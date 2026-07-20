@@ -1,13 +1,14 @@
+import 'dart:math' as math;
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
 import '../models/circuit_state.dart';
 import '../models/circuit_solver.dart';
 import '../models/circuit_history.dart';
 import '../services/sound_effects.dart';
-import '../widgets/circuit_canvas.dart';
-import '../widgets/component_tray.dart';
+import '../widgets/component_icon.dart';
 import '../widgets/circuit_controls.dart';
+import '../widgets/drag_drop_workspace.dart';
 
 class CircuitScreen extends StatefulWidget {
   const CircuitScreen({super.key});
@@ -22,19 +23,10 @@ class _CircuitScreenState extends State<CircuitScreen> {
   int _nextId = 0;
   final FocusNode _focusNode = FocusNode();
 
-  // [Bug1Fix] 工具箱拖拽进行中标志 — 防止 GestureDetector.onScaleEnd 错误创建导线
-  // 根因：DragTarget.onAccept 和 GestureDetector.onScaleEnd 竞争，后者先执行会用残留状态创建多余导线
-  // 方案：_onComponentDrop 入口设置此标志，_onDragEnd 入口检查并跳过
   bool _isToolboxDropActive = false;
+  DateTime? _lastTapTime; String? _lastTapId; Timer? _tapTimer;
 
-  // [Fix3] 开关双击检测：记录上次点击时间和元件ID
-  DateTime? _lastTapTime;
-  String? _lastTapId;
-  Timer? _tapTimer; // 单击延迟定时器（双击时取消）
-
-  String _vid() => 'v${_nextId++}';
-  String _cid() => 'c${_nextId++}';
-  String _wid() => 'w${_nextId++}';
+  String _vid() => 'v${_nextId++}'; String _cid() => 'c${_nextId++}'; String _wid() => 'w${_nextId++}';
 
   @override void initState() { super.initState(); _sfx = SoundEffects(); }
   @override void dispose() { _tapTimer?.cancel(); _sfx?.dispose(); _focusNode.dispose(); super.dispose(); }
@@ -45,469 +37,314 @@ class _CircuitScreenState extends State<CircuitScreen> {
     if (sound) _sfx?.tap();
   }
 
-  // ─── 从工具箱拖出元件放置 ────────────────────────
   void _onComponentDrop(ComponentType type, Offset worldPos) {
-    // [Bug1Fix] 设置工具箱拖拽标志，阻止 _onDragEnd 用残留状态创建多余导线
     _isToolboxDropActive = true;
+    try { _addComponent(type, worldPos); } finally { _isToolboxDropActive = false; }
+  }
 
-    try {
+  void _addComponent(ComponentType type, Offset wp) {
     if (type == ComponentType.wire) {
-      // 创建导线：两个顶点 + WireSegment
-      final vid1 = _vid(); final vid2 = _vid();
-      final verts = [
-        Vertex(id: vid1, x: worldPos.dx - 50, y: worldPos.dy),
-        Vertex(id: vid2, x: worldPos.dx + 50, y: worldPos.dy),
-      ];
-      final wire = WireSegment(
-        id: _wid(),
-        startVertexId: vid1,
-        endVertexId: vid2,
-      );
-      // [T-1] 同时添加新导线 + 清理所有画布拖拽中间状态（防止手势冲突）
-      _update(_state.copyWith(
-        wires: [..._state.wires, wire],
-        vertices: [..._state.vertices, ...verts],
-        creatingWireStartVertexId: null,
-        wireDragIdx: null,
-        dragSide: null,
-        draggingVertexId: null,
-        dragVertexNewPos: null,
-        draggingControlPointWireId: null,
-        draggingControlPointIndex: null,
-        dragPos: null,
-      ), sound: true);
+      final v1=_vid(), v2=_vid();
+      _update(_state.copyWith(wires:[..._state.wires,WireSegment(id:_wid(),startVertexId:v1,endVertexId:v2)],
+        vertices:[..._state.vertices,Vertex(id:v1,x:wp.dx-50,y:wp.dy),Vertex(id:v2,x:wp.dx+50,y:wp.dy)],
+        creatingWireStartVertexId:null,wireDragIdx:null,dragSide:null,draggingVertexId:null,dragVertexNewPos:null,
+        draggingControlPointWireId:null,draggingControlPointIndex:null,dragPos:null),sound:true);
     } else {
-      // 创建元件：两个端点顶点 + CircuitComponent
-      final vid1 = _vid(); final vid2 = _vid();
-      final verts = [
-        Vertex(id: vid1, x: worldPos.dx - 60, y: worldPos.dy, isTerminal: true),
-        Vertex(id: vid2, x: worldPos.dx + 60, y: worldPos.dy, isTerminal: true),
-      ];
-      final comp = CircuitComponent(
-        id: _cid(), type: type, x: worldPos.dx, y: worldPos.dy,
-        value: type.defaultValue, startVertexId: vid1, endVertexId: vid2,
-      );
-      // [T-1] 同时添加新元件 + 清理所有画布拖拽中间状态
-      _update(_state.copyWith(
-        components: [..._state.components, comp],
-        vertices: [..._state.vertices, ...verts],
-        creatingWireStartVertexId: null,
-        wireDragIdx: null,
-        dragSide: null,
-        draggingVertexId: null,
-        dragVertexNewPos: null,
-        draggingControlPointWireId: null,
-        draggingControlPointIndex: null,
-        dragPos: null,
-      ), sound: true);
-    }
-    } finally {
-      // [Bug1Fix] 确保工具箱拖拽标志被清除（即使异常也清除）
-      _isToolboxDropActive = false;
+      final v1=_vid(), v2=_vid();
+      _update(_state.copyWith(components:[..._state.components,
+        CircuitComponent(id:_cid(),type:type,x:wp.dx,y:wp.dy,value:type.defaultValue,startVertexId:v1,endVertexId:v2)],
+        vertices:[..._state.vertices,Vertex(id:v1,x:wp.dx-60,y:wp.dy,isTerminal:true),Vertex(id:v2,x:wp.dx+60,y:wp.dy,isTerminal:true)],
+        creatingWireStartVertexId:null,wireDragIdx:null,dragSide:null,draggingVertexId:null,dragVertexNewPos:null,
+        draggingControlPointWireId:null,draggingControlPointIndex:null,dragPos:null),sound:true);
     }
   }
 
-  // ─── 画布点击 ──────────────────────────────────────
-  void _onCanvasTap(Offset worldPos) {
-    // [Bug1Fix] 清除所有拖拽中间状态（防止点击空白区域后残留状态导致多余导线）
-    _update(_state.copyWith(
-      selectedId: null,
-      creatingWireStartVertexId: null,
-      wireDragIdx: null,
-      dragSide: null,
-      draggingVertexId: null,
-      dragVertexNewPos: null,
-      draggingControlPointWireId: null,
-      draggingControlPointIndex: null,
-      dragPos: null,
-    ));
-  }
+  void _onCanvasTap(Offset w) => _update(_state.copyWith(selectedId:null));
 
-  // ─── 元件交互 ─────────────────────────────────────────
-  void _onComponentTap(String compId) {
+  void _onComponentTap(String id) {
     final now = DateTime.now();
-
-    // [Fix3] 开关双击检测：300ms内连续点击同一个开关 = 双击
-    if (_lastTapId == compId &&
-        _lastTapTime != null &&
-        now.difference(_lastTapTime!) < const Duration(milliseconds: 300)) {
-      // 双击 → 如果是开关，切换状态（不改变选中状态）
-      final comp = _state.components.where((c) => c.id == compId).toList();
-      if (comp.isNotEmpty && comp.first.type == ComponentType.switch_) {
-        _tapTimer?.cancel();
-        _lastTapTime = null;
-        _lastTapId = null;
-        _toggleSwitch();
-        return;
-      }
+    if (_lastTapId == id && _lastTapTime != null && now.difference(_lastTapTime!) < const Duration(milliseconds:300)) {
+      final comp = _state.components.where((c)=>c.id==id).toList();
+      if (comp.isNotEmpty && comp.first.type == ComponentType.switch_) { _tapTimer?.cancel(); _lastTapTime=null; _lastTapId=null; _toggleSwitch(); return; }
     }
-
-    // [Fix6b] 立即设置选中状态（不在Timer里，确保拖拽能立即生效）
-    setState(() {
-      if (_state.selectedId == compId) {
-        _state = _state.copyWith(selectedId: null); // 再次点击同一元件 → 取消选中
-      } else {
-        _state = _state.copyWith(selectedId: compId); // 点击新元件 → 选中
-      }
-    });
-
-    // 记录这次点击（用于双击检测）
-    _lastTapTime = now;
-    _lastTapId = compId;
-
-    // 取消之前的定时器（如果有）
-    _tapTimer?.cancel();
-    _tapTimer = null;
+    setState(()=>_state=_state.copyWith(selectedId:_state.selectedId==id?null:id));
+    _lastTapTime=now; _lastTapId=id; _tapTimer?.cancel();
   }
 
   void _onWireTap(int idx) {
-    // 选择导线（而不是删除）
-    if (idx < _state.wires.length) {
-      final wire = _state.wires[idx];
-      _update(_state.copyWith(selectedId: wire.id));
-    }
+    if (idx < _state.wires.length) _update(_state.copyWith(selectedId:_state.wires[idx].id));
   }
 
-  // ─── 拖拽 ─────────────────────────────────────────────
-  // [Fix7] 拖拽开始：检测拖拽目标（不立即移动）
-  Offset? _dragStartMousePos; // 拖拽开始时的鼠标位置
-  Offset? _dragStartCompPos;  // 拖拽开始时的元件位置
+  Offset? _dragStartMousePos, _dragStartCompPos;
 
-  void _onDragStart(Offset worldPos) {
-    // 0. 清除残留状态（Bug1Fix）
-    if (_state.creatingWireStartVertexId != null) {
-      setState(() => _state = _state.copyWith(
-        creatingWireStartVertexId: null,
-        dragPos: null,
-      ));
+  void _onDragStart(Offset w) {
+    if (_state.creatingWireStartVertexId != null) setState(() => _state = _state.copyWith(creatingWireStartVertexId: null, dragPos: null));
+    final sel = _state.selected;
+    if (sel != null && !_state.wires.any((wr) => wr.id == _state.selectedId)) {
+      if (_state.draggingVertexId != null) setState(() => _state = _state.copyWith(draggingVertexId: null, dragVertexNewPos: null));
+      _dragStartMousePos = w; _dragStartCompPos = Offset(sel.x, sel.y); return;
     }
-
-    // [Fix7] 优先级调整：顶点 > 控制点 > 元件（避免焦点乱跳）
-    // 原因：顶点是精确拖拽目标，元件是选择目标。如果顶点和元件重叠，顶点优先。
-
-    // 1. [Fix2] 优先检查选中导线的端点（修复：选中a拖拽时不会命中b）
-    // [Fix5] 保留 selectedId（拖拽端点后导线仍然被选中，符合用户预期）
-    if (_state.selectedId != null) {
-      final selectedWire = _state.wires.where((w) => w.id == _state.selectedId).toList();
-      if (selectedWire.isNotEmpty) {
-        final wire = selectedWire.first;
-        final va = _state.findVertex(wire.startVertexId);
-        final vb = _state.findVertex(wire.endVertexId);
-        
-        if (va != null && (va.pos - worldPos).distance < 30) {
-          setState(() => _state = _state.copyWith(
-            draggingVertexId: va.id,
-            dragVertexNewPos: worldPos,
-            // 不清除 selectedId — 端点拖拽后导线应保持选中
-          ));
-          return;
-        }
-        if (vb != null && (vb.pos - worldPos).distance < 30) {
-          setState(() => _state = _state.copyWith(
-            draggingVertexId: vb.id,
-            dragVertexNewPos: worldPos,
-            // 不清除 selectedId — 端点拖拽后导线应保持选中
-          ));
-          return;
-        }
-      }
+    final hit = _state.components.where((c) => c.hitTest(w)).toList();
+    if (hit.isNotEmpty) {
+      setState(() => _state = _state.copyWith(selectedId: _state.selectedId == hit.first.id ? null : hit.first.id));
+      _dragStartMousePos = w; _dragStartCompPos = Offset(hit.first.x, hit.first.y); return;
     }
-
-    // 2. 检查是否按在顶点上（统一逻辑：所有顶点都可拖拽）— 优先级高于元件
-    final vertex = _state.vertexAt(worldPos);
-    if (vertex != null) {
-      // [Fix7] 顶点拖拽时，如果顶点属于某个元件的端子，不清除 selectedId
-      // 这样可以在拖拽端子顶点的同时，保持元件选中状态
-      final isTerminalVertex = _state.components.any((c) => c.startVertexId == vertex.id || c.endVertexId == vertex.id);
-      
-      // [Fix8] 重置拖拽偏移变量（防止后续元件拖拽时使用过期数据）
-      if (!isTerminalVertex) {
-        _dragStartMousePos = null;
-        _dragStartCompPos = null;
-      }
-      
-      setState(() => _state = _state.copyWith(
-        selectedId: isTerminalVertex ? _state.selectedId : null, // 端子顶点不清除选中
-        draggingVertexId: vertex.id,
-        dragVertexNewPos: worldPos,
-      ));
-      return;
-    }
-
-    // 3. 检查是否按在控制点上（开始拖拽控制点）— 优先级高于元件
-    if (_state.selectedId != null) {
-      final selectedWire = _state.wires.where((w) => w.id == _state.selectedId).toList();
-      if (selectedWire.isNotEmpty) {
-        final wire = selectedWire.first;
-        for (var i = 0; i < wire.controlPoints.length; i++) {
-          final cp = wire.controlPoints[i];
-          if ((cp - worldPos).distance < 15) {
-            setState(() => _state = _state.copyWith(
-              draggingControlPointWireId: wire.id,
-              draggingControlPointIndex: i,
-              dragPos: worldPos,
-            ));
-            return;
-          }
-        }
-      }
-    }
-
-    // 4. 检查是否按在元件上（选择/取消选择）
-    final hitComponent = _state.components.where((c) => c.hitTest(worldPos)).toList();
-    if (hitComponent.isNotEmpty) {
-      // [Fix6b] 立即选中该元件
-      setState(() {
-        if (_state.selectedId == hitComponent.first.id) {
-          _state = _state.copyWith(selectedId: null); // 再次点击同一元件 → 取消选中
-        } else {
-          _state = _state.copyWith(selectedId: hitComponent.first.id); // 点击新元件 → 选中
-        }
-      });
-      // [Fix7] 记录拖拽开始位置和元件位置（用于相对偏移计算）
-      final comp = hitComponent.first;
-      _dragStartMousePos = worldPos;
-      _dragStartCompPos = Offset(comp.x, comp.y);
-      return;
-    }
-
-    // 5. 如果点击空白区域且有选中元件，不立即移动（避免跳转到点击位置）
-    //    等待 _onDragMove 处理（使用相对偏移）
-    if (_state.selectedId != null) {
-      final comp = _state.selected;
-      if (comp != null) {
-        _dragStartMousePos = worldPos;
-        _dragStartCompPos = Offset(comp.x, comp.y);
-      }
-    }
+    final v = _state.vertexAt(w);
+    if (v != null) { setState(() => _state = _state.copyWith(draggingVertexId: v.id, dragVertexNewPos: w)); return; }
+    if (_state.selectedId != null && _state.selected != null) { _dragStartMousePos = w; _dragStartCompPos = Offset(_state.selected!.x, _state.selected!.y); }
   }
 
-  void _onDragMove(Offset worldPos) {
-    // 1. 如果正在拖拽控制点，更新控制点位置
-    if (_state.draggingControlPointWireId != null) {
-      setState(() => _state = _state.copyWith(dragPos: worldPos));
-      return;
-    }
-
-    // 2. 如果正在拖动顶点，更新顶点位置
-    if (_state.draggingVertexId != null) {
-      setState(() => _state = _state.copyWith(dragVertexNewPos: worldPos));
-      return;
-    }
-
-    // 3. [Fix7] 移动选中的元件（使用相对偏移，避免跳转到鼠标位置）
+  void _onDragMove(Offset w) {
+    if (_state.draggingControlPointWireId != null) { setState(() => _state = _state.copyWith(dragPos: w)); return; }
+    if (_state.draggingVertexId != null) { setState(() => _state = _state.copyWith(dragVertexNewPos: w)); return; }
     if (_state.selectedId != null && _dragStartMousePos != null && _dragStartCompPos != null) {
-      final dx = worldPos.dx - _dragStartMousePos!.dx;
-      final dy = worldPos.dy - _dragStartMousePos!.dy;
-      final newCompX = _dragStartCompPos!.dx + dx;
-      final newCompY = _dragStartCompPos!.dy + dy;
-      
-      final comp = _state.selected;
-      if (comp != null) {
-        final newComps = _state.components.map((c) {
-          if (c.id != comp.id) return c;
-          return c.copyWith(x: newCompX, y: newCompY);
-        }).toList();
-        final newVerts = _state.vertices.map((v) {
-          if (v.id == comp.startVertexId) return v.copyWith(x: v.x + dx, y: v.y + dy);
-          if (v.id == comp.endVertexId) return v.copyWith(x: v.x + dx, y: v.y + dy);
-          return v;
-        }).toList();
-        setState(() => _state = _state.copyWith(components: newComps, vertices: newVerts));
+      final nc = _state.selected;
+      if (nc != null) {
+        final nx = _dragStartCompPos!.dx + w.dx - _dragStartMousePos!.dx;
+        final ny = _dragStartCompPos!.dy + w.dy - _dragStartMousePos!.dy;
+        final incX = nx - nc.x, incY = ny - nc.y;
+        setState(() => _state = _state.copyWith(
+          components: _state.components.map((c) => c.id == nc.id ? c.copyWith(x: nx, y: ny) : c).toList(),
+          vertices: _state.vertices.map((v) {
+            if (v.id == nc.startVertexId) return v.copyWith(x: v.x + incX, y: v.y + incY);
+            if (v.id == nc.endVertexId) return v.copyWith(x: v.x + incX, y: v.y + incY);
+            return v;
+          }).toList()));
       }
     }
   }
 
   void _onDragEnd() {
-    // [Bug1Fix] 守卫：如果工具箱拖拽刚完成，跳过处理
-    if (_isToolboxDropActive) {
-      _isToolboxDropActive = false;
-      return;
-    }
-
-    // 0. 如果正在拖拽控制点
+    if (_isToolboxDropActive) return;
     if (_state.draggingControlPointWireId != null) {
-      final wireId = _state.draggingControlPointWireId!;
-      final index = _state.draggingControlPointIndex!;
-      final newPos = _state.dragPos!;
-
-      // 更新导线控制点
-      final wire = _state.wires.firstWhere((w) => w.id == wireId);
-      final updatedWire = wire.moveControlPoint(index, newPos);
-
+      final wr = _state.wires.firstWhere((w) => w.id == _state.draggingControlPointWireId);
       _update(_state.copyWith(
-        wires: _state.wires.map((w) => w.id == wireId ? updatedWire : w).toList(),
-        draggingControlPointWireId: null,
-        draggingControlPointIndex: null,
-        dragPos: null,
+        wires: _state.wires.map((w) => w.id == wr.id ? wr.moveControlPoint(_state.draggingControlPointIndex!, _state.dragPos!) : w).toList(),
+        draggingControlPointWireId: null, draggingControlPointIndex: null, dragPos: null,
       ), sound: true);
-      return;
-    }
-
-    // ✅ 修复：移除"创建导线"和"重新连接"分支
-
-    // 1. 如果正在拖动顶点（添加磁吸合并逻辑）
-    if (_state.draggingVertexId != null) {
-      final vertexId = _state.draggingVertexId!;
-      final newPos = _state.dragVertexNewPos ?? _state.findVertex(vertexId)!.pos;
-
-      // 查找磁吸目标（40px内，排除自己）
-      final snap = _state.findSnapTarget(newPos, excludeVertexId: vertexId);
-
+    } else if (_state.draggingVertexId != null) {
+      final vId = _state.draggingVertexId!;
+      final np = _state.dragVertexNewPos ?? _state.findVertex(vId)!.pos;
+      final snap = _state.findSnapTarget(np, excludeVertexId: vId);
       if (snap != null) {
-        // ✅ 新增：合并顶点
-        _mergeVertices(vertexId, snap.vertexId!);
+        _mergeVertices(vId, snap.vertexId!);
       } else {
-        // 移动顶点到新位置
         _update(_state.copyWith(
-          vertices: _state.vertices.map((v) =>
-            v.id == vertexId ? v.copyWith(x: newPos.dx, y: newPos.dy) : v
-          ).toList(),
-          draggingVertexId: null,
-          dragVertexNewPos: null,
+          vertices: _state.vertices.map((v) => v.id == vId ? v.copyWith(x: np.dx, y: np.dy) : v).toList(),
+          draggingVertexId: null, dragVertexNewPos: null,
         ), sound: true);
       }
-      
-      // [Fix7] 清除拖拽偏移记录
-      _dragStartMousePos = null;
-      _dragStartCompPos = null;
-      return;
     }
-
-    // 2. [Fix7] 清除拖拽偏移记录（元件拖拽结束）
-    _dragStartMousePos = null;
-    _dragStartCompPos = null;
+    _dragStartMousePos = null; _dragStartCompPos = null;
   }
 
-  // ✅ 新增：合并两个顶点（磁吸合并）
-  void _mergeVertices(String oldVertexId, String newVertexId) {
-    // 把所有引用 oldVertexId 的导线/元件，改为引用 newVertexId
-    final newWires = _state.wires.map((w) {
-      if (w.startVertexId == oldVertexId) {
-        return WireSegment(id: w.id, startVertexId: newVertexId, endVertexId: w.endVertexId);
-      }
-      if (w.endVertexId == oldVertexId) {
-        return WireSegment(id: w.id, startVertexId: w.startVertexId, endVertexId: newVertexId);
-      }
+  void _mergeVertices(String old, String nw) => _update(_state.copyWith(
+    wires: _state.wires.map((w) {
+      if (w.startVertexId == old) return WireSegment(id: w.id, startVertexId: nw, endVertexId: w.endVertexId);
+      if (w.endVertexId == old) return WireSegment(id: w.id, startVertexId: w.startVertexId, endVertexId: nw);
       return w;
-    }).toList();
-
-    final newComps = _state.components.map((c) {
-      if (c.startVertexId == oldVertexId) {
-        return c.copyWith(startVertexId: newVertexId);
-      }
-      if (c.endVertexId == oldVertexId) {
-        return c.copyWith(endVertexId: newVertexId);
-      }
+    }).toList(),
+    components: _state.components.map((c) {
+      if (c.startVertexId == old) return c.copyWith(startVertexId: nw);
+      if (c.endVertexId == old) return c.copyWith(endVertexId: nw);
       return c;
-    }).toList();
+    }).toList(),
+    vertices: _state.vertices.where((v) => v.id != old).toList(),
+    draggingVertexId: null, dragVertexNewPos: null,
+  ), sound: true);
 
-    // 删除 oldVertexId
-    final newVertices = _state.vertices.where((v) => v.id != oldVertexId).toList();
-
-    _update(_state.copyWith(
-      wires: newWires,
-      components: newComps,
-      vertices: newVertices,
-      draggingVertexId: null,
-      dragVertexNewPos: null,
-    ), sound: true);
-  }
-
-  // ─── 其他操作 ─────────────────────────────────────────
   void _deleteSelected() {
     if (_state.selectedId == null) return;
-
-    final selectedId = _state.selectedId!;
-
-    // 1. 检查是否选中了导线
-    final wireIndex = _state.wires.indexWhere((w) => w.id == selectedId);
-    if (wireIndex != -1) {
-      // 删除导线
-      final newWires = List<WireSegment>.from(_state.wires)..removeAt(wireIndex);
-      _update(_state.copyWith(wires: newWires, selectedId: null), sound: true);
-      return;
-    }
-
-    // 2. 否则，删除元件
-    _update(_state.removeComponent(selectedId));
+    final id = _state.selectedId!;
+    final wi = _state.wires.indexWhere((w) => w.id == id);
+    if (wi != -1) _update(_state.copyWith(wires: List<WireSegment>.from(_state.wires)..removeAt(wi), selectedId: null), sound: true);
+    else _update(_state.removeComponent(id));
   }
 
-  void _toggleSwitch() {
-    final sel = _state.selected; if (sel?.type != ComponentType.switch_) return;
-    _update(_state.copyWith(components: _state.components.map((c) =>
-      c.id == sel!.id ? c.copyWith(isClosed: !c.isClosed) : c).toList()), sound: true);
-  }
-
-  void _adjustValue(double v) {
-    final sel = _state.selected; if (sel == null) return;
-    final nv = v.clamp(sel.type.valueMin, sel.type.valueMax);
-    _update(_state.copyWith(components: _state.components.map((c) =>
-      c.id == sel.id ? c.copyWith(value: nv) : c).toList()));
-  }
-
+  void _toggleSwitch() { final s = _state.selected; if (s?.type != ComponentType.switch_) return;
+    _update(_state.copyWith(components: _state.components.map((c) => c.id == s!.id ? c.copyWith(isClosed: !c.isClosed) : c).toList()), sound: true); }
+  void _adjustValue(double v) { final s = _state.selected; if (s == null) return;
+    _update(_state.copyWith(components: _state.components.map((c) => c.id == s.id ? c.copyWith(value: v.clamp(s.type.valueMin, s.type.valueMax)) : c).toList())); }
   void _setZoom(double z) { _update(_state.copyWith(zoom: z.clamp(0.6, 2.0))); }
-  void _rotateSelected() {
-    final sel = _state.selected; if (sel == null) return;
-    _update(_state.copyWith(components: _state.components.map((c) =>
-      c.id == sel.id ? c.copyWith(rotation: (c.rotation + 90) % 360) : c).toList()));
-  }
-  void _undo() { final prev = _history.undo(_state); if (prev != null) setState(() { _state = prev; _solved = CircuitSolver.solve(prev); }); }
-  void _redo() { final next = _history.redo(_state); if (next != null) setState(() { _state = next; _solved = CircuitSolver.solve(next); }); }
+  void _rotateSelected() { final s = _state.selected; if (s == null) return;
+    _update(_state.copyWith(components: _state.components.map((c) => c.id == s.id ? c.copyWith(rotation: (c.rotation + 90) % 360) : c).toList())); }
+  void _undo() { final p = _history.undo(_state); if (p != null) setState(() { _state = p; _solved = CircuitSolver.solve(p); }); }
+  void _redo() { final n = _history.redo(_state); if (n != null) setState(() { _state = n; _solved = CircuitSolver.solve(n); }); }
 
-  void _clear() {
-    showDialog(context: context, builder: (ctx) => AlertDialog(
-      title: const Text('清空电路'), content: const Text('确定清空所有元件和连线吗？'),
-      actions: [
-        TextButton(onPressed: ()=>Navigator.pop(ctx), child: const Text('取消')),
-        TextButton(onPressed: (){Navigator.pop(ctx); _update(const CircuitState()); _history.clear(); _nextId=0;},
-          child: const Text('确定',style:TextStyle(color:Colors.red))),
-      ]));
-  }
+  void _clear() => showDialog(context: context, builder: (ctx) => AlertDialog(
+    title: const Text('清空电路'), content: const Text('确定清空所有元件和连线吗？'),
+    actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('取消')),
+      TextButton(onPressed: () { Navigator.pop(ctx); _update(const CircuitState()); _history.clear(); _nextId = 0; },
+          child: const Text('确定', style: TextStyle(color: Colors.red)))],
+  ));
+
+  static const _trayItems = [
+    DragItem(data: ComponentType.battery, label: '电池', icon: Icons.battery_5_bar, color: Color(0xFFEF4444)),
+    DragItem(data: ComponentType.resistor, label: '电阻', icon: Icons.waves, color: Color(0xFFF59E0B)),
+    DragItem(data: ComponentType.lightBulb, label: '灯泡', icon: Icons.lightbulb_outline, color: Color(0xFF22C55E)),
+    DragItem(data: ComponentType.switch_, label: '开关', icon: Icons.toggle_off_outlined, color: Color(0xFF6366F1)),
+    DragItem(data: ComponentType.fuse, label: '保险丝', icon: Icons.flash_on_rounded, color: Color(0xFFF97316)),
+    DragItem(data: ComponentType.ground, label: '接地', icon: Icons.vertical_align_bottom_rounded, color: Color(0xFF6B7280)),
+    DragItem(data: ComponentType.wire, label: '导线', icon: Icons.horizontal_rule_rounded, color: Color(0xFF334155)),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final sel = _state.selected;
-    return KeyboardListener(focusNode:_focusNode, autofocus:true, onKeyEvent:(event){
+    final hasSelection = _state.selectedId != null;
+    final isWireSelected = hasSelection && sel == null;
+    return KeyboardListener(focusNode: _focusNode, autofocus: true, onKeyEvent: (event) {
       if (event is KeyDownEvent) {
-        if (event.logicalKey == LogicalKeyboardKey.delete) {
-          _deleteSelected();
-        } else if (event.logicalKey == LogicalKeyboardKey.keyR) {
-          _rotateSelected();
-        } else if (event.logicalKey == LogicalKeyboardKey.escape) {
-          _update(_state.copyWith(selectedId:null));
-        } else if (event.logicalKey == LogicalKeyboardKey.keyZ && HardwareKeyboard.instance.isControlPressed) {
+        if (event.logicalKey == LogicalKeyboardKey.delete) _deleteSelected();
+        else if (event.logicalKey == LogicalKeyboardKey.keyR) _rotateSelected();
+        else if (event.logicalKey == LogicalKeyboardKey.escape) _update(_state.copyWith(selectedId: null));
+        else if (event.logicalKey == LogicalKeyboardKey.keyZ && HardwareKeyboard.instance.isControlPressed)
           HardwareKeyboard.instance.isShiftPressed ? _redo() : _undo();
-        } else if (event.logicalKey == LogicalKeyboardKey.keyY && HardwareKeyboard.instance.isControlPressed) {
-          _redo();
-        }
+        else if (event.logicalKey == LogicalKeyboardKey.keyY && HardwareKeyboard.instance.isControlPressed) _redo();
       }
     }, child: Scaffold(
       backgroundColor: const Color(0xFFF6FAFC),
-      appBar: AppBar(title: const Text('电路搭建'), backgroundColor: const Color(0xFF0B2B3D), foregroundColor: Colors.white, actions: [
-        if (sel != null) ...[
-          if (sel.type == ComponentType.switch_)
-            IconButton(icon: Icon(sel.isClosed?Icons.toggle_on:Icons.toggle_off,color:const Color(0xFF22C55E)), tooltip:'切换', onPressed:_toggleSwitch),
-          IconButton(icon: const Icon(Icons.rotate_right,color:Color(0xFFCBD5E1)), tooltip:'旋转(R)', onPressed:_rotateSelected),
-          IconButton(icon: const Icon(Icons.delete_outline,color:Color(0xFFEF4444)), tooltip:'删除(Del)', onPressed:_deleteSelected),
-        ],
-        IconButton(icon: const Icon(Icons.undo,size:20), tooltip:'撤销', onPressed:_history.canUndo?_undo:null),
-        IconButton(icon: const Icon(Icons.redo,size:20), tooltip:'重做', onPressed:_history.canRedo?_redo:null),
-        IconButton(icon: const Icon(Icons.zoom_out,size:20), tooltip:'缩小', onPressed:()=>_setZoom(_state.zoom-0.1)),
-        Text('${(_state.zoom*100).toInt()}%', style: const TextStyle(fontSize:11)),
-        IconButton(icon: const Icon(Icons.zoom_in,size:20), tooltip:'放大', onPressed:()=>_setZoom(_state.zoom+0.1)),
-        IconButton(icon: const Icon(Icons.restart_alt_rounded), tooltip:'清空', onPressed:_clear),
+      appBar: AppBar(title: Text(isWireSelected?'电路搭建 - 导线':sel!=null?'电路搭建 - ${sel.type.label}':'电路搭建'),
+        backgroundColor: const Color(0xFF0B2B3D), foregroundColor: Colors.white, actions: [
+        if (sel != null && sel.type == ComponentType.switch_)
+          IconButton(icon: Icon(sel.isClosed ? Icons.toggle_on : Icons.toggle_off, color: const Color(0xFF22C55E)), tooltip: '切换', onPressed: _toggleSwitch),
+        if (sel != null)
+          IconButton(icon: const Icon(Icons.rotate_right, color: Color(0xFFCBD5E1)), tooltip: '旋转(R)', onPressed: _rotateSelected),
+        if (hasSelection)
+          IconButton(icon: const Icon(Icons.delete_outline, color: Color(0xFFEF4444)), tooltip: '删除', onPressed: _deleteSelected),
+        IconButton(icon: const Icon(Icons.undo, size: 20), tooltip: '撤销', onPressed: _history.canUndo ? _undo : null),
+        IconButton(icon: const Icon(Icons.redo, size: 20), tooltip: '重做', onPressed: _history.canRedo ? _redo : null),
+        IconButton(icon: const Icon(Icons.zoom_out, size: 20), tooltip: '缩小', onPressed: () => _setZoom(_state.zoom - 0.1)),
+        Text('${(_state.zoom * 100).toInt()}%', style: const TextStyle(fontSize: 11)),
+        IconButton(icon: const Icon(Icons.zoom_in, size: 20), tooltip: '放大', onPressed: () => _setZoom(_state.zoom + 0.1)),
+        IconButton(icon: const Icon(Icons.restart_alt_rounded), tooltip: '清空', onPressed: _clear),
       ]),
-      body: Column(children: [
-        Expanded(child: CircuitCanvas(state:_state, solved:_solved, zoom:_state.zoom,
-          onTap: _onCanvasTap, onDragStart: _onDragStart, onDragUpdate: _onDragMove, onDragEnd: _onDragEnd,
-          onComponentTap: _onComponentTap, onWireTap: _onWireTap,
-          onScaleUpdate: (s)=>_setZoom(_state.zoom*s),
-          onComponentDrop: _onComponentDrop,
-        )),
-        CircuitControls(state:_state, solved:_solved, onValueChanged:_adjustValue),
-        const ComponentTray(),
-      ]),
+      body: DragDropWorkspace<ComponentType>(
+        layout: DragDropLayout.bottomTray,
+        trayTitle: '元件',
+        traySize: 80,
+        items: _trayItems,
+        onItemDropped: _onComponentDrop,
+        bottomPanel: SizedBox(height: 50, child: CircuitControls(state: _state, solved: _solved, onValueChanged: _adjustValue)),
+        canvasBuilder: (_, wsProj) => _buildCanvas(wsProj.canvasSize),
+      ),
     ));
+  }
+
+  Widget _buildCanvas(Size sz) {
+    final pw = _solved;
+    final proj = SceneProjection(scale: 1, origin: Offset(sz.width / 2, sz.height / 2), zoom: _state.zoom);
+    final isWire = _state.selected != null ? false : _state.selectedId != null && _state.wires.any((w) => w.id == _state.selectedId);
+
+    return Stack(children: [
+      GestureDetector(
+        onTapUp: (d) {
+          final w = proj.toWorld(d.localPosition);
+          final hit = _state.components.reversed.cast<CircuitComponent?>().firstWhere((c) => c!.hitTest(w), orElse: () => null);
+          if (hit != null) { _onComponentTap(hit.id); return; }
+          final wi = _hitTestWire(w, proj); if (wi != null) { _onWireTap(wi); return; }
+          _onCanvasTap(w);
+        },
+        onScaleStart: (d) { if (d.pointerCount < 2) _onDragStart(proj.toWorld(d.localFocalPoint)); },
+        onScaleUpdate: (d) => d.pointerCount >= 2 ? _setZoom(_state.zoom * d.horizontalScale) : _onDragMove(proj.toWorld(d.localFocalPoint)),
+        onScaleEnd: (d) { if (d.pointerCount < 2) _onDragEnd(); },
+        child: CustomPaint(size: sz,
+            painter: CircuitPainter(state: _state, solved: pw, projection: proj, wireSelected: isWire)),
+      ),
+      ..._state.components.map((comp) {
+        final sp = proj.toScreen(Offset(comp.x, comp.y));
+        final sw = proj.toScreenLength(comp.width), sh = proj.toScreenLength(comp.height);
+        return Positioned(key: Key('component_${comp.id}_${pw.hashCode}'), left: sp.dx - sw / 2, top: sp.dy - sh / 2, width: sw, height: sh,
+            child: IgnorePointer(child: Center(child: ComponentIconWidget(type: comp.type,
+                iconSize: (sw * 0.45).clamp(16, 32), fontSize: (sh * 0.18).clamp(8, 14), showLabel: sh > 30, fixedWidth: sw * 0.8, fixedHeight: sh * 0.7,
+                isPowered: pw.isPowered(comp.id), isClosed: comp.type == ComponentType.switch_ ? comp.isClosed : true))));
+      }),
+    ]);
+  }
+
+  int? _hitTestWire(Offset wp, SceneProjection proj) {
+    final sp = proj.toScreen(wp);
+    for (var i = 0; i < _state.wires.length; i++) {
+      final seg = _state.wires[i];
+      final sv = _state.findVertex(seg.startVertexId), ev = _state.findVertex(seg.endVertexId);
+      if (sv == null || ev == null) continue;
+      final pts = [proj.toScreen(sv.pos), ...seg.controlPoints.map(proj.toScreen), proj.toScreen(ev.pos)];
+      var md = double.infinity;
+      for (var j = 0; j < pts.length - 1; j++) {
+        final ab = pts[j + 1] - pts[j], ap = sp - pts[j];
+        final ls = ab.distanceSquared, t = ls == 0 ? 0 : (ap.dx * ab.dx + ap.dy * ab.dy) / ls;
+        md = math.min(md, (sp - (pts[j] + ab * (t.clamp(0.0, 1.0) as double))).distance);
+      }
+      if (md < 15) return i;
+    }
+    return null;
+  }
+
+}
+
+class SceneProjection {
+  final double scale; final Offset origin; final double zoom;
+  const SceneProjection({required this.scale, required this.origin, this.zoom = 1.0});
+  Offset toScreen(Offset w) => Offset(w.dx * scale * zoom + origin.dx, w.dy * scale * zoom + origin.dy);
+  Offset toWorld(Offset s) => Offset((s.dx - origin.dx) / (scale * zoom), (s.dy - origin.dy) / (scale * zoom));
+  double toScreenLength(double w) => w * scale * zoom;
+}
+
+class CircuitPainter extends CustomPainter {
+  final CircuitState state; final SolvedCircuit solved; final SceneProjection projection; final bool wireSelected;
+  CircuitPainter({required this.state, required this.solved, required this.projection, this.wireSelected = false});
+
+  @override void paint(Canvas canvas, Size size) { _grid(canvas, size); _wires(canvas); _components(canvas); }
+  @override bool shouldRepaint(covariant CircuitPainter old) =>
+      solved != old.solved || wireSelected != old.wireSelected ||
+      state.selectedId != old.state.selectedId || state.wires != old.state.wires || state.vertices != old.state.vertices ||
+      state.components != old.state.components || state.dragPos != old.state.dragPos ||
+      state.draggingVertexId != old.state.draggingVertexId || state.dragVertexNewPos != old.state.dragVertexNewPos;
+
+  void _grid(Canvas canvas, Size size) {
+    final p = Paint()..color = const Color(0xFFE8ECF0)..strokeWidth = 0.5..style = PaintingStyle.stroke;
+    final g = 40 * projection.scale * projection.zoom;
+    for (double x = 0; x < size.width; x += g) canvas.drawLine(Offset(x, 0), Offset(x, size.height), p);
+    for (double y = 0; y < size.height; y += g) canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
+  }
+
+  void _wires(Canvas canvas) {
+    for (final seg in state.wires) {
+      final sv = state.findVertex(seg.startVertexId), ev = state.findVertex(seg.endVertexId);
+      if (sv == null || ev == null) continue;
+      final sp = state.draggingVertexId == sv.id && state.dragVertexNewPos != null ? state.dragVertexNewPos! : sv.pos;
+      final ep = state.draggingVertexId == ev.id && state.dragVertexNewPos != null ? state.dragVertexNewPos! : ev.pos;
+      final path = Path()..moveTo(projection.toScreen(sp).dx, projection.toScreen(sp).dy);
+      for (final cp in seg.controlPoints) { final p = projection.toScreen(cp); path.lineTo(p.dx, p.dy); }
+      final lp = projection.toScreen(ep); path.lineTo(lp.dx, lp.dy);
+      final sel = state.selectedId == seg.id;
+      canvas.drawPath(path, Paint()..color = sel ? const Color(0xFFEF4444) : const Color(0xFF334155)
+          ..strokeWidth = sel ? 5 : 4..style = PaintingStyle.stroke..strokeCap = StrokeCap.round..strokeJoin = StrokeJoin.round);
+      _v(canvas, sv); _v(canvas, ev);
+    }
+  }
+
+  void _v(Canvas c, Vertex v) {
+    final drag = state.draggingVertexId == v.id;
+    final pos = projection.toScreen(drag ? (state.dragVertexNewPos ?? v.pos) : v.pos);
+    c.drawCircle(pos, drag ? 10.0 : (v.isJunction ? 5.0 : 3.0),
+        Paint()..color = drag ? Colors.blue : (v.isJunction ? const Color(0xFF334155) : const Color(0xFF94A3B8)));
+  }
+
+  void _components(Canvas canvas) { for (final comp in state.components) _draw(canvas, comp, comp.id == state.selectedId); }
+
+  void _draw(Canvas canvas, CircuitComponent c, bool sel) {
+    final pos = projection.toScreen(Offset(c.x, c.y));
+    final w = projection.toScreenLength(c.width), h = projection.toScreenLength(c.height);
+    final r = Rect.fromCenter(center: pos, width: w, height: h);
+    _t(canvas, Offset(r.left, pos.dy)); _t(canvas, Offset(r.right, pos.dy));
+    if (sel) canvas.drawRRect(RRect.fromRectAndRadius(r.inflate(6), const Radius.circular(8)),
+        Paint()..color = const Color(0xFF1177AA)..style = PaintingStyle.stroke..strokeWidth = 2);
+  }
+
+  void _t(Canvas c, Offset o) {
+    c.drawCircle(o, 5, Paint()..color = const Color(0xFF334155));
+    c.drawCircle(o, 3.5, Paint()..color = const Color(0xFF94A3B8));
+    c.drawCircle(o, 2, Paint()..color = Colors.white);
   }
 }

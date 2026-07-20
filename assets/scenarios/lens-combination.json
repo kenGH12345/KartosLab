@@ -1,0 +1,96 @@
+{
+  "scenarioId": "lens-combination",
+  "name": "透镜组合",
+  "description": "探究两个透镜组合时的成像规律，理解光学系统的等效焦距",
+  "version": "1.0.0",
+  "level": "advanced",
+  "domain": "optics-combo",
+
+  "inventory": {
+    "availableComponents": {
+      "lens": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": { "lensType": "convex", "diameter": 5.0 }
+      },
+      "lightSource": {
+        "maxCount": 1,
+        "locked": false,
+        "defaultParams": { "sourceType": "object", "objectHeight": 5.0 }
+      }
+    }
+  },
+
+  "initialLayout": [
+    {
+      "id": "light_1",
+      "type": "lightSource",
+      "x": -10,
+      "y": 0,
+      "locked": false,
+      "params": { "sourceType": "object", "objectHeight": 5.0 }
+    },
+    {
+      "id": "lens_1",
+      "type": "lens",
+      "x": -5,
+      "y": 0,
+      "locked": false,
+      "params": { "lensType": "convex", "focalLength": 10.0, "diameter": 5.0 }
+    },
+    {
+      "id": "lens_2",
+      "type": "lens",
+      "x": 5,
+      "y": 0,
+      "locked": false,
+      "params": { "lensType": "convex", "focalLength": 15.0, "diameter": 5.0 }
+    }
+  ],
+
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "alignment",
+      "description": "光源和两个透镜应在同一水平线上",
+      "params": { "elementIds": ["light_1", "lens_1", "lens_2"], "axis": "y", "tolerance": 5 },
+      "enforced": false
+    },
+    {
+      "id": "c2",
+      "type": "distance",
+      "description": "两个透镜间距建议 10cm～50cm",
+      "params": { "fromElementId": "lens_1", "toElementId": "lens_2", "minDistance": 1.0, "maxDistance": 5.0 },
+      "enforced": false
+    }
+  ],
+
+  "objectives": {
+    "type": "guided",
+    "description": "理解透镜组合的等效焦距：1/f_eq = 1/f1 + 1/f2 - d/(f1*f2)",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "imageProperties",
+        "description": "透镜组合后能形成清晰的像",
+        "params": {}
+      }
+    ],
+    "hints": [
+      { "trigger": "time_elapsed", "message": "尝试改变透镜之间的距离" },
+      { "trigger": "move_element", "message": "观察光线经过两个透镜后的偏折情况" }
+    ],
+    "validation": { "autoCheck": false, "showFeedback": true }
+  },
+
+  "gameRules": { "enabled": false, "penalties": [] },
+
+  "ui": {
+    "showGrid": true,
+    "showRuler": true,
+    "showFocalPoints": true,
+    "allowAddComponent": true,
+    "allowRemoveComponent": false,
+    "allowMoveComponent": true
+  }
+}

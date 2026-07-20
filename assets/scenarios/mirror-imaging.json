@@ -1,0 +1,87 @@
+{
+  "scenarioId": "mirror-imaging",
+  "name": "平面镜与凹面镜成像",
+  "description": "探究镜子（平面镜和凹面镜）的成像规律，理解反射成像原理",
+  "version": "1.0.0",
+  "level": "intermediate",
+  "domain": "optics-mirror",
+
+  "inventory": {
+    "availableComponents": {
+      "mirror": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": { "diameter": 6.0 }
+      },
+      "lightSource": {
+        "maxCount": 1,
+        "locked": false,
+        "defaultParams": { "sourceType": "object", "objectHeight": 5.0 }
+      }
+    }
+  },
+
+  "initialLayout": [
+    {
+      "id": "light_1",
+      "type": "lightSource",
+      "x": -5,
+      "y": 0,
+      "locked": false,
+      "params": { "sourceType": "object", "objectHeight": 5.0 }
+    },
+    {
+      "id": "mirror_1",
+      "type": "mirror",
+      "x": 0,
+      "y": 0,
+      "locked": false,
+      "params": { "mirrorType": "plane", "diameter": 6.0 }
+    }
+  ],
+
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "alignment",
+      "description": "光源和镜子应在同一水平线上",
+      "params": { "elementIds": ["light_1", "mirror_1"], "axis": "y", "tolerance": 5 },
+      "enforced": false
+    }
+  ],
+
+  "objectives": {
+    "type": "guided",
+    "description": "理解平面镜和凹面镜的成像规律",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "imageProperties",
+        "description": "平面镜成正立虚像，像距 = 物距",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "imageProperties",
+        "description": "凹面镜可成实像或虚像，取决于物距与焦距",
+        "params": {}
+      }
+    ],
+    "hints": [
+      { "trigger": "time_elapsed", "message": "观察像的位置与物的位置的关系" },
+      { "trigger": "time_elapsed", "message": "尝试切换到凹面镜观察不同的成像规律" }
+    ],
+    "validation": { "autoCheck": false, "showFeedback": true }
+  },
+
+  "gameRules": { "enabled": false, "penalties": [] },
+
+  "ui": {
+    "showGrid": true,
+    "showRuler": true,
+    "showFocalPoints": true,
+    "allowAddComponent": true,
+    "allowRemoveComponent": false,
+    "allowMoveComponent": true
+  }
+}

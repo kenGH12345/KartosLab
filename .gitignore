@@ -1,0 +1,73 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# ==== 以下为 refactor-baseline 前置的追加规则 · 2026-07-20 ====
+
+# --- vibe-loop 临时产物（根目录）---
+/analyze*.txt
+/analyze*.json
+/analysis*.txt
+/analysis*.json
+/test_*.txt
+/test_output*.txt
+/final_analysis.txt
+
+# --- vibe-loop 产物目录 ---
+/output/
+
+# --- AI 协作框架资产（源在 AI 工作区）---
+.claude/
+.codebuddy/
+.cursor/
+.workflow/
+AGENTS.md
+init.sh
+workflow.config.js
+
+# --- 第三方参考代码（外部下载/复制的原始项目 · 已验证 lib/ 下无 import 依赖）---
+/circuit-construction-kit-black-box-study-main/
+/phet-common-reference/
+/phet-reference/

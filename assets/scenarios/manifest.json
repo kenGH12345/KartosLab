@@ -1,0 +1,22 @@
+{
+  "scenarios": [
+    {
+      "id": "basic-lens-imaging",
+      "name": "凸透镜成像规律",
+      "level": "beginner",
+      "domain": "optics-lens"
+    },
+    {
+      "id": "lens-combination",
+      "name": "透镜组合",
+      "level": "intermediate",
+      "domain": "optics-combo"
+    },
+    {
+      "id": "mirror-imaging",
+      "name": "球面镜成像",
+      "level": "intermediate",
+      "domain": "optics-mirror"
+    }
+  ]
+}

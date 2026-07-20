@@ -1,0 +1,93 @@
+{
+  "scenarioId": "basic-lens-imaging",
+  "name": "凸透镜成像规律",
+  "description": "探究凸透镜成像的特点和规律",
+  "version": "1.0.0",
+  "level": "beginner",
+  "domain": "optics-lens",
+
+  "inventory": {
+    "availableComponents": {
+      "lightSource": {
+        "maxCount": 1,
+        "locked": false,
+        "defaultParams": { "sourceType": "object", "objectHeight": 5.0 }
+      },
+      "lens": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": { "lensType": "convex", "focalLength": 10.0, "diameter": 5.0 }
+      },
+      "screen": {
+        "maxCount": 1,
+        "locked": false,
+        "defaultParams": {}
+      }
+    }
+  },
+
+  "initialLayout": [
+    {
+      "id": "light_1",
+      "type": "lightSource",
+      "x": -25,
+      "y": 0,
+      "locked": false,
+      "params": { "sourceType": "object", "objectHeight": 5.0 }
+    },
+    {
+      "id": "lens_1",
+      "type": "lens",
+      "x": 0,
+      "y": 0,
+      "locked": false,
+      "params": { "lensType": "convex", "focalLength": 10.0, "diameter": 20.0 }
+    },
+    {
+      "id": "screen_1",
+      "type": "screen",
+      "x": 16,
+      "y": 0,
+      "locked": false,
+      "params": {}
+    }
+  ],
+
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "alignment",
+      "description": "蜡烛、透镜、光屏对齐在同一水平线",
+      "params": { "elementIds": ["light_1", "lens_1", "screen_1"], "axis": "y", "tolerance": 5 },
+      "enforced": false
+    }
+  ],
+
+  "objectives": {
+    "type": "guided",
+    "description": "观察凸透镜成像的三种情况：放大倒立、缩小倒立、无法成像",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "imageProperties",
+        "description": "当物距 > 2f 时，成缩小倒立实像",
+        "params": {}
+      }
+    ],
+    "hints": [
+      { "trigger": "objectDistance > 200", "message": "试着移动光屏，找到最清晰的像" }
+    ],
+    "validation": { "autoCheck": true, "showFeedback": true }
+  },
+
+  "gameRules": { "enabled": false, "penalties": [] },
+
+  "ui": {
+    "showGrid": true,
+    "showRuler": true,
+    "showFocalPoints": true,
+    "allowAddComponent": true,
+    "allowRemoveComponent": true,
+    "allowMoveComponent": true
+  }
+}
