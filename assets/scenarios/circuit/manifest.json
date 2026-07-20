@@ -1,0 +1,11 @@
+﻿{
+  "version": "1.0",
+  "scenarios": [
+    {
+      "id": "default",
+      "file": "default.json",
+      "name": "空电路（默认）",
+      "description": "空白工作区 · 复刻当前硬编码 const CircuitState() 初始状态"
+    }
+  ]
+}
