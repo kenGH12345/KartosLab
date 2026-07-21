@@ -5,7 +5,9 @@ import '../widgets/speedometer.dart';
 import '../widgets/force_arrow_painter.dart';
 
 class NetForceScreen extends StatefulWidget {
-  const NetForceScreen({super.key});
+  const NetForceScreen({super.key, this.scenarioId});
+  final String? scenarioId;
+
   @override State<NetForceScreen> createState() => _NetForceScreenState();
 }
 

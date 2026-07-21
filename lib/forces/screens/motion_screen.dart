@@ -9,8 +9,9 @@ import '../widgets/accelerometer.dart';
 
 /// Motion屏幕（无摩擦滑板模式）
 class MotionScreen extends StatefulWidget {
-  const MotionScreen({super.key, required this.mode});
+  const MotionScreen({super.key, required this.mode, this.scenarioId});
   final MotionScreenMode mode; // motion / friction / acceleration
+  final String? scenarioId;
 
   @override State<MotionScreen> createState() => _MotionScreenState();
 }

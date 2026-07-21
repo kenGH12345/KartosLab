@@ -2,14 +2,40 @@ import 'package:flutter/material.dart';
 
 import 'netforce_screen.dart';
 import 'motion_screen.dart';
+import '../config/scenario_manager.dart';
 
-/// 力与运动主页：4 个屏幕选择
+/// 力与运动主页：4 个实验模式 · 支持 JSON scenario 加载（§C1 合规）
 class ForcesHome extends StatefulWidget {
   const ForcesHome({super.key});
   @override State<ForcesHome> createState() => _ForcesHomeState();
 }
 
 class _ForcesHomeState extends State<ForcesHome> {
+  ForcesScenarioManager? _scenarioManager;
+
+  // 模式 → scenarioId 映射表（每个模式默认加载对应 JSON 场景）
+  static const _scenarioMap = <String, String>{
+    '合力': 'netforce-tug',
+    '运动': 'motion-explore',
+    '摩擦': 'friction-explore',
+    '加速度': 'acceleration-explore',
+  };
+
+  @override void initState() {
+    super.initState();
+    _loadScenarios();
+  }
+
+  Future<void> _loadScenarios() async {
+    try {
+      final mgr = ForcesScenarioManager();
+      await mgr.loadScenarios();
+      if (!mounted) return;
+      setState(() => _scenarioManager = mgr);
+    } catch (e) {
+      debugPrint('Failed to load forces scenarios: $e');
+    }
+  }
   // 用户可直接跳转的 4 个模式
   static const screens = [
     _ScreenInfo(title: '合力', subtitle: '拔河比赛\n力的合成与平衡', icon: Icons.sports_kabaddi, color: Color(0xFF22C55E)),
@@ -40,12 +66,13 @@ class _ForcesHomeState extends State<ForcesHome> {
           ])));
 
   void _open(_ScreenInfo s) {
+    final scenarioId = _scenarioManager != null ? _scenarioMap[s.title] : null;
     Widget page;
     switch (s.title) {
-      case '合力': page = const NetForceScreen();
-      case '运动': page = const MotionScreen(mode: MotionScreenMode.motion);
-      case '摩擦': page = const MotionScreen(mode: MotionScreenMode.friction);
-      case '加速度': page = const MotionScreen(mode: MotionScreenMode.acceleration);
+      case '合力': page = NetForceScreen(scenarioId: scenarioId);
+      case '运动': page = MotionScreen(mode: MotionScreenMode.motion, scenarioId: scenarioId);
+      case '摩擦': page = MotionScreen(mode: MotionScreenMode.friction, scenarioId: scenarioId);
+      case '加速度': page = MotionScreen(mode: MotionScreenMode.acceleration, scenarioId: scenarioId);
       default: return;
     }
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
