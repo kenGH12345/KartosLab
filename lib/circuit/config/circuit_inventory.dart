@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../../models/circuit_state.dart';
+import '../models/circuit_state.dart';
 
 /// Component inventory for circuit scenarios.
 ///

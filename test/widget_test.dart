@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geometric_optics/models/circuit_state.dart';
-import 'package:geometric_optics/models/circuit_solver.dart';
+import 'package:geometric_optics/circuit/models/circuit_state.dart';
+import 'package:geometric_optics/circuit/models/circuit_solver.dart';
 
 void main() {
   test('simple circuit component test', () {

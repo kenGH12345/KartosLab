@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../../models/circuit_state.dart';
-import '../../models/circuit_solver.dart';
+import '../models/circuit_state.dart';
+import '../models/circuit_solver.dart';
 
 enum CircuitObjectiveType {
   guided,

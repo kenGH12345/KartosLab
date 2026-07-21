@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:geometric_optics/main.dart';
-import 'package:geometric_optics/widgets/circuit_canvas.dart';
+import 'package:geometric_optics/circuit/widgets/circuit_canvas.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

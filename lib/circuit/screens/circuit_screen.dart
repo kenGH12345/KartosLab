@@ -2,14 +2,14 @@ import 'dart:math' as math;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../circuit/config/scenario_manager.dart';
+import '../config/scenario_manager.dart';
 import '../models/circuit_state.dart';
 import '../models/circuit_solver.dart';
 import '../models/circuit_history.dart';
-import '../services/sound_effects.dart';
+import '../../services/sound_effects.dart';
 import '../widgets/component_icon.dart';
 import '../widgets/circuit_controls.dart';
-import '../widgets/drag_drop_workspace.dart';
+import '../../widgets/drag_drop_workspace.dart';
 
 /// AC-4 feature flag · true = 从 JSON scenario 加载初始状态 · false = 保留原空拓扑硬编码
 ///

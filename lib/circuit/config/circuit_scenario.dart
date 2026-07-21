@@ -1,6 +1,6 @@
 ﻿import 'package:flutter/foundation.dart';
 
-import '../../models/circuit_state.dart';
+import '../models/circuit_state.dart';
 import 'circuit_constraint.dart';
 import 'circuit_inventory.dart';
 import 'circuit_learning_objective.dart';

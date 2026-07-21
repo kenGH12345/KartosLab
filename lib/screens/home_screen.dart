@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'circuit_screen.dart';
+import '../circuit/screens/circuit_screen.dart';
 import 'optics_screen.dart';
 import '../forces/screens/forces_home.dart';
 

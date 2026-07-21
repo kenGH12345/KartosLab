@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/circuit_state.dart';
-import 'component_icon.dart';
+import '../circuit/models/circuit_state.dart';
+import '../circuit/widgets/component_icon.dart';
 
 class ComponentTray extends StatelessWidget {
   const ComponentTray({super.key});

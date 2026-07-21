@@ -3,7 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:geometric_optics/circuit/config/circuit_scenario.dart';
-import 'package:geometric_optics/models/circuit_state.dart';
+import 'package:geometric_optics/circuit/models/circuit_state.dart';
 
 void main() {
   // ---------- 1 · default scenario (empty topology) ----------
