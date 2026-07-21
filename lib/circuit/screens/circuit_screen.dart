@@ -31,6 +31,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
   final CircuitHistory _history = CircuitHistory();
   SoundEffects? _sfx;
   int _nextId = 0;
+  CircuitScenarioManager? _scenarioManager;
   final FocusNode _focusNode = FocusNode();
 
   bool _isToolboxDropActive = false;
@@ -54,6 +55,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
       final manager = CircuitScenarioManager();
       await manager.loadScenarios();
       if (!mounted) return;
+      _scenarioManager = manager;
       final next = manager.loadScenario(_defaultScenarioId);
       setState(() {
         _state = next;
@@ -62,6 +64,22 @@ class _CircuitScreenState extends State<CircuitScreen> {
       });
     } catch (e) {
       debugPrint('Failed to load default circuit scenario: $e');
+    }
+  }
+
+  void _switchScenario(String scenarioId) {
+    final mgr = _scenarioManager;
+    if (mgr == null) return;
+    try {
+      final next = mgr.loadScenario(scenarioId);
+      _history.clear();
+      setState(() {
+        _state = next;
+        _solved = CircuitSolver.solve(next);
+        _nextId = _computeNextId(next);
+      });
+    } catch (e) {
+      debugPrint('Failed to switch circuit scenario to $scenarioId: $e');
     }
   }
 
@@ -262,6 +280,22 @@ class _CircuitScreenState extends State<CircuitScreen> {
       backgroundColor: const Color(0xFFF6FAFC),
       appBar: AppBar(title: Text(isWireSelected?'电路搭建 - 导线':sel!=null?'电路搭建 - ${sel.type.label}':'电路搭建'),
         backgroundColor: const Color(0xFF0B2B3D), foregroundColor: Colors.white, actions: [
+        PopupMenuButton<String>(
+          icon: const Icon(Icons.folder_open_rounded, size: 22),
+          tooltip: '切换场景',
+          onSelected: _switchScenario,
+          itemBuilder: (_) {
+            final mgr = _scenarioManager;
+            if (mgr == null) return [];
+            return mgr.scenarios.map((s) => PopupMenuItem<String>(
+              value: s.scenarioId,
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(s.name, style: const TextStyle(fontWeight: FontWeight.w500)),
+                Text(s.description, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
+              ]),
+            )).toList();
+          },
+        ),
         if (sel != null && sel.type == ComponentType.switch_)
           IconButton(icon: Icon(sel.isClosed ? Icons.toggle_on : Icons.toggle_off, color: const Color(0xFF22C55E)), tooltip: '切换', onPressed: _toggleSwitch),
         if (sel != null)
