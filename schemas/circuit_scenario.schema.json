@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phet/circuit-scenario.schema.json",
+  "title": "Circuit Scenario",
+  "description": "Schema for circuit module scenario JSON files. Each scenario defines an initial circuit topology as a 3-layer graph (components + wires + vertices). Corresponds to lib/circuit/config/circuit_scenario.dart.",
+  "type": "object",
+  "required": ["scenarioId", "name", "initialLayout"],
+  "properties": {
+    "scenarioId": {
+      "type": "string",
+      "description": "Unique scenario identifier (e.g. simple-series)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Scenario description",
+      "default": ""
+    },
+    "version": {
+      "type": "string",
+      "description": "Schema version",
+      "default": "1.0"
+    },
+    "inventory": {
+      "type": "object",
+      "description": "Component inventory controlling per-type availability and limits",
+      "properties": {
+        "availableComponents": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["maxCount", "locked", "defaultParams"],
+            "properties": {
+              "maxCount": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Maximum number of this component type allowed"
+              },
+              "locked": {
+                "type": "boolean",
+                "description": "Whether existing instances of this type cannot be removed"
+              },
+              "defaultParams": {
+                "type": "object",
+                "description": "Default constructor parameters (value, etc.)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "initialLayout": {
+      "type": "object",
+      "required": ["components", "wires", "vertices"],
+      "properties": {
+        "components": {
+          "type": "array",
+          "description": "Circuit components (battery, resistor, lightBulb, switch_, fuse, ground)",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "x", "y", "startVertexId", "endVertexId"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["battery", "resistor", "lightBulb", "switch_", "fuse", "ground", "wire"]
+              },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "rotation": { "type": "number", "default": 0.0 },
+              "value": { "type": "number", "default": 10.0 },
+              "isClosed": {
+                "type": "boolean",
+                "default": true,
+                "description": "Switch closed state (ignored for non-switch types)"
+              },
+              "startVertexId": { "type": "string" },
+              "endVertexId": { "type": "string" }
+            }
+          }
+        },
+        "wires": {
+          "type": "array",
+          "description": "Wire segments connecting vertices",
+          "items": {
+            "type": "object",
+            "required": ["id", "startVertexId", "endVertexId"],
+            "properties": {
+              "id": { "type": "string" },
+              "startVertexId": { "type": "string" },
+              "endVertexId": { "type": "string" },
+              "controlPoints": {
+                "type": "array",
+                "description": "Optional bend points for curved wires",
+                "items": {
+                  "type": "object",
+                  "required": ["x", "y"],
+                  "properties": {
+                    "x": { "type": "number" },
+                    "y": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "vertices": {
+          "type": "array",
+          "description": "Connection points. Terminal vertices belong to components; junction vertices connect multiple wires.",
+          "items": {
+            "type": "object",
+            "required": ["id", "x", "y"],
+            "properties": {
+              "id": { "type": "string" },
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "isJunction": {
+                "type": "boolean",
+                "default": false,
+                "description": "Multi-wire merge point (rendered as larger dot)"
+              },
+              "isTerminal": {
+                "type": "boolean",
+                "default": false,
+                "description": "Component terminal vertex (cannot be independently deleted)"
+              }
+            }
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "description": "Topology/composition constraints validated at runtime",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "description", "params"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["topology", "componentCount", "componentPresent"],
+            "description": "topology=closed-loop check, componentCount=min/max of type, componentPresent=type must exist"
+          },
+          "description": { "type": "string" },
+          "params": {
+            "type": "object",
+            "description": "Constraint-specific parameters (e.g. requireClosed, maxOpenNodes, componentType, minCount, maxCount)"
+          },
+          "enforced": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, violation blocks scenario completion"
+          }
+        }
+      }
+    },
+    "objectives": {
+      "type": "object",
+      "required": ["type", "description", "successCriteria", "validation"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["guided", "freeExplore", "challenge"]
+        },
+        "description": { "type": "string" },
+        "successCriteria": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "description", "params"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": {
+                "type": "string",
+                "enum": ["circuitClosed", "componentPowered", "bulbBrightness", "componentCount"]
+              },
+              "description": { "type": "string" },
+              "params": {
+                "type": "object",
+                "description": "Criterion-specific params (e.g. minBrightness, componentType, expectedCount)"
+              }
+            }
+          }
+        },
+        "hints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["trigger", "message"],
+            "properties": {
+              "trigger": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "required": ["autoCheck", "showFeedback"],
+          "properties": {
+            "autoCheck": {
+              "type": "boolean",
+              "description": "Automatically re-evaluate objectives on state change"
+            },
+            "showFeedback": {
+              "type": "boolean",
+              "description": "Show success/failure feedback to the student"
+            }
+          }
+        }
+      }
+    }
+  }
+}
