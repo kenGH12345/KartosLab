@@ -77,7 +77,7 @@ class LensElement extends OpticalElement {
     // 用透镜公式计算像点 → 所有光线折射后汇聚于同一点
     final u = x - ray.origin.dx;
     if (u.abs() < 0.001) return const InteractionResult(outRays: []);
-    final v = _lensFormula(u, f);
+    final v = OpticsMath.imageDistance(u, f);
     final mag = -v / u;
     final imagePoint = Offset(x + v, y + (ray.origin.dy - y) * mag);
     final isVirt = v < 0;
@@ -105,12 +105,6 @@ class LensElement extends OpticalElement {
     }
 
     return InteractionResult(outRays: [outRay], virtualRays: virtualRays);
-  }
-
-  double _lensFormula(double u, double f) {
-    final denom = 1 / f - 1 / u;
-    if (denom.abs() < 0.002) return denom < 0 ? -999 : 999;
-    return (1 / denom).clamp(-999, 999);
   }
 
   @override

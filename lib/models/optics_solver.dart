@@ -1,7 +1,15 @@
 import 'dart:math' as math;
 import 'dart:ui';
 
+import '../optics/physics/optics_math.dart';
 import 'optics_state.dart';
+
+/// 🗑️ Legacy solver — kept for `lib/widgets/optics_scene.dart` backward compatibility.
+///
+/// New code should use `lib/optics/solvers/optics_solver.dart` instead (component-model `OpticsWorld`).
+/// The types in this file (`RayPath`, `SolvedOptics`, `OpticsSolver`) shadow those in the new solver.
+///
+/// Do NOT add features here — port callers to the new solver when possible.
 
 class RayPath {
   const RayPath({
@@ -137,7 +145,7 @@ class OpticsSolver {
             points: [
               objectPoint,
               Offset(elementX, y),
-              _extendFrom(Offset(elementX, y), Offset(460, y - 28), 460),
+              OpticsMath.extendFrom(Offset(elementX, y), Offset(460, y - 28), 460),
             ],
             virtualPoints: [Offset(elementX, y), imagePoint],
             isBoundary: y.abs() == lensHalf,
@@ -148,7 +156,7 @@ class OpticsSolver {
               objectPoint,
               Offset(elementX, y),
               imagePoint,
-              _extendFrom(imagePoint, imagePoint - Offset(elementX, y), 380),
+              OpticsMath.extendFrom(imagePoint, imagePoint - Offset(elementX, y), 380),
             ],
             isBoundary: y.abs() == lensHalf,
           ),
@@ -184,7 +192,7 @@ class OpticsSolver {
             points: [
               objectPoint,
               Offset(elementX, y),
-              _extendFrom(Offset(elementX, y), Offset(-360, y - 80), 360),
+              OpticsMath.extendFrom(Offset(elementX, y), Offset(-360, y - 80), 360),
             ],
             virtualPoints: [Offset(elementX, y), imagePoint],
             isBoundary: y.abs() == half,
@@ -195,23 +203,10 @@ class OpticsSolver {
               objectPoint,
               Offset(elementX, y),
               imagePoint,
-              _extendFrom(imagePoint, imagePoint - Offset(elementX, y), 260),
+              OpticsMath.extendFrom(imagePoint, imagePoint - Offset(elementX, y), 260),
             ],
             isBoundary: y.abs() == half,
           ),
     ];
-  }
-
-  Offset _extendFrom(Offset start, Offset direction, double length) {
-    final d = math.sqrt(
-      direction.dx * direction.dx + direction.dy * direction.dy,
-    );
-    if (d == 0) {
-      return start;
-    }
-    return Offset(
-      start.dx + direction.dx / d * length,
-      start.dy + direction.dy / d * length,
-    );
   }
 }

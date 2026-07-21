@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 
+import '../physics/optics_math.dart';
 import 'optical_element.dart';
 import 'optics_world.dart';
 
@@ -13,12 +14,13 @@ class MirrorElement extends OpticalElement {
     super.type = OpticalElementType.mirror,
     required this.mirrorKind,
     this.diameter = 6.0,
+    this.radius = 180, // default matching OpticsState mirror mode
     required super.x,
     required super.y,
     super.rotation = 0,
     super.width = 2,   // 匹配视觉 6×80px 镜面图标
     super.height = 6,
-  }) : radius = 0;
+  });
 
   final MirrorType mirrorKind;
   final double diameter;
@@ -30,11 +32,13 @@ class MirrorElement extends OpticalElement {
     Offset? position,
     MirrorType? mirrorType,
     double? diameter,
+    double? radius,
   }) {
     return MirrorElement(
       id: id,
       mirrorKind: mirrorType ?? MirrorType.plane,
       diameter: diameter ?? 6.0,
+      radius: radius ?? 180,
       x: position?.dx ?? 0,
       y: position?.dy ?? 0,
     );
@@ -73,7 +77,20 @@ class MirrorElement extends OpticalElement {
 
   @override
   InteractionResult interactAt(Ray ray, OpticalHit hit, OpticsWorld world) {
-    final reflectedDirection = Offset(-ray.direction.dx, ray.direction.dy);
+    final Offset reflectedDirection;
+    if (mirrorKind == MirrorType.plane || radius.abs() < 1e-6) {
+      // 平面镜：x 方向翻转
+      reflectedDirection = Offset(-ray.direction.dx, ray.direction.dy);
+    } else {
+      // 曲面镜球面反射：球心 (x + radius, y)，radius > 0 凹面 / < 0 凸面
+      final center = Offset(x + radius, y);
+      final normal = OpticsMath.directionTo(center, hit.point);
+      final dot = ray.direction.dx * normal.dx + ray.direction.dy * normal.dy;
+      reflectedDirection = Offset(
+        ray.direction.dx - 2 * dot * normal.dx,
+        ray.direction.dy - 2 * dot * normal.dy,
+      );
+    }
     final reflectedRay = Ray(
       origin: hit.point,
       direction: reflectedDirection,
@@ -131,6 +148,7 @@ class MirrorElement extends OpticalElement {
     OpticalElementType? type,
     MirrorType? mirrorKind,
     double? diameter,
+    double? radius,
     double? x,
     double? y,
     double? rotation,
@@ -141,6 +159,7 @@ class MirrorElement extends OpticalElement {
       id: id ?? this.id,
       mirrorKind: mirrorKind ?? this.mirrorKind,
       diameter: diameter ?? this.diameter,
+      radius: radius ?? this.radius,
       x: x ?? this.x,
       y: y ?? this.y,
       rotation: rotation ?? this.rotation,

@@ -133,14 +133,17 @@ class OpticalSolver {
     for (final screen in elements.whereType<ScreenElement>()) {
       for (final r in rays) {
         if (r.points.length < 2) continue;
-        // 检测光线最后一段是否穿过光屏
-        final a = r.points[r.points.length - 2];
-        final b = r.points.last;
-        if (a.dx >= screen.x || b.dx <= screen.x) continue;
-        final t = (screen.x - a.dx) / (b.dx - a.dx);
-        final y = a.dy + t * (b.dy - a.dy);
-        if ((y - screen.y).abs() < screen.height / 2) {
-          hits.add(ScreenHit(screenId: screen.id, point: Offset(screen.x, y), intensity: 1.0));
+        // 检测光线任意相邻段是否穿过光屏（支持双向光线）
+        for (var i = 0; i < r.points.length - 1; i++) {
+          final a = r.points[i];
+          final b = r.points[i + 1];
+          if ((a.dx - screen.x) * (b.dx - screen.x) >= 0) continue; // 同侧，未穿过
+          final t = (screen.x - a.dx) / (b.dx - a.dx);
+          final y = a.dy + t * (b.dy - a.dy);
+          if ((y - screen.y).abs() < screen.height / 2) {
+            hits.add(ScreenHit(screenId: screen.id, point: Offset(screen.x, y), intensity: 1.0));
+            break; // 每条光线最多命中一次该光屏
+          }
         }
       }
     }
@@ -153,12 +156,13 @@ class OpticalSolver {
 
     Offset curObj = Offset(source.x, source.y - source.objectHeight / 2); // 笔尖
     ImageStage? lastStage;
+    double lastFocalLength = 0;
 
     for (final lens in lenses) {
       final f = lens.lensKind == LensType.convex ? lens.focalLength.abs() : -lens.focalLength.abs();
       final u = lens.x - curObj.dx;
       if (u.abs() < 0.001) continue;
-      final v = _lensFormula(u, f);
+      final v = OpticsMath.imageDistance(u, f);
       final mag = -v / u;
       final imgPt = Offset(lens.x + v, lens.y + (curObj.dy - lens.y) * mag);
       final stage = ImageStage(
@@ -168,6 +172,7 @@ class OpticalSolver {
       outStages.add(stage);
       curObj = imgPt;
       lastStage = stage;
+      lastFocalLength = lens.focalLength;
     }
 
     if (lastStage == null) return null;
@@ -175,13 +180,7 @@ class OpticalSolver {
     return ImageInfo(
       imagePoint: lastStage.imagePoint, imageHeight: h,
       imageX: lastStage.imagePoint.dx, isVirtual: lastStage.isVirtual,
-      magnification: lastStage.magnification, focalLength: lastStage.objectDistance.abs(),
+      magnification: lastStage.magnification, focalLength: lastFocalLength,
     );
-  }
-
-  double _lensFormula(double u, double f) {
-    final denom = 1 / f - 1 / u;
-    if (denom.abs() < 0.002) return denom < 0 ? -999 : 999;
-    return (1 / denom).clamp(-999, 999);
   }
 }
