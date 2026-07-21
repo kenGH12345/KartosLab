@@ -1,9 +1,11 @@
 ﻿import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:geometric_optics/circuit/config/circuit_scenario.dart';
 import 'package:geometric_optics/circuit/config/circuit_learning_objective.dart';
+import 'package:geometric_optics/circuit/config/scenario_manager.dart';
 import 'package:geometric_optics/circuit/models/circuit_state.dart';
 
 void main() {
@@ -406,5 +408,38 @@ void main() {
     final hints = obj.getApplicableHints(const CircuitState());
     expect(hints.length, equals(1));
     expect(hints.first.message, equals('H-bad'));
+  });
+
+  // ---------- 13 · fuse-blown end-to-end (rootBundle pipeline) ----------
+
+  testWidgets('fuse-blown scenario loads via rootBundle and manager', (tester) async {
+    final manager = CircuitScenarioManager();
+    await manager.loadScenarios();
+    // 加载前验证场景已在 manifest 中
+    expect(
+      () => manager.loadScenario('fuse-blown'),
+      returnsNormally,
+    );
+    final state = manager.loadScenario('fuse-blown');
+
+    // 3 components: battery + fuse + lightBulb
+    expect(state.components.length, equals(3));
+    expect(state.components.any((c) => c.type == ComponentType.battery), isTrue);
+    expect(state.components.any((c) => c.type == ComponentType.fuse), isTrue);
+    expect(state.components.any((c) => c.type == ComponentType.lightBulb), isTrue);
+
+    // 3 wires（闭合回路）
+    expect(state.wires.length, equals(3));
+
+    // 6 vertices（每个 component 2 个 terminal）
+    expect(state.vertices.length, equals(6));
+
+    // 检查 fuse value 正确解析（0.5A 额定电流）
+    final fuse = state.components.firstWhere((c) => c.type == ComponentType.fuse);
+    expect(fuse.value, equals(0.5));
+
+    // 检查 battery value（12V）
+    final bat = state.components.firstWhere((c) => c.type == ComponentType.battery);
+    expect(bat.value, equals(12.0));
   });
 }
