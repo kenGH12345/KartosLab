@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../circuit/config/scenario_manager.dart';
 import '../models/circuit_state.dart';
 import '../models/circuit_solver.dart';
 import '../models/circuit_history.dart';
@@ -9,6 +10,15 @@ import '../services/sound_effects.dart';
 import '../widgets/component_icon.dart';
 import '../widgets/circuit_controls.dart';
 import '../widgets/drag_drop_workspace.dart';
+
+/// AC-4 feature flag · true = 从 JSON scenario 加载初始状态 · false = 保留原空拓扑硬编码
+///
+/// 加载失败时静默降级为 `const CircuitState()`（不阻塞电路屏渲染）。
+/// 详见 `req-phet-circuit-config-json` Loop 3。
+const bool useScenarioLoader = true;
+
+/// AC-4 默认场景 id · 空拓扑 · 复刻 `const CircuitState()` 事实。
+const String _defaultScenarioId = 'default';
 
 class CircuitScreen extends StatefulWidget {
   const CircuitScreen({super.key});
@@ -28,7 +38,31 @@ class _CircuitScreenState extends State<CircuitScreen> {
 
   String _vid() => 'v${_nextId++}'; String _cid() => 'c${_nextId++}'; String _wid() => 'w${_nextId++}';
 
-  @override void initState() { super.initState(); _sfx = SoundEffects(); }
+  @override void initState() {
+    super.initState();
+    _sfx = SoundEffects();
+    if (useScenarioLoader) {
+      _loadDefaultScenario();
+    }
+  }
+
+  /// AC-4 · 从 `assets/scenarios/circuit/default.json` 异步加载初始状态。
+  ///
+  /// 失败时静默降级：`_state` 保持构造时的 `const CircuitState()`。
+  Future<void> _loadDefaultScenario() async {
+    try {
+      final manager = CircuitScenarioManager();
+      await manager.loadScenarios();
+      if (!mounted) return;
+      final next = manager.loadScenario(_defaultScenarioId);
+      setState(() {
+        _state = next;
+        _solved = CircuitSolver.solve(next);
+      });
+    } catch (e) {
+      debugPrint('Failed to load default circuit scenario: $e');
+    }
+  }
   @override void dispose() { _tapTimer?.cancel(); _sfx?.dispose(); _focusNode.dispose(); super.dispose(); }
 
   void _update(CircuitState next, {bool sound=false}) {
