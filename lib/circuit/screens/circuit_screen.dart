@@ -36,6 +36,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
 
   bool _isToolboxDropActive = false;
   DateTime? _lastTapTime; String? _lastTapId; Timer? _tapTimer;
+  Offset? _doubleTapWorld;
 
   String _vid() => 'v${_nextId++}'; String _cid() => 'c${_nextId++}'; String _wid() => 'w${_nextId++}';
 
@@ -335,6 +336,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
           final wi = _hitTestWire(w, proj); if (wi != null) { _onWireTap(wi); return; }
           _onCanvasTap(w);
         },
+        onDoubleTapDown: (d) { _doubleTapWorld = proj.toWorld(d.localPosition); },
+        onDoubleTap: () { final w = _doubleTapWorld; if (w != null) _onDoubleTap(w, proj); _doubleTapWorld = null; },
         onScaleStart: (d) { if (d.pointerCount < 2) _onDragStart(proj.toWorld(d.localFocalPoint)); },
         onScaleUpdate: (d) => d.pointerCount >= 2 ? _setZoom(_state.zoom * d.horizontalScale) : _onDragMove(proj.toWorld(d.localFocalPoint)),
         onScaleEnd: (d) { if (d.pointerCount < 2) _onDragEnd(); },
@@ -350,6 +353,32 @@ class _CircuitScreenState extends State<CircuitScreen> {
                 isPowered: pw.isPowered(comp.id), isClosed: comp.type == ComponentType.switch_ ? comp.isClosed : true))));
       }),
     ]);
+  }
+
+  /// 双击导线：命中已有控制点 → 删除；命中导线非控制点位置 → 添加拐点。
+  ///
+  /// 屏幕距离阈值 12px（控制点手柄）/ 15px（导线），与 `_hitTestWire` 保持一致。
+  void _onDoubleTap(Offset wp, SceneProjection proj) {
+    final sp = proj.toScreen(wp);
+    // 1) 先查是否命中某导线的某个控制点（优先删）
+    for (var i = 0; i < _state.wires.length; i++) {
+      final seg = _state.wires[i];
+      for (var j = 0; j < seg.controlPoints.length; j++) {
+        if ((proj.toScreen(seg.controlPoints[j]) - sp).distance < 12) {
+          final next = seg.removeControlPoint(j);
+          _update(_state.copyWith(
+            wires: _state.wires.map((w) => w.id == seg.id ? next : w).toList(),
+          ));
+          return;
+        }
+      }
+    }
+    // 2) 命中导线（非控制点位置） → 在最近线段插入控制点
+    final wi = _hitTestWire(wp, proj);
+    if (wi != null) {
+      final wireId = _state.wires[wi].id;
+      _update(_state.addControlPointToWire(wireId, wp));
+    }
   }
 
   int? _hitTestWire(Offset wp, SceneProjection proj) {
