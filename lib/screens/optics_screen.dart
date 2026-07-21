@@ -77,6 +77,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
   }
 
   void _selectElement(String? id) => setState(() => _selectedElementId = _selectedElementId == id ? null : id);
+  void _dragSelectElement(String id) => setState(() { if (_selectedElementId != id) _selectedElementId = id; });
   void _removeSelected() {
     final id = _selectedElementId;
     if (id == null) return;
@@ -117,6 +118,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
           world: _world, solved: _solved, selectedId: _selectedElementId,
           projection: proj,
           onElementTap: _selectElement,
+          onDragSelect: _dragSelectElement,
           onElementDrag: _moveElement,
         ),
       ),
@@ -140,10 +142,11 @@ class _OpticsScene extends StatelessWidget {
   final OpticsWorld world; final SolvedOptics? solved; final String? selectedId;
   final CanvasProjection projection;
   final void Function(String?) onElementTap;
+  final void Function(String) onDragSelect;
   final void Function(String, Offset) onElementDrag;
 
   const _OpticsScene({required this.world, required this.solved, required this.selectedId,
-    required this.projection, required this.onElementTap, required this.onElementDrag, super.key});
+    required this.projection, required this.onElementTap, required this.onDragSelect, required this.onElementDrag, super.key});
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -152,7 +155,12 @@ class _OpticsScene extends StatelessWidget {
       for (final e in world.elements.reversed) { if (e.hitTest(wp)) { onElementTap(e.id); return; } }
       onElementTap(null);
     },
-    onScaleStart: (_) {},
+    onScaleStart: (d) {
+      // auto-select element under finger so initialized elements can be dragged directly
+      if (selectedId != null) return;
+      final wp = projection.toWorld(d.localFocalPoint);
+      for (final e in world.elements.reversed) { if (e.hitTest(wp)) { onDragSelect(e.id); return; } }
+    },
     onScaleUpdate: (d) {
       if (d.pointerCount >= 2) return;
       if (selectedId == null) return;
