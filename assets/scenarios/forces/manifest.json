@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "scenarios": [
+    {
+      "id": "default",
+      "file": "default.json",
+      "name": "自由探索",
+      "description": "空白实验区 · 复刻当前硬编码默认值"
+    },
+    {
+      "id": "netforce-tug",
+      "file": "netforce-tug.json",
+      "name": "拔河比赛",
+      "description": "合力模式 · 左右两侧各 4 个拉绳者，目标将小车拉过边界"
+    },
+    {
+      "id": "motion-explore",
+      "file": "motion-explore.json",
+      "name": "力与运动探索",
+      "description": "无摩擦平面 · 堆叠质量块，施加推力观测速度和加速度"
+    },
+    {
+      "id": "friction-explore",
+      "file": "friction-explore.json",
+      "name": "摩擦力探索",
+      "description": "有摩擦表面 · 比较不同摩擦系数对运动的影响"
+    },
+    {
+      "id": "acceleration-explore",
+      "file": "acceleration-explore.json",
+      "name": "加速度测量",
+      "description": "加速度模式 · 观测 F=ma 关系，显示实时加速度计"
+    }
+  ]
+}

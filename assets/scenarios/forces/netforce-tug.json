@@ -1,0 +1,92 @@
+{
+  "scenarioId": "netforce-tug",
+  "name": "拔河比赛",
+  "description": "合力实验 · 左右各 4 名拉绳者（小力 50N / 中力 100N / 大力 150N），拖拽到绳结上参与拔河 · 小车越过边界=胜利",
+  "version": "1.0",
+  "mode": "netForce",
+  "initialParams": {
+    "mass": 0,
+    "position": 0,
+    "velocity": 0,
+    "appliedForce": 0,
+    "frictionCoeff": 0
+  },
+  "gameRules": {
+    "gameLength": 400,
+    "cartStep": 0.003
+  },
+  "pullers": [
+    {
+      "id": "sl0",
+      "force": 50,
+      "side": "left",
+      "color": "FF3B82F6"
+    },
+    {
+      "id": "sl1",
+      "force": 50,
+      "side": "left",
+      "color": "FF3B82F6"
+    },
+    {
+      "id": "ml",
+      "force": 100,
+      "side": "left",
+      "color": "FF3B82F6"
+    },
+    {
+      "id": "ll",
+      "force": 150,
+      "side": "left",
+      "color": "FF3B82F6"
+    },
+    {
+      "id": "sr0",
+      "force": 50,
+      "side": "right",
+      "color": "FFEF4444"
+    },
+    {
+      "id": "sr1",
+      "force": 50,
+      "side": "right",
+      "color": "FFEF4444"
+    },
+    {
+      "id": "mr",
+      "force": 100,
+      "side": "right",
+      "color": "FFEF4444"
+    },
+    {
+      "id": "lr",
+      "force": 150,
+      "side": "right",
+      "color": "FFEF4444"
+    }
+  ],
+  "successCriteria": [
+    {
+      "id": "sc-1",
+      "type": "gameWon",
+      "description": "一方获胜（小车越过边界）",
+      "params": {}
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "forceRange",
+      "description": "单侧最多 4 人参与",
+      "params": {
+        "maxPullersPerSide": 4
+      }
+    }
+  ],
+  "hints": [
+    {
+      "trigger": "always",
+      "message": "拖拽拉绳者到绳结上参与拔河，点击开始按钮开始比赛"
+    }
+  ]
+}

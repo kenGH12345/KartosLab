@@ -1,0 +1,78 @@
+{
+  "scenarioId": "friction-explore",
+  "name": "摩擦力探索",
+  "description": "有摩擦表面 · 调整摩擦系数观察物体速度变化 · 演示静摩擦与动摩擦的差异",
+  "version": "1.0",
+  "mode": "friction",
+  "initialParams": {
+    "mass": 50,
+    "position": 0,
+    "velocity": 0,
+    "appliedForce": 200,
+    "frictionCoeff": 0.25
+  },
+  "objects": [
+    {
+      "id": "box_10",
+      "label": "小箱 (10kg)",
+      "mass": 10,
+      "icon": "inventory_2"
+    },
+    {
+      "id": "box_20",
+      "label": "中箱 (20kg)",
+      "mass": 20,
+      "icon": "inventory_2"
+    },
+    {
+      "id": "box_50",
+      "label": "大箱 (50kg)",
+      "mass": 50,
+      "icon": "warehouse"
+    },
+    {
+      "id": "crate_100",
+      "label": "货箱 (100kg)",
+      "mass": 100,
+      "icon": "cases"
+    }
+  ],
+  "successCriteria": [
+    {
+      "id": "sc-1",
+      "type": "speedReached",
+      "description": "在有摩擦的情况下使物体加速到 5 m/s",
+      "params": {
+        "minSpeed": 5
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "maxSpeed",
+      "description": "最大速度不超过 40 m/s",
+      "params": {
+        "maxSpeed": 40
+      }
+    },
+    {
+      "id": "c2",
+      "type": "maxObjects",
+      "description": "最多堆叠 3 个物体",
+      "params": {
+        "maxObjects": 3
+      }
+    }
+  ],
+  "hints": [
+    {
+      "trigger": "speed < 1",
+      "message": "摩擦力在抵抗你的推力！试试增大施加力"
+    },
+    {
+      "trigger": "always",
+      "message": "静摩擦 = μs·mg，动摩擦 ≈ 0.8·μs·mg。物体静止时需要的力更大！"
+    }
+  ]
+}

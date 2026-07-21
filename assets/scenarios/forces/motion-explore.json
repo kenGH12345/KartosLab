@@ -1,0 +1,78 @@
+{
+  "scenarioId": "motion-explore",
+  "name": "力与运动探索",
+  "description": "无摩擦平面 · 堆叠不同质量的箱子，施加推力观察速度变化 · 演示 F=ma：相同力下质量越大加速度越小",
+  "version": "1.0",
+  "mode": "motion",
+  "initialParams": {
+    "mass": 10,
+    "position": 0,
+    "velocity": 0,
+    "appliedForce": 100,
+    "frictionCoeff": 0
+  },
+  "objects": [
+    {
+      "id": "box_10",
+      "label": "小箱 (10kg)",
+      "mass": 10,
+      "icon": "inventory_2"
+    },
+    {
+      "id": "box_20",
+      "label": "中箱 (20kg)",
+      "mass": 20,
+      "icon": "inventory_2"
+    },
+    {
+      "id": "box_50",
+      "label": "大箱 (50kg)",
+      "mass": 50,
+      "icon": "warehouse"
+    },
+    {
+      "id": "crate_100",
+      "label": "货箱 (100kg)",
+      "mass": 100,
+      "icon": "cases"
+    }
+  ],
+  "successCriteria": [
+    {
+      "id": "sc-1",
+      "type": "speedReached",
+      "description": "使物体加速到 10 m/s",
+      "params": {
+        "minSpeed": 10
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "maxSpeed",
+      "description": "最大速度不超过 40 m/s",
+      "params": {
+        "maxSpeed": 40
+      }
+    },
+    {
+      "id": "c2",
+      "type": "maxObjects",
+      "description": "最多堆叠 3 个物体",
+      "params": {
+        "maxObjects": 3
+      }
+    }
+  ],
+  "hints": [
+    {
+      "trigger": "speed < 2",
+      "message": "试试增加施加力（滑块向右推）"
+    },
+    {
+      "trigger": "always",
+      "message": "增加质量会让加速度变小——验证 F=ma！"
+    }
+  ]
+}

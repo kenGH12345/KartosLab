@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phet/forces-scenario.schema.json",
+  "title": "Forces Scenario",
+  "type": "object",
+  "required": [
+    "scenarioId",
+    "name",
+    "mode"
+  ],
+  "properties": {
+    "scenarioId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "netForce",
+        "motion",
+        "friction",
+        "acceleration"
+      ]
+    },
+    "initialParams": {
+      "type": "object",
+      "properties": {
+        "mass": {
+          "type": "number",
+          "default": 50,
+          "description": "kg"
+        },
+        "position": {
+          "type": "number",
+          "default": 0,
+          "description": "m"
+        },
+        "velocity": {
+          "type": "number",
+          "default": 0,
+          "description": "m/s"
+        },
+        "appliedForce": {
+          "type": "number",
+          "default": 0,
+          "description": "N, range -500~500"
+        },
+        "frictionCoeff": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0,
+          "maximum": 0.5
+        },
+        "showAccelerometer": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "gameRules": {
+      "type": "object",
+      "properties": {
+        "gameLength": {
+          "type": "number",
+          "default": 400
+        },
+        "cartStep": {
+          "type": "number",
+          "default": 0.003
+        }
+      }
+    },
+    "pullers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "force",
+          "side",
+          "color"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "force": {
+            "type": "number",
+            "enum": [
+              50,
+              100,
+              150
+            ]
+          },
+          "side": {
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^[0-9A-Fa-f]{8}$"
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "mass",
+          "icon"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "mass": {
+            "type": "number",
+            "minimum": 1
+          },
+          "icon": {
+            "type": "string",
+            "description": "Material icon name"
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "maxSpeed",
+              "maxObjects",
+              "forceRange"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "params": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "successCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "type",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "speedReached",
+              "forceBalanced",
+              "positionReached",
+              "gameWon"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "params": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "trigger",
+          "message"
+        ],
+        "properties": {
+          "trigger": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
