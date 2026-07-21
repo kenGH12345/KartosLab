@@ -3,6 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:geometric_optics/circuit/config/circuit_scenario.dart';
+import 'package:geometric_optics/circuit/config/circuit_learning_objective.dart';
 import 'package:geometric_optics/circuit/models/circuit_state.dart';
 
 void main() {
@@ -363,5 +364,47 @@ void main() {
     final resSpec = inv.availableComponents[ComponentType.resistor]!;
     expect(resSpec.maxCount, equals(3));
     expect(resSpec.locked, isFalse);
+  });
+
+  // ---------- M-1 · hint trigger filtering ----------
+
+  test('CircuitLearningObjective.getApplicableHints filters by trigger', () {
+    // 构造 3 个 hint · 分别测试不同 trigger 语法
+    final obj = CircuitLearningObjective.fromJson({
+      'type': 'guided',
+      'description': 'test',
+      'successCriteria': <Map<String, dynamic>>[],
+      'hints': [
+        {'trigger': 'always', 'message': 'H-always'},
+        {'trigger': 'openNodes > 0', 'message': 'H-open'},
+        {'trigger': 'componentCount(battery) == 0', 'message': 'H-noBattery'},
+      ],
+      'validation': {'autoCheck': false, 'showFeedback': true},
+    });
+
+    // 空场景 · openNodes=0（solver 对空拓扑返回空），battery=0
+    // H-always ✓ / H-open ✗（0>0 false） / H-noBattery ✓（0==0）
+    final empty = const CircuitState();
+    final hints = obj.getApplicableHints(empty);
+    final msgs = hints.map((h) => h.message).toSet();
+    expect(msgs.contains('H-always'), isTrue);
+    expect(msgs.contains('H-open'), isFalse);
+    expect(msgs.contains('H-noBattery'), isTrue);
+  });
+
+  test('CircuitLearningObjective._evalTrigger malformed trigger falls back to show', () {
+    // 语法错误的 trigger 应保守回退为"永远显示"（避免 typo 让 hint 消失）
+    final obj = CircuitLearningObjective.fromJson({
+      'type': 'guided',
+      'description': 'test',
+      'successCriteria': <Map<String, dynamic>>[],
+      'hints': [
+        {'trigger': 'garbled ~~~', 'message': 'H-bad'},
+      ],
+      'validation': {'autoCheck': false, 'showFeedback': true},
+    });
+    final hints = obj.getApplicableHints(const CircuitState());
+    expect(hints.length, equals(1));
+    expect(hints.first.message, equals('H-bad'));
   });
 }

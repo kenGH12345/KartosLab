@@ -37,8 +37,47 @@ class CircuitLearningObjective {
     return successCriteria.every((c) => c.check(state, solved));
   }
 
+  /// 按 hint.trigger 表达式过滤，仅返回当前 state 下应显示的 hints。
+  ///
+  /// 支持的 trigger 语法（简化版 · 覆盖当前 few-shot 场景足够）：
+  /// - 空字符串 或 `always` → 永远触发
+  /// - `openNodes <op> <N>`：例如 `openNodes > 0`
+  /// - `componentCount <op> <N>`：全体元件数
+  /// - `componentCount(<type>) <op> <N>`：指定类型元件数，如 `componentCount(switch_) == 0`
+  /// - `<op>` ∈ `>`, `>=`, `<`, `<=`, `==`, `!=`
+  ///
+  /// 解析失败的 trigger 视为永远触发（保守策略，保证 hint 不因 typo 消失）。
   List<CircuitHint> getApplicableHints(CircuitState state) {
-    return hints;
+    final solved = CircuitSolver.solve(state);
+    return hints.where((h) => _evalTrigger(h.trigger, state, solved)).toList();
+  }
+
+  static bool _evalTrigger(String trigger, CircuitState state, SolvedCircuit solved) {
+    final t = trigger.trim();
+    if (t.isEmpty || t == 'always') return true;
+    final m = RegExp(r'^(openNodes|componentCount(?:\(([a-zA-Z_]+)\))?)\s*(==|!=|>=|<=|>|<)\s*(\d+)$').firstMatch(t);
+    if (m == null) return true;
+    final metric = m.group(1)!;
+    final typeArg = m.group(2);
+    final op = m.group(3)!;
+    final n = int.parse(m.group(4)!);
+    final int lhs;
+    if (metric.startsWith('openNodes')) {
+      lhs = solved.openNodes.length;
+    } else {
+      lhs = typeArg == null
+          ? state.components.length
+          : state.components.where((c) => c.type.name == typeArg).length;
+    }
+    return switch (op) {
+      '==' => lhs == n,
+      '!=' => lhs != n,
+      '>=' => lhs >= n,
+      '<=' => lhs <= n,
+      '>'  => lhs >  n,
+      '<'  => lhs <  n,
+      _    => true,
+    };
   }
 
   factory CircuitLearningObjective.fromJson(Map<String, dynamic> json) {
