@@ -1,0 +1,172 @@
+{
+  "scenarioId": "controlled-switch",
+  "name": "开关控制电路",
+  "description": "电池 + 开关（默认断开）+ 灯泡串联 · 学生闭合开关后灯泡亮起 · 演示开关的通断控制",
+  "version": "1.0",
+  "inventory": {
+    "availableComponents": {
+      "battery": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "switch_": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {}
+      },
+      "lightBulb": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "wire": {
+        "maxCount": 10,
+        "locked": false,
+        "defaultParams": {}
+      }
+    }
+  },
+  "initialLayout": {
+    "vertices": [
+      {
+        "id": "v_bat_l",
+        "x": 100.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bat_r",
+        "x": 220.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_sw_l",
+        "x": 340.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_sw_r",
+        "x": 460.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_l",
+        "x": 580.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_r",
+        "x": 700.0,
+        "y": 200.0,
+        "isTerminal": true
+      }
+    ],
+    "components": [
+      {
+        "id": "bat_1",
+        "type": "battery",
+        "x": 160.0,
+        "y": 200.0,
+        "value": 10.0,
+        "startVertexId": "v_bat_l",
+        "endVertexId": "v_bat_r"
+      },
+      {
+        "id": "sw_1",
+        "type": "switch_",
+        "x": 400.0,
+        "y": 200.0,
+        "value": 0.0,
+        "isClosed": false,
+        "startVertexId": "v_sw_l",
+        "endVertexId": "v_sw_r"
+      },
+      {
+        "id": "bulb_1",
+        "type": "lightBulb",
+        "x": 640.0,
+        "y": 200.0,
+        "value": 10.0,
+        "startVertexId": "v_bulb_l",
+        "endVertexId": "v_bulb_r"
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "startVertexId": "v_bat_r",
+        "endVertexId": "v_sw_l"
+      },
+      {
+        "id": "w2",
+        "startVertexId": "v_sw_r",
+        "endVertexId": "v_bulb_l"
+      },
+      {
+        "id": "w3",
+        "startVertexId": "v_bulb_r",
+        "endVertexId": "v_bat_l",
+        "controlPoints": [
+          {
+            "x": 760.0,
+            "y": 350.0
+          },
+          {
+            "x": 40.0,
+            "y": 350.0
+          }
+        ]
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "topology",
+      "description": "开关闭合后电路形成回路",
+      "params": {
+        "requireClosed": true
+      },
+      "enforced": true
+    }
+  ],
+  "objectives": {
+    "type": "guided",
+    "description": "闭合开关使灯泡发光，理解开关的通断控制原理",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "circuitClosed",
+        "description": "开关闭合后形成闭合回路",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "bulbBrightness",
+        "description": "灯泡正常发光",
+        "params": {
+          "minBrightness": 0.01
+        }
+      }
+    ],
+    "hints": [
+      {
+        "trigger": "openNodes > 0",
+        "message": "双击开关将其闭合，电路才能接通"
+      }
+    ],
+    "validation": {
+      "autoCheck": true,
+      "showFeedback": true
+    }
+  }
+}

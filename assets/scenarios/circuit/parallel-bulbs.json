@@ -1,0 +1,193 @@
+{
+  "scenarioId": "parallel-bulbs",
+  "name": "并联灯泡电路",
+  "description": "1 电池 + 2 灯泡并联 · 演示分流与并联拓扑（路径三分叉→双灯泡→汇合）",
+  "version": "1.0",
+  "inventory": {
+    "availableComponents": {
+      "battery": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "lightBulb": {
+        "maxCount": 4,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "wire": {
+        "maxCount": 10,
+        "locked": false,
+        "defaultParams": {}
+      }
+    }
+  },
+  "initialLayout": {
+    "vertices": [
+      {
+        "id": "v_bat_l",
+        "x": 100.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bat_r",
+        "x": 220.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_split",
+        "x": 340.0,
+        "y": 200.0,
+        "isJunction": true
+      },
+      {
+        "id": "v_bulb1_l",
+        "x": 460.0,
+        "y": 120.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb1_r",
+        "x": 580.0,
+        "y": 120.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_merge",
+        "x": 700.0,
+        "y": 200.0,
+        "isJunction": true
+      },
+      {
+        "id": "v_bulb2_l",
+        "x": 460.0,
+        "y": 280.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb2_r",
+        "x": 580.0,
+        "y": 280.0,
+        "isTerminal": true
+      }
+    ],
+    "components": [
+      {
+        "id": "bat_1",
+        "type": "battery",
+        "x": 160.0,
+        "y": 200.0,
+        "value": 10.0,
+        "startVertexId": "v_bat_l",
+        "endVertexId": "v_bat_r"
+      },
+      {
+        "id": "bulb_1",
+        "type": "lightBulb",
+        "x": 520.0,
+        "y": 120.0,
+        "value": 10.0,
+        "startVertexId": "v_bulb1_l",
+        "endVertexId": "v_bulb1_r"
+      },
+      {
+        "id": "bulb_2",
+        "type": "lightBulb",
+        "x": 520.0,
+        "y": 280.0,
+        "value": 10.0,
+        "startVertexId": "v_bulb2_l",
+        "endVertexId": "v_bulb2_r"
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "startVertexId": "v_bat_r",
+        "endVertexId": "v_split"
+      },
+      {
+        "id": "w2",
+        "startVertexId": "v_split",
+        "endVertexId": "v_bulb1_l"
+      },
+      {
+        "id": "w3",
+        "startVertexId": "v_bulb1_r",
+        "endVertexId": "v_merge"
+      },
+      {
+        "id": "w4",
+        "startVertexId": "v_split",
+        "endVertexId": "v_bulb2_l"
+      },
+      {
+        "id": "w5",
+        "startVertexId": "v_bulb2_r",
+        "endVertexId": "v_merge"
+      },
+      {
+        "id": "w6",
+        "startVertexId": "v_merge",
+        "endVertexId": "v_bat_l",
+        "controlPoints": [
+          {
+            "x": 760.0,
+            "y": 360.0
+          },
+          {
+            "x": 40.0,
+            "y": 360.0
+          }
+        ]
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "topology",
+      "description": "电路必须形成闭合回路",
+      "params": {
+        "requireClosed": true
+      },
+      "enforced": true
+    }
+  ],
+  "objectives": {
+    "type": "guided",
+    "description": "搭建并联电路，观察两个灯泡同时发光",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "circuitClosed",
+        "description": "电路形成闭合回路",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "bulbBrightness",
+        "description": "两个灯泡都发光",
+        "params": {
+          "minBrightness": 0.01
+        }
+      }
+    ],
+    "hints": [
+      {
+        "trigger": "openNodes > 0",
+        "message": "请确认导线已连接所有元件，形成闭合回路"
+      }
+    ],
+    "validation": {
+      "autoCheck": true,
+      "showFeedback": true
+    }
+  }
+}

@@ -1,0 +1,176 @@
+{
+  "scenarioId": "two-batteries",
+  "name": "双电池串联电路",
+  "description": "两节电池（9V+6V）串联 + 灯泡 · 演示电压叠加效应 · 总电压15V驱动灯泡更亮",
+  "version": "1.0",
+  "inventory": {
+    "availableComponents": {
+      "battery": {
+        "maxCount": 3,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "lightBulb": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "wire": {
+        "maxCount": 10,
+        "locked": false,
+        "defaultParams": {}
+      }
+    }
+  },
+  "initialLayout": {
+    "vertices": [
+      {
+        "id": "v_b1_l",
+        "x": 100.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_b1_r",
+        "x": 220.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_b2_l",
+        "x": 340.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_b2_r",
+        "x": 460.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_l",
+        "x": 580.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_r",
+        "x": 700.0,
+        "y": 200.0,
+        "isTerminal": true
+      }
+    ],
+    "components": [
+      {
+        "id": "bat_1",
+        "type": "battery",
+        "x": 160.0,
+        "y": 200.0,
+        "value": 9.0,
+        "startVertexId": "v_b1_l",
+        "endVertexId": "v_b1_r"
+      },
+      {
+        "id": "bat_2",
+        "type": "battery",
+        "x": 400.0,
+        "y": 200.0,
+        "value": 6.0,
+        "startVertexId": "v_b2_l",
+        "endVertexId": "v_b2_r"
+      },
+      {
+        "id": "bulb_1",
+        "type": "lightBulb",
+        "x": 640.0,
+        "y": 200.0,
+        "value": 10.0,
+        "startVertexId": "v_bulb_l",
+        "endVertexId": "v_bulb_r"
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "startVertexId": "v_b1_r",
+        "endVertexId": "v_b2_l"
+      },
+      {
+        "id": "w2",
+        "startVertexId": "v_b2_r",
+        "endVertexId": "v_bulb_l"
+      },
+      {
+        "id": "w3",
+        "startVertexId": "v_bulb_r",
+        "endVertexId": "v_b1_l",
+        "controlPoints": [
+          {
+            "x": 760.0,
+            "y": 350.0
+          },
+          {
+            "x": 40.0,
+            "y": 350.0
+          }
+        ]
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "topology",
+      "description": "电路必须形成闭合回路",
+      "params": {
+        "requireClosed": true
+      },
+      "enforced": true
+    },
+    {
+      "id": "c2",
+      "type": "componentCount",
+      "description": "至少两节电池",
+      "params": {
+        "componentType": "battery",
+        "minCount": 2
+      },
+      "enforced": false
+    }
+  ],
+  "objectives": {
+    "type": "guided",
+    "description": "观察两节串联电池驱动灯泡，理解电压叠加原理",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "circuitClosed",
+        "description": "电路形成闭合回路",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "bulbBrightness",
+        "description": "灯泡发光",
+        "params": {
+          "minBrightness": 0.1
+        }
+      }
+    ],
+    "hints": [
+      {
+        "trigger": "openNodes > 0",
+        "message": "确认所有导线已连接，形成完整回路"
+      }
+    ],
+    "validation": {
+      "autoCheck": true,
+      "showFeedback": true
+    }
+  }
+}

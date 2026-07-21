@@ -12,6 +12,24 @@
       "file": "simple-series.json",
       "name": "简单串联电路",
       "description": "1 电池 + 1 电阻 + 1 灯泡 串联闭合回路 · 演示非空拓扑加载"
+    },
+    {
+      "id": "parallel-bulbs",
+      "file": "parallel-bulbs.json",
+      "name": "并联灯泡电路",
+      "description": "1 电池 + 2 灯泡并联 · 演示分流与并联拓扑"
+    },
+    {
+      "id": "controlled-switch",
+      "file": "controlled-switch.json",
+      "name": "开关控制电路",
+      "description": "电池 + 开关（默认断开）+ 灯泡 · 演示开关通断控制"
+    },
+    {
+      "id": "two-batteries",
+      "file": "two-batteries.json",
+      "name": "双电池串联电路",
+      "description": "两节电池串联 + 灯泡 · 演示电压叠加效应"
     }
   ]
 }
