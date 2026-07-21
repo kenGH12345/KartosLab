@@ -1,0 +1,186 @@
+{
+  "scenarioId": "open-circuit-debug",
+  "name": "电路诊断挑战",
+  "description": "电池 + 电阻 + 灯泡 已连接，但回路导线缺失 · 灯泡不亮 · 学生须补齐最后一根导线形成闭合回路",
+  "version": "1.0",
+  "inventory": {
+    "availableComponents": {
+      "battery": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "resistor": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "lightBulb": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "wire": {
+        "maxCount": 10,
+        "locked": false,
+        "defaultParams": {}
+      },
+      "switch_": {
+        "maxCount": 1,
+        "locked": false,
+        "defaultParams": {}
+      },
+      "fuse": {
+        "maxCount": 1,
+        "locked": false,
+        "defaultParams": {}
+      },
+      "ground": {
+        "maxCount": 1,
+        "locked": false,
+        "defaultParams": {}
+      }
+    }
+  },
+  "initialLayout": {
+    "vertices": [
+      {
+        "id": "v_bat_l",
+        "x": 100.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bat_r",
+        "x": 220.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_res_l",
+        "x": 340.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_res_r",
+        "x": 460.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_l",
+        "x": 580.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_r",
+        "x": 700.0,
+        "y": 200.0,
+        "isTerminal": true
+      }
+    ],
+    "components": [
+      {
+        "id": "bat_1",
+        "type": "battery",
+        "x": 160.0,
+        "y": 200.0,
+        "value": 9.0,
+        "startVertexId": "v_bat_l",
+        "endVertexId": "v_bat_r"
+      },
+      {
+        "id": "res_1",
+        "type": "resistor",
+        "x": 400.0,
+        "y": 200.0,
+        "value": 5.0,
+        "startVertexId": "v_res_l",
+        "endVertexId": "v_res_r"
+      },
+      {
+        "id": "bulb_1",
+        "type": "lightBulb",
+        "x": 640.0,
+        "y": 200.0,
+        "value": 10.0,
+        "startVertexId": "v_bulb_l",
+        "endVertexId": "v_bulb_r"
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "startVertexId": "v_bat_r",
+        "endVertexId": "v_res_l"
+      },
+      {
+        "id": "w2",
+        "startVertexId": "v_res_r",
+        "endVertexId": "v_bulb_l"
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "topology",
+      "description": "电路必须形成闭合回路",
+      "params": {
+        "requireClosed": true
+      },
+      "enforced": true
+    },
+    {
+      "id": "c2",
+      "type": "componentPresent",
+      "description": "必须有一个电池",
+      "params": {
+        "componentType": "battery"
+      },
+      "enforced": false
+    }
+  ],
+  "objectives": {
+    "type": "guided",
+    "description": "补齐缺失的回路导线，使电路闭合，灯泡发光",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "circuitClosed",
+        "description": "电路形成闭合回路（无断点）",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "bulbBrightness",
+        "description": "灯泡正常发光",
+        "params": {
+          "minBrightness": 0.01
+        }
+      }
+    ],
+    "hints": [
+      {
+        "trigger": "openNodes > 0",
+        "message": "电路还未闭合！请从灯泡右端拖一根导线，绕回电池左端"
+      },
+      {
+        "trigger": "componentCount(wire) < 3",
+        "message": "当前只有2根导线，还缺1根回路导线连接灯泡→电池"
+      }
+    ],
+    "validation": {
+      "autoCheck": true,
+      "showFeedback": true
+    }
+  }
+}

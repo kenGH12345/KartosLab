@@ -30,6 +30,12 @@
       "file": "two-batteries.json",
       "name": "双电池串联电路",
       "description": "两节电池串联 + 灯泡 · 演示电压叠加效应"
+    },
+    {
+      "id": "open-circuit-debug",
+      "file": "open-circuit-debug.json",
+      "name": "电路诊断挑战",
+      "description": "回路导线缺失 · 学生补齐最后一根导线闭合电路"
     }
   ]
 }
