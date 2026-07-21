@@ -58,10 +58,32 @@ class _CircuitScreenState extends State<CircuitScreen> {
       setState(() {
         _state = next;
         _solved = CircuitSolver.solve(next);
+        _nextId = _computeNextId(next);
       });
     } catch (e) {
       debugPrint('Failed to load default circuit scenario: $e');
     }
+  }
+
+  /// 扫描 scenario 中所有 id 的数字后缀，返回 max+1；避免手工新建元件时与 scenario id 撞车。
+  ///
+  /// 支持任意前缀 + 数字尾格式（如 `v0` / `bat_1` / `wire_junction_2`）。
+  /// 无数字后缀的 id 视为 -1；空场景返回 0。
+  static int _computeNextId(CircuitState state) {
+    final re = RegExp(r'(\d+)$');
+    int mx = -1;
+    for (final id in [
+      ...state.components.map((c) => c.id),
+      ...state.vertices.map((v) => v.id),
+      ...state.wires.map((w) => w.id),
+    ]) {
+      final m = re.firstMatch(id);
+      if (m != null) {
+        final n = int.tryParse(m.group(1)!) ?? -1;
+        if (n > mx) mx = n;
+      }
+    }
+    return mx + 1;
   }
   @override void dispose() { _tapTimer?.cancel(); _sfx?.dispose(); _focusNode.dispose(); super.dispose(); }
 
