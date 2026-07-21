@@ -1,0 +1,196 @@
+﻿import 'dart:convert';
+
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:geometric_optics/circuit/config/circuit_scenario.dart';
+import 'package:geometric_optics/models/circuit_state.dart';
+
+void main() {
+  // ---------- 1 · default scenario (empty topology) ----------
+
+  test('CircuitScenario.fromJson parses default (empty topology)', () {
+    const jsonStr = '''
+{
+  "scenarioId": "default",
+  "name": "empty circuit",
+  "description": "no pre-placed components",
+  "version": "1.0",
+  "initialLayout": {
+    "components": [],
+    "wires": [],
+    "vertices": []
+  }
+}''';
+
+    final scenario = CircuitScenario.fromJson(
+      jsonDecode(jsonStr) as Map<String, dynamic>,
+    );
+
+    expect(scenario.scenarioId, equals('default'));
+    expect(scenario.name, equals('empty circuit'));
+    expect(scenario.version, equals('1.0'));
+    expect(scenario.initialLayout.components, isEmpty);
+    expect(scenario.initialLayout.wires, isEmpty);
+    expect(scenario.initialLayout.vertices, isEmpty);
+  });
+
+  // ---------- 2 · simple-series (non-empty topology) ----------
+
+  test('CircuitScenario.fromJson parses simple-series with 3+3+6 topology', () {
+    const jsonStr = '''
+{
+  "scenarioId": "simple-series",
+  "name": "series",
+  "version": "1.0",
+  "initialLayout": {
+    "vertices": [
+      {"id":"v_bat_l","x":100,"y":200,"isTerminal":true},
+      {"id":"v_bat_r","x":220,"y":200,"isTerminal":true},
+      {"id":"v_res_l","x":340,"y":200,"isTerminal":true},
+      {"id":"v_res_r","x":460,"y":200,"isTerminal":true},
+      {"id":"v_bulb_l","x":580,"y":200,"isTerminal":true},
+      {"id":"v_bulb_r","x":700,"y":200,"isTerminal":true}
+    ],
+    "components": [
+      {"id":"bat_1","type":"battery","x":160,"y":200,"value":10,"startVertexId":"v_bat_l","endVertexId":"v_bat_r"},
+      {"id":"res_1","type":"resistor","x":400,"y":200,"value":10,"startVertexId":"v_res_l","endVertexId":"v_res_r"},
+      {"id":"bulb_1","type":"lightBulb","x":640,"y":200,"value":10,"startVertexId":"v_bulb_l","endVertexId":"v_bulb_r"}
+    ],
+    "wires": [
+      {"id":"w1","startVertexId":"v_bat_r","endVertexId":"v_res_l"},
+      {"id":"w2","startVertexId":"v_res_r","endVertexId":"v_bulb_l"},
+      {"id":"w3","startVertexId":"v_bulb_r","endVertexId":"v_bat_l","controlPoints":[{"x":760,"y":350},{"x":40,"y":350}]}
+    ]
+  }
+}''';
+
+    final scenario = CircuitScenario.fromJson(
+      jsonDecode(jsonStr) as Map<String, dynamic>,
+    );
+
+    expect(scenario.scenarioId, equals('simple-series'));
+    final layout = scenario.initialLayout;
+
+    // vertices
+    expect(layout.vertices.length, equals(6));
+    expect(layout.vertices[0].id, equals('v_bat_l'));
+    expect(layout.vertices[0].isTerminal, isTrue);
+
+    // components
+    expect(layout.components.length, equals(3));
+    expect(layout.components[0].type, equals(ComponentType.battery));
+    expect(layout.components[1].type, equals(ComponentType.resistor));
+    expect(layout.components[2].type, equals(ComponentType.lightBulb));
+    expect(layout.components[0].value, equals(10.0));
+
+    // wires
+    expect(layout.wires.length, equals(3));
+    expect(layout.wires[2].controlPoints.length, equals(2));
+    expect(layout.wires[2].controlPoints[0]['x'], equals(760.0));
+  });
+
+  // ---------- 3 · toJson round-trip ----------
+
+  test('CircuitScenario.toJson round-trip preserves data', () {
+    final original = CircuitScenario(
+      scenarioId: 'test-roundtrip',
+      name: 'rt',
+      description: 'round-trip check',
+      version: '2.0',
+      initialLayout: CircuitLayout(
+        components: [
+          ComponentPlacement(
+            id: 'c1',
+            type: ComponentType.battery,
+            x: 100,
+            y: 200,
+            startVertexId: 'v1',
+            endVertexId: 'v2',
+            value: 12.0,
+          ),
+        ],
+        wires: [
+          WirePlacement(
+            id: 'w1',
+            startVertexId: 'v1',
+            endVertexId: 'v2',
+            controlPoints: [{'x': 50.0, 'y': 30.0}],
+          ),
+        ],
+        vertices: [
+          VertexPlacement(id: 'v1', x: 100, y: 200, isTerminal: true),
+          VertexPlacement(id: 'v2', x: 200, y: 200, isTerminal: true),
+        ],
+      ),
+    );
+
+    final json = original.toJson();
+    final restored = CircuitScenario.fromJson(json);
+
+    expect(restored.scenarioId, equals(original.scenarioId));
+    expect(restored.version, equals(original.version));
+    expect(restored.initialLayout.components.length, equals(1));
+    expect(restored.initialLayout.components[0].type, equals(ComponentType.battery));
+    expect(restored.initialLayout.components[0].value, equals(12.0));
+    expect(restored.initialLayout.wires.length, equals(1));
+    expect(restored.initialLayout.vertices.length, equals(2));
+  });
+
+  // ---------- 4 · missing required field ----------
+
+  test('CircuitScenario.fromJson throws on missing scenarioId', () {
+    const jsonStr = '{"name":"no-id","version":"1.0","initialLayout":{"components":[],"wires":[],"vertices":[]}}';
+
+    expect(
+      () => CircuitScenario.fromJson(
+        jsonDecode(jsonStr) as Map<String, dynamic>,
+      ),
+      throwsA(isA<TypeError>()),
+    );
+  });
+
+  // ---------- 5 · unknown ComponentType ----------
+
+  test('parseComponentType throws on unknown type string', () {
+    expect(
+      () => parseComponentType('not_a_valid_type'),
+      throwsA(isA<ArgumentError>()),
+    );
+  });
+
+  // ---------- 6 · defaults for optional fields ----------
+
+  test('CircuitScenario.fromJson applies defaults for optional fields', () {
+    const jsonStr = '''
+{
+  "scenarioId": "minimal",
+  "name": "min",
+  "initialLayout": {
+    "components": [
+      {"id":"c1","type":"fuse","x":0,"y":0,"startVertexId":"v1","endVertexId":"v2"}
+    ],
+    "wires": [],
+    "vertices": [
+      {"id":"v1","x":0,"y":0},
+      {"id":"v2","x":10,"y":10}
+    ]
+  }
+}''';
+
+    final scenario = CircuitScenario.fromJson(
+      jsonDecode(jsonStr) as Map<String, dynamic>,
+    );
+
+    expect(scenario.description, equals(''));
+    expect(scenario.version, equals('1.0'));
+
+    final comp = scenario.initialLayout.components[0];
+    expect(comp.rotation, equals(0.0));
+    expect(comp.value, equals(10.0));
+    expect(comp.isClosed, isTrue);
+
+    final vtx = scenario.initialLayout.vertices[0];
+    expect(vtx.isJunction, isFalse);
+    expect(vtx.isTerminal, isFalse);
+  });
+}
