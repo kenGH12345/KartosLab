@@ -1,5 +1,6 @@
 import 'forces_simulation.dart';
 import 'forces_item.dart';
+import '../config/forces_scenario.dart';
 
 /// Motion/Friction/Acceleration 三屏幕共用模型
 /// 管理物品堆叠 + 推力者状态 + 物理引擎
@@ -7,8 +8,27 @@ class MotionModel {
   MotionModel({
     double friction = 0,
     this.showAccelerometer = false,
-  }) : sim = ForcesSimulation() {
+    double initialMass = 0,
+    double initialPosition = 0,
+    double initialVelocity = 0,
+    double initialAppliedForce = 0,
+  }) : sim = ForcesSimulation(mass: initialMass > 0 ? initialMass : 50) {
     sim.frictionCoeff = friction;
+    sim.position = initialPosition;
+    sim.velocity = initialVelocity;
+    sim.appliedForce = initialAppliedForce;
+  }
+
+  /// 从 scenario JSON 构建（§C1 合规）
+  factory MotionModel.fromScenario(ForcesScenario s, {double? overrideFriction}) {
+    return MotionModel(
+      friction: overrideFriction ?? s.frictionCoeff,
+      showAccelerometer: s.showAccelerometer,
+      initialMass: s.mass,
+      initialPosition: s.position,
+      initialVelocity: s.velocity,
+      initialAppliedForce: s.appliedForce,
+    );
   }
 
   final ForcesSimulation sim;

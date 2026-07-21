@@ -6,12 +6,13 @@ import '../widgets/force_arrow_painter.dart';
 import '../widgets/speedometer.dart';
 import '../widgets/applied_force_slider.dart';
 import '../widgets/accelerometer.dart';
+import '../config/forces_scenario.dart';
 
 /// Motion屏幕（无摩擦滑板模式）
 class MotionScreen extends StatefulWidget {
-  const MotionScreen({super.key, required this.mode, this.scenarioId});
+  const MotionScreen({super.key, required this.mode, this.scenario});
   final MotionScreenMode mode; // motion / friction / acceleration
-  final String? scenarioId;
+  final ForcesScenario? scenario;
 
   @override State<MotionScreen> createState() => _MotionScreenState();
 }
@@ -26,8 +27,19 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
 
   @override void initState() {
     super.initState();
-    _model = MotionModel(friction: widget.mode == MotionScreenMode.motion ? 0 : 0.25,
-      showAccelerometer: widget.mode == MotionScreenMode.acceleration);
+    final s = widget.scenario;
+    if (s != null) {
+      final defaultFriction = switch (widget.mode) {
+        MotionScreenMode.motion => 0.0,
+        _ => 0.25,
+      };
+      _model = MotionModel.fromScenario(s, overrideFriction: defaultFriction);
+    } else {
+      _model = MotionModel(
+        friction: widget.mode == MotionScreenMode.motion ? 0 : 0.25,
+        showAccelerometer: widget.mode == MotionScreenMode.acceleration,
+      );
+    }
     _ticker = AnimationController(vsync: this)..addListener(_loop);
     _ticker.repeat(period: const Duration(milliseconds: 16));
   }

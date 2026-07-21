@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../config/forces_scenario.dart';
 
 /// 拉绳者（NetForce 屏幕的人物拖拽体）
 class Puller {
@@ -14,11 +15,24 @@ class Puller {
 
 /// NetForce（合力）屏幕模型：拔河比赛
 class NetforceModel {
-  static const double gameLength = 400;   // 胜负边界（像素单位）
   static const int knotsPerSide = 4;
-  static const double cartStep = 0.003;   // 小车移动倍率
+
+  double gameLength = 400;   // 胜负边界（像素单位）
+  double cartStep = 0.003;   // 小车移动倍率
 
   NetforceModel();
+
+  /// 从 scenario JSON 构建（§C1 合规）
+  factory NetforceModel.fromScenario(ForcesScenario s) {
+    final m = NetforceModel();
+    m.gameLength = s.gameLength;
+    m.cartStep = s.cartStep;
+    m.pullers.clear();
+    for (final p in s.pullers) {
+      m.pullers.add(Puller(id: p.id, force: p.force, side: p.side, color: p.color));
+    }
+    return m;
+  }
 
   double cartPosition = 0;
   double cartVelocity = 0;

@@ -66,13 +66,13 @@ class _ForcesHomeState extends State<ForcesHome> {
           ])));
 
   void _open(_ScreenInfo s) {
-    final scenarioId = _scenarioManager != null ? _scenarioMap[s.title] : null;
+    final scenario = _scenarioManager?.tryLoad(_scenarioMap[s.title] ?? '');
     Widget page;
     switch (s.title) {
-      case '合力': page = NetForceScreen(scenarioId: scenarioId);
-      case '运动': page = MotionScreen(mode: MotionScreenMode.motion, scenarioId: scenarioId);
-      case '摩擦': page = MotionScreen(mode: MotionScreenMode.friction, scenarioId: scenarioId);
-      case '加速度': page = MotionScreen(mode: MotionScreenMode.acceleration, scenarioId: scenarioId);
+      case '合力': page = NetForceScreen(scenario: scenario);
+      case '运动': page = MotionScreen(mode: MotionScreenMode.motion, scenario: scenario);
+      case '摩擦': page = MotionScreen(mode: MotionScreenMode.friction, scenario: scenario);
+      case '加速度': page = MotionScreen(mode: MotionScreenMode.acceleration, scenario: scenario);
       default: return;
     }
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));

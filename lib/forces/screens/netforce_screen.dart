@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import '../models/netforce_model.dart';
 import '../widgets/speedometer.dart';
 import '../widgets/force_arrow_painter.dart';
+import '../config/forces_scenario.dart';
 
 class NetForceScreen extends StatefulWidget {
-  const NetForceScreen({super.key, this.scenarioId});
-  final String? scenarioId;
+  const NetForceScreen({super.key, this.scenario});
+  final ForcesScenario? scenario;
 
   @override State<NetForceScreen> createState() => _NetForceScreenState();
 }
 
 class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStateMixin {
-  final _model = NetforceModel();
+  late final NetforceModel _model;
   late final AnimationController _ticker;
   bool _showValues = true, _showSum = true, _showSpeed = true;
 
@@ -20,7 +21,13 @@ class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStat
   bool? _hoverSide;
   int? _hoverKnotIdx;
 
-  @override void initState() { super.initState(); _ticker = AnimationController(vsync: this)..addListener(_tick); _startTicker(); }
+  @override void initState() {
+    super.initState();
+    _model = widget.scenario != null
+        ? NetforceModel.fromScenario(widget.scenario!)
+        : NetforceModel();
+    _ticker = AnimationController(vsync: this)..addListener(_tick); _startTicker();
+  }
   @override void dispose() { _ticker.dispose(); super.dispose(); }
 
   void _startTicker() { _ticker.repeat(period: const Duration(milliseconds: 16)); }
