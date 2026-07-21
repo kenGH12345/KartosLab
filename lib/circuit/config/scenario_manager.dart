@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../models/circuit_state.dart';
+import '../../models/circuit_solver.dart';
 import 'circuit_scenario.dart';
+import 'circuit_constraint.dart';
+import 'circuit_learning_objective.dart';
 
 /// 电路场景管理器（Step 1a · §C1 落地）
 ///
@@ -122,5 +125,38 @@ class CircuitScenarioManager {
       wires: wires,
       vertices: vertices,
     );
+  }
+
+  /// Validate all constraints (enforced only) against current [CircuitState].
+  ///
+  /// Returns list of violation messages; empty list = all passed.
+  /// Non-enforced constraints are always skipped.
+  List<String> validateConstraints(CircuitState state) {
+    final scenario = _currentScenario;
+    if (scenario == null) return [];
+
+    final violations = <String>[];
+    for (final c in scenario.constraints) {
+      if (!c.enforced) continue;
+      final msg = c.buildViolationMessage(state);
+      if (msg != null) violations.add(msg);
+    }
+    return violations;
+  }
+
+  /// Check if current scenario objectives are achieved.
+  ///
+  /// Returns true if no objectives are defined or all criteria are met.
+  bool checkObjectives(CircuitState state) {
+    final scenario = _currentScenario;
+    if (scenario == null || scenario.objectives == null) return true;
+    return scenario.objectives!.checkAchieved(state);
+  }
+
+  /// Get applicable hints for current state from scenario objectives.
+  List<CircuitHint> getHints(CircuitState state) {
+    final scenario = _currentScenario;
+    if (scenario == null || scenario.objectives == null) return [];
+    return scenario.objectives!.getApplicableHints(state);
   }
 }

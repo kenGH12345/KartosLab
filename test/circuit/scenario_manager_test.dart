@@ -193,4 +193,132 @@ void main() {
     expect(vtx.isJunction, isFalse);
     expect(vtx.isTerminal, isFalse);
   });
+
+  // ---------- 7 · constraints parsing ----------
+
+  test('CircuitScenario.fromJson parses constraints section', () {
+    const jsonStr = '''
+{
+  "scenarioId": "constrained",
+  "name": "has-constraints",
+  "version": "1.0",
+  "initialLayout": {
+    "components": [],
+    "wires": [],
+    "vertices": []
+  },
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "topology",
+      "description": "must be closed loop",
+      "params": { "requireClosed": true },
+      "enforced": true
+    },
+    {
+      "id": "c2",
+      "type": "componentCount",
+      "description": "need 1 battery",
+      "params": { "componentType": "battery", "minCount": 1, "maxCount": 2 },
+      "enforced": false
+    }
+  ]
+}''';
+
+    final scenario = CircuitScenario.fromJson(
+      jsonDecode(jsonStr) as Map<String, dynamic>,
+    );
+
+    expect(scenario.constraints.length, equals(2));
+    expect(scenario.constraints[0].id, equals('c1'));
+    expect(scenario.constraints[0].type.name, equals('topology'));
+    expect(scenario.constraints[0].enforced, isTrue);
+    expect(scenario.objectives, isNull);
+  });
+
+  // ---------- 8 · objectives parsing ----------
+
+  test('CircuitScenario.fromJson parses objectives section', () {
+    const jsonStr = '''
+{
+  "scenarioId": "with-objectives",
+  "name": "has-objectives",
+  "version": "1.0",
+  "initialLayout": {
+    "components": [],
+    "wires": [],
+    "vertices": []
+  },
+  "objectives": {
+    "type": "guided",
+    "description": "make the bulb light up",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "circuitClosed",
+        "description": "circuit forms a closed loop",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "bulbBrightness",
+        "description": "bulb is visible",
+        "params": { "minBrightness": 0.1 }
+      }
+    ],
+    "hints": [
+      { "trigger": "openNodes > 0", "message": "close the circuit" }
+    ],
+    "validation": { "autoCheck": true, "showFeedback": true }
+  }
+}''';
+
+    final scenario = CircuitScenario.fromJson(
+      jsonDecode(jsonStr) as Map<String, dynamic>,
+    );
+
+    expect(scenario.objectives, isNotNull);
+    final obj = scenario.objectives!;
+    expect(obj.type.name, equals('guided'));
+    expect(obj.successCriteria.length, equals(2));
+    expect(obj.successCriteria[0].type.name, equals('circuitClosed'));
+    expect(obj.successCriteria[1].type.name, equals('bulbBrightness'));
+    expect(obj.hints.length, equals(1));
+    expect(obj.validation.autoCheck, isTrue);
+  });
+
+  // ---------- 9 · toJson round-trip with constraints + objectives ----------
+
+  test('CircuitScenario.toJson round-trip preserves constraints and objectives', () {
+    final original = CircuitScenario(
+      scenarioId: 'rt-constraints',
+      name: 'rt',
+      description: 'round-trip constraints test',
+      version: '1.0',
+      initialLayout: CircuitLayout(
+        components: [
+          ComponentPlacement(
+            id: 'bat',
+            type: ComponentType.battery,
+            x: 0,
+            y: 0,
+            startVertexId: 'v1',
+            endVertexId: 'v2',
+          ),
+        ],
+        wires: [],
+        vertices: [
+          VertexPlacement(id: 'v1', x: 0, y: 0),
+          VertexPlacement(id: 'v2', x: 10, y: 10),
+        ],
+      ),
+    );
+
+    final json = original.toJson();
+    final restored = CircuitScenario.fromJson(json);
+
+    expect(restored.scenarioId, equals(original.scenarioId));
+    expect(restored.constraints, isEmpty);
+    expect(restored.objectives, isNull);
+  });
 }

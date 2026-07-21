@@ -59,5 +59,46 @@
         ]
       }
     ]
+  },
+
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "topology",
+      "description": "电路必须形成闭合回路",
+      "params": { "requireClosed": true },
+      "enforced": true
+    },
+    {
+      "id": "c2",
+      "type": "componentCount",
+      "description": "至少需要一个电池",
+      "params": { "componentType": "battery", "minCount": 1 },
+      "enforced": false
+    }
+  ],
+
+  "objectives": {
+    "type": "guided",
+    "description": "搭建一个简单串联电路，让灯泡发光",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "circuitClosed",
+        "description": "电路形成闭合回路",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "bulbBrightness",
+        "description": "灯泡亮度 > 0",
+        "params": { "minBrightness": 0.01 }
+      }
+    ],
+    "hints": [
+      { "trigger": "openNodes > 0", "message": "电路还未闭合，请用导线连接所有元件" },
+      { "trigger": "no_battery", "message": "请添加一个电池为电路供电" }
+    ],
+    "validation": { "autoCheck": true, "showFeedback": true }
   }
 }

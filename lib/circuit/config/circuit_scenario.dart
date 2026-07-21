@@ -1,14 +1,17 @@
 ﻿import 'package:flutter/foundation.dart';
 
 import '../../models/circuit_state.dart';
+import 'circuit_constraint.dart';
+import 'circuit_learning_objective.dart';
 
-/// 电路场景（Step 1a · §C1 落地）
+/// Circuit scenario (Step 1a · §C1 + Step 1c · §C4).
 ///
-/// 对应光学 `LabScenario`（`lib/optics/config/lab_scenario.dart`），但按
-/// `req-phet-circuit-config-json` Step 1a 边界收窄：
-/// - 不含 inventory（Step 1b · `req-phet-circuit-config-inventory`）
-/// - 不含 constraints / objectives / gameRules（Step 1c · `req-phet-circuit-config-constraints`）
-/// - 不含 ui 段（电路无 `showFocalPoints` 类语义 · `zoom` 是运行时状态）
+/// Counterpart to optical `LabScenario` (`lib/optics/config/lab_scenario.dart`).
+///
+/// Fields by step:
+/// - Step 1a: scenarioId, name, description, version, initialLayout
+/// - Step 1c: constraints, objectives
+/// - (pending): inventory (Step 1b), gameRules
 ///
 /// 电路 `initialLayout` 必须 3 层表达（比光学复杂）：
 /// - components：电池 / 电阻 / 灯泡 / 开关 / 保险丝 / 接地 / 导线元件
@@ -24,6 +27,8 @@ class CircuitScenario {
     required this.description,
     required this.version,
     required this.initialLayout,
+    this.constraints = const [],
+    this.objectives,
   });
 
   final String scenarioId;
@@ -31,6 +36,8 @@ class CircuitScenario {
   final String description;
   final String version;
   final CircuitLayout initialLayout;
+  final List<CircuitConstraint> constraints;
+  final CircuitLearningObjective? objectives;
 
   factory CircuitScenario.fromJson(Map<String, dynamic> json) {
     return CircuitScenario(
@@ -41,6 +48,15 @@ class CircuitScenario {
       initialLayout: CircuitLayout.fromJson(
         json['initialLayout'] as Map<String, dynamic>,
       ),
+      constraints: (json['constraints'] as List<dynamic>?)
+              ?.map((e) =>
+                  CircuitConstraint.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      objectives: json['objectives'] != null
+          ? CircuitLearningObjective.fromJson(
+              json['objectives'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -51,6 +67,9 @@ class CircuitScenario {
       'description': description,
       'version': version,
       'initialLayout': initialLayout.toJson(),
+      if (constraints.isNotEmpty)
+        'constraints': constraints.map((e) => e.toJson()).toList(),
+      if (objectives != null) 'objectives': objectives!.toJson(),
     };
   }
 }
