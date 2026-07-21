@@ -321,4 +321,47 @@ void main() {
     expect(restored.constraints, isEmpty);
     expect(restored.objectives, isNull);
   });
+
+  // ---------- 10 · inventory parsing ----------
+
+  test('CircuitScenario.fromJson parses inventory section', () {
+    const jsonStr = '''
+{
+  "scenarioId": "with-inventory",
+  "name": "has-inventory",
+  "version": "1.0",
+  "initialLayout": {
+    "components": [],
+    "wires": [],
+    "vertices": []
+  },
+  "inventory": {
+    "availableComponents": {
+      "battery": { "maxCount": 1, "locked": true, "defaultParams": { "value": 9.0 } },
+      "resistor": { "maxCount": 3, "locked": false, "defaultParams": { "value": 20.0 } }
+    }
+  }
+}''';
+
+    final scenario = CircuitScenario.fromJson(
+      jsonDecode(jsonStr) as Map<String, dynamic>,
+    );
+
+    expect(scenario.inventory, isNotNull);
+    final inv = scenario.inventory!;
+    expect(inv.availableComponents.length, equals(2));
+
+    final batSpec = inv.availableComponents[ComponentType.battery];
+    expect(batSpec, isNotNull);
+    expect(batSpec!.maxCount, equals(1));
+    expect(batSpec.locked, isTrue);
+    expect(batSpec.defaultParams['value'], equals(9.0));
+
+    expect(inv.canAdd(ComponentType.battery, 0), isTrue);
+    expect(inv.canAdd(ComponentType.battery, 1), isFalse);
+
+    final resSpec = inv.availableComponents[ComponentType.resistor]!;
+    expect(resSpec.maxCount, equals(3));
+    expect(resSpec.locked, isFalse);
+  });
 }

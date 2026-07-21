@@ -2,16 +2,12 @@
 
 import '../../models/circuit_state.dart';
 import 'circuit_constraint.dart';
+import 'circuit_inventory.dart';
 import 'circuit_learning_objective.dart';
 
-/// Circuit scenario (Step 1a · §C1 + Step 1c · §C4).
+/// Circuit scenario (Step 1a · §C1 + Step 1b · §C2 + Step 1c · §C4).
 ///
 /// Counterpart to optical `LabScenario` (`lib/optics/config/lab_scenario.dart`).
-///
-/// Fields by step:
-/// - Step 1a: scenarioId, name, description, version, initialLayout
-/// - Step 1c: constraints, objectives
-/// - (pending): inventory (Step 1b), gameRules
 ///
 /// 电路 `initialLayout` 必须 3 层表达（比光学复杂）：
 /// - components：电池 / 电阻 / 灯泡 / 开关 / 保险丝 / 接地 / 导线元件
@@ -27,6 +23,7 @@ class CircuitScenario {
     required this.description,
     required this.version,
     required this.initialLayout,
+    this.inventory,
     this.constraints = const [],
     this.objectives,
   });
@@ -36,6 +33,7 @@ class CircuitScenario {
   final String description;
   final String version;
   final CircuitLayout initialLayout;
+  final CircuitComponentInventory? inventory;
   final List<CircuitConstraint> constraints;
   final CircuitLearningObjective? objectives;
 
@@ -48,6 +46,10 @@ class CircuitScenario {
       initialLayout: CircuitLayout.fromJson(
         json['initialLayout'] as Map<String, dynamic>,
       ),
+      inventory: json['inventory'] != null
+          ? CircuitComponentInventory.fromJson(
+              json['inventory'] as Map<String, dynamic>)
+          : null,
       constraints: (json['constraints'] as List<dynamic>?)
               ?.map((e) =>
                   CircuitConstraint.fromJson(e as Map<String, dynamic>))
@@ -67,6 +69,7 @@ class CircuitScenario {
       'description': description,
       'version': version,
       'initialLayout': initialLayout.toJson(),
+      if (inventory != null) 'inventory': inventory!.toJson(),
       if (constraints.isNotEmpty)
         'constraints': constraints.map((e) => e.toJson()).toList(),
       if (objectives != null) 'objectives': objectives!.toJson(),

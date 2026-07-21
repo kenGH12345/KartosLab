@@ -3,6 +3,19 @@
   "name": "简单串联电路",
   "description": "1 电池 + 1 电阻 + 1 灯泡 串联闭合回路 · Step 1a 演示非空拓扑加载",
   "version": "1.0",
+
+  "inventory": {
+    "availableComponents": {
+      "battery":    { "maxCount": 2, "locked": false, "defaultParams": { "value": 10.0 } },
+      "resistor":   { "maxCount": 2, "locked": false, "defaultParams": { "value": 10.0 } },
+      "lightBulb":  { "maxCount": 2, "locked": false, "defaultParams": { "value": 10.0 } },
+      "switch_":    { "maxCount": 1, "locked": false, "defaultParams": {} },
+      "fuse":       { "maxCount": 1, "locked": false, "defaultParams": {} },
+      "ground":     { "maxCount": 1, "locked": false, "defaultParams": {} },
+      "wire":       { "maxCount": 10, "locked": false, "defaultParams": {} }
+    }
+  },
+
   "initialLayout": {
     "vertices": [
       { "id": "v_bat_l",   "x": 100.0, "y": 200.0, "isTerminal": true  },
