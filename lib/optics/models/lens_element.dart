@@ -18,14 +18,11 @@ class LensElement extends OpticalElement {
     super.rotation = 0,
     super.width = 4,   // 匹配视觉 40×130px 透镜图标
     super.height = 14, // ≈ 2×7 世界单位，加容错
-  }) : radius = 0,
-       refractiveIndex = 1.5;
+  });
 
   final LensType lensKind;
   final double focalLength;
   final double diameter;
-  final double radius;
-  final double refractiveIndex;
 
   // 工厂方法：从场景配置创建
   static LensElement create({

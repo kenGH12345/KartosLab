@@ -79,6 +79,12 @@ class ScenarioManager {
   // 获取当前场景
   LabScenario? get currentScenario => _currentScenario;
 
+  LabScenario _requireScenario(String caller) {
+    final s = _currentScenario;
+    if (s == null) throw StateError('$caller: no current scenario loaded');
+    return s;
+  }
+
   // 切换到指定场景
   OpticsWorld loadScenario(String scenarioId) {
     final scenario = _scenarios.firstWhere(
@@ -101,8 +107,9 @@ class ScenarioManager {
 
   // 从放置配置创建元件
   OpticalElement _createElementFromPlacement(ElementPlacement placement) {
+    final scenario = _requireScenario('_createElementFromPlacement');
     // 合并 inventory 中的 defaultParams（placement params 优先）
-    final spec = _currentScenario?.inventory.availableComponents[placement.type];
+    final spec = scenario.inventory.availableComponents[placement.type];
     final merged = <String, dynamic>{};
     if (spec != null) {
       merged.addAll(spec.defaultParams);

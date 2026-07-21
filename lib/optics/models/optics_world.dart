@@ -56,11 +56,8 @@ class OpticsWorld {
 
   // 根据 ID 获取元件
   OpticalElement? getElementById(String id) {
-    try {
-      return elements.firstWhere((e) => e.id == id);
-    } catch (e) {
-      return null;
-    }
+    final idx = elements.indexWhere((e) => e.id == id);
+    return idx >= 0 ? elements[idx] : null;
   }
 
   // 获取选中的元件
