@@ -1,0 +1,202 @@
+{
+  "scenarioId": "fuse-blown",
+  "name": "保险丝保护电路",
+  "description": "电池 12V + 保险丝(0.5A) + 灯泡(10Ω) 串联 · 演示保险丝在过流时的保护作用 · 电流 1.2A 超过保险丝额定 0.5A",
+  "version": "1.0",
+  "inventory": {
+    "availableComponents": {
+      "battery": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "fuse": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 0.5
+        }
+      },
+      "lightBulb": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      },
+      "wire": {
+        "maxCount": 10,
+        "locked": false,
+        "defaultParams": {}
+      },
+      "resistor": {
+        "maxCount": 2,
+        "locked": false,
+        "defaultParams": {
+          "value": 10.0
+        }
+      }
+    }
+  },
+  "initialLayout": {
+    "vertices": [
+      {
+        "id": "v_bat_l",
+        "x": 100.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bat_r",
+        "x": 220.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_fuse_l",
+        "x": 340.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_fuse_r",
+        "x": 460.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_l",
+        "x": 580.0,
+        "y": 200.0,
+        "isTerminal": true
+      },
+      {
+        "id": "v_bulb_r",
+        "x": 700.0,
+        "y": 200.0,
+        "isTerminal": true
+      }
+    ],
+    "components": [
+      {
+        "id": "bat_1",
+        "type": "battery",
+        "x": 160.0,
+        "y": 200.0,
+        "value": 12.0,
+        "startVertexId": "v_bat_l",
+        "endVertexId": "v_bat_r"
+      },
+      {
+        "id": "fuse_1",
+        "type": "fuse",
+        "x": 400.0,
+        "y": 200.0,
+        "value": 0.5,
+        "startVertexId": "v_fuse_l",
+        "endVertexId": "v_fuse_r"
+      },
+      {
+        "id": "bulb_1",
+        "type": "lightBulb",
+        "x": 640.0,
+        "y": 200.0,
+        "value": 10.0,
+        "startVertexId": "v_bulb_l",
+        "endVertexId": "v_bulb_r"
+      }
+    ],
+    "wires": [
+      {
+        "id": "w1",
+        "startVertexId": "v_bat_r",
+        "endVertexId": "v_fuse_l"
+      },
+      {
+        "id": "w2",
+        "startVertexId": "v_fuse_r",
+        "endVertexId": "v_bulb_l"
+      },
+      {
+        "id": "w3",
+        "startVertexId": "v_bulb_r",
+        "endVertexId": "v_bat_l",
+        "controlPoints": [
+          {
+            "x": 760.0,
+            "y": 350.0
+          },
+          {
+            "x": 40.0,
+            "y": 350.0
+          }
+        ]
+      }
+    ]
+  },
+  "constraints": [
+    {
+      "id": "c1",
+      "type": "topology",
+      "description": "电路必须形成闭合回路",
+      "params": {
+        "requireClosed": true
+      },
+      "enforced": true
+    },
+    {
+      "id": "c2",
+      "type": "componentPresent",
+      "description": "保险丝必须存在于电路中",
+      "params": {
+        "componentType": "fuse"
+      },
+      "enforced": false
+    }
+  ],
+  "objectives": {
+    "type": "guided",
+    "description": "观察保险丝在电路中的保护作用 · 理解额定电流与过流概念",
+    "successCriteria": [
+      {
+        "id": "sc-1",
+        "type": "circuitClosed",
+        "description": "电路形成闭合回路",
+        "params": {}
+      },
+      {
+        "id": "sc-2",
+        "type": "bulbBrightness",
+        "description": "灯泡发光",
+        "params": {
+          "minBrightness": 0.01
+        }
+      },
+      {
+        "id": "sc-3",
+        "type": "componentCount",
+        "description": "电路中包含保险丝",
+        "params": {
+          "componentType": "fuse",
+          "expectedCount": 1
+        }
+      }
+    ],
+    "hints": [
+      {
+        "trigger": "componentCount(fuse) == 0",
+        "message": "请添加一个保险丝到电路中"
+      },
+      {
+        "trigger": "openNodes > 0",
+        "message": "电路未闭合 · 请用导线连接所有元件形成回路"
+      }
+    ],
+    "validation": {
+      "autoCheck": true,
+      "showFeedback": true
+    }
+  }
+}

@@ -36,6 +36,12 @@
       "file": "open-circuit-debug.json",
       "name": "电路诊断挑战",
       "description": "回路导线缺失 · 学生补齐最后一根导线闭合电路"
+    },
+    {
+      "id": "fuse-blown",
+      "file": "fuse-blown.json",
+      "name": "保险丝保护电路",
+      "description": "电池 12V + 保险丝(0.5A) + 灯泡(10Ω) 串联 · 演示保险丝过流保护"
     }
   ]
 }
