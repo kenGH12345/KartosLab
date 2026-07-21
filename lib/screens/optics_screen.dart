@@ -138,7 +138,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
 
 // ── 光学场景内容（纯绘制，拖拽由 DragDropWorkspace 处理） ──
 
-class _OpticsScene extends StatelessWidget {
+class _OpticsScene extends StatefulWidget {
   final OpticsWorld world; final SolvedOptics? solved; final String? selectedId;
   final CanvasProjection projection;
   final void Function(String?) onElementTap;
@@ -149,24 +149,55 @@ class _OpticsScene extends StatelessWidget {
     required this.projection, required this.onElementTap, required this.onDragSelect, required this.onElementDrag, super.key});
 
   @override
+  State<_OpticsScene> createState() => _OpticsSceneState();
+}
+
+class _OpticsSceneState extends State<_OpticsScene> {
+  // drag anchor: element position and pointer world position when scale starts
+  Offset? _dragElementStart;
+  Offset? _dragPointerStart;
+  String? _dragId;
+
+  OpticsWorld get world => widget.world;
+  SolvedOptics? get solved => widget.solved;
+  String? get selectedId => widget.selectedId;
+  CanvasProjection get projection => widget.projection;
+
+  @override
   Widget build(BuildContext context) => GestureDetector(
+    behavior: HitTestBehavior.opaque,
     onTapUp: (d) {
       final wp = projection.toWorld(d.localPosition);
-      for (final e in world.elements.reversed) { if (e.hitTest(wp)) { onElementTap(e.id); return; } }
-      onElementTap(null);
+      for (final e in world.elements.reversed) { if (e.hitTest(wp)) { widget.onElementTap(e.id); return; } }
+      widget.onElementTap(null);
     },
     onScaleStart: (d) {
-      // auto-select element under finger so initialized elements can be dragged directly
-      if (selectedId != null) return;
       final wp = projection.toWorld(d.localFocalPoint);
-      for (final e in world.elements.reversed) { if (e.hitTest(wp)) { onDragSelect(e.id); return; } }
+      // pick element under finger (if not selected, auto-select)
+      String? hitId = selectedId != null && world.getElementById(selectedId!) != null &&
+              world.getElementById(selectedId!)!.hitTest(wp)
+          ? selectedId
+          : null;
+      if (hitId == null) {
+        for (final e in world.elements.reversed) {
+          if (e.hitTest(wp)) { hitId = e.id; widget.onDragSelect(e.id); break; }
+        }
+      }
+      if (hitId == null) { _dragId = null; return; }
+      final el = world.getElementById(hitId);
+      if (el == null) { _dragId = null; return; }
+      _dragId = hitId;
+      _dragElementStart = Offset(el.x, el.y);
+      _dragPointerStart = wp;
     },
     onScaleUpdate: (d) {
       if (d.pointerCount >= 2) return;
-      if (selectedId == null) return;
-      if (d.focalPointDelta.distance < 4.0) return;
-      onElementDrag(selectedId!, projection.toWorld(d.localFocalPoint));
+      if (_dragId == null || _dragElementStart == null || _dragPointerStart == null) return;
+      final wp = projection.toWorld(d.localFocalPoint);
+      final delta = wp - _dragPointerStart!;
+      widget.onElementDrag(_dragId!, _dragElementStart! + delta);
     },
+    onScaleEnd: (_) { _dragId = null; _dragElementStart = null; _dragPointerStart = null; },
     child: SizedBox(width: projection.canvasSize.width, height: projection.canvasSize.height,
       child: Stack(children: [
         Positioned.fill(child: Container(color: const Color(0xFFF8FCFE))),
