@@ -1,0 +1,195 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phet/optics-scenario.schema.json",
+  "title": "Optics Scenario",
+  "description": "Schema for optics module scenario JSON files. Each scenario defines initial optical element placements, inventory, constraints, learning objectives, game rules, and UI config. Corresponds to lib/optics/config/lab_scenario.dart.",
+  "type": "object",
+  "required": ["scenarioId", "name", "level", "domain", "inventory", "initialLayout", "constraints", "ui"],
+  "properties": {
+    "scenarioId": {
+      "type": "string",
+      "description": "Unique scenario identifier (e.g. basic-lens-imaging)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name in Chinese (e.g. 凸透镜成像规律)"
+    },
+    "description": {
+      "type": "string",
+      "default": "",
+      "description": "Scenario description"
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0.0",
+      "description": "Semantic version"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Difficulty level"
+    },
+    "domain": {
+      "type": "string",
+      "enum": ["optics-lens", "optics-mirror", "optics-combo"],
+      "description": "Experiment domain grouping. optics-lens for lens experiments, optics-mirror for mirror experiments, optics-combo for combined setups."
+    },
+    "inventory": {
+      "type": "object",
+      "description": "Component inventory controlling per-type availability and defaults",
+      "required": ["availableComponents"],
+      "properties": {
+        "availableComponents": {
+          "type": "object",
+          "description": "Map of element type name to ComponentSpec. Valid keys: lightSource, lens, mirror, screen, candle, prism.",
+          "additionalProperties": {
+            "type": "object",
+            "required": ["maxCount", "locked", "defaultParams"],
+            "properties": {
+              "maxCount": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Maximum number of this element type the student can add"
+              },
+              "locked": {
+                "type": "boolean",
+                "description": "Whether existing instances of this type cannot be removed"
+              },
+              "defaultParams": {
+                "type": "object",
+                "description": "Default constructor parameters for newly added elements"
+              }
+            }
+          }
+        }
+      }
+    },
+    "initialLayout": {
+      "type": "array",
+      "description": "Elements placed on the optical bench at scenario start",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "x", "y"],
+        "properties": {
+          "id": { "type": "string", "description": "Unique element identifier (e.g. light_1, lens_1)" },
+          "type": {
+            "type": "string",
+            "enum": ["lightSource", "lens", "mirror", "screen", "candle", "prism"],
+            "description": "Optical element type"
+          },
+          "x": { "type": "number", "description": "World x coordinate. Center of bench x=0; negative = left of origin (light source side)." },
+          "y": { "type": "number", "description": "World y coordinate. Principal axis y=0." },
+          "rotation": { "type": "number", "default": 0, "description": "Rotation angle in radians" },
+          "locked": { "type": "boolean", "default": false, "description": "When true, element cannot be moved or removed by the student" },
+          "params": {
+            "type": "object",
+            "description": "Type-specific parameters",
+            "properties": {
+              "lensType": { "type": "string", "enum": ["convex", "concave"], "description": "For type=lens" },
+              "focalLength": { "type": "number", "description": "For type=lens: focal length in world units" },
+              "diameter": { "type": "number", "description": "For type=lens/mirror: element diameter in world units" },
+              "mirrorType": { "type": "string", "enum": ["concave", "convex", "plane"], "description": "For type=mirror" },
+              "sourceType": { "type": "string", "enum": ["object", "point", "parallel"], "description": "For type=lightSource" },
+              "objectHeight": { "type": "number", "description": "For type=lightSource with sourceType=object: arrow height" }
+            }
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "description": "Runtime validation constraints",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "description", "params", "enforced"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["alignment", "distance", "order"],
+            "description": "alignment: elements share same axis. distance: spacing between two elements. order: left-to-right x ordering."
+          },
+          "description": { "type": "string" },
+          "params": { "type": "object", "description": "alignment: {elementIds, axis (x|y), tolerance}. distance: {fromElementId, toElementId, minDistance?, maxDistance?}. order: {elementIds}." },
+          "enforced": { "type": "boolean", "default": false, "description": "When true, violation blocks scenario completion" }
+        }
+      }
+    },
+    "objectives": {
+      "type": "object",
+      "description": "Learning objectives and success criteria",
+      "required": ["type", "description", "successCriteria", "validation"],
+      "properties": {
+        "type": { "type": "string", "enum": ["guided", "freeExplore", "challenge"] },
+        "description": { "type": "string" },
+        "successCriteria": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "description", "params"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string", "enum": ["imageProperties", "elementPosition", "rayPath"] },
+              "description": { "type": "string" },
+              "params": { "type": "object", "description": "imageProperties: {expectedVirtual?, expectedMagnification?}. elementPosition/rayPath: {}." }
+            }
+          }
+        },
+        "hints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["trigger", "message"],
+            "properties": {
+              "trigger": { "type": "string" },
+              "message": { "type": "string" }
+            }
+          }
+        },
+        "validation": {
+          "type": "object",
+          "required": ["autoCheck", "showFeedback"],
+          "properties": {
+            "autoCheck": { "type": "boolean" },
+            "showFeedback": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "gameRules": {
+      "type": "object",
+      "description": "Gamification rules",
+      "required": ["enabled", "penalties"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "timeLimit": { "type": "integer", "description": "Time limit in seconds (null = unlimited)" },
+        "scoreFormula": { "type": "string" },
+        "penalties": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "value", "condition"],
+            "properties": {
+              "type": { "type": "string" },
+              "value": { "type": "integer" },
+              "condition": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "description": "UI visibility and interaction toggles",
+      "required": ["showGrid", "showRuler", "showFocalPoints", "allowAddComponent", "allowRemoveComponent", "allowMoveComponent"],
+      "properties": {
+        "showGrid": { "type": "boolean" },
+        "showRuler": { "type": "boolean" },
+        "showFocalPoints": { "type": "boolean", "description": "Show focal point markers" },
+        "allowAddComponent": { "type": "boolean" },
+        "allowRemoveComponent": { "type": "boolean" },
+        "allowMoveComponent": { "type": "boolean" }
+      }
+    }
+  }
+}
