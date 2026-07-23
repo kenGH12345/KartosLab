@@ -50,7 +50,12 @@ class DragDropWorkspace<T extends Object> extends StatelessWidget {
     final canvas = Expanded(child: _DropCanvas<T>(canvasBuilder: canvasBuilder, onItemDropped: onItemDropped, scale: scale));
     return switch (layout) {
       DragDropLayout.sideTray => Row(children: [tray, canvas, if (rightPanel != null) rightPanel!]),
-      DragDropLayout.bottomTray => Column(children: [canvas, if (bottomPanel != null) bottomPanel!, tray]),
+      DragDropLayout.bottomTray => rightPanel == null
+          ? Column(children: [canvas, if (bottomPanel != null) bottomPanel!, tray])
+          : Row(children: [
+              Expanded(child: Column(children: [canvas, if (bottomPanel != null) bottomPanel!, tray])),
+              rightPanel!,
+            ]),
     };
   }
 

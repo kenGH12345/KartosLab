@@ -39,6 +39,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
     DragItem(data: 'mirror_plane', label: '平面镜', icon: Icons.motion_photos_on_rounded, color: Color(0xFF6366F1)),
     DragItem(data: 'mirror_concave', label: '凹面镜', icon: Icons.texture_rounded, color: Color(0xFF22C55E)),
     DragItem(data: 'lightSource', label: '光源', icon: Icons.light_mode_rounded, color: Color(0xFFEAB308)),
+    DragItem(data: 'screen', label: '光屏', icon: Icons.crop_portrait_rounded, color: Color(0xFF6B7280)),
   ];
 
   @override void initState() { super.initState(); _loadInitialScenario(); }
@@ -61,6 +62,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
       'lens_convex' || 'lens_concave' => OpticalElementType.lens,
       'mirror_plane' || 'mirror_concave' => OpticalElementType.mirror,
       'lightSource' => OpticalElementType.lightSource,
+      'screen' => OpticalElementType.screen,
       _ => null,
     };
     if (type == null || !_policy.canAdd(type, _world)) return;
@@ -71,6 +73,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
       'mirror_plane' => MirrorElement.create(id: 'mirror_$idx', position: worldPos, mirrorType: MirrorType.plane),
       'mirror_concave' => MirrorElement.create(id: 'mirror_$idx', position: worldPos, mirrorType: MirrorType.concave),
       'lightSource' => LightSourceElement.create(id: 'light_$idx', position: worldPos, sourceType: SourceType.object),
+      'screen' => ScreenElement.create(id: 'screen_$idx', position: worldPos),
       _ => throw UnsupportedError('Unknown component type: $typeId'),
     };
     setState(() { _world = _world.addElement(element); _selectedElementId = element.id; _solve(); });
@@ -106,9 +109,10 @@ class _OpticsScreenState extends State<OpticsScreen> {
     ),
     body: SafeArea(
       child: DragDropWorkspace<String>(
+        layout: DragDropLayout.bottomTray,
         trayTitle: '元件库',
         items: _trayItems,
-        traySize: 200,
+        traySize: 80,
         scale: 20,
         onItemDropped: _onComponentDrop,
         rightPanel: _currentScenario != null
