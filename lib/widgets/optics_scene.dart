@@ -335,10 +335,15 @@ class OpticsScenePainter extends CustomPainter {
     if (!state.showFocalPoints) return;
     final f = solved.focalLength;
     if (f.isFinite) {
-      final positions = state.mode == SimMode.lens ? [-f, f] : [-f, f];
-      for (final x in positions) {
+      // F 点：焦点（明黄）
+      for (final x in [-f, f]) {
         final center = p.toScreen(Offset(x.clamp(-380, 380).toDouble(), 0));
         _drawPoint(canvas, center, const Color(0xFFE9F438), 'F');
+      }
+      // 2F 点：二倍焦距（略淡黄，区分视觉层级；用于"物距 > 2f / 物距 = 2f"等教学分界）
+      for (final x in [-2 * f, 2 * f]) {
+        final center = p.toScreen(Offset(x.clamp(-380, 380).toDouble(), 0));
+        _drawPoint(canvas, center, const Color(0xFFF4EC7A), '2F');
       }
     }
   }
