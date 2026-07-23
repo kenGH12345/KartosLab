@@ -75,7 +75,9 @@
       }
     ],
     "hints": [
-      { "trigger": "objectDistance > 200", "message": "试着移动光屏，找到最清晰的像" }
+      { "trigger": "objectDistance > 200", "message": "试着移动光屏，找到最清晰的像" },
+      { "trigger": "time_elapsed", "message": "焦距不是固定的：f = ±R / (2·(n−1))，其中 R 是曲率半径、n 是折射率，凸透镜 f 取正、凹透镜取负" },
+      { "trigger": "time_elapsed", "message": "试着拖动右下角的 R 和 n 滑块：R 越大 f 越大；n 越大 f 反而越小；切换凸/凹会让 f 变号" }
     ],
     "validation": { "autoCheck": true, "showFeedback": true }
   },
