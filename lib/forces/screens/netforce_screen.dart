@@ -69,7 +69,9 @@ class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStat
         }
       });
     }
-    return Column(children: [
+    return Material(
+      type: MaterialType.transparency,
+      child: Column(children: [
       Expanded(flex: 2, child: _buildForceDisplay()),
       PropertyControlPanel(
         padding: const EdgeInsets.all(12),
@@ -99,7 +101,8 @@ class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStat
         Container(width: 2, color: const Color(0xFFCBD5E1)),
         Expanded(child: _pullerTray(true)),
       ])),
-  ]);
+    ]),
+    );
 
   }
 
