@@ -24,10 +24,9 @@ class ComponentInventory {
     if (raw == null || raw is! Map<String, dynamic>) {
       return const ComponentInventory(availableComponents: {});
     }
-    final available = raw as Map<String, dynamic>;
     final map = <OpticalElementType, ComponentSpec>{};
 
-    for (final entry in available.entries) {
+    for (final entry in raw.entries) {
       final type = _parseType(entry.key);
       final spec = ComponentSpec.fromJson(entry.value as Map<String, dynamic>);
       map[type] = spec;

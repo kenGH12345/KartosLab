@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/circuit_state.dart';
-import '../models/circuit_solver.dart';
 import 'circuit_scenario.dart';
-import 'circuit_constraint.dart';
 import 'circuit_learning_objective.dart';
 
 /// 电路场景管理器（Step 1a · §C1 落地）

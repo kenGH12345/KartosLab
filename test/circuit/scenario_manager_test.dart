@@ -1,6 +1,5 @@
 ﻿import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:geometric_optics/circuit/config/circuit_scenario.dart';

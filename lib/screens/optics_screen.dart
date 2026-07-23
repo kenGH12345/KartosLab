@@ -146,7 +146,7 @@ class _OpticsScene extends StatefulWidget {
   final void Function(String, Offset) onElementDrag;
 
   const _OpticsScene({required this.world, required this.solved, required this.selectedId,
-    required this.projection, required this.onElementTap, required this.onDragSelect, required this.onElementDrag, super.key});
+    required this.projection, required this.onElementTap, required this.onDragSelect, required this.onElementDrag});
 
   @override
   State<_OpticsScene> createState() => _OpticsSceneState();
@@ -416,7 +416,7 @@ class _RayPainter extends CustomPainter {
 
 class _RightPanel extends StatelessWidget {
   final LabScenario scenario; final OpticsWorld world;
-  const _RightPanel({required this.scenario, required this.world, super.key});
+  const _RightPanel({required this.scenario, required this.world});
 
   @override Widget build(_) => Container(width: 250, color: const Color(0xFFF9FAFB),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

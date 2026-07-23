@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 import '../physics/optics_math.dart';
 import 'optical_element.dart';
@@ -114,8 +113,8 @@ class LensElement extends OpticalElement {
 
     // 绘制透镜主体
     paint.color = lensKind == LensType.convex
-        ? Colors.blue.withOpacity(0.3)
-        : Colors.red.withOpacity(0.3);
+        ? Colors.blue.withValues(alpha: 0.3)
+        : Colors.red.withValues(alpha: 0.3);
     paint.style = PaintingStyle.fill;
     canvas.drawRect(rect, paint);
 

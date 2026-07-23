@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 import '../models/optical_element.dart';
@@ -36,11 +37,11 @@ class ScenarioManager {
               LabScenario.fromJson(jsonDecode(jsonStr) as Map<String, dynamic>);
           _scenarios.add(scenario);
         } catch (e) {
-          print('Failed to load scenario $id: $e');
+          debugPrint('Failed to load scenario $id: $e');
         }
       }
     } catch (e) {
-      print('Failed to load scenarios manifest: $e');
+      debugPrint('Failed to load scenarios manifest: $e');
     }
   }
 

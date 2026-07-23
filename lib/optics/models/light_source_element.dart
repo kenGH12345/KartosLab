@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 import 'optical_element.dart';
 import 'optics_world.dart';
@@ -52,7 +51,7 @@ class LightSourceElement extends OpticalElement {
     );
 
     // 绘制光源主体
-    paint.color = Colors.yellow.withOpacity(0.5);
+    paint.color = Colors.yellow.withValues(alpha: 0.5);
     paint.style = PaintingStyle.fill;
     canvas.drawRect(rect, paint);
 

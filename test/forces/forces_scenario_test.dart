@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geometric_optics/forces/config/forces_scenario.dart';
 import 'package:geometric_optics/forces/config/scenario_manager.dart';

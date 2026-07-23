@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import '../models/optical_element.dart';
 import '../models/optics_world.dart';
 import '../solvers/optics_solver.dart';
-import 'constraint.dart';
 
 // 教学目标类型枚举
 enum ObjectiveType {

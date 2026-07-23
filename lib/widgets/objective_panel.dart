@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../optics/config/learning_objective.dart';
-import '../optics/config/lab_scenario.dart';
 import '../optics/models/optics_world.dart';
 import '../optics/solvers/optics_solver.dart';
 

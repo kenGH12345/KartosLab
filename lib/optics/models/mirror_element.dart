@@ -1,7 +1,4 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 import '../physics/optics_math.dart';
 import 'optical_element.dart';
@@ -116,9 +113,9 @@ class MirrorElement extends OpticalElement {
 
     // 绘制镜子主体
     paint.color = switch (mirrorKind) {
-      MirrorType.concave => Colors.green.withOpacity(0.3),
-      MirrorType.convex => Colors.orange.withOpacity(0.3),
-      MirrorType.plane => Colors.grey.withOpacity(0.3),
+      MirrorType.concave => Colors.green.withValues(alpha: 0.3),
+      MirrorType.convex => Colors.orange.withValues(alpha: 0.3),
+      MirrorType.plane => Colors.grey.withValues(alpha: 0.3),
     };
     paint.style = PaintingStyle.fill;
     canvas.drawRect(rect, paint);

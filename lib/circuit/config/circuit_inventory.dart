@@ -28,10 +28,9 @@ class CircuitComponentInventory {
     if (raw == null || raw is! Map<String, dynamic>) {
       return const CircuitComponentInventory(availableComponents: {});
     }
-    final available = raw as Map<String, dynamic>;
     final map = <ComponentType, CircuitComponentSpec>{};
 
-    for (final entry in available.entries) {
+    for (final entry in raw.entries) {
       final type = _parseComponentType(entry.key);
       final spec = CircuitComponentSpec.fromJson(
           entry.value as Map<String, dynamic>);
