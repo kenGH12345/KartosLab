@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../common/controls/phet_slider.dart';
 import '../models/optics_solver.dart';
 import '../models/optics_state.dart';
 
@@ -76,6 +77,15 @@ class OpticsScene extends StatelessWidget {
                 left: 18,
                 bottom: 18,
                 child: _ZoomButtons(state: state, onChanged: onStateChanged),
+              ),
+              Positioned(
+                right: 18,
+                bottom: 18,
+                child: _ParamPanel(
+                  state: state,
+                  focalLength: solved.focalLength,
+                  onChanged: onStateChanged,
+                ),
               ),
             ],
           ),
@@ -751,6 +761,88 @@ class _ZoomButtons extends StatelessWidget {
           icon: const Icon(Icons.zoom_out_rounded),
         ),
       ],
+    );
+  }
+}
+
+/// 透镜/镜面参数面板：曲率半径 R + 折射率 n（仅 lens 显示） + 当前焦距 f 徽章。
+///
+/// f 徽章直接读 [solved.focalLength]（solver 每帧现算），确保调参与显示强一致。
+/// n 下界故意设为 1.1 而非 1.0——避开 solver 中 `max(0.1, n-1)` 截断行为的
+/// 视觉死区（n<1.1 时公式分母被 clamp，滑条继续拖动但 f 不再变化会让学生困惑）。
+class _ParamPanel extends StatelessWidget {
+  const _ParamPanel({
+    required this.state,
+    required this.focalLength,
+    required this.onChanged,
+  });
+
+  final OpticsState state;
+  final double focalLength;
+  final ValueChanged<OpticsState> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final isLens = state.mode == SimMode.lens;
+    final fText = focalLength.isFinite
+        ? '${focalLength.toStringAsFixed(0)} cm'
+        : '∞';
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.92),
+        border: Border.all(color: const Color(0xFF90A4AE)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        child: SizedBox(
+          width: 220,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // f 徽章：读数强调（大字号 + 主色）
+              Row(
+                children: [
+                  const Text(
+                    '当前焦距 f =',
+                    style: TextStyle(fontSize: 12, color: Color(0xFF334155)),
+                  ),
+                  const Spacer(),
+                  Text(
+                    fText,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF166534),
+                    ),
+                  ),
+                ],
+              ),
+              const Divider(height: 14),
+              PhetSlider(
+                label: '曲率半径 R',
+                unit: 'cm',
+                min: 30,
+                max: 200,
+                step: 5,
+                value: state.radius,
+                onChanged: (v) => onChanged(state.copyWith(radius: v)),
+              ),
+              if (isLens)
+                PhetSlider(
+                  label: '折射率 n',
+                  min: 1.1,
+                  max: 2.0,
+                  step: 0.05,
+                  value: state.refractiveIndex,
+                  onChanged: (v) => onChanged(state.copyWith(refractiveIndex: v)),
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
