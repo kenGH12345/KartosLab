@@ -97,7 +97,7 @@ class _Card<T extends Object> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget card() => item.customFeedback?.call() ?? Card(margin: EdgeInsets.zero,
+    Widget card() => Card(margin: EdgeInsets.zero,
         color: item.color.withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10),
             side: BorderSide(color: item.color.withValues(alpha: 0.3))),
@@ -107,7 +107,12 @@ class _Card<T extends Object> extends StatelessWidget {
               SizedBox(width: fsz >= 14 ? 12 : 6),
               Text(item.label, style: TextStyle(fontWeight: FontWeight.w600, fontSize: fsz)),
             ])));
-    return Draggable<T>(data: item.data, feedback: card(), childWhenDragging: Opacity(opacity: 0.4, child: card()), child: card());
+    // 拖拽反馈：优先用 customFeedback（渲染画布上的最终形态预览），否则用 tray 卡片
+    // 用 Material 包一层，避免 customFeedback 缺 Material 上下文时抛异常（如 Icon/Text）
+    final feedback = item.customFeedback != null
+        ? Material(color: Colors.transparent, child: item.customFeedback!())
+        : card();
+    return Draggable<T>(data: item.data, feedback: feedback, childWhenDragging: Opacity(opacity: 0.4, child: card()), child: card());
   }
 }
 

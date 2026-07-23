@@ -296,14 +296,23 @@ class _CircuitScreenState extends State<CircuitScreen> {
           child: const Text('确定', style: TextStyle(color: Colors.red)))],
   ));
 
-  static const _trayItems = [
-    DragItem(data: ComponentType.battery, label: '电池', icon: Icons.battery_5_bar, color: Color(0xFFEF4444)),
-    DragItem(data: ComponentType.resistor, label: '电阻', icon: Icons.waves, color: Color(0xFFF59E0B)),
-    DragItem(data: ComponentType.lightBulb, label: '灯泡', icon: Icons.lightbulb_outline, color: Color(0xFF22C55E)),
-    DragItem(data: ComponentType.switch_, label: '开关', icon: Icons.toggle_off_outlined, color: Color(0xFF6366F1)),
-    DragItem(data: ComponentType.fuse, label: '保险丝', icon: Icons.flash_on_rounded, color: Color(0xFFF97316)),
-    DragItem(data: ComponentType.ground, label: '接地', icon: Icons.vertical_align_bottom_rounded, color: Color(0xFF6B7280)),
-    DragItem(data: ComponentType.wire, label: '导线', icon: Icons.horizontal_rule_rounded, color: Color(0xFF334155)),
+  // 每项都带 customFeedback：拖拽跟随手指的浮起视觉与画布上落定的最终形态一致（迷你版）。
+  // 参见 lib/widgets/drag_drop_workspace.dart 的 DragItem.customFeedback。
+  static final _trayItems = <DragItem<ComponentType>>[
+    DragItem(data: ComponentType.battery, label: '电池', icon: Icons.battery_5_bar, color: const Color(0xFFEF4444),
+        customFeedback: () => ComponentIconWidget.dragFeedback(ComponentType.battery)),
+    DragItem(data: ComponentType.resistor, label: '电阻', icon: Icons.waves, color: const Color(0xFFF59E0B),
+        customFeedback: () => ComponentIconWidget.dragFeedback(ComponentType.resistor)),
+    DragItem(data: ComponentType.lightBulb, label: '灯泡', icon: Icons.lightbulb_outline, color: const Color(0xFF22C55E),
+        customFeedback: () => ComponentIconWidget.dragFeedback(ComponentType.lightBulb)),
+    DragItem(data: ComponentType.switch_, label: '开关', icon: Icons.toggle_off_outlined, color: const Color(0xFF6366F1),
+        customFeedback: () => ComponentIconWidget.dragFeedback(ComponentType.switch_)),
+    DragItem(data: ComponentType.fuse, label: '保险丝', icon: Icons.flash_on_rounded, color: const Color(0xFFF97316),
+        customFeedback: () => ComponentIconWidget.dragFeedback(ComponentType.fuse)),
+    DragItem(data: ComponentType.ground, label: '接地', icon: Icons.vertical_align_bottom_rounded, color: const Color(0xFF6B7280),
+        customFeedback: () => ComponentIconWidget.dragFeedback(ComponentType.ground)),
+    DragItem(data: ComponentType.wire, label: '导线', icon: Icons.horizontal_rule_rounded, color: const Color(0xFF334155),
+        customFeedback: () => ComponentIconWidget.dragFeedback(ComponentType.wire)),
   ];
 
   @override

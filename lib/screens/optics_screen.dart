@@ -33,13 +33,22 @@ class _OpticsScreenState extends State<OpticsScreen> {
   int _nextElementId = 1; // 单调自增，避免 elements.length+1 在删元件后重号冲突
 
   // 可拖拽元件定义（与 circuits 的 ComponentType 同模式，供 DragDropWorkspace 使用）
-  static const _trayItems = [
-    DragItem(data: 'lens_convex', label: '凸透镜', icon: Icons.lens_blur_rounded, color: Color(0xFF3B82F6)),
-    DragItem(data: 'lens_concave', label: '凹透镜', icon: Icons.lens_outlined, color: Color(0xFFEF4444)),
-    DragItem(data: 'mirror_plane', label: '平面镜', icon: Icons.motion_photos_on_rounded, color: Color(0xFF6366F1)),
-    DragItem(data: 'mirror_concave', label: '凹面镜', icon: Icons.texture_rounded, color: Color(0xFF22C55E)),
-    DragItem(data: 'lightSource', label: '光源', icon: Icons.light_mode_rounded, color: Color(0xFFEAB308)),
-    DragItem(data: 'screen', label: '光屏', icon: Icons.crop_portrait_rounded, color: Color(0xFF6B7280)),
+  //
+  // 每项都带 customFeedback：拖拽跟随手指的浮起视觉与画布上落定的最终形态一致（迷你版）。
+  // 参见 lib/widgets/drag_drop_workspace.dart 的 DragItem.customFeedback。
+  static final _trayItems = <DragItem<String>>[
+    DragItem(data: 'lens_convex', label: '凸透镜', icon: Icons.lens_blur_rounded, color: const Color(0xFF3B82F6),
+        customFeedback: () => const _TrayPreview.lens(convex: true)),
+    DragItem(data: 'lens_concave', label: '凹透镜', icon: Icons.lens_outlined, color: const Color(0xFFEF4444),
+        customFeedback: () => const _TrayPreview.lens(convex: false)),
+    DragItem(data: 'mirror_plane', label: '平面镜', icon: Icons.motion_photos_on_rounded, color: const Color(0xFF6366F1),
+        customFeedback: () => const _TrayPreview.mirror(color: Color(0xFF1D4ED8))),
+    DragItem(data: 'mirror_concave', label: '凹面镜', icon: Icons.texture_rounded, color: const Color(0xFF22C55E),
+        customFeedback: () => const _TrayPreview.mirror(color: Color(0xFF15803D))),
+    DragItem(data: 'lightSource', label: '光源', icon: Icons.light_mode_rounded, color: const Color(0xFFEAB308),
+        customFeedback: () => const _TrayPreview.source()),
+    DragItem(data: 'screen', label: '光屏', icon: Icons.crop_portrait_rounded, color: const Color(0xFF6B7280),
+        customFeedback: () => const _TrayPreview.screen()),
   ];
 
   @override void initState() { super.initState(); _loadInitialScenario(); }
@@ -483,6 +492,47 @@ class _FocalPointsPainter extends CustomPainter {
   bool shouldRepaint(covariant _FocalPointsPainter old) =>
       old.world != world || old.proj != proj;
 }
+
+/// 托盘拖拽反馈的迷你预览（Draggable.feedback 用）。
+///
+/// 用途：让"拖起来跟随手指的浮起视觉"与"落到画布上的最终形态"保持一致（迷你版）。
+/// 由于 tray item 是"类别"而非"实例"（tray 里的凸透镜不绑定具体 focalLength），
+/// 因此本 widget 不复用 _LensIcon 等实例化组件，而是画结构性缩略图。
+class _TrayPreview extends StatelessWidget {
+  final _PreviewKind kind;
+  final bool convex; // for lens
+  final Color? tint; // for mirror
+  const _TrayPreview.lens({required this.convex}) : kind = _PreviewKind.lens, tint = null;
+  const _TrayPreview.mirror({required Color color}) : kind = _PreviewKind.mirror, convex = false, tint = color;
+  const _TrayPreview.source() : kind = _PreviewKind.source, convex = false, tint = null;
+  const _TrayPreview.screen() : kind = _PreviewKind.screen, convex = false, tint = null;
+
+  @override
+  Widget build(BuildContext context) {
+    switch (kind) {
+      case _PreviewKind.lens:
+        final c = convex ? const Color(0xFF3B82F6) : const Color(0xFFEF4444);
+        final bc = convex ? const Color(0xFF1E40AF) : const Color(0xFF991B1B);
+        return SizedBox(width: 32, height: 56,
+            child: CustomPaint(painter: _LensPainter(convex: convex, color: c, borderColor: bc)));
+      case _PreviewKind.mirror:
+        return Container(width: 6, height: 56,
+            decoration: BoxDecoration(color: const Color(0xFFCBD5E1),
+                borderRadius: BorderRadius.circular(3),
+                border: Border.all(color: tint!, width: 2)));
+      case _PreviewKind.source:
+        return SvgPicture.asset('assets/images/pencil.svg',
+            width: 20, height: 56, fit: BoxFit.fill);
+      case _PreviewKind.screen:
+        return Container(width: 6, height: 56,
+            decoration: BoxDecoration(color: const Color(0xFFD1D5DB),
+                borderRadius: BorderRadius.circular(2),
+                border: Border.all(color: const Color(0xFF6B7280), width: 2)));
+    }
+  }
+}
+
+enum _PreviewKind { lens, mirror, source, screen }
 
 class _RightPanel extends StatelessWidget {
   final LabScenario scenario; final OpticsWorld world;
