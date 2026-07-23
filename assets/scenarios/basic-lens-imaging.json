@@ -65,12 +65,12 @@
 
   "objectives": {
     "type": "guided",
-    "description": "观察凸透镜成像的三种情况：放大倒立、缩小倒立、无法成像",
+    "description": "观察凸透镜成像的三种情况：放大倒立、缩小倒立、无法成像（f = 焦距，2f = 二倍焦距）",
     "successCriteria": [
       {
         "id": "sc-1",
         "type": "imageProperties",
-        "description": "当物距 > 2f 时，成缩小倒立实像",
+        "description": "当物距 u > 2f（二倍焦距）时，成缩小倒立的实像",
         "params": {}
       }
     ],
