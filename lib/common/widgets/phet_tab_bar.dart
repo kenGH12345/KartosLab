@@ -74,16 +74,17 @@ class _PhetTabbedScreenState extends State<PhetTabbedScreen> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     final accent = widget.accentColor ?? const Color(0xFF1177AA);
-    return Column(
+    return Scaffold(
+      appBar: widget.title != null
+          ? AppBar(
+              title: Text(widget.title!),
+              backgroundColor: accent,
+              foregroundColor: Colors.white,
+              elevation: 0,
+            )
+          : null,
+      body: Column(
       children: [
-        if (widget.title != null)
-          Padding(
-            padding: widget.tabBarPadding ?? const EdgeInsets.only(top: 8, left: 12, right: 12),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(widget.title!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
-            ),
-          ),
         Padding(
           padding: widget.tabBarPadding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
           child: TabBar(
@@ -115,6 +116,7 @@ class _PhetTabbedScreenState extends State<PhetTabbedScreen> with SingleTickerPr
           ),
         ),
       ],
+      ),
     );
   }
 }
