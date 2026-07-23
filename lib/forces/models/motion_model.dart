@@ -1,6 +1,7 @@
 import 'forces_simulation.dart';
 import 'forces_item.dart';
 import '../config/forces_scenario.dart';
+import '../../common/chart/chart_series.dart';
 
 /// Motion/Friction/Acceleration 三屏幕共用模型
 /// 管理物品堆叠 + 推力者状态 + 物理引擎
@@ -33,6 +34,10 @@ class MotionModel {
 
   final ForcesSimulation sim;
   bool showAccelerometer;
+
+  // 图表数据源（可用于 PhetChart）
+  final MemorySeriesDataProvider posData = MemorySeriesDataProvider();
+  final MemorySeriesDataProvider velData = MemorySeriesDataProvider();
 
   // 物品堆叠（最多 3 个）
   final List<ForceItem> stack = [];
@@ -68,6 +73,11 @@ class MotionModel {
     sim.frictionCoeff = mu.clamp(0, ForcesSimulation.maxFriction);
   }
 
-  void tick(double dt) => sim.tick(dt);
-  void reset() { sim.reset(); clearStack(); }
+  void tick(double dt, double totalTime) {
+    sim.tick(dt);
+    // 记录 chart 数据
+    posData.add(TimeDataPoint(totalTime, sim.position));
+    velData.add(TimeDataPoint(totalTime, sim.velocity));
+  }
+  void reset() { sim.reset(); posData.clear(); velData.clear(); clearStack(); }
 }

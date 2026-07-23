@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/circuit_state.dart';
+import '../../common/controls/phet_slider.dart';
 
 class CircuitControls extends StatelessWidget {
   final CircuitState state;
@@ -32,19 +33,21 @@ class CircuitControls extends StatelessWidget {
         border: Border(top: BorderSide(color: Color(0xFFB8D8E8))),
       ),
       child: Row(children: [
-        Text('${sel.type.label}:', style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF0B2B3D))),
-        const SizedBox(width: 8),
         IconButton(icon: const Icon(Icons.remove_circle_outline, size: 22), onPressed: () => onValueChanged(sel.value - (sel.type.valueStep)),
           padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 32, minHeight: 32)),
+        const SizedBox(width: 4),
         Expanded(
-          child: Slider(
-            value: sel.value, min: sel.type.valueMin, max: sel.type.valueMax,
-            divisions: ((sel.type.valueMax - sel.type.valueMin) / sel.type.valueStep).round(),
-            activeColor: const Color(0xFF1177AA),
+          child: PhetSlider(
+            label: sel.type.label,
+            unit: sel.type.unit,
+            min: sel.type.valueMin,
+            max: sel.type.valueMax,
+            step: sel.type.valueStep,
+            value: sel.value,
             onChanged: onValueChanged,
           ),
         ),
-        Text('${sel.value.toInt()} ${sel.type.unit}', style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF0B2B3D))),
+        const SizedBox(width: 4),
         IconButton(icon: const Icon(Icons.add_circle_outline, size: 22), onPressed: () => onValueChanged(sel.value + sel.type.valueStep),
           padding: EdgeInsets.zero, constraints: const BoxConstraints(minWidth: 32, minHeight: 32)),
       ]),

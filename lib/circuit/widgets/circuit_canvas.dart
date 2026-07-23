@@ -33,9 +33,15 @@ class CircuitCanvas extends StatelessWidget {
       final canvas = GestureDetector(
         onTapUp: (d) {
           final w = proj.toWorld(d.localPosition);
+          // 导线优先命中（8px 内）：解决"元件矩形吞点击"导致贴近元件的导线选不中的问题
+          final closeWire = _hitTestWire(w, proj, threshold: 8);
+          if (closeWire != null) { onWireTap(closeWire); return; }
+          // 元件本体命中
           final hit = _hitTest(w);
           if (hit != null) { onComponentTap(hit.id); return; }
-          if (_hitTestWire(w, proj) != null) { onWireTap(_hitTestWire(w, proj)!); return; }
+          // 兜底：15px 内的导线仍可命中（远离元件的导线段保持原体验）
+          final farWire = _hitTestWire(w, proj, threshold: 15);
+          if (farWire != null) { onWireTap(farWire); return; }
           onTap(w);
         },
         onScaleStart: (d) {
@@ -126,7 +132,7 @@ class CircuitCanvas extends StatelessWidget {
     return null;
   }
 
-  int? _hitTestWire(Offset wp, SceneProjection proj) {
+  int? _hitTestWire(Offset wp, SceneProjection proj, {double threshold = 15}) {
     final sp = proj.toScreen(wp); // 点击位置（屏幕坐标）
 
     for (var i = 0; i < state.wires.length; i++) {
@@ -152,7 +158,7 @@ class CircuitCanvas extends StatelessWidget {
         if (dist < minDist) minDist = dist;
       }
 
-      if (minDist < 15) return i;
+      if (minDist < threshold) return i;
     }
     return null;
   }
@@ -265,10 +271,30 @@ class CircuitPainter extends CustomPainter {
       final snap = state.findSnapTarget(state.dragVertexNewPos!, excludeVertexId: state.draggingVertexId);
       if (snap != null) {
         final snapPos = projection.toScreen(snap.position);
-        canvas.drawCircle(snapPos, 12, Paint()
-          ..color = const Color(0xFF22C55E).withValues(alpha: 0.5)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2);
+        final draggedV = state.findVertex(state.draggingVertexId!);
+        final isTerminalDrag = draggedV != null && draggedV.isTerminal;
+        if (isTerminalDrag) {
+          // 拖动的是元件端子：拒绝 merge，显示红色禁止图标提示"不能连"
+          final red = const Color(0xFFEF4444);
+          canvas.drawCircle(snapPos, 14, Paint()
+            ..color = red.withValues(alpha: 0.6)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2.5);
+          // 禁止斜杠 "⊘"
+          final r = 10.0;
+          final dx = r * 0.7071, dy = r * 0.7071;
+          canvas.drawLine(
+            Offset(snapPos.dx - dx, snapPos.dy - dy),
+            Offset(snapPos.dx + dx, snapPos.dy + dy),
+            Paint()..color = red..strokeWidth = 2.5..strokeCap = StrokeCap.round,
+          );
+        } else {
+          // 普通顶点拖动：可磁吸合并，显示绿色高亮
+          canvas.drawCircle(snapPos, 12, Paint()
+            ..color = const Color(0xFF22C55E).withValues(alpha: 0.5)
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2);
+        }
       }
     }
   }

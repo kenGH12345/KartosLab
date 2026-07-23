@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 
 import '../models/netforce_model.dart';
 import '../widgets/speedometer.dart';
-import '../widgets/force_arrow_painter.dart';
+import '../../common/controls/arrow_painter.dart';
 import '../config/forces_scenario.dart';
+import '../../common/simulation_clock.dart';
+import '../../common/widgets/time_control_bar.dart';
+import '../../common/controls/game_timer.dart';
+import '../../common/widgets/game_over_dialog.dart';
+import '../../common/widgets/game_scoreboard.dart';
+import '../../common/widgets/property_control_panel.dart';
 
 class NetForceScreen extends StatefulWidget {
   const NetForceScreen({super.key, this.scenario});
@@ -14,8 +20,10 @@ class NetForceScreen extends StatefulWidget {
 
 class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStateMixin {
   late final NetforceModel _model;
-  late final AnimationController _ticker;
+  late final SimulationClock _clock;
   bool _showValues = true, _showSum = true, _showSpeed = true;
+  final GameTimer _gameTimer = GameTimer();
+  bool _gameOverShown = false;
 
   // 拖拽悬停状态
   bool? _hoverSide;
@@ -26,48 +34,74 @@ class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStat
     _model = widget.scenario != null
         ? NetforceModel.fromScenario(widget.scenario!)
         : NetforceModel();
-    _ticker = AnimationController(vsync: this)..addListener(_tick); _startTicker();
+    _clock = SimulationClock(fps: 60);
+    _clock.attach(this);
+    _clock.onTick = (dt, _) { if (_model.isRunning) { _model.tick(dt); setState(() {}); } };
+    _clock.onStarted = () { setState(_model.go); _gameTimer.start(); _gameOverShown = false; };
+    _clock.onPaused = () { setState(_model.pause); _gameTimer.stop(); };
+    _clock.onReset = () { setState(_model.reset); _gameTimer.reset(); _gameOverShown = false; };
+    _clock.play();
   }
-  @override void dispose() { _ticker.dispose(); super.dispose(); }
+  @override void dispose() { _clock.dispose(); super.dispose(); }
 
-  void _startTicker() { _ticker.repeat(period: const Duration(milliseconds: 16)); }
-
-  void _tick() {
-    if (_model.isRunning) { _model.tick(0.016); setState(() {}); }
-  }
-
-  @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('合力'), backgroundColor: const Color(0xFFFEF3C7)),
-    body: Column(children: [
+  @override Widget build(BuildContext context) {
+    if (_model.isGameOver && !_gameOverShown) {
+      _gameOverShown = true;
+      _gameTimer.stop();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => GameOverDialog(
+              score: (_model.leftForce + _model.rightForce).toInt(),
+              stars: _model.winner != null ? 3 : 1,
+              elapsedMs: _gameTimer.elapsedMs,
+              title: '${_model.winner == 'right' ? '红队' : '蓝队'} 获胜! 🎉',
+              onReplay: () {
+                Navigator.of(context).pop();
+                setState(_model.reset);
+                _gameTimer.start();
+                _gameOverShown = false;
+              },
+            ),
+          );
+        }
+      });
+    }
+    return Column(children: [
       Expanded(flex: 2, child: _buildForceDisplay()),
-      Container(padding: const EdgeInsets.all(12), color: const Color(0xFFF8FAFC),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
+      PropertyControlPanel(
+        padding: const EdgeInsets.all(12),
+        spacing: 6,
+        children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             _checkChip('合力', _showSum, (v) => setState(() => _showSum = v)),
             _checkChip('值', _showValues, (v) => setState(() => _showValues = v)),
             _checkChip('速度', _showSpeed, (v) => setState(() => _showSpeed = v)),
           ]),
-          const SizedBox(height: 8),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _btn(_model.isRunning ? '暂停' : 'Go!', _model.isRunning ? const Color(0xFFF59E0B) : const Color(0xFF22C55E),
-                () => setState(() => _model.isRunning ? _model.pause() : _model.go())),
+            TimeControlBar(clock: _clock),
             const SizedBox(width: 12),
             _btn('Return', const Color(0xFF3B82F6), () => setState(_model.returnCart)),
-            const SizedBox(width: 12),
-            _btn('重置', const Color(0xFF6B7280), () => setState(_model.reset)),
           ]),
-          if (_model.isGameOver)
-            Padding(padding: const EdgeInsets.only(top: 8), child: Text('${_model.winner == 'right' ? '红队' : '蓝队'} 获胜! 🎉',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: Color(0xFFDC2626)))),
-        ])),
+          GameScoreboard(
+            level: 1, maxLevel: 1,
+            score: (_model.leftForce + _model.rightForce).toInt(),
+            elapsedMs: _gameTimer.elapsedMs,
+            title: '总力',
+          ),
+        ],
+      ),
       if (_showSpeed) SizedBox(height: 80, child: Speedometer(speed: _model.cartVelocity.abs() * 10)),
       Container(height: 80, color: const Color(0xFFF1F5F9), child: Row(children: [
         Expanded(child: _pullerTray(false)),
         Container(width: 2, color: const Color(0xFFCBD5E1)),
         Expanded(child: _pullerTray(true)),
       ])),
-    ]),
-  );
+  ]);
+
+  }
 
   Widget _buildForceDisplay() => LayoutBuilder(builder: (ctx, c) {
     final w = c.maxWidth, h = c.maxHeight;

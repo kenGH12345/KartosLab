@@ -10,6 +10,7 @@ import '../../services/sound_effects.dart';
 import '../widgets/component_icon.dart';
 import '../widgets/circuit_controls.dart';
 import '../../widgets/drag_drop_workspace.dart';
+import '../../common/controls/phet_combo_box.dart';
 
 /// AC-4 feature flag · true = 从 JSON scenario 加载初始状态 · false = 保留原空拓扑硬编码
 ///
@@ -32,6 +33,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
   SoundEffects? _sfx;
   int _nextId = 0;
   CircuitScenarioManager? _scenarioManager;
+  String _currentScenarioId = _defaultScenarioId;
   final FocusNode _focusNode = FocusNode();
 
   bool _isToolboxDropActive = false;
@@ -62,6 +64,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
         _state = next;
         _solved = CircuitSolver.solve(next);
         _nextId = _computeNextId(next);
+        _currentScenarioId = _defaultScenarioId;
       });
     } catch (e) {
       debugPrint('Failed to load default circuit scenario: $e');
@@ -78,6 +81,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
         _state = next;
         _solved = CircuitSolver.solve(next);
         _nextId = _computeNextId(next);
+        _currentScenarioId = scenarioId;
       });
     } catch (e) {
       debugPrint('Failed to switch circuit scenario to $scenarioId: $e');
@@ -159,6 +163,18 @@ class _CircuitScreenState extends State<CircuitScreen> {
       if (_state.draggingVertexId != null) setState(() => _state = _state.copyWith(draggingVertexId: null, dragVertexNewPos: null));
       _dragStartMousePos = w; _dragStartCompPos = Offset(sel.x, sel.y); return;
     }
+    // 选中的是导线：优先命中导线端点（15px），进入顶点拖动模式（用于断连/挪端点）
+    final selWire = _state.selectedId != null ? _state.wires.where((wr) => wr.id == _state.selectedId).toList() : const <WireSegment>[];
+    if (selWire.isNotEmpty) {
+      final wr = selWire.first;
+      for (final vid in [wr.startVertexId, wr.endVertexId]) {
+        final v = _state.findVertex(vid);
+        if (v != null && (v.pos - w).distance < 15) {
+          setState(() => _state = _state.copyWith(draggingVertexId: v.id, dragVertexNewPos: w));
+          return;
+        }
+      }
+    }
     final hit = _state.components.where((c) => c.hitTest(w)).toList();
     if (hit.isNotEmpty) {
       setState(() => _state = _state.copyWith(selectedId: _state.selectedId == hit.first.id ? null : hit.first.id));
@@ -202,8 +218,35 @@ class _CircuitScreenState extends State<CircuitScreen> {
       final np = _state.dragVertexNewPos ?? _state.findVertex(vId)!.pos;
       final snap = _state.findSnapTarget(np, excludeVertexId: vId);
       if (snap != null) {
-        _mergeVertices(vId, snap.vertexId!);
+        // 保护：不允许把元件 terminal merge 到别的顶点（会导致元件被硬拉到目标位置）
+        final draggedV = _state.findVertex(vId);
+        if (draggedV != null && draggedV.isTerminal) {
+          _update(_state.copyWith(draggingVertexId: null, dragVertexNewPos: null));
+        } else {
+          _mergeVertices(vId, snap.vertexId!);
+        }
       } else {
+        // 断连分支：若被拖顶点是某元件的 terminal 且无磁吸目标，则新建自由 vertex 承接 wire 端，原 terminal 留在元件上
+        final draggedV = _state.findVertex(vId);
+        final ownerComp = _state.components.where((c) => c.startVertexId == vId || c.endVertexId == vId).toList();
+        if (draggedV != null && draggedV.isTerminal && ownerComp.isNotEmpty) {
+          final wiresOnTerminal = _state.wires.where((wr) => wr.startVertexId == vId || wr.endVertexId == vId).toList();
+          if (wiresOnTerminal.isNotEmpty) {
+            final newV = Vertex(id: _vid(), x: np.dx, y: np.dy);
+            final newWires = _state.wires.map((wr) {
+              if (wr.startVertexId == vId) return wr.copyWith(startVertexId: newV.id);
+              if (wr.endVertexId == vId) return wr.copyWith(endVertexId: newV.id);
+              return wr;
+            }).toList();
+            _update(_state.copyWith(
+              vertices: [..._state.vertices, newV],
+              wires: newWires,
+              draggingVertexId: null, dragVertexNewPos: null,
+            ), sound: true);
+            _dragStartMousePos = null; _dragStartCompPos = null;
+            return;
+          }
+        }
         _update(_state.copyWith(
           vertices: _state.vertices.map((v) => v.id == vId ? v.copyWith(x: np.dx, y: np.dy) : v).toList(),
           draggingVertexId: null, dragVertexNewPos: null,
@@ -279,24 +322,19 @@ class _CircuitScreenState extends State<CircuitScreen> {
       }
     }, child: Scaffold(
       backgroundColor: const Color(0xFFF6FAFC),
-      appBar: AppBar(title: Text(isWireSelected?'电路搭建 - 导线':sel!=null?'电路搭建 - ${sel.type.label}':'电路搭建'),
+        appBar: AppBar(title: Text(isWireSelected?'电路搭建 - 导线':sel!=null?'电路搭建 - ${sel.type.label}':'电路搭建'),
         backgroundColor: const Color(0xFF0B2B3D), foregroundColor: Colors.white, actions: [
-        PopupMenuButton<String>(
-          icon: const Icon(Icons.folder_open_rounded, size: 22),
-          tooltip: '切换场景',
-          onSelected: _switchScenario,
-          itemBuilder: (_) {
-            final mgr = _scenarioManager;
-            if (mgr == null) return [];
-            return mgr.scenarios.map((s) => PopupMenuItem<String>(
-              value: s.scenarioId,
-              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(s.name, style: const TextStyle(fontWeight: FontWeight.w500)),
-                Text(s.description, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
-              ]),
-            )).toList();
-          },
-        ),
+        if (_scenarioManager != null)
+          SizedBox(
+            width: 140,
+            child: PhetComboBox<String>(
+              items: _scenarioManager!.scenarios.map((s) => s.scenarioId).toList(),
+              itemLabels: _scenarioManager!.scenarios.map((s) => s.name).toList(),
+              value: _currentScenarioId,
+              onChanged: _switchScenario,
+            ),
+          ),
+          const SizedBox(width: 8),
         if (sel != null && sel.type == ComponentType.switch_)
           IconButton(icon: Icon(sel.isClosed ? Icons.toggle_on : Icons.toggle_off, color: const Color(0xFF22C55E)), tooltip: '切换', onPressed: _toggleSwitch),
         if (sel != null)

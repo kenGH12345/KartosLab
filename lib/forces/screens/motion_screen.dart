@@ -2,11 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../models/motion_model.dart';
 import '../models/forces_item.dart';
-import '../widgets/force_arrow_painter.dart';
+import '../../common/controls/arrow_painter.dart';
 import '../widgets/speedometer.dart';
 import '../widgets/applied_force_slider.dart';
 import '../widgets/accelerometer.dart';
 import '../config/forces_scenario.dart';
+import '../../common/simulation_clock.dart';
+import '../../common/widgets/time_control_bar.dart';
+import '../../common/chart/chart_series.dart';
+import '../../common/chart/phet_chart.dart';
+import '../../common/chart/chart_painter.dart';
+import '../../common/controls/phet_slider.dart';
+import '../../common/widgets/property_control_panel.dart';
+import '../../common/chart/graph_suite.dart';
+import '../../common/controls/phet_number_field.dart';
 
 /// Motion屏幕（无摩擦滑板模式）
 class MotionScreen extends StatefulWidget {
@@ -21,8 +30,10 @@ enum MotionScreenMode { motion, friction, acceleration }
 
 class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMixin {
   late final MotionModel _model;
-  late final AnimationController _ticker;
+  late final SimulationClock _clock;
   bool _showForces = true, _showSum = true, _showValues = true, _showMasses = true, _showSpeed = true;
+  bool _showChart = false;
+  int _chartMode = 0;
   double _friction = 0;
 
   @override void initState() {
@@ -40,51 +51,70 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
         showAccelerometer: widget.mode == MotionScreenMode.acceleration,
       );
     }
-    _ticker = AnimationController(vsync: this)..addListener(_loop);
-    _ticker.repeat(period: const Duration(milliseconds: 16));
+    _clock = SimulationClock(fps: 60);
+    _clock.attach(this);
+    _clock.onTick = (dt, t) { _model.tick(dt, t); setState(() {}); };
+    _clock.play();
   }
 
-  @override void dispose() { _model.reset(); _ticker.dispose(); super.dispose(); }
-
-  void _loop() { _model.tick(0.016); setState(() {}); }
+  @override void dispose() { _model.reset(); _clock.dispose(); super.dispose(); }
 
   void _addItem(ForceItem item) { if (_model.canAdd) setState(() => _model.addItem(item)); }
 
-  String get _title => switch (widget.mode) { MotionScreenMode.motion => '运动', MotionScreenMode.friction => '摩擦', MotionScreenMode.acceleration => '加速度' };
-
-  Color get _accent => switch (widget.mode) { MotionScreenMode.motion => const Color(0xFF22C55E), MotionScreenMode.friction => const Color(0xFFF59E0B), MotionScreenMode.acceleration => const Color(0xFF7C3AED) };
-
-  @override Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: Text('${_title} (${widget.mode.name})'), backgroundColor: _accent.withAlpha(20)),
-    body: Column(children: [
+  @override Widget build(BuildContext context) => Column(children: [
       // 画布
       Expanded(flex: 3, child: _buildCanvas()),
+      // 图表
+      if (_showChart) _buildChart(),
       // 控制面板
-      Container(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), color: const Color(0xFFF8FAFC),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
+      PropertyControlPanel(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        spacing: 6,
+        children: [
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
             _chip('力', _showForces, (v) => setState(() => _showForces = v)),
             if (widget.mode != MotionScreenMode.motion) _chip('合力', _showSum, (v) => setState(() => _showSum = v)),
             _chip('值', _showValues, (v) => setState(() => _showValues = v)),
             _chip('质量', _showMasses, (v) => setState(() => _showMasses = v)),
             _chip('速度', _showSpeed, (v) => setState(() => _showSpeed = v)),
+            _chip('图表', _showChart, (v) => setState(() => _showChart = v)),
           ]),
-          const SizedBox(height: 6),
           AppliedForceSlider(value: _model.sim.appliedForce, onChanged: (v) => setState(() => _model.setAppliedForce(v))),
-          if (widget.mode != MotionScreenMode.motion) ...[
-            const SizedBox(height: 6),
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              const Text('摩擦: ', style: TextStyle(fontSize: 12)),
-              SizedBox(width: 150, child: Slider(value: _friction, min: 0, max: 0.5, divisions: 10,
-                  label: _friction.toStringAsFixed(2),
-                  onChanged: (v) => setState(() { _friction = v; _model.setFriction(v); }))),
-            ]),
-          ],
-        ])),
+          TimeControlBar(clock: _clock),
+          Row(mainAxisSize: MainAxisSize.min, children: [
+            Expanded(
+              child: PhetNumberField(
+                label: '位置',
+                unit: 'm',
+                value: _model.sim.position,
+                format: '0.0',
+                onChanged: (v) => setState(() => _model.sim.position = v),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: PhetNumberField(
+                label: '速度',
+                unit: 'm/s',
+                value: _model.sim.velocity,
+                format: '0.0',
+                onChanged: (v) => setState(() => _model.sim.velocity = v),
+              ),
+            ),
+          ]),
+          if (widget.mode != MotionScreenMode.motion)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: PhetSlider(
+                label: '摩擦', min: 0, max: 0.5, step: 0.05, value: _friction, unit: 'μ',
+                onChanged: (v) => setState(() { _friction = v; _model.setFriction(v); }),
+              ),
+            ),
+        ],
+      ),
       // 底栏
       SizedBox(height: 60, child: _buildItemTrays()),
-    ]),
-  );
+  ]);
 
   Widget _buildCanvas() => LayoutBuilder(builder: (ctx, c) {
     final w = c.maxWidth, h = c.maxHeight;
@@ -158,5 +188,44 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
   Widget _chip(String l, bool v, ValueChanged<bool> cb) => FilterChip(
       label: Text(l, style: const TextStyle(fontSize: 11)), selected: v, onSelected: cb,
       selectedColor: const Color(0xFF1177AA).withAlpha(30), visualDensity: VisualDensity.compact);
+
+  Widget _buildChart() {
+    const allSeries = [
+      ChartSeries(title: 'Position', abbr: 'x', unit: 'm', color: Color(0xFF3B82F6)),
+      ChartSeries(title: 'Velocity', abbr: 'v', unit: 'm/s', color: Color(0xFFEF4444)),
+    ];
+    final suites = [
+      GraphSuite(label: '全部', series: allSeries),
+      GraphSuite(label: '位置', series: [allSeries[0]]),
+      GraphSuite(label: '速度', series: [allSeries[1]]),
+    ];
+    final active = suites[_chartMode];
+    final maxDomain = _clock.totalTime > 20 ? _clock.totalTime + 5 : 20.0;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        GraphSuiteSelector(
+          suites: suites,
+          selectedIndex: _chartMode,
+          onChanged: (i) => setState(() => _chartMode = i),
+        ),
+        SizedBox(
+          height: 150,
+          child: PhetChart(
+            series: active.series,
+            dataProviders: active.series.length >= 2
+                ? [_model.posData, _model.velData]
+                : active.series.first.abbr == 'x' ? [_model.posData] : [_model.velData],
+            domainRange: Range(0, maxDomain),
+            rangeRange: const Range(-20, 20),
+            currentTime: _clock.totalTime,
+            domainLabel: 'Time (s)',
+            showGrid: true,
+            height: 150,
+          ),
+        ),
+      ],
+    );
+  }
 
 }
