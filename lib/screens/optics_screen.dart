@@ -204,6 +204,13 @@ class _OpticsSceneState extends State<_OpticsScene> {
         Positioned(left: 0, top: projection.origin.dy - 1, right: 0, height: 2,
             child: Container(color: const Color(0xFF7A81CA))),
         ...world.elements.map((e) => _elementWidget(e, projection, e.id == selectedId)),
+        // 焦距标记层（F/F' 与 2F/2F'）—— 独立 painter，仅按 elements 派发
+        IgnorePointer(
+          child: CustomPaint(
+            size: Size.infinite,
+            painter: _FocalPointsPainter(world: world, proj: projection),
+          ),
+        ),
         // 渲染层不拦截点击/拖放，让事件穿透到元件和 DragTarget
         if (solved != null)
           IgnorePointer(child: Stack(children: [
@@ -412,6 +419,65 @@ class _RayPainter extends CustomPainter {
   }
 
   @override bool shouldRepaint(_RayPainter o) => o.ray != ray;
+}
+
+/// 焦距标记层：读 world.elements 里的 lens/mirror，在光轴上画 F / F' / 2F / 2F' 四个点 + 文字。
+///
+/// 说明：
+/// - lens：F' 在透镜右侧（+f），F 在左侧（-f）；2F' / 2F 同理。
+/// - mirror：反射系统 F 在镜面前方（凹面镜 → 左侧）；平面镜 focalLength 为 infinity，跳过。
+class _FocalPointsPainter extends CustomPainter {
+  final OpticsWorld world;
+  final CanvasProjection proj;
+  const _FocalPointsPainter({required this.world, required this.proj});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (final e in world.elements) {
+      if (e is LensElement) {
+        final f = e.focalLength.abs();
+        if (f < 0.001) continue;
+        _drawMark(canvas, e.x + f, e.y, 'F\'');
+        _drawMark(canvas, e.x - f, e.y, 'F');
+        _drawMark(canvas, e.x + 2 * f, e.y, '2F\'', secondary: true);
+        _drawMark(canvas, e.x - 2 * f, e.y, '2F', secondary: true);
+      } else if (e is MirrorElement) {
+        if (e.focalLength.isInfinite) continue;
+        final f = e.focalLength.abs();
+        if (f < 0.001) continue;
+        // 镜面焦距在镜面前方（对凹面镜，光线来自左方 → 焦点在左）
+        _drawMark(canvas, e.x - f, e.y, 'F');
+        _drawMark(canvas, e.x - 2 * f, e.y, '2F', secondary: true);
+      }
+    }
+  }
+
+  void _drawMark(Canvas canvas, double wx, double wy, String label,
+      {bool secondary = false}) {
+    final sp = proj.toScreen(Offset(wx, wy));
+    final dotColor = secondary ? const Color(0xFFF59E0B) : const Color(0xFFDC2626);
+    final textColor = secondary ? const Color(0xFFB45309) : const Color(0xFFB91C1C);
+    canvas.drawCircle(sp, secondary ? 4 : 5, Paint()..color = dotColor);
+    canvas.drawCircle(sp, secondary ? 4 : 5,
+        Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 1.5);
+    final tp = TextPainter(
+      text: TextSpan(
+        text: label,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          shadows: const [Shadow(color: Colors.white, blurRadius: 2)],
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    tp.paint(canvas, Offset(sp.dx - tp.width / 2, sp.dy + 6));
+  }
+
+  @override
+  bool shouldRepaint(covariant _FocalPointsPainter old) =>
+      old.world != world || old.proj != proj;
 }
 
 class _RightPanel extends StatelessWidget {
