@@ -86,9 +86,10 @@ if [[ -d "$EXP_DIR" ]]; then
   done
 fi
 
-# === 检查 6: AI 自主功能测试证据链（Phase 2 新增） ===
-# agile-vibe SOP 阶段 3 强制产出 test-report/ac-verification.md；缺失则警告（非阻塞，由 code-reviewer 步骤 2.5 阻塞）
+# === 检查 6: AI 自主功能测试证据链（v0.2.0 · 自动化优先） ===
+# agile-vibe SOP 阶段 3 强制产出 test-report/ac-verification.md + integration-test.log；缺失则警告（非阻塞，由 code-reviewer 步骤 2.5 阻塞）
 AC_VERIFY="$REQ_DIR/test-report/ac-verification.md"
+INTEG_LOG="$REQ_DIR/test-report/integration-test.log"
 if [[ ! -f "$AC_VERIFY" ]]; then
   # 允许豁免：meta.yaml 含 test_exempt: true + test_exempt_reason 非空
   if grep -q "^test_exempt:[[:space:]]*true" "$META" 2>/dev/null; then
@@ -99,7 +100,7 @@ if [[ ! -f "$AC_VERIFY" ]]; then
       echo "✓ 已豁免功能测试（理由: $EXEMPT_REASON）"
     fi
   else
-    echo "⚠️  未发现 test-report/ac-verification.md（agile-vibe SOP 阶段 3 强制产出）"
+    echo "⚠️  未发现 test-report/ac-verification.md（agile-vibe SOP 阶段 3 v0.2.0 强制产出）"
     echo "    如为纯文档/纯回溯需求，请在 meta.yaml 加 test_exempt: true + test_exempt_reason: <理由>"
     # 非阻塞：由 code-reviewer 步骤 2.5 做强制门禁
   fi
@@ -110,15 +111,20 @@ else
     echo "⚠️  ac-verification.md 存在但诚实声明勾选不足 3 项（当前 $CHECKED 项 · agile-vibe SOP 9.4）"
   fi
 
-  # === 检查 6.5：零真操作检测（self-testing skill v0.1.1 边界） ===
-  # 警告级（c2 模式）：若 AC 表全 ⚠️/未验证/静态推演 且 header 未标 "self-test not executed" 且勾了诚实声明 → 只警告不阻塞
+  # v0.2.0 新增：检查 integration-test.log 是否存在（自动化断言主线）
+  if [[ ! -f "$INTEG_LOG" ]]; then
+    echo "⚠️  未发现 test-report/integration-test.log（v0.2.0 自动化断言主线 · 由 code-reviewer 步骤 2.5 阻塞）"
+  fi
+
+  # === 检查 6.5：零真操作检测（self-testing skill v0.2.0 语义调整） ===
+  # 警告级：若 AC 表全 ⚠️/未验证 且 header 未标 "self-test not executed" 且勾了诚实声明 → 只警告不阻塞
   AC_ROWS=$(grep -cE '^\| AC-[0-9]' "$AC_VERIFY" 2>/dev/null || echo 0)
-  WARN_ROWS=$(grep -cE '^\| AC-[0-9].*(⚠️|未验证|静态推演)' "$AC_VERIFY" 2>/dev/null || echo 0)
+  WARN_ROWS=$(grep -cE '^\| AC-[0-9].*(⚠️|未验证|需人工抽验)' "$AC_VERIFY" 2>/dev/null || echo 0)
   HAS_NOT_EXEC_HEADER=$(grep -c "self-test not executed" "$AC_VERIFY" 2>/dev/null || echo 0)
   if [[ "$AC_ROWS" -gt 0 && "$WARN_ROWS" == "$AC_ROWS" && "$HAS_NOT_EXEC_HEADER" -eq 0 && "$CHECKED" -ge 3 ]]; then
-    echo "⚠️  零真操作违规: 全部 $AC_ROWS 个 AC 均为 ⚠️/未验证/静态推演，但未标 'self-test not executed' 且勾选了诚实声明"
-    echo "    参考: .codebuddy/skills/core/self-testing/SKILL.md #零真操作边界"
-    echo "    修法: 补至少 1 个真操作 AC，或在 header 加 'self-test not executed · reason: <说明>'"
+    echo "⚠️  零真操作违规: 全部 $AC_ROWS 个 AC 均为 ⚠️/未验证/需人工抽验，但未标 'self-test not executed' 且勾选了诚实声明"
+    echo "    参考: .codebuddy/skills/core/self-testing/SKILL.md #零真操作边界（v0.2.0）"
+    echo "    修法: 补至少 1 个 integration_test 通过 AC，或在 header 加 'self-test not executed · reason: <说明>'"
   fi
 fi
 

@@ -140,29 +140,33 @@ flowchart LR
      bash .workflow/scripts/fingerprint-diff.sh .workflow/fingerprints/snapshots/<req-id>-pre-<N-1>.json .workflow/fingerprints/snapshots/<req-id>-pre-<N>.json
      ```
      比对结果如有 **breaking change**（模块删除/接口签名变化/依赖环出现），必须在 process.txt 记录并告知用户；用户确认后方可继续
-  9. **AI 自主功能测试（Feature Verification）**（Phase 3 收尾前必做）：功能"看起来完成"到"标记完成"之间，必须以**用户视角**逐 AC 验证一遍，产出落到 `requirements/<req-id>/test-report/`：
+  9. **AI 自主功能测试（Feature Verification）**（Phase 3 收尾前必做 · v0.2.0 自动化优先）：功能"看起来完成"到"标记完成"之间，必须**以 integration_test 自动化断言**逐 AC 验证一遍，产出落到 `requirements/<req-id>/test-report/`：
 
-     **9.1 · 功能测试（核心 · 每个 AC 必做）**
-     - AI 必须**真实运行**目标产物（`flutter run -d windows` / 命令行工具跑一遍 / 打开页面点一遍）
-     - 逐 AC 按用户操作路径执行：**每 AC ≥ 1 步操作 + 1 张对应步骤截图**（不是最终态大合影）
-     - 每 AC 在 `test-report/ac-verification.md` 记录：操作步骤 / 预期 / 实际（引用截图文件名）/ 结论（✅ / ⚠️ / ❌）
-     - 未真实操作过的 AC → 显式写 `未验证 / 理由: <说明>`，**禁止**基于源码推理填 ✅
+     **9.1 · 集成测试（核心 · 每个数据/交互类 AC 必做）**
+     - AI 必须**真实运行** integration_test：`flutter test integration_test/<sim>_test.dart -d windows 2>&1 | tee test-report/integration-test.log`
+     - 逐 AC 编写 `testWidgets` 断言：**每 AC ≥ 1 个断言 group**（数据/交互类 AC 覆盖 · 视觉/美观类转 9.3 人工抽验）
+     - 每 AC 在 `test-report/ac-verification.md` 记录：AC 类型 / test file:line 引用 / 断言要点 / 通过状态（✅ / ⚠️ / ❌）
+     - 未跑 integration_test 的 AC → 显式写 `未验证 / 理由: <说明>`，**禁止**基于源码推理填 ✅
+     - **v0.2.0 关键**：AI **不允许**要求用户为强制自测截图（视觉证据转 9.3 可选人工抽验）
 
-     **9.2 · 代码测试（地基 · 有单测项目才做）**
-     - 若项目有 `test/` 目录且当前语言有单测框架 → 跑 `flutter test` 等对应命令，输出到 `test-report/code-test.log`
-     - 无单测项目（如纯 demo / 工具脚本）→ 在 `ac-verification.md` 顶部注明"本项目无单测，仅功能测试"
+     **9.2 · 单元测试（地基 · 有单测项目才做）**
+     - 若项目有 `test/` 目录且当前语言有单测框架 → 跑 `flutter test` 等对应命令，输出到 `test-report/unit-test.log`
+     - 无单测项目（如纯 demo / 工具脚本）→ 在 `ac-verification.md` 顶部注明"本项目无单测，仅集成测试"
 
-     **9.3 · 视觉回归（UI 改动才做）**
-     - 触发条件：改动涉及 `lib/**/screens/` `lib/**/view/` `lib/common/widgets/`
-     - 3 视口截图对齐 `80-phet-sim-checklist.mdc §七 M1`（375×667 / 1024×768 / 1920×1080），存 `requirements/<req-id>/screenshots/<sim>-{mobile-portrait,tablet-landscape,desktop}.png`
-     - 视觉回归证明"没溢出没崩"，**不代替**功能测试
+     **9.3 · 人工抽验（视觉/美观类 AC · 可选 · 不强制）**
+     - 触发条件：integration_test 无法覆盖的 AC（视觉美观 / 布局居中感 / 教学卡片可读性等）
+     - AI 侧：报告中标 `未验证 / 理由: 需人工抽验` + 一句话说明可能的视觉风险
+     - 用户侧：**按需**自行 `flutter run -d windows` 观察 · 结果口头/文字反馈即可 · 可选截图存 `screenshots/`
+     - **v0.2.0 关键**：3 视口截图从**强制降为可选** · AI 不主动索要 · 用户不做也不阻塞需求推进
+     - `80-phet-sim-checklist.mdc §七 M1` 联动同步降级
 
      **9.4 · 诚实声明（对齐 `60-citation-and-honesty.mdc`）**
      - `test-report/ac-verification.md` 末尾必须勾选 3 条：
-       - [ ] 每个 ✅ 的 AC 都由本会话真实操作产物完成，非源码推理
-       - [ ] 所有截图均由本次运行产出（mtime 在 phase 3 期间），非历史缓存
-       - [ ] 未验证 / 部分失败的 AC 已在报告中显式标注
+       - [ ] 每个 ✅ 的 AC 都由本会话真实跑通 integration_test 断言，非源码推理
+       - [ ] 所有 integration-test.log 均由本次运行产出（mtime 在 phase 3 期间），非历史缓存
+       - [ ] 未验证 / 部分失败的 AC 已在报告中显式标注（视觉/美观类明确标"需人工抽验"）
      - 违反 9.4 任一项 → code-reviewer 阶段判定 Blocker 退回
+     - **零真操作**：integration_test 通过 AC 数 = 0 · 却勾选第 1 条 → 判定违规（详见 self-testing SKILL v0.2.0 "零真操作边界"）
 
      **9.5 · 豁免路径**
      - 纯文档 / 纯回溯 / 零代码改动 → 在 `meta.yaml` 加 `test_exempt: true` + `test_exempt_reason: <非空理由>`，跳过 9.1-9.4

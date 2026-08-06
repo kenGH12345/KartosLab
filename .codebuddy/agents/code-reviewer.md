@@ -88,27 +88,29 @@ tools: Read, Glob, Grep, Bash
 2. 按文件分组（按目录 / 按模块）
 3. 不要"重新评审整仓"，只看本次改动
 
-### 步骤 2.5：验 AC 功能测试证据链（AI 自测门禁 · 核心）
+### 步骤 2.5：验 AC 功能测试证据链（AI 自测门禁 · 核心 · v0.2.0 自动化优先）
 
 **触发条件**：SOP = `agile-vibe`（默认场景）。
 
-按 `agile-vibe.md` 阶段 3 强制约束第 9 条，AI 应已产出 `test-report/ac-verification.md` + 步骤截图。本步骤**验证证据真实性**：
+按 `agile-vibe.md` 阶段 3 强制约束第 9 条（v0.2.0），AI 应已产出 `test-report/ac-verification.md` + `integration-test.log`。本步骤**验证证据真实性**：
 
 | 检查项 | 命令/方法 | 通过标准 | 未通过处置 |
 |---|---|---|---|
-| **ac-verification.md 存在** | `test -s requirements/<req-id>/test-report/ac-verification.md` | 存在且非空 | **Blocker** · 退回补功能测试 |
+| **ac-verification.md 存在** | `test -s requirements/<req-id>/test-report/ac-verification.md` | 存在且非空 | **Blocker** · 退回补集成测试 |
+| **integration-test.log 存在** | `test -s requirements/<req-id>/test-report/integration-test.log` | 存在且含 `All tests passed` 或等价 pass 输出 | **Blocker** · 无自动化断言 = 未自测 |
 | **每个 AC 有证据行** | grep `AC-N` 到 md 表格 | AC 总数 = md 表格行数（漏 AC 应显式标"未验证"） | **Blocker** · 漏 AC 无解释 |
-| **每个 ✅ AC 至少有 1 张操作截图** | 从 md 表格提取截图文件名 → `test -f screenshots/<name>` | 全部命中 | **Blocker** · ✅ 无证据 = 疑似源码推理 |
-| **截图 mtime 在 phase 3 期间** | `stat -c %Y screenshots/*.png` + 对比 process.txt phase 3 起始时间 | 全部 ≥ phase 3 start | **Major** · 疑似历史缓存冒充 |
+| **每个 ✅ AC 有 test file:line 引用** | 从 md 表格提取 test 文件引用 → `grep -n testWidgets integration_test/*_test.dart` 验证存在 | 全部命中 | **Blocker** · ✅ 无 test 引用 = 疑似源码推理 |
+| **视觉/美观类 AC 显式标"未验证"** | grep `需人工抽验` 到 md 表格 | 视觉类 AC 均标未验证 | **Minor** · 视觉类填 ✅ 疑似虚报（v0.2.0 起视觉类不允许 ✅） |
 | **3 项诚实声明已勾选** | `grep -c "^- \[x\]" ac-verification.md` | ≥ 3 | **Blocker** · 未跑真测却报告 pass = 违反 `60-citation-and-honesty.mdc` |
-| **代码测试 log（若有单测项目）** | `test -f test-report/code-test.log`（无单测项目豁免） | 存在或 ac-verification.md 顶部有豁免说明 | **Minor** · 建议补跑 |
-| **视觉回归 3 视口（UI 改动才检）** | UI 类改动时 3 张 png 齐全 | 齐全 | **Major** · 违反 `80-phet-sim-checklist.mdc §七 M1` |
+| **零真操作检测** | integration_test 通过 AC 数 = 0 但勾了诚实声明第 1 条 · 且 header 无 `self-test not executed` | 不出现此组合 | **Blocker** · 详见 self-testing SKILL v0.2.0 "零真操作边界" |
+| **单元测试 log（若有单测项目）** | `test -f test-report/unit-test.log`（无单测项目豁免） | 存在或 ac-verification.md 顶部有豁免说明 | **Minor** · 建议补跑 |
+| **~~3 视口截图~~**（v0.2.0 起降级） | ~~UI 改动时 3 张 png 齐全~~ | **可选** · 不作 Major/Blocker · 用户按需 | · |
 
-**如何判断"UI 改动"**：`svn diff --summarize` 中含 `lib/**/screens/` `lib/**/view/` `lib/common/widgets/` 任一路径 → 视为 UI 改动，触发 3 视口截图强制项。
+**如何判断"UI 改动"**：v0.2.0 起不再自动触发 3 视口截图强制项 · UI 改动仅触发"视觉/美观类 AC 需在报告中列出并标未验证"的软提示。
 
 **豁免**：如 `meta.yaml` 存在 `test_exempt: true` + `test_exempt_reason: <非空>`（典型：纯回溯 / 纯文档 / 零代码改动），跳过本步骤但需在评审报告注明"已豁免 · 理由：<引用 reason>"。
 
-**评审报告新增段**：在 `design/代码评审.md` 增加"功能测试证据核对"段，列每 AC 的证据引用 + 判定。
+**评审报告新增段**：在 `design/代码评审.md` 增加"功能测试证据核对"段，列每 AC 的 test file:line 引用 + 判定（✅ / 未验证-需人工抽验 / ❌）。
 
 ### 步骤 3：三视角逐一评审
 

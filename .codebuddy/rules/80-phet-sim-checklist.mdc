@@ -140,7 +140,7 @@ alwaysApply: true
 | 未通过 §七 L0-1（主图未居中） | UI 改动退回 · 补居中包裹后重新提交 | code-reviewer |
 | 未通过 §七 L0-2（有溢出） | UI 改动阻塞 · 必修 | code-reviewer |
 | 未通过 §七 L0-3（硬编码尺寸） | UI 改动退回 · 换为 LayoutBuilder | code-reviewer |
-| 未提交 §七 M1 三视口截图 | commit 阻塞 | code-reviewer |
+| ~~未提交 §七 M1 三视口截图~~ | ~~commit 阻塞~~ · v0.2.0 起降为**可选** · 不阻塞 | · |
 
 **执行时机**：主会话在 phase 1.intake → 2.requirement 阶段切换时，必须逐条通过本表并在 `process.txt` 追加一行：
 
@@ -189,9 +189,11 @@ grep -rn "Positioned(left:\|Padding(padding: const EdgeInsets.only(left:" lib/<s
 - [ ] **禁止**硬编码 `SizedBox(width: 800, height: 600)` 之类固定像素
 - [ ] 允许硬编码的是：控件面板宽度（如右侧参数条 240px）、字体级别基线、图标尺寸；不允许硬编码的是：主渲染区、主 Canvas、Tab 内容区
 
-### M1 · 截图证据要求
+### M1 · 视口证据要求（v0.2.0 起 · 可选 · 不强制）
 
-UI 类改动 commit 前必须提供 **3 种视口截图** 作为可视反馈证据（对齐 `10-vibecoding-protocol.mdc` 第 3 条可视反馈优先）：
+> **v0.2.0 变更**（2026-08-06）：3 视口截图从"强制门禁"降为"可选证据"。触发原因：用户明确"自动化测试不用管视觉 · 不要老确认" · 3-Time Rule 3 次以上打断实证。联动 `self-testing SKILL v0.2.0` §第 3 层人工抽验降级。
+
+UI 类改动 commit 前**建议**（非强制）提供 **3 种视口截图**：
 
 | 视口尺寸 | 场景 | 文件名约定 |
 |---|---|---|
@@ -199,9 +201,11 @@ UI 类改动 commit 前必须提供 **3 种视口截图** 作为可视反馈证�
 | 1024×768 | 平板横屏 | `<sim>-tablet-landscape.png` |
 | 1920×1080 | 桌面 | `<sim>-desktop.png` |
 
-- [ ] 3 张截图存于 `requirements/<req-id>/screenshots/`
-- [ ] `process.txt` 追加一行：`[time] layout-screenshots: 3 视口已提交（mobile/tablet/desktop）`
-- [ ] `code-reviewer` 在 review 时验证 3 张截图存在，缺少 → 阻塞合入
+- [ ] （可选）3 张截图存于 `requirements/<req-id>/screenshots/`
+- [ ] （可选）`process.txt` 追加一行：`[time] layout-screenshots: 3 视口已提交（mobile/tablet/desktop）`
+- [ ] `code-reviewer` **不再阻塞**"缺 3 视口截图"的合入 · 但若 integration_test 无 layout 断言 · reviewer 可建议用户抽验
+
+**新 sim 首次上线例外**：新 sim 首次进入 done 状态时 · 主会话**建议**（仍非强制）在 layout-audit-2026-07.md 补一次 3 视口截图 · 作为项目健康度基线。
 
 ### 存量 sim 一次性审计（Q 决策）
 
@@ -233,6 +237,14 @@ UI 类改动 commit 前必须提供 **3 种视口截图** 作为可视反馈证�
 ---
 
 ## 变更历史
+
+> 2026-08-06 by 主会话（用户明确指令"自动化测试不用管视觉 · 不要老确认" · 直接执行 · 无 y/n 循环）：
+> §七 M1 · 3 视口截图从**强制降为可选** · 联动 self-testing SKILL v0.2.0 视觉证据降级。
+> - M1 段：截图从"必须提供"改为"建议（非强制）" · code-reviewer 不再阻塞缺截图合入
+> - §六 违反后果表：`未提交 §七 M1 三视口截图` 条目划删 · 标注 v0.2.0 降级
+> - 保留 L0-1/L0-2/L0-3 三条阻塞级 layout 硬约束不变（布局居中/无溢出/响应式）· 因为它们能被 integration_test 或 flutter analyze 部分覆盖 · 不依赖手动截图
+> - 触发原因：3-Time Rule · 用户 3 次以上明确表达"每次都让我截图" · 视觉证据的门禁形态从"AI 强制索要"转为"用户按需自验"
+> - 联动改动：self-testing SKILL.md v0.2.0 · ac-verification-template.md · agile-vibe.md 9.1/9.3 · code-reviewer.md 步骤 2.5 · check-before-done.{sh,ps1} Check 6/6.5
 
 > 2026-07-28 by 主对话 · 用户决策 A · G1 · Q · M1：
 > 新增 §七 屏幕适配与画面居中（Layout Standards）· 项目级硬性布局规则落地。

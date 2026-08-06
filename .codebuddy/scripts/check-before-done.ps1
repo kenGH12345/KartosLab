@@ -3,7 +3,7 @@
 # NOTE: uses $args[0] instead of a param() block on purpose — PowerShell 5.1's
 # `-File` mode mishandles position parameters when a param() block is combined
 # with non-trivial script bodies. $args is an automatic variable and always works.
-# Version: 1.2.0
+# Version: 1.3.0
 #
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File .codebuddy\scripts\check-before-done.ps1 <req-id>
@@ -102,9 +102,10 @@ if (Test-Path $expDir -PathType Container) {
     }
 }
 
-# === Check 6: AI feature test evidence chain (Phase 2 addition) ===
-# agile-vibe SOP phase 3 requires test-report/ac-verification.md; missing -> warning (non-blocking, blocked by code-reviewer step 2.5)
+# === Check 6: AI feature test evidence chain (v0.2.0 · automation-first) ===
+# agile-vibe SOP phase 3 requires test-report/ac-verification.md + integration-test.log; missing -> warning (non-blocking, blocked by code-reviewer step 2.5)
 $acVerify = Join-Path $reqDir "test-report\ac-verification.md"
+$integLog = Join-Path $reqDir "test-report\integration-test.log"
 if (-not (Test-Path $acVerify -PathType Leaf)) {
     # Exemption: meta.yaml has test_exempt: true + non-empty test_exempt_reason
     if ($metaContent -match 'test_exempt:\s*true') {
@@ -118,7 +119,7 @@ if (-not (Test-Path $acVerify -PathType Leaf)) {
             Write-Host "OK: Feature test exempted (reason: $exemptReason)"
         }
     } else {
-        Write-Host "WARNING: test-report/ac-verification.md not found (agile-vibe SOP phase 3 required output)"
+        Write-Host "WARNING: test-report/ac-verification.md not found (agile-vibe SOP phase 3 v0.2.0 required output)"
         Write-Host "    For pure doc/retrospective needs, add test_exempt: true + test_exempt_reason: <reason> to meta.yaml"
         # Non-blocking: enforced by code-reviewer step 2.5
     }
@@ -130,16 +131,21 @@ if (-not (Test-Path $acVerify -PathType Leaf)) {
         Write-Host "WARNING: ac-verification.md exists but honesty declaration checkboxes < 3 (current: $checkedCount, agile-vibe SOP 9.4)"
     }
 
-    # === Check 6.5: Zero real-operation detection (self-testing SKILL v0.1.1 boundary) ===
-    # Warning-level (c2 mode): if all AC rows are static-inference/unverified but honesty declaration is checked
+    # v0.2.0 new: check integration-test.log presence (automation-first assertion main line)
+    if (-not (Test-Path $integLog -PathType Leaf)) {
+        Write-Host "WARNING: test-report/integration-test.log not found (v0.2.0 automation-first assertion main line · blocked by code-reviewer step 2.5)"
+    }
+
+    # === Check 6.5: Zero real-operation detection (self-testing SKILL v0.2.0 semantic adjustment) ===
+    # Warning-level: if all AC rows are ⚠️/未验证/需人工抽验 but honesty declaration is checked
     # AND header doesn't contain 'self-test not executed' -> WARNING (not blocking)
     $acRows = ([regex]::Matches($acContent, '^\| AC-\d', 'Multiline')).Count
-    $warnRows = ([regex]::Matches($acContent, '^\| AC-\d.*(⚠️|未验证|静态推演)', 'Multiline')).Count
+    $warnRows = ([regex]::Matches($acContent, '^\| AC-\d.*(⚠️|未验证|需人工抽验)', 'Multiline')).Count
     $hasNotExecHeader = ([regex]::Matches($acContent, 'self-test not executed')).Count
     if ($acRows -gt 0 -and $warnRows -eq $acRows -and $hasNotExecHeader -eq 0 -and $checkedCount -ge 3) {
-        Write-Host "WARNING: Zero real-operation violation - all $acRows AC(s) are static-inference/unverified but honesty declaration checked without 'self-test not executed' header"
-        Write-Host "    See: .codebuddy/skills/core/self-testing/SKILL.md#zero-real-operation-boundary"
-        Write-Host "    Fix: add at least 1 real-operation AC OR add 'self-test not executed - reason: <...>' to report header"
+        Write-Host "WARNING: Zero real-operation violation - all $acRows AC(s) are ⚠️/unverified/manual-spot-check-needed but honesty declaration checked without 'self-test not executed' header"
+        Write-Host "    See: .codebuddy/skills/core/self-testing/SKILL.md#zero-real-operation-boundary (v0.2.0)"
+        Write-Host "    Fix: add at least 1 integration_test-passing AC OR add 'self-test not executed - reason: <...>' to report header"
     }
 }
 
