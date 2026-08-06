@@ -1,0 +1,3 @@
+[2026-08-06 17:00] phase init 1.intake: 由 req-color-vision-layout-fix Phase 3 integration test 首跑衍生 · 存桩追踪状态 (status=pending) · 未开工
+[2026-08-06 17:00] 关键实证: requirements/req-color-vision-layout-fix/ 早期 test 报 `A RenderFlex overflowed by 49 pixels on the bottom` · 溢出 Column size(130,139) constraints(<=1560,<=139) offset(715,0) mainAxisAlignment=center · 视口 1600x900 · 触发路径 tap('色觉·RGB合成') → tap('Filter') 之间的 settle · 因此排除 color_vision/screens/single_bulb_screen.dart · 目标锁定 HomeScreen 或 ColorVisionHome 或其 Magic Lab 首屏
+[2026-08-06 17:00] 未做: AC 定义 · 根因诊断(Column 归属) · 视口审计(320-1920 全区间) · 方案权衡 · 均留待 phase 2.requirement 开工时补

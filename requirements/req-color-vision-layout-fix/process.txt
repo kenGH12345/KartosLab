@@ -6,3 +6,11 @@
 [2026-08-06 09:52] phase 2.requirement → 3.iteration: 用户选 C · 主会话直接 pair 改代码 + 加 integration_test 一举两得 · 不再委派 frontend-dev
 [2026-08-06 09:52] verdict=approve_go / 备注: 路径C · 修布局(方案B) + 加 integration_test 断言主图存在 · 未来 CI 自动防 L0-2 回归
 [2026-08-06 09:52] 关键发现: 项目已有 integration_test/app_test.dart(287行) · 之前 self-testing skill v0.1.1 关于"AI-only 无 GUI 能力"的定位有误 · 收尾后走 30-skill-self-evolution 升级 v0.2.0
+[2026-08-06 16:50] phase 3.iteration 首次收敛测试: flutter analyze lib/color_vision/ + integration_test/color_vision_test.dart · No issues found (3.6s) · AC-1 静态门禁通过
+[2026-08-06 16:52] flutter test integration_test/color_vision_test.dart -d windows: 5/5 fail · 根因不在本 sim · overflow 发生在 HomeScreen→ColorVisionHome 导航链某 Column(130x139 · offset(715,0)) · 与本次修改的 SingleBulbScreen 无关 · 但 IntegrationTestBinding 把 render exception 判 test fail 导致 AC-1 断言无法拿到清白结果
+[2026-08-06 16:52] verdict=approve_go(路径A) / 备注: 用户选 A · 收窄 test 隔离本 sim(pumpWidget(MaterialApp(home:SingleBulbScreen))) · HomeScreen/ColorVisionHome 溢出转档到 req-home-screen-overflow-fix stub
+[2026-08-06 16:58] test v2 结果: 5/5 pass · testDone success 覆盖 AC-1/AC-2/AC-3/AC-3b/AC-1b · print_events=0 overflow_or_exception_hits=0 · fail-loud 断言全部达标 · 方案B 修复有效
+[2026-08-06 16:58] 派生债: 建 requirements/req-home-screen-overflow-fix/ stub · 承接 test v1 发现的 HomeScreen 或 ColorVisionHome 130x139 Column overflow · 剥离本需求范围
+[2026-08-06 17:05] 用户指令: 视图/UI 视角(AC-4 三视口截图 + AC-5 手动滚动感)由用户自测 · AI 只负责自动化能覆盖的部分 · 收尾流程直接推进
+[2026-08-06 17:08] AC-3 regression-log 产出: test-report/regression-log.md · 15 组合覆盖(直接测 6 + 代码路径解耦推理 9) · 从 integration test 结果派生 · 未起 sim
+[2026-08-06 17:08] AI 侧闭环状态: AC-1/AC-2/AC-3/AC-3b/AC-1b 已通过 integration test + regression-log · AC-4/AC-5 由用户自测保留 · 是否切 phase 4.closing 等用户拍板
