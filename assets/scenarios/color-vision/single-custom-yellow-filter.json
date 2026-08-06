@@ -1,0 +1,28 @@
+﻿{
+  "scenarioId": "single-custom-yellow-filter",
+  "name": "Custom Yellow Filter",
+  "description": "Create a custom filter that passes 50% red and 50% green, blocking all blue. Compare with no filter.",
+  "version": "1.0",
+  "screen": "singleBulb",
+  "beamMode": "photons",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 100,
+    "blueIntensity": 100,
+    "filterType": "custom",
+    "customFilter": {
+      "redPass": 0.5,
+      "greenPass": 0.5,
+      "bluePass": 0
+    },
+    "showPhotonView": true,
+    "personPosition": 320
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "filterPassed", "description": "Person sees dim yellow after custom filter", "params": {"expectedColor": "yellow"}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "This custom filter lets 50% of red and green through, but blocks blue."},
+    {"trigger": "always", "message": "Switch to 'No Filter' to see the difference — without the filter, the person sees bright white light."}
+  ]
+}

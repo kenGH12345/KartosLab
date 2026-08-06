@@ -1,0 +1,47 @@
+{
+  "$schema": "https://docs.claude.com/schemas/mcp.schema.json",
+  "_comment": "AIVibeCoding MCP 配置骨架。v0.1 默认不启用任何 MCP（保持模板通用）。落地具体项目时按需打开/添加。所有 server 都用 _disabled 后缀：移除后缀即生效。",
+
+  "mcpServers": {
+    "_filesystem_disabled": {
+      "_comment": "文件系统 MCP，让 agent 能在受限路径下做文件操作。Claude Code 内置文件工具一般够用，启用与否看是否需要更细粒度的目录权限控制。",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "../trunk/"]
+    },
+
+    "_github_disabled": {
+      "_comment": "GitHub MCP，用于 issue/PR/repo 自动化。需配置 GITHUB_TOKEN。",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      }
+    },
+
+    "_browser_disabled": {
+      "_comment": "浏览器 MCP（如 puppeteer/playwright），用于前端可视反馈：截图、E2E、UI 验证。frontend-dev agent 的 vibecoding 协议会用到。",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+    },
+
+    "_postgres_disabled": {
+      "_comment": "PostgreSQL MCP，让 backend-dev agent 能直接验证 schema / 跑 query 看数据。需配置 DATABASE_URL。",
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+
+    "_custom_internal_disabled": {
+      "_comment": "项目自有的内部系统 MCP（CI/CD、需求管理 TAPD/Jira、内部 wiki 等）。在落地具体项目时按需添加。这里只是占位示例。",
+      "command": "node",
+      "args": ["./scripts/mcp/internal-server.js"],
+      "env": {
+        "API_TOKEN": "${INTERNAL_API_TOKEN}"
+      }
+    }
+  },
+
+  "_comment_usage": "启用某 MCP 的步骤：1) 把 server 名的 '_disabled' 后缀去掉；2) 配置必要的环境变量（在 .env 而非本文件——本文件可入版本库，密钥不可）；3) 重启 Claude Code 让配置生效；4) 如需要在 agent 中使用 MCP 工具，在 agent frontmatter 的 tools 字段加 'mcp__<server-name>__<tool>'。"
+}

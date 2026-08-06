@@ -1,0 +1,1 @@
+{"scenarios":[{"id":"default","file":"default.json"},{"id":"slow-wave","file":"slow-wave.json"},{"id":"fast-wave","file":"fast-wave.json"},{"id":"strong-signal","file":"strong-signal.json"},{"id":"no-field","file":"no-field.json"}]}

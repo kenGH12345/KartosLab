@@ -1,0 +1,83 @@
+﻿import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:geometric_optics/color_vision/config/color_vision_scenario.dart';
+import 'package:geometric_optics/color_vision/config/color_vision_scenario_manager.dart';
+
+void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  test('L9 regression: all 8 scenarios load and pass schema validation', () async {
+    final mgr = ColorVisionScenarioManager();
+    await mgr.loadScenarios();
+
+    expect(mgr.scenarios.length, 8, reason: 'Should have 8 scenarios after L9');
+
+    for (final s in mgr.scenarios) {
+      // Verify each field populates correctly
+      expect(s.scenarioId, isNotEmpty);
+      expect(s.name, isNotEmpty);
+      expect(s.screen, anyOf(CVScreen.rgb, CVScreen.singleBulb));
+
+      // Verify intensities are in valid range
+      expect(s.redIntensity, inInclusiveRange(0, 100));
+      expect(s.greenIntensity, inInclusiveRange(0, 100));
+      expect(s.blueIntensity, inInclusiveRange(0, 100));
+
+      // Verify filterType is a known value
+      expect(s.filterType, anyOf('none', 'red', 'green', 'blue', 'custom'));
+
+      // Verify customFilter values are in range if filterType is custom
+      if (s.filterType == 'custom') {
+        expect(s.customFilterR, inInclusiveRange(0, 1));
+        expect(s.customFilterG, inInclusiveRange(0, 1));
+        expect(s.customFilterB, inInclusiveRange(0, 1));
+      }
+
+      debugPrint('PASS: ${s.scenarioId} (screen=${s.screen.name})');
+    }
+  });
+
+  test('L9 regression: specific scenario checks', () async {
+    final mgr = ColorVisionScenarioManager();
+    await mgr.loadScenarios();
+
+    // rgb-yellow-only: blue should be 0
+    final yellow = mgr.findById('rgb-yellow-only');
+    expect(yellow, isNotNull);
+    expect(yellow!.blueIntensity, 0);
+
+    // rgb-dark-room: all intensities 0
+    final dark = mgr.findById('rgb-dark-room');
+    expect(dark, isNotNull);
+    expect(dark!.redIntensity, 0);
+    expect(dark.greenIntensity, 0);
+    expect(dark.blueIntensity, 0);
+
+    // single-custom-yellow-filter: should have custom pass rates
+    final custom = mgr.findById('single-custom-yellow-filter');
+    expect(custom, isNotNull);
+    expect(custom!.filterType, 'custom');
+    expect(custom.customFilterR, 0.5);
+    expect(custom.customFilterG, 0.5);
+    expect(custom.customFilterB, 0);
+
+    debugPrint('All specific scenario checks passed');
+  });
+
+  test('L9 regression: successCriteria and hints parsing', () async {
+    final mgr = ColorVisionScenarioManager();
+    await mgr.loadScenarios();
+
+    for (final s in mgr.scenarios) {
+      for (final sc in s.successCriteria) {
+        expect(sc.id, isNotEmpty);
+        expect(sc.type, anyOf('colorMatch', 'filterPassed', 'intensityReached'));
+      }
+      for (final h in s.hints) {
+        expect(h.trigger, isNotEmpty);
+        expect(h.message, isNotEmpty);
+      }
+    }
+    debugPrint('All successCriteria and hints parse correctly');
+  });
+}

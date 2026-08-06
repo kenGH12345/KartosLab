@@ -1,0 +1,26 @@
+{
+  "scenarioId": "default",
+  "name": "EM Wave Explorer",
+  "description": "Freely explore how an oscillating electron on a transmitting antenna generates propagating electromagnetic waves. Adjust frequency and amplitude; observe the retarded field at distance.",
+  "version": "1.0",
+  "screen": "singleAntenna",
+  "initialParams": {
+    "frequency": 0.5,
+    "amplitude": 0.5,
+    "showCurve": true,
+    "showArrows": true,
+    "dynamicFieldEnabled": true
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.05, "max": 2.0, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"observeWave","description":"Notice the red curve connecting field arrow tips propagates outward","params":{"minFrequency":0.3}},
+    {"id":"sc-2","type":"observeField","description":"Observe field arrows changing direction as the wave passes","params":{"minAmplitude":0.3}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"Drag Frequency slider to change how fast the electron oscillates"},
+    {"trigger":"always","message":"The red curve shows the wave envelope; green arrows show field strength at each point"}
+  ]
+}

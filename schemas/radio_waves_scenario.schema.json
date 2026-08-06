@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phet/radio-waves-scenario.schema.json",
+  "title": "Radio Waves Scenario",
+  "type": "object",
+  "required": ["scenarioId", "name", "screen"],
+  "properties": {
+    "scenarioId": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string", "default": "" },
+    "version": { "type": "string", "default": "1.0" },
+    "screen": {
+      "type": "string",
+      "enum": ["singleAntenna"],
+      "description": "singleAntenna = one transmitting antenna with oscillating electron, field arrows, and wave curve"
+    },
+    "initialParams": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "number", "minimum": 0.05, "maximum": 2.0, "default": 0.5,
+          "description": "Electron oscillation speed. Higher = faster oscillation, shorter wavelength (denser wave crests)."
+        },
+        "amplitude": {
+          "type": "number", "minimum": 0, "maximum": 1, "default": 0.5,
+          "description": "Electron oscillation amplitude [0,1]. 0 = no movement, 1 = maximum displacement."
+        },
+        "showCurve": {
+          "type": "boolean", "default": true,
+          "description": "Display the red envelope curve connecting field arrow tips."
+        },
+        "showArrows": {
+          "type": "boolean", "default": true,
+          "description": "Display green field strength arrows along the X-axis."
+        },
+        "dynamicFieldEnabled": {
+          "type": "boolean", "default": true,
+          "description": "Enable propagating dynamic field (radiation). When false, only shows static Coulomb field."
+        }
+      }
+    },
+    "paramRanges": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "object",
+          "required": ["min", "max", "step"],
+          "properties": {
+            "min": { "type": "number" }, "max": { "type": "number" },
+            "step": { "type": "number" }, "unit": { "type": ["string", "null"] }
+          }
+        },
+        "amplitude": {
+          "type": "object",
+          "required": ["min", "max", "step"],
+          "properties": {
+            "min": { "type": "number" }, "max": { "type": "number" },
+            "step": { "type": "number" }, "unit": { "type": ["string", "null"] }
+          }
+        }
+      }
+    },
+    "successCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["observeWave", "observeField", "toggleField", "frequencyReached", "amplitudeReached"]
+          },
+          "description": { "type": "string" },
+          "params": {
+            "type": "object",
+            "properties": {
+              "minFrequency": { "type": "number" }, "maxFrequency": { "type": "number" },
+              "exactFrequency": { "type": "number" }, "minAmplitude": { "type": "number" },
+              "maxAmplitude": { "type": "number" }, "exactAmplitude": { "type": "number" },
+              "dynamicFieldEnabled": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["trigger", "message"],
+        "properties": {
+          "trigger": { "type": "string", "description": "'always' or a condition expression like 'frequency < 0.3'" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

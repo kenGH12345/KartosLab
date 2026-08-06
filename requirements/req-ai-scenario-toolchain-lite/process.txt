@@ -1,0 +1,13 @@
+[2026-07-31 12:20] 主会话: 立项 req-ai-scenario-toolchain-lite（A 任务 · 闭环工具链）
+[2026-07-31 12:20] verdict=approve_go / 备注: 用户确认 1A 2A 3A（Schema+Dart 语义校验 / 自动写入 assets+更新 manifest / DeepSeek OpenAI 兼容 API 模型名可配置）
+[2026-07-31 12:20] 主会话: 调研现状——docs/prompts/*.md(7) + schemas/*.json(7) + assets/scenarios/<sim>/*.json+manifest(7 sim) 均已就位；scripts/ai_scenario_gen/ 缺失（工具链未闭环）
+[2026-07-31 12:20] 主会话: B 任务已完成（上一轮）——修复 color_vision_scenario.md 字符串拼接 bug + 补齐物理常数/Anti-Patterns/Validation Checklist + few-shot 3→6
+[2026-07-31 12:20] 主会话: 开始建脚手架 scripts/ai_scenario_gen/{generate.py, validate.dart, README.md}
+[2026-07-31 12:25] 主会话: 建脚手架 scripts/ai_scenario_gen/{generate.py, validate_test.dart, README.md}
+[2026-07-31 12:25] 主会话: 实测发现坑1——pubspec name=geometric_optics（非 phet），validate.dart import 前缀已修正为 package:geometric_optics/
+[2026-07-31 12:25] 主会话: 实测发现坑2——*_scenario.dart 均 import package:flutter/material.dart，纯 dart run 无法加载 dart:ui；闸门改用 flutter test 驱动（validate_test.dart）
+[2026-07-31 12:25] 主会话: 实测发现坑3——schema/*.json 带 UTF-8 BOM，generate.py _load_text 改 utf-8-sig 解码
+[2026-07-31 12:25] 主会话: 实测发现坑4——Windows 下 subprocess 调 flutter 需 shutil.which 定位 flutter.bat，否则 FileNotFoundError
+[2026-07-31 12:25] 主会话: 闸门双向验证——合法 rgb-default.json 通过 All tests passed!；非法 screen=notAScreen 被正确拒绝(Unknown CVScreen)
+[2026-07-31 12:25] 主会话: 端到端验证——--from-stdin --write 跑通 schema+Dart 双闸门+写入+manifest 更新（已还原真实 manifest，无资产污染）
+[2026-07-31 12:25] verdict=approve_go / 备注: A 工具链闭环达成，待用户用真实 DeepSeek key 跑一次真 LLM 生成

@@ -1,0 +1,12 @@
+# meta.yaml — 修复 color_vision Single Bulb 屏窄视口布局崩溃
+req_id: req-color-vision-layout-fix
+title: 修复 color_vision single_bulb 屏窄视口下主图消失（L0-2/L0-3 违规）
+sop: agile-vibe
+phase: 3.iteration
+status: in_progress
+created_at: "2026-08-05 17:24"
+updated_at: "2026-08-06 09:52"
+edd_template_version: v2.0
+# 来源: req-verify-selftest-color-vision 衍生发现
+# 证据: requirements/req-verify-selftest-color-vision/screenshots/ac-BUG-layout-overflow-red.png
+# 违规: .codebuddy/rules/80-phet-sim-checklist.mdc §七 L0-2 + L0-3

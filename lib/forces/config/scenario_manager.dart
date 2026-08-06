@@ -1,37 +1,42 @@
-import 'dart:convert';
-import 'package:flutter/services.dart';
+﻿import '../../common/scenario/scenario_manager_base.dart';
 import 'forces_scenario.dart';
 
-class ForcesScenarioManager {
-  final List<ForcesScenario> _scenarios = [];
+/// Forces scenario manager.
+///
+/// Extends [ScenarioManagerBase]. Forces has no separate state type
+/// (TState = ForcesScenario) and no constraint/objective methods.
+/// Overrides [entryKey] because the forces manifest uses `file`
+/// instead of `id` as the entry key.
+class ForcesScenarioManager
+    extends ScenarioManagerBase<ForcesScenario, ForcesScenario> {
+  ForcesScenarioManager();
 
-  List<ForcesScenario> get scenarios => List.unmodifiable(_scenarios);
+  // ---------------------------------------------------------------------------
+  // ScenarioManagerBase required overrides
+  // ---------------------------------------------------------------------------
 
-  Future<void> loadScenarios() async {
-    final manifestStr = await rootBundle.loadString('assets/scenarios/forces/manifest.json');
-    final manifest = jsonDecode(manifestStr) as Map<String, dynamic>;
-    final list = manifest['scenarios'] as List<dynamic>;
+  @override
+  String get manifestPath => 'assets/scenarios/forces/manifest.json';
 
-    _scenarios.clear();
-    for (final entry in list) {
-      final e = entry as Map<String, dynamic>;
-      final file = e['file'] as String;
-      final src = await rootBundle.loadString('assets/scenarios/forces/$file');
-      final data = jsonDecode(src) as Map<String, dynamic>;
-      _scenarios.add(ForcesScenario.fromJson(data));
-    }
-  }
+  @override
+  String scenarioPath(String entryKey) =>
+      'assets/scenarios/forces/$entryKey';
 
-  ForcesScenario loadScenario(String scenarioId) {
-    final s = _scenarios.firstWhere((s) => s.scenarioId == scenarioId);
-    return s;
-  }
+  @override
+  ForcesScenario Function(Map<String, dynamic>) get fromJson =>
+      ForcesScenario.fromJson;
 
-  ForcesScenario? tryLoad(String scenarioId) {
-    try {
-      return _scenarios.firstWhere((s) => s.scenarioId == scenarioId);
-    } catch (_) {
-      return null;
-    }
-  }
+  @override
+  String Function(ForcesScenario) get scenarioId => (s) => s.scenarioId;
+
+  @override
+  ForcesScenario Function(ForcesScenario) get buildInitialState => (s) => s;
+
+  /// Forces manifest uses `file` key instead of `id`.
+  @override
+  String entryKey(Map<String, dynamic> entry) => entry['file'] as String;
+
+  /// Try to load a scenario by id, returning null if not found.
+  /// Thin wrapper around [findById].
+  ForcesScenario? tryLoad(String scenarioId) => findById(scenarioId);
 }

@@ -1,0 +1,21 @@
+﻿{
+  "scenarioId": "rgb-yellow-only",
+  "name": "Explore Yellow (R+G)",
+  "description": "Start with red and green at full intensity, blue off. Observe yellow in the overlap zone, then try adding blue.",
+  "version": "1.0",
+  "screen": "rgb",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 100,
+    "blueIntensity": 0,
+    "personPosition": 300
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "colorMatch", "description": "See yellow in overlap zone", "params": {"targetColor": "yellow"}},
+    {"id": "sc-2", "type": "colorMatch", "description": "Add blue to make white", "params": {"targetColor": "white"}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "Red + Green = Yellow. Try adding blue to see what happens!"},
+    {"trigger": "blueIntensity > 50", "message": "You are making white light now — R+G+B!"}
+  ]
+}

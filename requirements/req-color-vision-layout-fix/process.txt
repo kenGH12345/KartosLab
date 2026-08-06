@@ -1,0 +1,8 @@
+[2026-08-05 17:24] phase init 1.intake: 由 req-verify-selftest-color-vision 阶段3 补测衍生 · L0-2/L0-3 违规实证在其 screenshots/ac-BUG-layout-overflow-red.png · 已建目录 spec/ + meta.yaml + 需求简述.md 存桩
+[2026-08-05 18:20] phase 1.intake → 2.requirement: 主会话判定 80-checklist §一 适用范围="新sim开工"，本需求为存量sim Bug修复，走标准 agile-vibe · 已切 status=in_progress
+[2026-08-05 18:20] 主会话直接承担 product-manager 职责 · 澄清 AC + 出 spec/需求简述.md v1.1（在现有存桩基础上细化）
+[2026-08-05 18:24] 主会话四问澄清收敛（β 解读）: Q1=A(只修 single_bulb) / Q2=B(知识面板 Expanded flex:3 + 内部滚动) / Q3=a(用户手截3视口图+主会话PowerShell落盘) / Q4=A(15组合仅记 regression-log 非逐张截图)
+[2026-08-05 18:24] verdict=approve_go / 备注: spec v1.1 细化到 5 条 AC · 实现方案锁定 B · 不引入 LayoutBuilder(遵循 00-engineering §4 最小化) · 保留升级 A 的接口
+[2026-08-06 09:52] phase 2.requirement → 3.iteration: 用户选 C · 主会话直接 pair 改代码 + 加 integration_test 一举两得 · 不再委派 frontend-dev
+[2026-08-06 09:52] verdict=approve_go / 备注: 路径C · 修布局(方案B) + 加 integration_test 断言主图存在 · 未来 CI 自动防 L0-2 回归
+[2026-08-06 09:52] 关键发现: 项目已有 integration_test/app_test.dart(287行) · 之前 self-testing skill v0.1.1 关于"AI-only 无 GUI 能力"的定位有误 · 收尾后走 30-skill-self-evolution 升级 v0.2.0

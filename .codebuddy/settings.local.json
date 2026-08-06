@@ -1,0 +1,10 @@
+{
+  "enabledMcpjsonServers": [
+    "_filesystem_disabled",
+    "_github_disabled",
+    "_browser_disabled",
+    "_postgres_disabled",
+    "_custom_internal_disabled"
+  ],
+  "disabledMcpjsonServers": []
+}

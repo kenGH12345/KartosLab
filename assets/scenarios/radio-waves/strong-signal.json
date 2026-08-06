@@ -1,0 +1,25 @@
+{
+  "scenarioId": "strong-signal",
+  "name": "Strong Signal: Maximum Amplitude",
+  "description": "Maximize the oscillation amplitude. Observe how the field arrows grow longer and the wave envelope becomes more pronounced. Amplitude controls signal strength -- important for understanding why radio signals weaken with distance.",
+  "version": "1.0",
+  "screen": "singleAntenna",
+  "initialParams": {
+    "frequency": 0.5,
+    "amplitude": 1.0,
+    "showCurve": true,
+    "showArrows": true,
+    "dynamicFieldEnabled": true
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.05, "max": 2.0, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"observeField","description":"Observe large field arrows at maximum amplitude","params":{"minAmplitude":0.9}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"Maximum amplitude = strongest signal. The field arrows are at their largest."},
+    {"trigger":"always","message":"In real radio transmission, higher amplitude = more power = longer range."}
+  ]
+}

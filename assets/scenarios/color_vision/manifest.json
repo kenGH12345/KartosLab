@@ -1,0 +1,8 @@
+{
+  "scenarios": [
+    {
+      "id": "rgb-default",
+      "file": "rgb-default.json"
+    }
+  ]
+}

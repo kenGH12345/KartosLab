@@ -1,0 +1,21 @@
+﻿{
+  "scenarioId": "rgb-cyan-challenge",
+  "name": "Challenge: Pure Cyan",
+  "description": "Start with green and blue at 100%, red at 100%. Turn off red completely to make pure cyan.",
+  "version": "1.0",
+  "screen": "rgb",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 100,
+    "blueIntensity": 100,
+    "personPosition": 300
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "colorMatch", "description": "Turn off red to make cyan", "params": {"targetColor": "cyan"}},
+    {"id": "sc-2", "type": "colorMatch", "description": "Turn off green to make magenta", "params": {"targetColor": "magenta"}}
+  ],
+  "hints": [
+    {"trigger": "redIntensity > 10", "message": "Cyan = Green + Blue. Turn down the red slider!"},
+    {"trigger": "redIntensity < 5 && greenIntensity > 80 && blueIntensity > 80", "message": "You made cyan! Now try turning off green instead — what color do you see?"}
+  ]
+}

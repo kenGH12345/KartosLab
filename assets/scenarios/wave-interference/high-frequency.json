@@ -1,0 +1,28 @@
+{
+  "scenarioId": "high-frequency",
+  "name": "High Frequency: Short Wavelength",
+  "description": "Set frequency to maximum (1.0). Higher frequency = shorter wavelength = more interference fringes packed into the same angular range. This directly demonstrates the wave equation relationship: lambda * f = c (constant wave speed).",
+  "version": "1.0",
+  "screen": "waterDoubleSlit",
+  "initialParams": {
+    "frequency": 1.0,
+    "amplitude": 2.5,
+    "barrierEnabled": true,
+    "slitSize": 8,
+    "slitSeparation": 20
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.5, "max": 1.0, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0.2, "max": 3.0, "step": 0.1, "unit": null },
+    "slitSize": { "min": 4, "max": 20, "step": 1, "unit": "px" },
+    "slitSeparation": { "min": 12, "max": 36, "step": 1, "unit": "px" }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"observePattern","description":"Observe very dense interference fringes at high frequency","params":{"minFrequency":0.8}},
+    {"id":"sc-2","type":"compareFrequency","description":"Compare high freq (1.0) vs low freq (0.2): count how fringe count scales with frequency","params":{}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"High frequency = short wavelength = many fringes. The wave speed c is fixed, so lambda decreases as frequency increases."},
+    {"trigger":"always","message":"This is why blue light (high frequency) produces finer interference patterns than red light (low frequency) in optical double-slit experiments."}
+  ]
+}

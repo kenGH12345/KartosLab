@@ -1,8 +1,6 @@
-import 'dart:convert';
+﻿import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-
+import '../../common/scenario/scenario_manager_base.dart';
 import '../models/optical_element.dart';
 import '../models/lens_element.dart';
 import '../models/mirror_element.dart';
@@ -13,103 +11,53 @@ import '../solvers/optics_solver.dart';
 import 'lab_scenario.dart';
 import 'constraint.dart';
 
-// 场景管理器类
-class ScenarioManager {
-  final List<LabScenario> _scenarios = [];
+/// Optics scenario manager.
+///
+/// Extends [ScenarioManagerBase] -- manifest loading, findById, and scenario
+/// caching are handled by the base class. This class provides optics-specific
+/// element construction, constraint validation, and objective checking.
+class ScenarioManager extends ScenarioManagerBase<LabScenario, OpticsWorld> {
   LabScenario? _currentScenario;
 
-  // 加载所有场景配置
-  Future<void> loadScenarios() async {
-    try {
-      final manifestStr =
-          await rootBundle.loadString('assets/scenarios/manifest.json');
-      final manifest = jsonDecode(manifestStr) as Map<String, dynamic>;
-      final scenarioIds =
-          (manifest['scenarios'] as List<dynamic>).cast<Map<String, dynamic>>();
-
-      _scenarios.clear();
-      for (final scenarioData in scenarioIds) {
-        final id = scenarioData['id'] as String;
-        try {
-          final jsonStr =
-              await rootBundle.loadString('assets/scenarios/$id.json');
-          final scenario =
-              LabScenario.fromJson(jsonDecode(jsonStr) as Map<String, dynamic>);
-          _scenarios.add(scenario);
-        } catch (e) {
-          debugPrint('Failed to load scenario $id: $e');
-        }
-      }
-    } catch (e) {
-      debugPrint('Failed to load scenarios manifest: $e');
-    }
-  }
-
-  // 获取所有场景
-  List<LabScenario> get scenarios => List.unmodifiable(_scenarios);
-
-  // domain → 中文标签映射
-  static const Map<String, String> domainLabels = {
-    'optics-lens': '透镜实验',
-    'optics-mirror': '镜子实验',
-    'optics-combo': '组合实验',
-  };
-
-  // 按 domain 分组
-  Map<String, List<LabScenario>> getScenariosByDomain() {
-    final groups = <String, List<LabScenario>>{};
-    for (final domain in domainLabels.keys) {
-      groups[domain] = [];
-    }
-    groups['other'] = [];
-
-    for (final scenario in _scenarios) {
-      final domain = scenario.domain;
-      if (groups.containsKey(domain)) {
-        groups[domain]!.add(scenario);
-      } else {
-        groups['other']!.add(scenario);
-      }
-    }
-
-    // 移除空组
-    groups.removeWhere((k, v) => v.isEmpty);
-    return groups;
-  }
-
-  // 获取当前场景
+  /// The currently active scenario (set by [buildInitialState]).
   LabScenario? get currentScenario => _currentScenario;
 
-  LabScenario _requireScenario(String caller) {
-    final s = _currentScenario;
-    if (s == null) throw StateError('$caller: no current scenario loaded');
-    return s;
-  }
+  // ---------------------------------------------------------------------------
+  // ScenarioManagerBase required overrides
+  // ---------------------------------------------------------------------------
 
-  // 切换到指定场景
-  OpticsWorld loadScenario(String scenarioId) {
-    final scenario = _scenarios.firstWhere(
-      (s) => s.scenarioId == scenarioId,
-      orElse: () => throw Exception('Scenario not found: $scenarioId'),
-    );
+  @override
+  String get manifestPath => 'assets/scenarios/manifest.json';
 
+  @override
+  String scenarioPath(String entryKey) => 'assets/scenarios/$entryKey.json';
+
+  @override
+  LabScenario Function(Map<String, dynamic>) get fromJson => LabScenario.fromJson;
+
+  @override
+  String Function(LabScenario) get scenarioId => (s) => s.scenarioId;
+
+  @override
+  OpticsWorld Function(LabScenario) get buildInitialState => _build;
+
+  OpticsWorld _build(LabScenario scenario) {
     _currentScenario = scenario;
-
-    // 根据 initialLayout 创建初始世界
     final elements = scenario.initialLayout
         .map((placement) => _createElementFromPlacement(placement))
         .toList();
-
     return OpticsWorld(
       elements: elements,
       showFocalPoints: scenario.ui.showFocalPoints,
     );
   }
 
-  // 从放置配置创建元件
+  // ---------------------------------------------------------------------------
+  // Domain-specific: element construction
+  // ---------------------------------------------------------------------------
+
   OpticalElement _createElementFromPlacement(ElementPlacement placement) {
     final scenario = _requireScenario('_createElementFromPlacement');
-    // 合并 inventory 中的 defaultParams（placement params 优先）
     final spec = scenario.inventory.availableComponents[placement.type];
     final merged = <String, dynamic>{};
     if (spec != null) {
@@ -151,6 +99,66 @@ class ScenarioManager {
     }
   }
 
+  LabScenario _requireScenario(String caller) {
+    final s = _currentScenario;
+    if (s == null) throw StateError('$caller: no current scenario loaded');
+    return s;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Constraints & objectives
+  // ---------------------------------------------------------------------------
+
+  @override
+  List<ConstraintViolation> validateConstraints(OpticsWorld state) {
+    if (_currentScenario == null) return [];
+    final violations = <ConstraintViolation>[];
+    for (final constraint in _currentScenario!.constraints) {
+      if (constraint.enforced && !constraint.validate(state)) {
+        violations.add(ConstraintViolation(constraint: constraint));
+      }
+    }
+    return violations;
+  }
+
+  @override
+  bool checkObjectives(OpticsWorld state, [dynamic extra]) {
+    if (_currentScenario == null) return true;
+    final objectives = _currentScenario!.objectives;
+    if (objectives == null) return true;
+    final solved = extra as SolvedOptics?;
+    if (solved == null) return true;
+    return objectives.checkAchieved(state, solved);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Domain helpers
+  // ---------------------------------------------------------------------------
+
+  static const Map<String, String> domainLabels = {
+    'optics-lens': '\u900f\u955c\u5b9e\u9a8c',
+    'optics-mirror': '\u955c\u5b50\u5b9e\u9a8c',
+    'optics-combo': '\u7ec4\u5408\u5b9e\u9a8c',
+  };
+
+  Map<String, List<LabScenario>> getScenariosByDomain() {
+    final groups = <String, List<LabScenario>>{};
+    for (final domain in domainLabels.keys) {
+      groups[domain] = [];
+    }
+    groups['other'] = [];
+    for (final scenario in scenarios) {
+      final domain = scenario.domain;
+      if (groups.containsKey(domain)) {
+        groups[domain]!.add(scenario);
+      } else {
+        groups['other']!.add(scenario);
+      }
+    }
+    groups.removeWhere((k, v) => v.isEmpty);
+    return groups;
+  }
+
   static LensType _parseLensType(dynamic type) {
     if (type is! String) return LensType.convex;
     return switch (type) {
@@ -176,28 +184,5 @@ class ScenarioManager {
       'parallel' => SourceType.parallel,
       _ => SourceType.object,
     };
-  }
-
-  // 验证当前世界是否满足约束
-  List<ConstraintViolation> validateConstraints(OpticsWorld world) {
-    if (_currentScenario == null) return [];
-
-    final violations = <ConstraintViolation>[];
-    for (final constraint in _currentScenario!.constraints) {
-      if (constraint.enforced && !constraint.validate(world)) {
-        violations.add(ConstraintViolation(constraint: constraint));
-      }
-    }
-
-    return violations;
-  }
-
-  // 检查教学目标是否达成
-  bool checkObjectives(OpticsWorld world, SolvedOptics solved) {
-    if (_currentScenario == null) return true;
-    final objectives = _currentScenario!.objectives;
-    if (objectives == null) return true;
-
-    return objectives.checkAchieved(world, solved);
   }
 }

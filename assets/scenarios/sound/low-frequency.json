@@ -1,0 +1,21 @@
+{
+  "scenarioId": "low-frequency",
+  "name": "Low Pitch: Deep Sound",
+  "description": "Explore low-frequency sound: wide-spaced arcs, deep pitch. Compare with high-frequency to understand the inverse relationship between frequency and wavelength.",
+  "version": "1.0",
+  "screen": "singleSource",
+  "initialParams": {
+    "frequency": 100,
+    "amplitude": 0.8
+  },
+  "paramRanges": {
+    "frequency": { "min": 0, "max": 300, "step": 10, "unit": "Hz" },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "observeWavelength", "description": "Observe the wide spacing between wave arcs at low frequency", "params": {"maxFrequency": 150}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "Low frequency = long wavelength. The arcs are far apart. This corresponds to a deep, bass-like sound."}
+  ]
+}

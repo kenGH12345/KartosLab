@@ -126,6 +126,8 @@ class ForceArrowPainter extends CustomPainter {
     this.color = const Color(0xFFEF4444),
     this.label,
     this.maxForce = 500,
+    this.centered = false,
+    this.labelAlign = LabelAlign.end,
   });
 
   final double magnitude;
@@ -133,25 +135,66 @@ class ForceArrowPainter extends CustomPainter {
   final Color color;
   final String? label;
   final double maxForce;
+  /// true 时箭头相对 SizedBox 中心对称绘制（适用于合力等需要居中锤齐的场景）
+  final bool centered;
+  final LabelAlign labelAlign;
 
   @override
   void paint(Canvas canvas, Size size) {
-    if (magnitude < 1) return;
+    // 箭头画在上 1/3、标签留在下方（避免重叠）
+    final arrowY = centered && label != null ? size.height * 0.28 : size.height / 2;
+    if (magnitude < 1) {
+      // 合力为零时仍需要显示“Σ0”标签（教学目的）：画中心小圆点 + 标签
+      if (centered && label != null) {
+        final cx = size.width / 2;
+        canvas.drawCircle(Offset(cx, arrowY), 3, Paint()..color = color);
+        final tp = TextPainter(
+          text: TextSpan(text: label!, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
+          textDirection: TextDirection.ltr,
+        )..layout();
+        // 标签居中在 SizedBox 下方
+        tp.paint(canvas, Offset(cx - tp.width / 2, arrowY + 8));
+      }
+      return;
+    }
     final ratio = (magnitude / maxForce).clamp(0.0, 1.0);
     final len = size.width * 0.8 * ratio;
-    final cy = size.height / 2;
     final sign = direction ? 1.0 : -1.0;
 
+    // centered=true 时以 SizedBox 中心为箭头中心对称展开；tail 与 tip 各处一半长度处
+    final cx = size.width / 2;
+    final tail = centered ? Offset(cx - sign * len / 2, arrowY) : Offset(0, arrowY);
+    final tip = centered ? Offset(cx + sign * len / 2, arrowY) : Offset(sign * len, arrowY);
+
+    // centered 模式：箭头画在上方，标签手动居中画在下方（不交给 ArrowPainter，避免重叠）
+    if (centered && label != null) {
+      final delegate = ArrowPainter(
+        tail: tail,
+        tip: tip,
+        color: color,
+        // 不传 label 给箭头绘制器
+      );
+      delegate.paint(canvas, size);
+      final tp = TextPainter(
+        text: TextSpan(text: label!, style: TextStyle(color: color, fontSize: 11, fontWeight: FontWeight.w600)),
+        textDirection: TextDirection.ltr,
+      )..layout();
+      tp.paint(canvas, Offset(cx - tp.width / 2, arrowY + 8));
+      return;
+    }
+
     final delegate = ArrowPainter(
-      tail: Offset(0, cy),
-      tip: Offset(sign * len, cy),
+      tail: tail,
+      tip: tip,
       color: color,
       label: label,
+      labelAlign: labelAlign,
     );
     delegate.paint(canvas, size);
   }
 
   @override
   bool shouldRepaint(ForceArrowPainter o) =>
-      o.magnitude != magnitude || o.direction != direction || o.color != color || o.label != label;
+      o.magnitude != magnitude || o.direction != direction || o.color != color || o.label != label
+          || o.centered != centered || o.labelAlign != labelAlign;
 }

@@ -1,0 +1,33 @@
+﻿# Phet Sim 需求模板 meta.yaml
+# 复制此文件到 requirements/<req-id>/meta.yaml 后填写
+req_id: req-port-<sim-name>
+title: 复刻 PhET <sim-name> 到 Flutter phet 工程
+status: intake
+phase: '1.intake'
+created_at: '<YYYY-MM-DD HH:MM>'
+updated_at: '<YYYY-MM-DD HH:MM>'
+repo_path: 'C:\workspace\phet'
+
+java_source:
+  path: 'c:\workspace\phetTrunk\phetTrunk\simulations-java\simulations\<sim-name>\src\edu\colorado\phet\<sim-package>\'
+  file_count: <N>
+  tech_stack: <phetgraphics | piccolo-phet>
+  edu_value: '<★ ~ ★★★>'
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC 分层（model / view / controller）
+  - 元件组件化（一元件一 Painter）
+  - L0 组件复用（lib/common/ · 禁止平行实现）
+  - 配置化（assets/scenarios/<sim>/*.json）
+  - 可 AI 生成（schemas/ + docs/prompts/）
+  - 布局硬性要求（居中 + 无溢出 + 响应式 · 见 80-checklist §七）
+  - 严格遵循 shared-abstraction-plan.md
+
+acceptance_criteria:
+  - AC-1: <sim 可独立展示核心现象>
+  - AC-2: <核心交互可操作>
+  - AC-3: <≥3 个 JSON scenario>
+  - AC-4: <四原则合规>
+  - AC-5: <3 视口无溢出 · flutter analyze 0 issues>

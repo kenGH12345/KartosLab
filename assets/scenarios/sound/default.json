@@ -1,0 +1,23 @@
+{
+  "scenarioId": "default",
+  "name": "Sound Wave Explorer",
+  "description": "Freely adjust the frequency and amplitude of a point sound source. Observe how the spherical wave propagates; higher frequency produces denser wave arcs (shorter wavelength).",
+  "version": "1.0",
+  "screen": "singleSource",
+  "initialParams": {
+    "frequency": 500,
+    "amplitude": 0.5
+  },
+  "paramRanges": {
+    "frequency": { "min": 0, "max": 1000, "step": 10, "unit": "Hz" },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "observeWavelength", "description": "Notice that increasing frequency makes the wave arcs denser", "params": {"minFrequency": 700}},
+    {"id": "sc-2", "type": "observeAmplitude", "description": "Notice that amplitude controls the brightness of the wave pattern", "params": {"minAmplitude": 0.3}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "Drag the Frequency slider to see wavelength change in real time"},
+    {"trigger": "always", "message": "Higher frequency = shorter wavelength (denser arcs). Lower frequency = longer wavelength (sparser arcs)."}
+  ]
+}

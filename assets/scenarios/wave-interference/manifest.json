@@ -1,0 +1,1 @@
+{"scenarios":[{"id":"default","file":"default.json"},{"id":"no-barrier","file":"no-barrier.json"},{"id":"wide-slit","file":"wide-slit.json"},{"id":"narrow-slit","file":"narrow-slit.json"},{"id":"high-frequency","file":"high-frequency.json"}]}

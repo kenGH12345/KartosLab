@@ -1,0 +1,17 @@
+可选参数：
+
+参数	作用
+-Destination <path>	目标项目根目录（必填，参数化，不写死）
+-WithData	额外搬业务数据（.vibe context requirements output）
+-DryRun	只预览要复制什么，不写文件
+-Quiet	只打摘要
+调用示例：
+
+# 预览
+powershell -NoProfile -File .codebuddy/scripts/copy-framework-to-project.ps1 -Destination "E:\MyNewProj" -DryRun
+
+# 真实分发（自动重建镜像）
+powershell -NoProfile -File .codebuddy/scripts/copy-framework-to-project.ps1 -Destination "E:\MyNewProj" 
+SVN 红线提醒：脚本只写本地文件、绝不 svn commit，符合 00-engineering-principles.mdc SVN 安全段。复制完若要在目标项目提交，需你单独审批。
+
+请提供目标项目绝对路径，我立即执行（或你也可自己跑上面的命令，脚本已可用）

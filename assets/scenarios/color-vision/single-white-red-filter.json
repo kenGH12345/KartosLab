@@ -1,0 +1,23 @@
+﻿{
+  "scenarioId": "single-white-red-filter",
+  "name": "White Light + Red Filter",
+  "description": "White light (R+G+B) passes through a red filter - only red light transmits. Observe how color filters selectively transmit light.",
+  "version": "1.0",
+  "screen": "singleBulb",
+  "beamMode": "photons",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 100,
+    "blueIntensity": 100,
+    "filterType": "red",
+    "showPhotonView": true,
+    "personPosition": 300
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "filterPassed", "description": "Person sees red after filter", "params": {"expectedColor": "red"}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "White light = R+G+B. The red filter blocks green and blue."},
+    {"trigger": "always", "message": "Try switching to 'photon mode' to see individual colored dots passing the filter"}
+  ]
+}

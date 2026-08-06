@@ -1,0 +1,22 @@
+﻿{
+  "scenarioId": "rgb-dark-room",
+  "name": "Dark Room Exploration",
+  "description": "Start in complete darkness. Gradually add red, green, and blue to discover how colors combine.",
+  "version": "1.0",
+  "screen": "rgb",
+  "initialParams": {
+    "redIntensity": 0,
+    "greenIntensity": 0,
+    "blueIntensity": 0,
+    "personPosition": 300
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "intensityReached", "description": "Set red to at least 80%", "params": {"channel": "red", "minValue": 80}},
+    {"id": "sc-2", "type": "colorMatch", "description": "Produce magenta (R+B)", "params": {"targetColor": "magenta"}},
+    {"id": "sc-3", "type": "colorMatch", "description": "Produce cyan (G+B)", "params": {"targetColor": "cyan"}}
+  ],
+  "hints": [
+    {"trigger": "redIntensity < 5 && greenIntensity < 5 && blueIntensity < 5", "message": "It is dark! Move any slider to start exploring."},
+    {"trigger": "redIntensity > 50 && greenIntensity < 10 && blueIntensity > 50", "message": "Red + Blue = Magenta. Try adding green!"}
+  ]
+}

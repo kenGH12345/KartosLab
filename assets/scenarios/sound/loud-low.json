@@ -1,0 +1,22 @@
+{
+  "scenarioId": "loud-low",
+  "name": "Loud Bass: High Amplitude + Low Frequency",
+  "description": "Combine maximum amplitude with low frequency. Observe that you get deep, widely-spaced, high-contrast wave arcs - a visualization of what the ear perceives as a loud, deep sound.",
+  "version": "1.0",
+  "screen": "singleSource",
+  "initialParams": {
+    "frequency": 80,
+    "amplitude": 1.0
+  },
+  "paramRanges": {
+    "frequency": { "min": 0, "max": 300, "step": 10, "unit": "Hz" },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "observeWavelength", "description": "Observe widely-spaced arcs (long wavelength) at low frequency", "params": {"maxFrequency": 120}},
+    {"id": "sc-2", "type": "observeAmplitude", "description": "Observe high-contrast wave pattern at maximum amplitude", "params": {"minAmplitude": 0.9}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "This is what a loud bass drum would look like as a wave: wide arcs with strong contrast."}
+  ]
+}

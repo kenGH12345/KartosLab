@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phet/sound-scenario.schema.json",
+  "title": "Sound Wave Scenario",
+  "type": "object",
+  "required": ["scenarioId", "name", "screen"],
+  "properties": {
+    "scenarioId": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string", "default": "" },
+    "version": { "type": "string", "default": "1.0" },
+    "screen": {
+      "type": "string",
+      "enum": ["singleSource"],
+      "description": "singleSource = single speaker point source with spherical wave propagation"
+    },
+    "initialParams": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000,
+          "default": 500,
+          "description": "Speaker frequency in Hz. Higher = higher pitch, shorter wavelength (denser arcs)."
+        },
+        "amplitude": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5,
+          "description": "Speaker amplitude [0,1]. 0 = silence, 1 = maximum loudness (strongest contrast)."
+        }
+      }
+    },
+    "paramRanges": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "object",
+          "required": ["min", "max", "step"],
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" },
+            "step": { "type": "number" },
+            "unit": { "type": "string", "default": "Hz" }
+          },
+          "description": "Frequency slider range override"
+        },
+        "amplitude": {
+          "type": "object",
+          "required": ["min", "max", "step"],
+          "properties": {
+            "min": { "type": "number" },
+            "max": { "type": "number" },
+            "step": { "type": "number" },
+            "unit": { "type": ["string", "null"] }
+          },
+          "description": "Amplitude slider range override"
+        }
+      }
+    },
+    "successCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["observeWavelength", "observeAmplitude", "frequencyReached", "amplitudeReached"]
+          },
+          "description": { "type": "string" },
+          "params": {
+            "type": "object",
+            "properties": {
+              "minFrequency": { "type": "number" },
+              "maxFrequency": { "type": "number" },
+              "exactFrequency": { "type": "number" },
+              "minAmplitude": { "type": "number" },
+              "maxAmplitude": { "type": "number" },
+              "exactAmplitude": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["trigger", "message"],
+        "properties": {
+          "trigger": {
+            "type": "string",
+            "description": "'always' or a condition expression like 'frequency < 200'"
+          },
+          "message": {
+            "type": "string",
+            "description": "Hint text displayed to the student"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,23 @@
+﻿{
+  "scenarioId": "single-green-filter",
+  "name": "White Light + Green Filter",
+  "description": "White light passes through a green filter. Observe that only green light reaches the person.",
+  "version": "1.0",
+  "screen": "singleBulb",
+  "beamMode": "photons",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 100,
+    "blueIntensity": 100,
+    "filterType": "green",
+    "showPhotonView": true,
+    "personPosition": 320
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "filterPassed", "description": "Person sees green after filter", "params": {"expectedColor": "green"}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "White light contains all colors. The green filter only lets green through."},
+    {"trigger": "always", "message": "Red and blue photons are blocked — watch them disappear at the filter line!"}
+  ]
+}

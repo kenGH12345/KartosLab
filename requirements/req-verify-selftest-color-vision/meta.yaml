@@ -1,0 +1,11 @@
+# meta.yaml — 验证专用需求（非业务需求）
+req_id: req-verify-selftest-color-vision
+title: 验证 agile-vibe v0.2.1 第9条 AI 自主功能测试闭环（靶子=color_vision sim）
+sop: agile-vibe
+phase: 3.iteration
+status: in_progress
+created_at: "2026-08-03 14:43"
+updated_at: "2026-08-05 17:24"
+# 本需求为元验证需求，不产出业务代码，仅验证 self-testing skill + 阶段3第9条门禁
+test_exempt: false
+note: "验证闭环用途 · 不改 color_vision 业务代码"

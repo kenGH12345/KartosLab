@@ -1,0 +1,40 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash c:/workspace/WorkFlowAgent/workflow/tools/wf-hook.sh",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node c:/workspace/WorkFlowAgent/workflow/hooks/pre-tool-use-guard.js",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node c:/workspace/WorkFlowAgent/workflow/hooks/stop-guard.js",
+            "timeout": 5000
+          }
+        ]
+      }
+    ]
+  }
+}

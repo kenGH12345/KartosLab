@@ -1,0 +1,8 @@
+phase: 2.requirement
+status: in_progress
+sop: agile-vibe
+created_at: "2026-07-31 12:20"
+updated_at: "2026-07-31 12:20"
+edd_template_version: v2.0
+title: AI 场景生成工具链闭环（A 任务）
+selection: "1A 2A 3A（Schema+Dart 校验 / 自动落盘+manifest / DeepSeek OpenAI 兼容 API）"

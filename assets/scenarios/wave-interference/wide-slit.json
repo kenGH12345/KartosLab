@@ -1,0 +1,28 @@
+{
+  "scenarioId": "wide-slit",
+  "name": "Wide Slits: Closely-Spaced Fringes",
+  "description": "Set the slit separation to maximum (36 px). According to the double-slit equation d sin(theta) = n lambda, wider separation produces more closely-spaced interference fringes. Count the number of bright bands and compare with narrow separation.",
+  "version": "1.0",
+  "screen": "waterDoubleSlit",
+  "initialParams": {
+    "frequency": 0.4,
+    "amplitude": 1.5,
+    "barrierEnabled": true,
+    "slitSize": 10,
+    "slitSeparation": 36
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.1, "max": 1.0, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0.2, "max": 3.0, "step": 0.1, "unit": null },
+    "slitSize": { "min": 4, "max": 20, "step": 1, "unit": "px" },
+    "slitSeparation": { "min": 24, "max": 36, "step": 1, "unit": "px" }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"observePattern","description":"Observe many closely-spaced interference fringes at maximum separation","params":{"minSlitSep":34}},
+    {"id":"sc-2","type":"countFringes","description":"Count the number of bright radial bands visible","params":{}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"Wider separation (d) = more fringes = narrower spacing. This is the inverse relationship: fringe spacing proportional to lambda/d."},
+    {"trigger":"always","message":"Try reducing separation to 12 and compare 鈥?how many fringes disappear?"}
+  ]
+}

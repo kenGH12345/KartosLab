@@ -1,0 +1,28 @@
+{
+  "scenarioId": "default",
+  "name": "Water Wave Double-Slit",
+  "description": "Classic Young double-slit experiment with water waves. A single oscillator generates circular ripples; a barrier with two slits creates two coherent sources. Observe the characteristic interference pattern of alternating bright and dark radial bands.",
+  "version": "1.0",
+  "screen": "waterDoubleSlit",
+  "initialParams": {
+    "frequency": 0.4,
+    "amplitude": 1.5,
+    "barrierEnabled": true,
+    "slitSize": 10,
+    "slitSeparation": 24
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.1, "max": 1.0, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0.2, "max": 3.0, "step": 0.1, "unit": null },
+    "slitSize": { "min": 4, "max": 20, "step": 1, "unit": "px" },
+    "slitSeparation": { "min": 12, "max": 36, "step": 1, "unit": "px" }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"observePattern","description":"Observe alternating bright and dark bands radiating from the slits","params":{"minFrequency":0.2}},
+    {"id":"sc-2","type":"adjustSeparation","description":"Change slit separation and observe how fringe spacing changes","params":{}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"The two slits act as independent wave sources. Where crests overlap = bright band; crest + trough = dark band."},
+    {"trigger":"always","message":"Drag Frequency to change wavelength; Slit Size/Separation to change the interference geometry."}
+  ]
+}

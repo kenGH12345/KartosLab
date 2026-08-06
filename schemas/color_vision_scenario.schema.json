@@ -1,0 +1,77 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phet/color-vision-scenario.schema.json",
+  "title": "Color Vision Scenario",
+  "type": "object",
+  "required": ["scenarioId", "name", "screen"],
+  "properties": {
+    "scenarioId": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string", "default": "" },
+    "version": { "type": "string", "default": "1.0" },
+    "screen": {
+      "type": "string",
+      "enum": ["rgb", "singleBulb"],
+      "description": "rgb = RGB三色合成屏 · singleBulb = 单光源+滤光片屏"
+    },
+    "beamMode": {
+      "type": "string",
+      "enum": ["photons", "wave"],
+      "default": "photons",
+      "description": "photons = 光子颗粒模式 · wave = 连续光束模式（仅 singleBulb 屏有效）"
+    },
+    "initialParams": {
+      "type": "object",
+      "properties": {
+        "redIntensity":   { "type": "number", "minimum": 0, "maximum": 100, "default": 100 },
+        "greenIntensity": { "type": "number", "minimum": 0, "maximum": 100, "default": 100 },
+        "blueIntensity":  { "type": "number", "minimum": 0, "maximum": 100, "default": 100 },
+        "filterType": {
+          "type": "string",
+          "enum": ["none", "red", "green", "blue", "custom"],
+          "default": "none",
+          "description": "滤光片类型 · 仅 singleBulb 屏有效"
+        },
+        "customFilter": {
+          "type": "object",
+          "description": "自定义滤光片 RGB 透过率 (0-1)",
+          "properties": {
+            "redPass":   { "type": "number", "minimum": 0, "maximum": 1 },
+            "greenPass": { "type": "number", "minimum": 0, "maximum": 1 },
+            "bluePass":  { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "showPhotonView":  { "type": "boolean", "default": true },
+        "showBeamView":    { "type": "boolean", "default": false },
+        "personPosition":  { "type": "number", "default": 300, "description": "Person 距光源像素距离" }
+      }
+    },
+    "successCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "description"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["colorMatch", "filterPassed", "intensityReached"]
+          },
+          "description": { "type": "string" },
+          "params": { "type": "object" }
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["trigger", "message"],
+        "properties": {
+          "trigger": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

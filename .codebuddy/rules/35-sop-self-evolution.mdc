@@ -1,0 +1,120 @@
+---
+description: SOP 自进化协议——发现 SOP 过时不允许静默改，必须按 5 步先提案再修改。
+alwaysApply: true
+---
+
+# SOP 自进化协议
+
+SOP 是协作流程的标准。如果 AI 可以"顺手改一下"，几个 session 后就没人知道为什么阶段定义变成现在这样、新规则跟正在运行的需求是否冲突——整套流程就废了。
+
+本规则与 `30-skill-self-evolution.mdc` 同构对照。**SOP 改动比 Skill 影响面更大**（涉及多个 agent + commands + 正在运行的需求 meta.yaml），约束更严。
+
+## 硬约束
+
+任何 agent / 主会话 / 命令都**严禁**：
+
+- 直接 Edit / Write `.codebuddy/sop/*.md` 的 frontmatter（含 `phases` / `phase_count` / `phase_field_format` / `tags` / `version`）
+- 直接 Edit / Write `.codebuddy/sop/*.md` 的阶段定义、状态机表、回退条件、完成标准
+- 直接 Edit / Write `.codebuddy/sop/INDEX.md` 的状态机表与适用场景表
+- "顺便修一下错别字"也不行——SOP 的每个细节都被 agent 与 skill 引用
+
+允许的轻改动（无需走协议）：纯文档段落里的措辞润色（如"何时该用专业 agent"提示语句的非语义改写），但**必须不涉及任何字段、阶段名、agent 名、状态机、完成标准**。
+
+唯一允许的实质修改方式：**5 步协议**。
+
+## 5 步协议
+
+### 1. 触发判定
+
+发现以下任一情况，触发协议：
+
+- SOP 阶段定义与实际行为不符（如 demo 实证 `meta.yaml:11` 写 `phase=4.coding` 但 SOP 4=testing 错位）
+- SOP 引用的 agent / skill 已不存在
+- 阶段切换或回退路径有疏漏（按 SOP 走完拿不到声明的产物）
+- 同一类问题被同一 SOP 处理失败 ≥ 2 次
+- 用户明确指出 SOP 有问题
+- SOP 体检报告（如 `.codebuddy/docs/SOP-CHECKUP-*.md`）发现的诊断
+
+不触发的情况：
+
+- 你"觉得可以更好"——这不是触发条件
+- 单次特殊场景需要——单次特殊处理就够了，不要改 SOP
+- 没有 3 次以上的重复证据——遵循 3-Time Rule（参见 `10-vibecoding-protocol.mdc` 第 5 条）
+
+### 2. 诊断
+
+写明：
+
+- **现状**：当前 SOP 是怎么写的（必须引用 `.codebuddy/sop/<name>.md:<line>`）
+- **现象**：实际跑出来什么问题（必须有真实样本，引用 `requirements/<id>/process.txt:<line>` 或 commit sha）
+- **根因**：为什么会这样（不要停在"agent 没遵守"，要查 SOP 本身的设计是否有缺陷）
+
+### 3. 拟定修改
+
+写明：
+
+- **diff**：要改哪几行（before / after）
+- **影响面**（比 Skill 更广，必须列全）：
+  - 哪些 agent 引用了改动的字段（grep 整 `agents/`）
+  - 哪些 skill 引用了（特别检查 `managing-requirement` / `session-restorer` / `doctor`）
+  - 哪些命令引用了（grep `commands/`）
+  - **正在运行的需求**（`status != done`）的 `meta.yaml` 是否兼容？
+- **兼容性**：
+  - 旧产物是否仍可读？
+  - 是否需要回填已运行需求的字段？
+  - 与已有 `phase_overrides` 历史记录是否冲突？
+
+### 4. 输出提案 + 等待用户回复
+
+把诊断 + 拟修发给用户，**等用户回 y/n**。
+
+不允许：
+
+- 不等用户回复直接改
+- 用户没回复就当作"默认同意"
+- 用户说"看着办"就跳到第 5 步——必须显式 y/n
+- 把多条改动捆绑成一个 y/n（每条独立确认，避免捆绑通过）
+
+### 5. 应用 + 记录变更历史
+
+用户回 `y` 后：
+
+- 应用改动
+- **若改动了 `phases` / `phase_field_format`**：必须遍历所有正在运行的需求 `meta.yaml` 检查兼容；不兼容的需求逐一与用户讨论是否回填
+- 升级 SOP frontmatter 的 `version` 字段（如 0.1.0 → 0.1.1）
+- 在 `.codebuddy/sop/<name>.md` 末尾追加变更历史段（与 30/40 协议族同构 blockquote 风格）：
+
+  ```
+  ## 变更历史
+
+  > YYYY-MM-DD by <需求 ID 或操作者> [version: 0.1.1]：
+  > 一句话改动摘要。
+  > - 改动 1（含 file:line）
+  > - 改动 2
+  > - 触发原因：<docs/SOP-CHECKUP-Y.md Fix-Z 或 commit sha>
+  ```
+
+  > **协议族格式约定**（30/35/40 已统一）：blockquote 风格 + 多 bullet 详细说明。version 字段是 SOP 特有信息，写在首行括号内。
+
+- **改完跑 `./.codebuddy/scripts/sync-codebuddy.{sh,ps1}`**（rules/agents/commands 在镜像范围；SOP 自身不在镜像范围，但相关 agent 联动改动需要 sync）
+- 在主会话汇报"已按用户确认应用变更"，列出对应的 commit sha
+
+用户回 `n`：**SOP 不动**，把诊断写到 `.codebuddy/docs/SOP-CHECKUP-<date>.md` 备查。
+
+## 与其他规则的关系
+
+- Skill 自进化协议（同构对照）→ `30-skill-self-evolution.mdc`
+- Agent 自进化协议（同构对照）→ `40-agent-self-evolution.mdc`
+- "不可逆操作需用户确认" → `20-verify-before-act.mdc`
+- 触发时机 "做了 3 次" → `10-vibecoding-protocol.mdc` 第 5 条
+- 改 SOP 必须考虑 sync 到 .codebuddy → 由 `doctor` skill 子节 1.1 兜底（`.codebuddy/skills/core/doctor/SKILL.md`）
+- 引用先行（诊断/影响面必须可追溯）→ `60-citation-and-honesty.mdc`
+
+## 变更历史
+
+> 2026-05-06 by req-sop-protocol-gaps-batch Phase 3：
+> M-2：变更历史段模板格式与 30/40 协议族同构。
+> - 步骤 5 example 由表格风格（`| 日期 | 版本 | 变更 | ... |`）改为 blockquote 风格（`> YYYY-MM-DD by ... [version: X]：`）
+> - 增加"协议族格式约定"说明，明示 30/35/40 已统一
+> - 触发原因：`requirements/req-add-40-agent-self-evolution/notes.md:56-59` reviewer M-2
+> - 同步追加"Agent 自进化协议（同构对照）→ 40-agent-self-evolution.mdc"关系引用

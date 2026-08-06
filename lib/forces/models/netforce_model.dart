@@ -18,7 +18,7 @@ class NetforceModel {
   static const int knotsPerSide = 4;
 
   double gameLength = 400;   // 胜负边界（像素单位）
-  double cartStep = 0.003;   // 小车移动倍率
+  double cartStep = 0.03;    // 小车移动倍率（×10 加大响应幅度，让不平衡合力立刻可见）
 
   NetforceModel();
 

@@ -1,0 +1,25 @@
+{
+  "scenarioId": "slow-wave",
+  "name": "Slow Oscillation: Long Wavelength",
+  "description": "Set the electron to oscillate slowly. Observe the wide spacing between wave crests -- this is the EM equivalent of a low-frequency radio wave (e.g. AM radio ~1 MHz carrier).",
+  "version": "1.0",
+  "screen": "singleAntenna",
+  "initialParams": {
+    "frequency": 0.15,
+    "amplitude": 0.8,
+    "showCurve": true,
+    "showArrows": true,
+    "dynamicFieldEnabled": true
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.05, "max": 0.4, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"observeWave","description":"Observe widely spaced wave crests at low frequency","params":{"maxFrequency":0.2}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"Slow oscillation = long wavelength. This is like an AM radio carrier wave."},
+    {"trigger":"always","message":"Notice how the electron (blue dot) moves up and down slowly on the antenna."}
+  ]
+}

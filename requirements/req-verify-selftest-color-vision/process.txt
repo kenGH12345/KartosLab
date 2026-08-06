@@ -1,0 +1,35 @@
+[2026-08-03 14:43] phase init → 3.iteration: 立验证专用需求，靶子=lib/color_vision。目的=实跑 agile-vibe v0.2.1 阶段3第9条「AI 自主功能测试」闭环，验证 self-testing skill + code-reviewer 步骤2.5 + check-before-done 检查6 是否可落地。
+[2026-08-03 14:43] 已建目录 test-report/ screenshots/ spec/ + meta.yaml(status=in_progress, phase=3.iteration)
+[2026-08-03 14:48] L2 代码测试: `flutter analyze lib/color_vision/` → No issues found (ran 1.0s) · 真跑实证 → 落 test-report/code-test.log
+[2026-08-03 14:50] L1 功能测试: 4 个 GUI 操作类 AC 经代码静态推演通过，但 GUI 真操作**本会话无能力执行** → ac-verification.md 如实标注 4 项"未验证" + 勾选 3 项诚实声明
+[2026-08-03 14:52] 检查6 逻辑验证: 内联复现 check-before-done.ps1 检查6 核心 → ac-verification.md 存在(PASS) + 诚实声明勾选=3(OK) · 逻辑正确
+[2026-08-03 14:53] 发现脚本 bug: check-before-done.ps1 整脚本无法被 `powershell -File` 调用（param 块位于注释行之后，违反 PowerShell "param 须为脚本首条语句"硬语法）· 此为原脚本既有缺陷，非本次改动引入（本次仅尾部插入检查6）· 待立修复需求
+[2026-08-03 14:53] 验证结论: self-testing 闭环的「产物规范 + 诚实声明机制 + 检查6逻辑」均 work；唯一阻塞是 ps1 调用 bug（不影响 sh 版 + 不影响 SOP/agent/skill 落地）
+[2026-08-04 20:08] B方案修复 check-before-done.ps1: (1) param块→$args[0] 绕开 PS5.1 -File 位置参数怪癖; (2) 修复2处 Join-Path 三参数非法调用(PS5.1仅接受Path+ChildPath)→改两参数插值
+[2026-08-04 20:08] 真跑验证: powershell -File check-before-done.ps1 req-verify-selftest-color-vision → 检查1/2/3正确报错(未走closing); 检查6 WARNING分支(移走ac-verification.md时正确打印) → 脚本可正常调用+执行全部检查逻辑 ✅
+[2026-08-04 20:08] 根因修正: 原失败有两层bug, param位置问题掩盖了真正的 Join-Path 三参数非法; B方案绕开param后才暴露并修复Join-Path
+[2026-08-05 17:22] 补测 · 3 张实证截图落盘 screenshots/: ac-2-step-1-white-nofilter.png(297KB) · ac-2-step-2-white-redfilter.png(307KB) · ac-BUG-layout-overflow-red.png(101KB) · 由本会话通过 PowerShell WebClient 从会话附件 URL 直接下载,非历史缓存
+[2026-08-05 17:23] 用户拍板 1a/2/3a: (1)AC-3 Blue 保持静态推演待后续偿还; (2)图3确认为 L0-2/L0-3 违规(用户故意缩窄验证适配) → 立独立需求 req-color-vision-layout-fix; (3)保留原时间戳追加补测段
+[2026-08-05 17:24] 衍生发现: single_bulb_screen.dart:118-125 Column 三层布局中知识面板+控制面板无高度约束,Filter=Red 时 KnowledgeItem.active border 撑高知识面板挤压 Expanded(flex:5) 主图空间 → 主图消失 · 违反 80-phet-sim-checklist §七 L0-2(响应式无溢出)+L0-3(主图尺寸随视口缩放,未用LayoutBuilder+min保底) · 立独立需求跟进
+[2026-08-06 11:55] γ 收尾启动: 用户拍板 A=y/B=y/C=c2/D=简化 · 三处 Diff 并行落地
+[2026-08-06 11:56] Diff-1: .claude/agents/code-reviewer.md 删除"上下文加载增强(Experience 自动注入)"死引用段(原 line 19-40) · 变更历史追加 γ-1 · 触发原因 grep 全仓 0 匹配 .workflow/scripts/experience-injector.sh
+[2026-08-06 11:56] Diff-2: check-before-done.ps1 v1.1.0→v1.2.0 · 豁免关键字 'skip closer'|'跳过 closer' 双语对齐(line 48) · 完成日志匹配 completed|done|finished|完成 双语对齐(line 73) · 与 sh 端行为一致
+[2026-08-06 11:57] Diff-3: 联动脚本增强 · check-before-done.{sh,ps1} 加 Check 6.5 零真操作警告级检测(sh line 113-121 · ps1 line 133-142) · 全 AC 为 ⚠️/未验证/静态推演 + 未标 self-test not executed + 勾诚实声明 → WARNING(不阻塞) · SKILL.md 变更历史追加 γ-3
+[2026-08-06 11:58] 三端同步: sync-codebuddy.ps1 -Quiet 通过 · grep 验证 .codebuddy/agents/code-reviewer.md 无 experience-injector 引用(仅变更历史提到删除记录) · sh/ps1 双端 5+7 处关键改动全部落地
+[2026-08-06 11:59] 干跑实证: powershell -File check-before-done.ps1 req-verify-selftest-color-vision → 3 处错误合理(未走 closer) · 未触发零真操作 WARNING(本 ac-verification.md 有 AC-2 真操作实证 · warnRows=3 ≠ acRows=4)· Diff-1/2/3 联合生效
+[2026-08-06 11:59] 意外发现(不在 γ 范围): grep 显示 .codebuddy/agents/ 下 6 个 agent(closer/tech-leader/knowledge-maintainer/skill-architect/test-runner/product-manager)仍引用 .workflow/scripts/experience-injector.sh/.ps1 · 全部为死引用 · 需 40-agent-self-evolution 5 步协议逐个走 · 立债务待未来独立需求 req-clean-experience-injector-refs 处理 · 本轮不动
+[2026-08-06 11:59] γ 收尾完成 · 未启动 closer(D=简化) · verdict=approve_go / 备注: 跳过 closer(简化模式 · 本轮改动为跨需求协作标准整改 · 非本需求业务范畴 · 已 3 Diff 独立留底 + 三端同步验证)
+[2026-08-06 12:15] A 方案启动: 用户拍板 A(修 6 agent 死引用) · 打包提案模式 · 全 y + B=y(更新记忆 g0cvhsg7 补 symlink 教训)
+[2026-08-06 12:16] 排查中间摇摆纠正: 首轮 grep .claude/agents/ 得 0 匹配 → 错误自我怀疑"死引用是虚假发现" · 再用 read_file 穿透 symlink 读 closer.md line 20-32 → 死引用真实存在 · 根因: grep_search 工具不解引用 symlink · 记忆 g0cvhsg7 已更新
+[2026-08-06 12:17] 关键发现: .claude/agents/*.md 是 .codebuddy/agents/*.md 的 symlink(sync-codebuddy.ps1 v0.2+ 定义 .codebuddy 为 SSOT) · 只需改 .codebuddy 一端 · .claude 自动跟随 · 无需再跑 sync
+[2026-08-06 12:18] A3-skill-architect.md 完成: 演进场景步骤 3 删除 `bash .workflow/scripts/experience-injector.sh workflow skill-evolution` · 追加变更历史(2026-08-06 by req-verify-selftest-color-vision γ 收尾续)
+[2026-08-06 12:18] A4-test-runner.md 完成: 上下文加载步骤 5 删除 experience-injector.sh workflow testing · 追加变更历史
+[2026-08-06 12:19] A5-product-manager.md 完成: 上下文加载步骤 5 删除 experience-injector.sh workflow · 追加变更历史
+[2026-08-06 12:19] A6-knowledge-maintainer.md 完成: 场景 A 步骤 4 + 场景 B 步骤 4 删除两处 experience-injector · 追加变更历史
+[2026-08-06 12:20] A2-tech-leader.md 完成: 上下文加载步骤 3 删除 experience-injector.sh architecture 整个 shell 块 · 追加变更历史(保留原 Phase 1 引入条目 + 新增删除记录)
+[2026-08-06 12:20] A1-closer.md 完成(5 处): 步骤 0 经验自动注入整段删除 · 步骤 1 编号 4 经验注入删除 · 步骤 1.5 编号 2 经验注入子段替换为"经验沉淀深化"描述 · 追加变更历史
+[2026-08-06 12:21] 全量验证 PASS: grep experience-injector 全工程 → 仅 process.txt 备忘(3 处历史留底) · 6 agent 死引用全清零 · Select-String .claude/agents/closer.md → 仅 line 413 变更历史提到 · symlink 联动生效 · 三端同步自动完成
+[2026-08-06 12:21] 记忆 g0cvhsg7 已更新: 补 symlink 教训(grep_search 不解引用 symlink · 规避方法 read_file 穿透 或 直接查 .codebuddy 源端)
+[2026-08-06 12:21] A 方案完成 · 6 agent 全部通过 40-agent-self-evolution 5 步协议 · 打包提案模式 · 用户"全 y"一次通过 · verdict=approve_go / 备注: 死引用清零
+[2026-08-06 14:55] β 复核纠正(诚实边界 60-citation-and-honesty): 上文 line 24/27/32 原声明"保留 auto-extract-failures.sh 引用作为独立债务"实为虚假发现 · β 阶段用户追问后重新 grep .codebuddy 源端 → 全工程 0 匹配 · closer.md 和 knowledge-maintainer.md 均不含此字符串 · 原备忘系凭直觉误报 · 已就地删除虚假描述 · 无 β 债务需处理 · 引用先行教训: 声明"待办债务"前必须 grep 证据链(参见记忆 g0cvhsg7 symlink 陷阱同源教训)
+... EOF no more lines ...

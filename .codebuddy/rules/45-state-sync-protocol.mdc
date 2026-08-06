@@ -1,0 +1,157 @@
+---
+description: 状态同步——四件套（meta/process/INDEX/notes）、阶段切换"先写后做"三步顺序、知识库优先。
+alwaysApply: true
+---
+
+# 状态同步协议
+
+AI 会话可能中途中断，人也可能临时切走。**下次接手必须能从文件里读出"上次到哪、上次为什么这么做"**。
+
+## 四件套
+
+每个需求维护以下 4 类文件：
+
+| 文件 | 角色 | 谁写 |
+|---|---|---|
+| `meta.yaml` | 结构化状态（phase/status/sop/created_at/updated_at） | 主会话 + scripts |
+| `process.txt` | 时间序日志（"什么时候、谁、做了什么、产出在哪"） | 所有 agent / 主会话 |
+| `INDEX.md`（由 rebuild-index.sh 自动生成） | 跨需求索引（status / phase / 最近活动） | doctor / 脚本 / 主会话 |
+| `notes.md` | 决策、踩坑、参考链接（非结构化） | 任何 agent |
+
+**单一源**：
+
+- 当前阶段在哪个 → `meta.yaml`
+- 为什么走到这一步 → `process.txt`
+- 这个阶段产物的具体内容 → `spec/` `design/` `tasks/` 下的对应文件
+- INDEX 是缓存，不是源；与 `meta.yaml` 不一致时以 `meta.yaml` 为准
+
+## 阶段切换三步顺序（"先写后做"）
+
+任何阶段切换、agent 委派、关键产物生成前，**严格按这个顺序**：
+
+### 步骤 1：先写状态
+
+```yaml
+# meta.yaml
+phase: 2.requirement   # 改这里
+status: in_progress
+updated_at: "2026-04-29 19:30"
+```
+
+```
+[2026-04-29 19:30] phase 1→2: 委派 product-manager 进行需求澄清
+```
+
+### 步骤 2：再做实际操作
+
+- 调 `Task` 委派 product-manager
+- 创建 `spec/` 目录
+- ...
+
+### 步骤 3：操作完成后写完成日志
+
+```
+[2026-04-29 20:15] product-manager 完成需求澄清，输出 spec/需求简述.md（5 个 AC）
+```
+
+### closing 阶段的标准日志格式（多 agent 场景）
+
+当阶段切换涉及 ≥ 2 个 agent 串联（典型：阶段 4 closing 的 `code-reviewer` → `closer` → `knowledge-maintainer`），**必须逐 agent 分别写步骤 3 完成日志**，不允许塌缩成一行：
+
+```
+[2026-05-06 16:30] phase 3.iteration → 4.closing: 委派 code-reviewer
+[2026-05-06 16:32] code-reviewer 完成，passed_with_suggestions（0 Blocker / 0 Major / 1 Minor）
+[2026-05-06 16:33] verdict=approve_go / 备注: 立即修 Minor；重派 closer
+[2026-05-06 17:11] closer 完成收尾（closer 内部 17:05 / 主会话观察 17:11），产出 spec/最终需求.md 等
+[2026-05-06 17:18] knowledge-maintainer 完成沉淀（KM 内部 17:15 / 主会话观察 17:18）
+[2026-05-06 17:20] phase 4.closing → done: meta.status=done, INDEX 同步
+```
+
+**不允许的塌缩写法**（违反"时间序日志"单一源原则）：
+
+- ❌ `[...] phase 3.iteration → 4.closing → done`（一行涵盖整个 closing 流程，agent 执行时长与结果不可追溯）
+- ❌ closer 一行 + 直接 done（漏掉 KM 日志；若本次跳过 KM 应明写"跳过 KM，理由: ..."）
+
+**时间戳归属**：closer / KM 等 subagent 与主会话的时间戳归属参 `.codebuddy/agents/closer.md` 步骤 5 "时间戳归属约定"段——`completed_at` 用内部时间；`process.txt` 用主会话观察时间；两者有差时可并列标注。
+
+实证来源：
+- 合规范例：`requirements/req-closer-add-fix4-check/process.txt:25-34`
+- 塌缩反例：`requirements/req-sop-protocol-gaps-batch/process.txt:5`、`requirements/req-cleanup-dev-agents-minors/process.txt:7`
+
+**为什么严格这个顺序**：如果"做"和"写"反过来，agent 中途崩了就只剩 "做了一半但状态没记" —— 下次接手不知道这个阶段已经动过。
+
+## 用户决策记录（verdict）
+
+用户在 process.txt 里的拍板必须用统一枚举，便于程序读取与 doctor 校验。
+
+**格式**：
+
+```
+[time] verdict=<enum> [by <user|agent-name>] [/ 备注: <自由文本>]
+```
+
+**枚举值**：
+
+| 枚举 | 含义 | 典型场景 |
+|---|---|---|
+| `approve_go` | 同意，进入下一步 | 评审通过、方案确认、阶段切换确认 |
+| `tweak` | 同意但需局部调整 | 接受当前产物，备注列改动点 |
+| `redo` | 不同意，重做当前阶段 | 不接受产物，要求当前 agent 重新出 |
+| `back_to_phase_<N>` | 回退到指定阶段 | 发现需求歧义、方案根因问题（N 必须是合法 phase id） |
+| `delegate_<agent-name>` | 委派给某 agent 继续 | 用户明确指定下一个 agent（agent-name 必须是 agents 目录里的真实名字） |
+| `abort` | 终止当前需求 | 决定不做 / 撤销 |
+
+**不允许的写法**：
+
+- ❌ "用户选 A 方案"（自由文本，doctor 无法解析）
+- ❌ `verdict=delegate_tl_v11`（缩写或带版本号；应写 `verdict=delegate_tech-leader / 备注: v1.1`）
+- ❌ verdict 与备注合并（如 `verdict=approve_v2`，应拆为 `verdict=approve_go / 备注: v2`）
+
+## 不允许的操作
+
+- ❌ 主会话直接编辑 `spec/` `design/` `tasks/` 下的阶段产物（这是阶段 agent 的职责）
+- ❌ 跳过 `process.txt` 的留底
+- ❌ INDEX 手工同步（应跑 `/doctor` 让脚本对齐）
+- ❌ 在阶段切换前删除上一阶段的产物（保留作 baseline）
+- ❌ **将 `status` 置为 `done` 前未跑 done 门禁脚本**。任何 agent 或主会话在写 `status: done` 之前，**必须**先执行：
+  ```bash
+  bash .codebuddy/scripts/check-before-done.sh <req-id>
+  ```
+  脚本 exit 0 才可标 done；exit 1 则按提示走完 closing 流程或由用户显式豁免（`verdict=approve_go / 备注: 跳过 closer`）。
+
+## 知识库优先（详见 `20-verify-before-act.mdc`）
+
+任何 agent 启动时**必须**先读：
+
+1. `meta.yaml`（确认当前阶段 + variant）
+2. `process.txt`（最近 20 行；理解上次做到哪）
+3. `notes.md`（如有；理解决策与踩坑）
+4. `context/project/<name>/<variant>/INDEX.md`（项目级背景；variant 从 meta.yaml 读取）
+
+不允许"凭直觉做事"或"只看了一个文件就开搞"。
+
+### 当 `context/project/<name>/<variant>/INDEX.md` 不存在时
+
+- **不允许**静默跳过——这是项目知识库尚未建立的信号
+- agent 必须：
+  - 在 `process.txt` 追加：`[time] <agent>: 项目知识库 context/project/<name>/<variant>/INDEX.md 不存在，本次基于"无项目级背景"假设进行；建议跑 init 脚本或手工建 INDEX.md 后再继续`
+  - 在返回主会话的摘要里显式列出"上下文缺口"段
+- 用户决定：
+  - 立即建 INDEX.md（手工或脚本）→ agent 重新启动
+  - 接受"无背景"继续 → agent 在产出文档里所有"项目级判断"前加 `[基于假设: 无项目知识库]` 前缀
+- **禁止**：agent 自己脑补"应该是这样"——这违反 `60-citation-and-honesty.mdc`
+
+## 与其他规则的关系
+
+- 阶段切换的具体执行 → `.codebuddy/skills/core/managing-requirement/SKILL.md`
+- 知识库的查找顺序 → `20-verify-before-act.mdc`
+- INDEX 一致性校验 → `/doctor` 命令
+
+## 变更历史
+
+> 2026-05-07 by req-sop-process-discipline Phase 3：补 m-5 closing 阶段多 agent 日志格式规范。
+> - "阶段切换三步顺序"段步骤 3 后追加"closing 阶段的标准日志格式（多 agent 场景）"子段：合规范例（6 行逐 agent + 内部 vs 观察时间）+ 塌缩反例 + 时间戳归属引用（指向 `.codebuddy/agents/closer.md` 步骤 5）
+> - 触发原因：`requirements/req-sop-protocol-gaps-batch/process.txt:5` + `requirements/req-cleanup-dev-agents-minors/process.txt:7` 两处塌缩反例；`requirements/req-closer-add-fix4-check/process.txt:25-34` 合规范例
+> - 范围：本协议无独立"45 协议自进化"流程，按 35 协议的"类 35 纪律"执行（先提案 + 用户 y/n + 变更历史段）
+> - 配套：`.codebuddy/sop/agile-vibe.md` v0.1.3 同批加"特殊场景：跳阶段"子段（本需求 Diff-A；修 m-2）
+> - 首次建立本文件变更历史段（与 30/35/40 协议族对齐）

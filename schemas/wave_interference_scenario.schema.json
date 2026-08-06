@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://phet/wave-interference-scenario.schema.json",
+  "title": "Wave Interference Scenario",
+  "type": "object",
+  "required": ["scenarioId", "name", "screen"],
+  "properties": {
+    "scenarioId": { "type": "string" },
+    "name": { "type": "string" },
+    "description": { "type": "string", "default": "" },
+    "version": { "type": "string", "default": "1.0" },
+    "screen": {
+      "type": "string",
+      "enum": ["waterDoubleSlit"],
+      "description": "waterDoubleSlit = single point source + double-slit barrier producing interference pattern on 80x55 FDTD grid"
+    },
+    "initialParams": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "number", "minimum": 0.1, "maximum": 1.0, "default": 0.4,
+          "description": "Oscillator frequency. Higher = shorter wavelength, denser interference fringes."
+        },
+        "amplitude": {
+          "type": "number", "minimum": 0.2, "maximum": 3.0, "default": 1.5,
+          "description": "Wave amplitude. Higher = brighter crests, deeper troughs in the heatmap."
+        },
+        "barrierEnabled": {
+          "type": "boolean", "default": true,
+          "description": "Show the double-slit barrier. When false, clean circular propagation from a single source."
+        },
+        "slitSize": {
+          "type": "integer", "minimum": 4, "maximum": 20, "default": 10,
+          "description": "Height of each slit in grid cells. Narrower slits = more ideal point sources."
+        },
+        "slitSeparation": {
+          "type": "integer", "minimum": 12, "maximum": 36, "default": 24,
+          "description": "Center-to-center distance between slits in grid cells. Wider = more fringes (per d sin theta = n lambda)."
+        }
+      }
+    },
+    "paramRanges": {
+      "type": "object",
+      "properties": {
+        "frequency": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} },
+        "amplitude": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} },
+        "slitSize": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} },
+        "slitSeparation": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} }
+      }
+    },
+    "successCriteria": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id","type","description"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["observePattern","adjustSeparation","toggleBarrier","compareFrequency","compareSlitSize","countFringes","frequencyReached","amplitudeReached"]
+          },
+          "description": { "type": "string" },
+          "params": {
+            "type": "object",
+            "properties": {
+              "minFrequency": {"type":"number"}, "maxFrequency": {"type":"number"}, "exactFrequency": {"type":"number"},
+              "minAmplitude": {"type":"number"}, "maxAmplitude": {"type":"number"}, "exactAmplitude": {"type":"number"},
+              "barrierEnabled": {"type":"boolean"}, "minSlitSize": {"type":"integer"}, "maxSlitSize": {"type":"integer"},
+              "minSlitSep": {"type":"integer"}, "maxSlitSep": {"type":"integer"}
+            }
+          }
+        }
+      }
+    },
+    "hints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["trigger","message"],
+        "properties": {
+          "trigger": { "type": "string", "description": "'always' or condition like 'frequency > 0.7'" },
+          "message": { "type": "string" }
+        }
+      }
+    }
+  }
+}

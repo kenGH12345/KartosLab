@@ -1,0 +1,26 @@
+{
+  "scenarioId": "no-field",
+  "name": "Static Field Only: No Radiation",
+  "description": "Disable the dynamic field to see only the static Coulomb field. Toggle Dynamic back on to see the dramatic difference: only accelerating charges radiate EM waves. A charge at rest or moving at constant velocity produces no radiation.",
+  "version": "1.0",
+  "screen": "singleAntenna",
+  "initialParams": {
+    "frequency": 0.5,
+    "amplitude": 0.5,
+    "showCurve": true,
+    "showArrows": true,
+    "dynamicFieldEnabled": false
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.05, "max": 2.0, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"toggleField","description":"Observe flat line (no wave) when dynamic field is off","params":{"dynamicFieldEnabled":false}},
+    {"id":"sc-2","type":"toggleField","description":"Enable dynamic field and observe wave pattern appear","params":{"dynamicFieldEnabled":true}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"With Dynamic field OFF, the electron still oscillates but creates no propagating wave."},
+    {"trigger":"always","message":"Toggle Dynamic ON to see the wave appear. Only accelerating charges radiate!"}
+  ]
+}

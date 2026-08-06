@@ -1,0 +1,20 @@
+﻿{
+  "scenarioId": "rgb-make-white",
+  "name": "Challenge: Make White Light",
+  "description": "Start with red light only. Your goal: adjust sliders to produce white light (R=G=B=100%).",
+  "version": "1.0",
+  "screen": "rgb",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 0,
+    "blueIntensity": 0,
+    "personPosition": 300
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "colorMatch", "description": "Produce white (R=G=B)", "params": {"targetColor": "white", "tolerance": 5}}
+  ],
+  "hints": [
+    {"trigger": "greenIntensity < 50", "message": "Try increasing the green slider"},
+    {"trigger": "blueIntensity < 50", "message": "You also need blue light to make white"}
+  ]
+}

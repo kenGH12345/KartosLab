@@ -1,0 +1,21 @@
+{
+  "scenarioId": "high-frequency",
+  "name": "High Pitch: Sharp Sound",
+  "description": "Explore high-frequency sound: tightly-packed arcs, sharp pitch. Notice how the wave pattern becomes very dense as frequency approaches 1000 Hz.",
+  "version": "1.0",
+  "screen": "singleSource",
+  "initialParams": {
+    "frequency": 800,
+    "amplitude": 0.6
+  },
+  "paramRanges": {
+    "frequency": { "min": 500, "max": 1000, "step": 10, "unit": "Hz" },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "observeWavelength", "description": "Observe the very dense wave arcs at high frequency", "params": {"minFrequency": 800}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "High frequency = short wavelength. The arcs are packed tightly. This corresponds to a sharp, whistle-like sound."}
+  ]
+}

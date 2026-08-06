@@ -1,0 +1,25 @@
+{
+  "scenarioId": "fast-wave",
+  "name": "Fast Oscillation: Short Wavelength",
+  "description": "Set the electron to oscillate rapidly. Observe tightly packed wave crests -- the EM equivalent of a high-frequency signal (e.g. FM radio ~100 MHz, or WiFi ~2.4 GHz).",
+  "version": "1.0",
+  "screen": "singleAntenna",
+  "initialParams": {
+    "frequency": 1.5,
+    "amplitude": 0.6,
+    "showCurve": true,
+    "showArrows": true,
+    "dynamicFieldEnabled": true
+  },
+  "paramRanges": {
+    "frequency": { "min": 0.8, "max": 2.0, "step": 0.05, "unit": null },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id":"sc-1","type":"observeWave","description":"Observe tightly packed wave crests at high frequency","params":{"minFrequency":1.2}}
+  ],
+  "hints": [
+    {"trigger":"always","message":"Fast oscillation = short wavelength. This is like an FM radio or WiFi signal."},
+    {"trigger":"always","message":"The electron (blue dot) vibrates rapidly -- you may notice the field arrows change direction quickly."}
+  ]
+}

@@ -6,10 +6,11 @@ import '../config/scenario_manager.dart';
 import '../models/circuit_state.dart';
 import '../models/circuit_solver.dart';
 import '../models/circuit_history.dart';
-import '../../services/sound_effects.dart';
+import '../services/sound_effects.dart';
 import '../widgets/component_icon.dart';
 import '../widgets/circuit_controls.dart';
-import '../../widgets/drag_drop_workspace.dart';
+import '../../common/widgets/drag_drop_workspace.dart';
+import '../../common/widgets/knowledge_panel.dart';
 import '../../common/controls/phet_combo_box.dart';
 
 /// AC-4 feature flag · true = 从 JSON scenario 加载初始状态 · false = 保留原空拓扑硬编码
@@ -363,7 +364,10 @@ class _CircuitScreenState extends State<CircuitScreen> {
         traySize: 80,
         items: _trayItems,
         onItemDropped: _onComponentDrop,
-        bottomPanel: SizedBox(height: 50, child: CircuitControls(state: _state, solved: _solved, onValueChanged: _adjustValue)),
+        bottomPanel: Column(mainAxisSize: MainAxisSize.min, children: [
+          _buildKnowledgePanel(),
+          SizedBox(height: 50, child: CircuitControls(state: _state, solved: _solved, onValueChanged: _adjustValue)),
+        ]),
         canvasBuilder: (_, wsProj) => _buildCanvas(wsProj.canvasSize),
       ),
     ));
@@ -444,6 +448,72 @@ class _CircuitScreenState extends State<CircuitScreen> {
       if (md < 15) return i;
     }
     return null;
+  }
+
+  // ---- 电路知识点 ----
+  Widget _buildKnowledgePanel() {
+    return KnowledgePanel(
+      title: '电路基础知识',
+      titleIcon: '⚡',
+      titleColor: const Color(0xFFF59E0B),
+      maxHeight: 200,
+      sections: [
+        KnowledgeSection.grid(items: const [
+          KnowledgeItem(
+            dot: Color(0xFFEF4444),
+            title: '串联电路',
+            titleColor: Color(0xFFEF4444),
+            desc: '元件首尾相连。电流处处相等I=I₁=I₂,总电压=各段之和U=U₁+U₂。一个断开全断。',
+          ),
+          KnowledgeItem(
+            dot: Color(0xFF22C55E),
+            title: '并联电路',
+            titleColor: Color(0xFF22C55E),
+            desc: '元件并列连接。各支路电压相等U=U₁=U₂,干路电流=各支路之和I=I₁+I₂。互不影响。',
+          ),
+          KnowledgeItem(
+            dot: Color(0xFFF97316),
+            title: '欧姆定律',
+            titleColor: Color(0xFFF97316),
+            desc: 'U = I × R。电压=电流×电阻。已知任意两个量可求第三个——电路分析最基础的公式。',
+          ),
+          KnowledgeItem(
+            dot: Color(0xFF6366F1),
+            title: '短路与断路',
+            titleColor: Color(0xFF6366F1),
+            desc: '短路：导线直接连接电源两极,电流极大,危险!断路：电路某处断开,无电流。保险丝防短路。',
+          ),
+        ]),
+        KnowledgeSection.list(
+          subtitle: '知识点',
+          subtitleIcon: '📚',
+          subtitleColor: const Color(0xFF60A5FA),
+          items: const [
+            KnowledgeItem(
+              icon: '🔌',
+              title: '电流的本质 · 电子流 vs 常规电流',
+              titleColor: Color(0xFFF59E0B),
+              desc: '实际是带负电的电子从负极流向正极（电子流）。但工程上约定"常规电流"从正极流向负极——'
+                  '这是历史原因,所有电路图符号都按常规电流标方向,不影响计算结果。',
+            ),
+            KnowledgeItem(
+              icon: '📊',
+              title: '基尔霍夫定律 · 电路分析基石',
+              titleColor: Color(0xFF22C55E),
+              desc: 'KCL(电流定律): 流入节点的电流=流出节点的电流。KVL(电压定律): 闭合回路总电压降=0。'
+                  '这两条定律是分析任意复杂电路的核心工具——比欧姆定律更通用。',
+            ),
+            KnowledgeItem(
+              icon: '💡',
+              title: '安全用电 · 生活常识',
+              titleColor: Color(0xFF8B5CF6),
+              desc: '保险丝/空气开关=短路保护(电流过大自动断开)。接地线=漏电时把电流导入大地保护人身安全。'
+                  '人体安全电压≤36V,家用220V足以致命——所以千万别用湿手碰开关。',
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
 }

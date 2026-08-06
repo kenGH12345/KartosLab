@@ -1,0 +1,22 @@
+﻿{
+  "scenarioId": "rgb-default",
+  "name": "RGB Color Mixing",
+  "description": "Freely adjust red, green, and blue light intensities; observe how additive color mixing produces new colors in the beam overlap zone.",
+  "version": "1.0",
+  "screen": "rgb",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 100,
+    "blueIntensity": 100,
+    "personPosition": 300
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "colorMatch", "description": "Produce yellow (R+G)", "params": {"targetColor": "yellow"}},
+    {"id": "sc-2", "type": "colorMatch", "description": "Produce magenta (R+B)", "params": {"targetColor": "magenta"}},
+    {"id": "sc-3", "type": "colorMatch", "description": "Produce cyan (G+B)", "params": {"targetColor": "cyan"}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "Drag the R/G/B sliders to see how colors mix in the overlap zone"},
+    {"trigger": "always", "message": "R+G=Yellow | R+B=Magenta | G+B=Cyan | R+G+B=White"}
+  ]
+}

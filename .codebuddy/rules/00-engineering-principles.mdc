@@ -1,0 +1,91 @@
+---
+description: 工程基本原则——读后改、编辑优于新建、不写无用注释。所有 AI 协作的底色。
+alwaysApply: true
+---
+
+# 工程基本原则
+
+这些原则是任何 agent / 命令开始工作前必须遵循的硬约束。
+
+## 五条底色
+
+### 1. 先理解问题，再动手写码
+
+- 收到任务后，先用足够的工具调用建立上下文（读相关文件、查相关历史、看测试）
+- 信心 < 95% 时，向用户追问而不是猜测（详见 `20-verify-before-act.mdc`）
+- 不允许"边做边问"——边做意味着已经在做某种假设，问只是为了确认
+
+### 2. 编辑优于新建
+
+- 修代码时**优先在现有文件改**，不要创建平行的新文件
+- 真要新建文件，要能说出"为什么这件事不该写在已有的 X 里"
+- 文档同理：宁可改一份现有 README，不要写 "README-v2"
+
+### 3. 读后改（Read Before Edit）
+
+- 任何 `StrReplace` / `Write` / `Edit` 操作前，**必须**先用 Read 工具读过这个文件
+- 不要凭文件名/路径猜测内容
+- 编辑时 `old_string` 必须是文件里**确实存在的**文本
+
+### 4. 最小化方案优于过度设计
+
+- 解决问题时先想"最少需要改动多少"
+- 抽象/泛化必须有具体的第二个使用者来证明，不要为"未来可能有用"做泛化
+- 简单优于复杂；可读性优于炫技
+
+### 5. 不写无用注释
+
+不允许的注释：
+
+- `// 导入模块`
+- `// 定义函数`
+- `// 增加计数器`
+- `// 解释这次修改`（commit message 是写这个的）
+
+允许的注释：
+
+- 解释**非显而易见**的设计权衡
+- 标注外部约束（如 "必须 < 100 字符，因 API 限制"）
+- TODO / FIXME 带 issue 号
+
+## SVN 安全（红线）
+
+**核心差异**：SVN commit = 立即推送到服务器，不可撤销。这与 git commit（本地提交）有本质区别——git 时代"commit 后还有 push 机会"，SVN 没有。
+
+### 红线 1：任何 svn commit 必须获得用户许可
+
+任何 agent / 脚本 / 命令执行 `svn commit` 前，**必须**按以下流程操作：
+
+1. 运行 `svn status` — 展示变更文件清单
+2. 运行 `svn diff` — 展示内容变更
+3. 明确告知用户：**"即将提交到 SVN 服务器，此操作不可撤销"**
+4. 获得用户明确的 y/n 确认
+5. 仅在用户回复 y 后才可执行 `svn commit -m "<message>"`
+
+**绝不**允许任何 agent 未经此流程自动执行 `svn commit`。
+
+### 红线 2：禁止的危险操作
+
+绝不主动执行：
+
+- `svn delete` 删除服务器端分支/目录（不可逆，必须用户决定）
+- `svn merge --reverse` 反向合并回滚（等价于 git reset --hard，破坏历史）
+- 跳过 pre-commit hook（除非用户明确要求）
+
+### 与 git 时代规则的对照
+
+| git 时代红线 | SVN 等价规则 |
+|---|---|
+| `git push`（禁止自动推送） | SVN commit 就是推送 — 红线 1 的审批流程就是等价保护 |
+| `git push --force` 到 main | SVN 没有 force-push；commit 一旦提交不可改写 |
+| `git reset --hard` / `git rebase -i` | SVN 没有 reset/rebase；用 `svn merge --reverse` 回滚（须用户审批） |
+| `git commit --amend` | SVN commit 不可修改；只能新提交覆盖 |
+| `--no-verify` 跳 hook | SVN pre-commit hook 同样不应跳过 |
+| `git commit` 仅用户要求时 | **加强**：`svn commit` 必须展示变更 + 获得用户确认 |
+
+## 与其他规则的关系
+
+- 第 1 条信心阈值 → `20-verify-before-act.mdc`
+- 状态变化留底 → `45-state-sync-protocol.mdc`
+- 代码质量收口 → `code-reviewer` agent
+- SVN 分支隔离 → `50-svn-branch-safety.mdc`

@@ -1,0 +1,209 @@
+---
+description: Agent 文件自进化协议——发现 agent prompt 过时不允许静默改，必须按 5 步先提案再修改。
+alwaysApply: true
+---
+
+# Agent 文件自进化协议
+
+Agent 文件（`.claude/agents/*.md` 与 `.codebuddy/agents/*.md` 镜像）是 IDE 客户端**启动时直接加载并注册到 `Task` 工具**的产物。如果 AI 可以"顺手改一下"，几个 session 后就没人知道为什么 agent 行为变成现在这样、改动是基于哪次实证——更危险的是：agent 注册机制是 IDE 软件层面写死的，**用户事后追溯只能靠 SVN 日志**，没有"日志"补救。
+
+本规则与 `30-skill-self-evolution.mdc`、`35-sop-self-evolution.mdc` 并列同构，构成框架的**自进化协议族**：
+
+| 协议 | 覆盖产物 | 加载机制 |
+|---|---|---|
+| `30-skill-self-evolution.mdc` | `.codebuddy/skills/**/SKILL.md`、`.codebuddy/skills/**/references/*.md` | LLM 通过 `Read` 工具按需加载 |
+| `35-sop-self-evolution.mdc` | `.codebuddy/sop/*.md` | 主会话与 `managing-requirement` skill 按需加载 |
+| **`40-agent-self-evolution.mdc`**（本文件） | `.claude/agents/*.md` + `.codebuddy/agents/*.md` 镜像 | **IDE 客户端启动时硬编码扫描并注册到 `Task` 工具** |
+
+**与 30/35 的关键差异**：agent 文件的修改**必须考虑三端同步**（`.claude/` → `.codebuddy/`），且修改后**新行为只在下次 IDE 重启或 session 中生效**（不像 SOP/Skill 改完立即被读到）。
+
+## 硬约束
+
+任何 agent / 主会话 / 命令都**严禁**：
+
+- 直接 Edit / Write `.claude/agents/*.md` 的 frontmatter（`name` / `description` / `model` / `tools` / `color`）
+- 直接 Edit / Write `.claude/agents/*.md` 的角色定位、关键约束、commit 自检逻辑、工作流程步骤
+- 直接 Edit / Write `.codebuddy/agents/*.md`（这是镜像，源在 `.claude/agents/`）
+- "顺便修一下错别字"也不行——agent 的每个细节都直接影响 IDE 注册行为与 LLM 受到的 system prompt
+
+允许的轻改动（**无需走协议**，但仍须三端同步）：纯文档段落里的措辞润色（如 `## 关键边界` 段子句的非语义改写），但**必须不涉及任何 frontmatter 字段、步骤名、约束条款、shell 指令、引用路径**。
+
+唯一允许的实质修改方式：**5 步协议**。
+
+## 5 步协议
+
+### 1. 触发判定
+
+发现以下任一情况，触发协议：
+
+- agent 描述与实际行为不符（如 prompt 写"按 X 流程"但实际跑下来流程不一致）
+- agent 引用的工具 / 文件 / agent 已不存在
+- agent 步骤里有明显疏漏（按它做完拿不到声明的产物，如 closer 漏 commit 实证 `req-closer-add-fix4-check Phase 4`）
+- 同一类问题被同一 agent 处理失败 ≥ 2 次
+- 用户明确指出 agent 有问题
+- 协议族其他文件（30/35）改动后引发 agent 联动需求
+- 三端同步检查（`.codebuddy/scripts/sync-codebuddy.sh` + `diff -q`）发现内容不一致
+
+不触发的情况：
+
+- 你"觉得可以更好"——这不是触发条件
+- 单次特殊场景需要——单次特殊处理就够了，不要改 agent
+- 没有 3 次以上的重复证据——遵循 3-Time Rule（参见 `10-vibecoding-protocol.mdc` 第 5 条）
+
+### 2. 诊断
+
+写明：
+
+- **现状**：当前 agent prompt 是怎么写的（必须引用 `.claude/agents/<name>.md:<line>`）
+- **现象**：实际跑出来什么问题（必须有真实样本，引用 `requirements/<id>/process.txt:<line>` 或具体 commit sha）
+- **根因**：为什么会这样（不要停在"agent 没遵守规则"，要查 agent prompt 本身的设计是否有缺陷）
+
+诊断必须区分**两种失败模式**（基于 dogfood #6 经验）：
+
+| 失败模式 | 例子 | 根因走向 |
+|---|---|---|
+| **行为偏差**（agent 没按 prompt 做） | agent 跳过了 prompt 里写的某步骤 | 改 prompt 让步骤更显眼 / 加 fail-loud 自检 |
+| **Prompt 缺陷**（agent 按 prompt 做但 prompt 漏写） | closer 按"收尾产物"列表 commit，但列表遗漏目标文件 | 改 prompt 补全清单 / 加全量自检（如 `svn status` 实证） |
+
+### 3. 拟定修改
+
+写明：
+
+- **diff**：要改哪几行（before / after）
+- **影响面**（必须列全）：
+  - 哪些其他 agent 引用了改动的字段（grep 整 `.claude/agents/`）
+  - 哪些 skill 引用了（grep `.codebuddy/skills/`）
+  - 哪些 SOP / 命令 / 规则引用了
+  - 哪些**正在运行的需求**（`status != done`）的 agent 调用链可能因此中断
+- **三端镜像兼容性**：
+  - 改动是否会影响 `.codebuddy/agents/<同名>.md` 镜像？
+  - 是否需要同步触发 `.codebuddy/scripts/sync-codebuddy.sh`？
+  - sync 后是否需要 `diff -q .claude/agents/<name>.md .codebuddy/agents/<name>.md` 验证？
+- **生效时机说明**：agent 改动**只在下次 IDE 重启或新建 session 时**对 LLM 生效；本 session 仍是旧 prompt 行为
+
+### 4. 输出提案 + 等待用户回复
+
+把诊断 + 拟修发给用户，**等用户回 y/n**。
+
+不允许：
+
+- 不等用户回复直接改
+- 用户没回复就当作"默认同意"
+- 用户说"看着办"就跳到第 5 步——必须显式 y/n
+- 把多条改动捆绑成一个 y/n（每条独立确认，避免捆绑通过）
+
+### 5. 应用 + 记录变更历史
+
+用户回 `y` 后：
+
+- 应用改动到 `.claude/agents/<name>.md`
+- **必跑** `bash .codebuddy/scripts/sync-codebuddy.sh`（macOS/Linux）或 `pwsh .codebuddy/scripts/sync-codebuddy.ps1`（Windows）→ 同步到 `.codebuddy/agents/<name>.md`
+- **必验证** `diff -q .claude/agents/<name>.md .codebuddy/agents/<name>.md`（应无输出）
+- 在 `.claude/agents/<name>.md` 末尾追加变更历史段（仿 30/35 协议格式）：
+
+  ```markdown
+  ## 变更历史
+
+  > YYYY-MM-DD by <需求 ID 或操作者> Phase N：
+  > 一句话改动摘要。
+  > - 改动 1（含 file:line）
+  > - 改动 2
+  > - 实证触发：<commit sha 或 process.txt:line>
+  > - 与 `<参考 agent>` 的同构性说明（如适用）
+  ```
+
+- 在主会话汇报"已按用户确认应用变更"，列出对应的 commit sha + `diff -q` 验证结果
+
+用户回 `n`：**agent 不动**，把诊断写到当前需求的 `notes.md` 备查。
+
+## commit 范围实证（commit-producing agents 通用条款）
+
+**适用范围**：所有产生 SVN commit 的 agent，包括但不限于 `closer` / `backend-dev` / `frontend-dev` / 任何未来添加的 dev 类 agent。
+
+### 背景
+
+来自 `req-closer-add-fix4-check` Phase 4 dogfood #6 的实证：closer 在 3 个 commit (`4fb710e/75c5b03/2b4ce4a`) 中**全部漏 commit** 了本需求的核心交付物 `.claude/agents/closer.md`，因为原 prompt 只列了"收尾产物"清单，**没明示"目标文件"也要 commit**。Fix-4 的 `[AC-...]` message 自检管 message 合规，**管不了"漏 commit"**——这是两种不同的失败模式（详见上文"诊断"段）。
+
+### 通用约束
+
+任何 commit-producing agent 在执行 `svn commit` 之前，**必须**先做"commit 范围实证"：
+
+```bash
+svn status
+# 列出全部 modified + untracked 项；逐条核对是否属于本次任务范围
+```
+
+**5 类清单（按易遗漏度排序）**：
+
+| 类别 | 例子 | 易遗漏度 |
+|---|---|---|
+| **本任务的"目标文件"**（最易遗漏） | 业务代码 `<repo>/src/...`、agent prompt `.claude/agents/<file>.md` + 镜像、SOP `.codebuddy/sop/*.md`、规则 `.codebuddy/rules/*.mdc` | 🚨 致命 |
+| **阶段快照** | `spec/*.md`、`design/*.md`、`tasks/*.json` | 高 |
+| **测试产生文件** | snapshot 测试快照、E2E 截图、coverage 报告 | 中 |
+| **流程留底** | `process.txt`、`notes.md` 当 task 内追加的段 | 中 |
+| **意外改动** | linter 自动 fix、IDE 临时文件、`.DS_Store` 等 | 低（但需识别区分） |
+
+**漏 commit 任何前 4 类视为"未完成任务"**，不允许进入下一步。
+
+### 关系到 Fix-4 的 message 合规自检
+
+`commit 范围实证` 与 `Fix-4 message 自检` 是**两道独立门禁**，缺一不可：
+
+| 门禁 | 时机 | 验证什么 | 失败处理 |
+|---|---|---|---|
+| **commit 范围实证** | `svn commit` 之前 | svn status 是否覆盖任务全量 | 补 add 后再实证一次 |
+| **Fix-4 message 自检** | `svn commit` 之前 | message 含合法 `[AC-(none\|[0-9]+(,[0-9]+)*)\]` | 重写 message 后再校验 |
+
+### 回溯需求豁免
+
+**适用场景**：需求是"回溯型"——所有代码改动已在历史 revision 中，本次需求只整理 AC 映射 / 修订文档（详见 `.codebuddy/sop/agile-vibe.md` 阶段 3 "特殊场景：回溯需求"小节）。
+
+**豁免范围**：
+- 历史 revision 的 `[AC-...]` 段缺失 → **不要求**事后修改（SVN revision 不可修改，违反 `00-engineering-principles.mdc` SVN 安全段）
+- 本次需求新产生的 commit（spec 整理 / 反向映射 / 收尾文档等） → **仍必须**通过 Fix-4 自检 + commit 范围实证
+
+**替代证据要求**（豁免不等于无证据）：
+- `spec/commit-AC-map.md` 反向映射表必须列：`AC-N ↔ revision r<N> ↔ 一句话描述`
+- 每个 AC 至少对应一条 revision；如 AC 跨多 revision，全列出
+- 主会话或 closer 在 `process.txt` 追加"已豁免说明"：本次回溯需求对历史 revision 的 [AC-...] 段豁免，证据见 `spec/commit-AC-map.md`
+
+**反向例子**（**不**适用豁免）：
+- 本次需求新写的代码 commit（不是历史 commit）—— 必须按 Fix-4 + 范围实证
+- 用户为方便偷懒不写 [AC-...] —— 不豁免，重写 message
+
+实证来源：`req-sop-checkup-2026-05-04` dogfood 发现 #4（`requirements/req-sop-checkup-2026-05-04/notes.md:88`）。
+
+### 已合规的 agent 先例
+
+- `.claude/agents/closer.md`：步骤 6.5.1（svn status 实证范围）+ 6.5.2（Fix-4 message 自检）—— 由 `req-closer-add-fix4-check Phase 4 dogfood` 修订
+
+### 后续 agent 修订建议
+
+`backend-dev.md` / `frontend-dev.md` 目前**尚未**实施"commit 范围实证"约束（详见 `context/project/AIVibeCodingProj/sop-known-issues.md` 第 #6 调研段的 4 类风险 A/B/C/D）。本协议正式立项后，应通过独立需求按本协议第 1-5 步逐一修订。
+
+## 与其他规则的关系
+
+- 协议族同构对照 → `30-skill-self-evolution.mdc`、`35-sop-self-evolution.mdc`
+- "不可逆操作 / 改协作标准必须用户确认" → `20-verify-before-act.mdc`
+- "SVN 安全（不自动 commit、commit 须用户审批）" → `00-engineering-principles.mdc` SVN 安全段
+- 触发时机 "做了 3 次" → `10-vibecoding-protocol.mdc` 第 5 条 3-Time Rule
+- 三端同步与 doctor 体检 → `.codebuddy/skills/core/doctor/SKILL.md` 子节 1.1
+- 引用先行（诊断 / 影响面必须可追溯） → `60-citation-and-honesty.mdc`
+- 渐进式输出（提案 + 选项呈现） → `70-progressive-output.mdc`
+
+## 变更历史
+
+> 2026-05-06 by req-add-40-agent-self-evolution Phase 3：
+> 协议初版。补足框架"自进化协议族"覆盖缺口。
+> - 实证触发：`req-closer-add-fix4-check` Phase 4 验证 5 步流程可控（见 commits `493ec60` `60548d1` `055a15d` `12b0934`）
+> - dogfood #6 提供"commit 范围实证"通用条款的实证基础（`context/project/AIVibeCodingProj/sop-known-issues.md` #6 调研段）
+> - 与 30/35 协议形态同构（5 步 + 硬约束 + 关系引用）
+> - 关键差异点：强制三端同步（`.claude/` ↔ `.codebuddy/`）+ 生效时机说明（IDE 重启）
+
+> 2026-05-06 by req-sop-protocol-gaps-batch Phase 3：
+> A3：补"回溯需求豁免"专项段（解决 dogfood #4）。
+> - 在 `commit 范围实证 → 关系到 Fix-4 message 合规自检` 段后插入"回溯需求豁免"小节
+> - 明确豁免范围（仅历史 commit 缺 [AC-...] 段）+ 替代证据要求（spec/commit-AC-map.md）+ 反向例子（不豁免本次新代码）
+> - 协议级正式化原本仅在 `sop-known-issues.md:7-11` 的变通方案
+> - 配套 `.codebuddy/sop/agile-vibe.md` 阶段 3 的"特殊场景：回溯需求"小节（双向引用）
+> - 触发原因：`requirements/req-sop-checkup-2026-05-04/notes.md:88` dogfood #4

@@ -1,0 +1,23 @@
+{
+  "scenarioId": "silent",
+  "name": "Silence: Zero Amplitude",
+  "description": "Start from silence (amplitude = 0). Gradually increase amplitude to see the wave pattern appear. Demonstrates that amplitude controls loudness: zero amplitude = no sound.",
+  "version": "1.0",
+  "screen": "singleSource",
+  "initialParams": {
+    "frequency": 440,
+    "amplitude": 0.0
+  },
+  "paramRanges": {
+    "frequency": { "min": 0, "max": 1000, "step": 10, "unit": "Hz" },
+    "amplitude": { "min": 0, "max": 1, "step": 0.05, "unit": null }
+  },
+  "successCriteria": [
+    {"id": "sc-1", "type": "observeAmplitude", "description": "Discover that amplitude = 0 produces no visible wave pattern", "params": {"exactAmplitude": 0.0}},
+    {"id": "sc-2", "type": "observeAmplitude", "description": "Increase amplitude to see the wave pattern appear and grow stronger", "params": {"minAmplitude": 0.5}}
+  ],
+  "hints": [
+    {"trigger": "always", "message": "Amplitude = 0 means silence. Slowly drag the Amplitude slider to the right to 'turn up' the volume."},
+    {"trigger": "always", "message": "The gray-scale arcs become more visible (darker darks, lighter lights) as amplitude increases."}
+  ]
+}

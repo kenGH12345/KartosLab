@@ -14,6 +14,7 @@ import '../../common/chart/phet_chart.dart';
 import '../../common/chart/chart_painter.dart';
 import '../../common/controls/phet_slider.dart';
 import '../../common/widgets/property_control_panel.dart';
+import '../../common/widgets/knowledge_panel.dart';
 import '../../common/chart/graph_suite.dart';
 import '../../common/controls/phet_number_field.dart';
 
@@ -66,6 +67,8 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
       Expanded(flex: 3, child: _buildCanvas()),
       // 图表
       if (_showChart) _buildChart(),
+      // 力与运动知识点
+      _buildKnowledgePanel(),
       // 控制面板
       PropertyControlPanel(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -182,6 +185,72 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
             if (i.massKnown) Text('${i.mass.toInt()}kg', style: const TextStyle(fontSize: 8, color: Color(0xFF64748B))),
           ])),
       )).toList(),
+    );
+  }
+
+  // ---- 力与运动知识点 ----
+  Widget _buildKnowledgePanel() {
+    return KnowledgePanel(
+      title: '力与运动原理',
+      titleIcon: '🚀',
+      titleColor: const Color(0xFF3B82F6),
+      maxHeight: 220,
+      sections: [
+        KnowledgeSection.grid(items: const [
+          KnowledgeItem(
+            dot: Color(0xFFDC2626),
+            title: '牛顿第一定律 (惯性)',
+            titleColor: Color(0xFFDC2626),
+            desc: '不受力或合力为零时,物体保持静止或匀速直线运动。质量越大惯性越大——刹车距离更长。',
+          ),
+          KnowledgeItem(
+            dot: Color(0xFF22C55E),
+            title: '牛顿第二定律 F=ma',
+            titleColor: Color(0xFF22C55E),
+            desc: '物体加速度与合力成正比,与质量成反比。a=F/m——同样的力推小车加速快,推大车加速慢。',
+          ),
+          KnowledgeItem(
+            dot: Color(0xFF3B82F6),
+            title: '牛顿第三定律',
+            titleColor: Color(0xFF3B82F6),
+            desc: '作用力与反作用力大小相等、方向相反,作用在不同物体上。你推墙=墙也在推你。',
+          ),
+          KnowledgeItem(
+            dot: Color(0xFFF59E0B),
+            title: '摩擦力',
+            titleColor: Color(0xFFF59E0B),
+            desc: '阻碍相对运动的力。f=μN。与接触面粗糙程度(μ)和正压力(N)有关。冰面μ小→滑得远。',
+          ),
+        ]),
+        KnowledgeSection.list(
+          subtitle: '知识点',
+          subtitleIcon: '📚',
+          subtitleColor: const Color(0xFF60A5FA),
+          items: const [
+            KnowledgeItem(
+              icon: '🧭',
+              title: '合力与运动状态改变',
+              titleColor: Color(0xFFF59E0B),
+              desc: '合力不为零→速度改变(加速/减速/转向)。合力为零→速度不变(静止或匀速)。'
+                  '不是\"力维持运动\"而是\"力改变运动\"——这是从亚里士多德到牛顿的认知革命。',
+            ),
+            KnowledgeItem(
+              icon: '📐',
+              title: '受力分析 · 自由体图',
+              titleColor: Color(0xFF22C55E),
+              desc: '画自由体图是解力学题的第一步：把物体隔离出来,画出所有作用力(重力/支持力/摩擦力/推力等)。'
+                  '然后用F=ma列方程——这是从初中到大学物理都通用的方法。',
+            ),
+            KnowledgeItem(
+              icon: '🏎️',
+              title: '质量与加速度 · 生活体验',
+              titleColor: Color(0xFF8B5CF6),
+              desc: '同样油门,空车加速快、满载加速慢——这就是m越大a越小。赛车减重、火箭分级抛壳都是这个道理。'
+                  '安全带和气囊通过延长碰撞时间来减小加速度,保护乘客——F=ma的救命应用。',
+            ),
+          ],
+        ),
+      ],
     );
   }
 
