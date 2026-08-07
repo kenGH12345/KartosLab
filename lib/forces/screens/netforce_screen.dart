@@ -11,6 +11,7 @@ import '../../common/widgets/game_over_dialog.dart';
 import '../../common/widgets/game_scoreboard.dart';
 import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
+import '../../common/widgets/nine_grid_layout.dart';
 
 class NetForceScreen extends StatefulWidget {
   const NetForceScreen({super.key, this.scenario});
@@ -72,67 +73,123 @@ class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStat
     }
     return Material(
       type: MaterialType.transparency,
-      child: Column(children: [
-      // 顶部玩法提示条
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        color: const Color(0xFFFEF3C7),
-        child: const Text(
-          '🎯 拔河游戏：① 拖小人到绿点摆阵  →  ② 点画面中央 ▶ 开始  →  ③ ⏸ 可暂停观察',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF92400E)),
+      child: NineGridLayout(
+        // 顶部中格 = 玩法提示条
+        topCenter: Container(
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+          color: const Color(0xFFFEF3C7),
+          child: const Text(
+            '🎯 拔河游戏：① 拖小人到绿点摆阵 → ② 点画面中央 ▶ 开始 → ③ ⏸ 可暂停观察',
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF92400E)),
+          ),
         ),
+        // 中间格 = 拔河主画面 · 面积 ≥ 70% 屏 · 自适应
+        center: _buildForceDisplay(),
+        // 右侧边格 = 控制面板 · 竖排紧凑 · 窄条可滚动
+        midRight: _buildSidePanel(),
+        // 左侧边格 = 速度表 + 知识点入口
+        midLeft: _buildSideInfo(),
+        // 底部中格 = 双队拖拽托盘
+        bottomCenter: _buildBottomTray(),
       ),
-      Expanded(flex: 2, child: _buildForceDisplay()),
-      // 合力与拔河知识点
-      _buildKnowledgePanel(),
-      PropertyControlPanel(
-        padding: const EdgeInsets.all(12),
-        spacing: 6,
+    );
+
+  }
+
+  /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
+  Widget _buildSidePanel() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: PropertyControlPanel(
+        padding: const EdgeInsets.all(8),
+        spacing: 10,
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            _checkChip('合力', _showSum, (v) => setState(() => _showSum = v)),
-            _checkChip('值', _showValues, (v) => setState(() => _showValues = v)),
-            _checkChip('速度', _showSpeed, (v) => setState(() => _showSpeed = v)),
-          ]),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: [
+              _checkChip('合力', _showSum, (v) => setState(() => _showSum = v)),
+              _checkChip('值', _showValues, (v) => setState(() => _showValues = v)),
+              _checkChip('速度', _showSpeed, (v) => setState(() => _showSpeed = v)),
+            ],
+          ),
+          const Divider(height: 8),
+          Column(children: [
             TimeControlBar(clock: _clock),
-            const SizedBox(width: 12),
+            const SizedBox(height: 4),
             Tooltip(
               message: '把小车拉回中间原位（点画面 ▶ 开始）',
               child: _btn('归位', const Color(0xFF3B82F6), () => setState(() { _model.returnCart(); })),
             ),
           ]),
-          GameScoreboard(
-            level: 1, maxLevel: 1,
-            score: (_model.leftForce + _model.rightForce).toInt(),
-            elapsedMs: _gameTimer.elapsedMs,
-            title: '总力',
+          const Divider(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: GameScoreboard(
+              level: 1, maxLevel: 1,
+              score: (_model.leftForce + _model.rightForce).toInt(),
+              elapsedMs: _gameTimer.elapsedMs,
+              title: '总力',
+            ),
           ),
         ],
       ),
-      if (_showSpeed) SizedBox(height: 80, child: Speedometer(speed: _model.cartVelocity.abs() * 10)),
-      // 托盘标题栏
-      Container(
-        height: 22,
-        color: const Color(0xFFE2E8F0),
-        child: Row(children: const [
-          Expanded(child: Center(child: Text('🔵 蓝队 · 长按拖到左侧绿点',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF1D4ED8))))),
-          SizedBox(width: 2),
-          Expanded(child: Center(child: Text('🔴 红队 · 长按拖到右侧绿点',
-              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFFB91C1C))))),
-        ]),
-      ),
-      Container(height: 80, color: const Color(0xFFF1F5F9), child: Row(children: [
-        Expanded(child: _pullerTray(false)),
-        Container(width: 2, color: const Color(0xFFCBD5E1)),
-        Expanded(child: _pullerTray(true)),
-      ])),
-    ]),
     );
+  }
 
+  /// 左侧边格 · 速度表 + 知识点入口
+  Widget _buildSideInfo() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+      child: Column(children: [
+        if (_showSpeed)
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Speedometer(speed: _model.cartVelocity.abs() * 10),
+          ),
+        const SizedBox(height: 8),
+        IconButton(
+          icon: const Icon(Icons.menu_book_outlined, size: 22),
+          tooltip: '知识点',
+          onPressed: _showKnowledgeDialog,
+        ),
+      ]),
+    );
+  }
+
+  /// 底部中格 · 双队拖拽托盘
+  Widget _buildBottomTray() {
+    return Column(children: [
+      Row(children: const [
+        Expanded(child: Center(child: Text('🔵 蓝队',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Color(0xFF1D4ED8))))),
+        Expanded(child: Center(child: Text('🔴 红队',
+            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Color(0xFFB91C1C))))),
+      ]),
+      Expanded(child: Row(children: [
+        Expanded(child: SingleChildScrollView(child: _pullerTray(false))),
+        Container(width: 2, color: const Color(0xFFCBD5E1)),
+        Expanded(child: SingleChildScrollView(child: _pullerTray(true))),
+      ])),
+    ]);
+  }
+
+  /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildForceDisplay() => LayoutBuilder(builder: (ctx, c) {

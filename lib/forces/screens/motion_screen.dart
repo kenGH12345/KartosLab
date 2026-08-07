@@ -17,6 +17,7 @@ import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/chart/graph_suite.dart';
 import '../../common/controls/phet_number_field.dart';
+import '../../common/widgets/nine_grid_layout.dart';
 
 /// Motion屏幕（无摩擦滑板模式）
 class MotionScreen extends StatefulWidget {
@@ -62,62 +63,103 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
 
   void _addItem(ForceItem item) { if (_model.canAdd) setState(() => _model.addItem(item)); }
 
-  @override Widget build(BuildContext context) => Column(children: [
-      // 画布
-      Expanded(flex: 3, child: _buildCanvas()),
-      // 图表
-      if (_showChart) _buildChart(),
-      // 力与运动知识点
-      _buildKnowledgePanel(),
-      // 控制面板
-      PropertyControlPanel(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        spacing: 6,
+  @override Widget build(BuildContext context) => NineGridLayout(
+      // 中间格 = 运动画布 · 面积 ≥ 70% 屏 · 自适应
+      center: _buildCanvas(),
+      // 右侧边格 = 控制面板 · 竖排紧凑 · 窄条可滚动
+      midRight: _buildSidePanel(),
+      // 底部中格 = 物体托盘
+      bottomCenter: _buildItemTrays(),
+      // 右下边格 = 知识点入口（知识卡过长改为弹窗）
+      bottomRight: Center(
+        child: IconButton(
+          icon: const Icon(Icons.menu_book_outlined, size: 22),
+          tooltip: '知识点',
+          onPressed: _showKnowledgeDialog,
+        ),
+      ),
+  );
+
+  /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
+  Widget _buildSidePanel() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: PropertyControlPanel(
+        padding: const EdgeInsets.all(8),
+        spacing: 10,
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-            _chip('力', _showForces, (v) => setState(() => _showForces = v)),
-            if (widget.mode != MotionScreenMode.motion) _chip('合力', _showSum, (v) => setState(() => _showSum = v)),
-            _chip('值', _showValues, (v) => setState(() => _showValues = v)),
-            _chip('质量', _showMasses, (v) => setState(() => _showMasses = v)),
-            _chip('速度', _showSpeed, (v) => setState(() => _showSpeed = v)),
-            _chip('图表', _showChart, (v) => setState(() => _showChart = v)),
-          ]),
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: [
+              _chip('力', _showForces, (v) => setState(() => _showForces = v)),
+              if (widget.mode != MotionScreenMode.motion) _chip('合力', _showSum, (v) => setState(() => _showSum = v)),
+              _chip('值', _showValues, (v) => setState(() => _showValues = v)),
+              _chip('质量', _showMasses, (v) => setState(() => _showMasses = v)),
+              _chip('速度', _showSpeed, (v) => setState(() => _showSpeed = v)),
+              _chip('图表', _showChart, (v) => _showChartDialog()),
+            ],
+          ),
           AppliedForceSlider(value: _model.sim.appliedForce, onChanged: (v) => setState(() => _model.setAppliedForce(v))),
-          TimeControlBar(clock: _clock),
-          Row(mainAxisSize: MainAxisSize.min, children: [
-            Expanded(
-              child: PhetNumberField(
-                label: '位置',
-                unit: 'm',
-                value: _model.sim.position,
-                format: '0.0',
-                onChanged: (v) => setState(() => _model.sim.position = v),
-              ),
+          const Divider(height: 8),
+          Center(child: TimeControlBar(clock: _clock)),
+          const Divider(height: 8),
+          PhetNumberField(
+            label: '位置',
+            unit: 'm',
+            value: _model.sim.position,
+            format: '0.0',
+            onChanged: (v) => setState(() => _model.sim.position = v),
+          ),
+          const SizedBox(height: 4),
+          PhetNumberField(
+            label: '速度',
+            unit: 'm/s',
+            value: _model.sim.velocity,
+            format: '0.0',
+            onChanged: (v) => setState(() => _model.sim.velocity = v),
+          ),
+          if (widget.mode != MotionScreenMode.motion) ...[
+            const Divider(height: 8),
+            PhetSlider(
+              label: '摩擦', min: 0, max: 0.5, step: 0.05, value: _friction, unit: 'μ',
+              onChanged: (v) => setState(() { _friction = v; _model.setFriction(v); }),
             ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: PhetNumberField(
-                label: '速度',
-                unit: 'm/s',
-                value: _model.sim.velocity,
-                format: '0.0',
-                onChanged: (v) => setState(() => _model.sim.velocity = v),
-              ),
-            ),
-          ]),
-          if (widget.mode != MotionScreenMode.motion)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: PhetSlider(
-                label: '摩擦', min: 0, max: 0.5, step: 0.05, value: _friction, unit: 'μ',
-                onChanged: (v) => setState(() { _friction = v; _model.setFriction(v); }),
-              ),
-            ),
+          ],
         ],
       ),
-      // 底栏
-      SizedBox(height: 60, child: _buildItemTrays()),
-  ]);
+    );
+  }
+
+  /// 图表 → 弹窗（9 宫格边条容纳不下图表）
+  void _showChartDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 640, maxHeight: 420),
+          child: _buildChart(),
+        ),
+      ),
+    );
+  }
+
+  /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildCanvas() => LayoutBuilder(builder: (ctx, c) {
     final w = c.maxWidth, h = c.maxHeight;

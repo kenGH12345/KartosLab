@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/celebration_dialog.dart';
 import '../../common/widgets/knowledge_panel.dart';
+import '../../common/widgets/nine_grid_layout.dart';
 import '../model/color_vision_state.dart';
 import '../solver/color_model.dart';
 import '../painters/potion_cauldron_painter.dart';
@@ -143,34 +144,41 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Container(width: double.infinity, padding: const EdgeInsets.fromLTRB(16, 6, 16, 2),
-        decoration: const BoxDecoration(gradient: LinearGradient(colors: [Color(0xFF1E1B4B), Color(0xFF312E81)])),
-        child: SafeArea(bottom: false, child: Column(children: [
-          const Text('三原色魔法实验室', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: Color(0xFFF8FAFC))),
-          const SizedBox(height: 2),
-          Text(_subtitle(), style: const TextStyle(fontSize: 10, color: Color(0xFFA5B4FC))),
-          const SizedBox(height: 6),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _modeBtn('自由探索', LabMode.explore, const Color(0xFFEF4444)),
-            const SizedBox(width: 4), _modeBtn('挑战模式', LabMode.challenge, const Color(0xFFF97316)),
-            const SizedBox(width: 4), _modeBtn('色轮探秘', LabMode.wheel, const Color(0xFFEC4899)),
-          ]),
-        ])),
+    return NineGridLayout(
+      // 顶部中格 = 标题 + 模式切换
+      topCenter: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text('三原色魔法实验室',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Color(0xFF312E81))),
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 4,
+            runSpacing: 2,
+            alignment: WrapAlignment.center,
+            children: [
+              _modeBtn('自由探索', LabMode.explore, const Color(0xFFEF4444)),
+              _modeBtn('挑战模式', LabMode.challenge, const Color(0xFFF97316)),
+              _modeBtn('色轮探秘', LabMode.wheel, const Color(0xFFEC4899)),
+            ],
+          ),
+        ],
       ),
-      Expanded(flex: 3, child: _buildCanvas()),
-      // RGB 加色法知识点（仅在自由探索模式展示）
-      if (_mode == LabMode.explore) _buildKnowledgePanel(),
-      _buildControls(),
-    ]);
-  }
-
-  String _subtitle() {
-    switch (_mode) {
-      case LabMode.explore: return '拖动魔法药水，调配出万千色彩！';
-      case LabMode.challenge: return '调配出目标颜色！拖动药水瓶或用下方滑块调整';
-      case LabMode.wheel: return '点击色轮探索颜色，查看对应的 RGB 值！';
-    }
+      // 中间格 = 实验画面（三种模式）· 面积 ≥ 70% 屏 · 自适应
+      center: _buildCanvas(),
+      // 右侧边格 = 模式相关控制 · 竖排紧凑 · 窄条可滚动
+      midRight: _buildSideControls(),
+      // 右下边格 = 知识点入口（explore 模式 · 知识卡过长改为弹窗）
+      bottomRight: _mode == LabMode.explore
+          ? Center(
+              child: IconButton(
+                icon: const Icon(Icons.menu_book_outlined, size: 22),
+                tooltip: '知识点',
+                onPressed: _showKnowledgeDialog,
+              ),
+            )
+          : null,
+    );
   }
 
   Widget _buildCanvas() {
@@ -253,31 +261,40 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
     });
   }
 
-  Widget _buildControls() {
+  Widget _buildSideControls() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: PropertyControlPanel(
+        padding: const EdgeInsets.all(8),
+        spacing: 10,
+        children: _modeControls(),
+      ),
+    );
+  }
+
+  List<Widget> _modeControls() {
     // ====== 色轮 ======
     if (_mode == LabMode.wheel) {
-      return PropertyControlPanel(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), spacing: 4, children: [
-        Row(children: [
-          const Text('亮度:', style: TextStyle(fontSize: 11, color: Color(0xFF64748B))),
-          Expanded(child: Slider(value: _wheelBrightness, min: 0.1, max: 1.0, activeColor: const Color(0xFF6366F1),
-            onChanged: (v) => setState(() => _wheelBrightness = v))),
-          Text('${(_wheelBrightness * 100).round()}%', style: const TextStyle(fontSize: 10, color: Color(0xFF64748B))),
-        ]),
-        Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(width: 20, height: 20, decoration: BoxDecoration(color: _wheelColor,
-            borderRadius: BorderRadius.circular(4), border: Border.all(color: const Color(0xFFCBD5E1)))),
-          const SizedBox(width: 8),
-          Text(_nameColor(_wheelColor), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: _wheelColor)),
-        ]),
-      ]);
+      return [
+        _readoutRow('亮度 Brightness', '${(_wheelBrightness * 100).round()}%'),
+        Slider(value: _wheelBrightness, min: 0.1, max: 1.0, activeColor: const Color(0xFF6366F1),
+          onChanged: (v) => setState(() => _wheelBrightness = v)),
+        Center(
+          child: Column(children: [
+            Container(width: 24, height: 24, decoration: BoxDecoration(color: _wheelColor,
+              borderRadius: BorderRadius.circular(4), border: Border.all(color: const Color(0xFFCBD5E1)))),
+            const SizedBox(height: 4),
+            Text(_nameColor(_wheelColor), style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: _wheelColor)),
+          ]),
+        ),
+      ];
     }
 
     // ====== 挑战模式 ======
     if (_mode == LabMode.challenge) {
       final acc = _calcAccuracy();
       final totalTime = (30 + (_level - 1) * 5).toDouble();
-      return PropertyControlPanel(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), spacing: 4, children: [
-        // Timer bar + accuracy
+      return [
         Row(children: [
           Expanded(child: SizedBox(height: 6, child: ClipRRect(borderRadius: BorderRadius.circular(3),
             child: LinearProgressIndicator(value: (_timeLeft / totalTime).clamp(0.0, 1.0),
@@ -288,46 +305,67 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
           Text('${acc.round()}%', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700,
             color: acc >= 90 ? const Color(0xFF22C55E) : acc >= 70 ? const Color(0xFFF59E0B) : const Color(0xFFEF4444))),
         ]),
-        // RGB sliders
-        Row(children: [
-          _miniSlider(0, 'R', const Color(0xFFFF0000)),
-          _miniSlider(1, 'G', const Color(0xFF00CC00)),
-          _miniSlider(2, 'B', const Color(0xFF0088FF)),
-        ]),
+        _miniSliderVertical(0, 'R', const Color(0xFFFF0000)),
+        _miniSliderVertical(1, 'G', const Color(0xFF00CC00)),
+        _miniSliderVertical(2, 'B', const Color(0xFF0088FF)),
         if (!_challengeActive && _timeLeft <= 0)
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            SizedBox(height: 28, child: ElevatedButton.icon(
-              onPressed: () { _score = 0; _streak = 0; _level = 1; _startChallenge(); },
-              icon: const Icon(Icons.replay, size: 14), label: const Text('重新开始', style: TextStyle(fontSize: 10)),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF97316), foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 12)))),
-          ]),
-      ]);
+          Center(child: SizedBox(height: 28, child: ElevatedButton.icon(
+            onPressed: () { _score = 0; _streak = 0; _level = 1; _startChallenge(); },
+            icon: const Icon(Icons.replay, size: 14), label: const Text('重新开始', style: TextStyle(fontSize: 10)),
+            style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFF97316), foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 12))))),
+      ];
     }
 
     // ====== 自由探索 ======
-    return PropertyControlPanel(padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), spacing: 4, children: [
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        Container(width: 24, height: 24, decoration: BoxDecoration(color: _state.mixedColor,
+    return [
+      Center(child: Column(children: [
+        Container(width: 28, height: 28, decoration: BoxDecoration(color: _state.mixedColor,
           borderRadius: BorderRadius.circular(6), border: Border.all(color: const Color(0xFFCBD5E1), width: 2))),
-        const SizedBox(width: 10),
-        Text(ColorModel.colorName(_state.mixedColor), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: _state.mixedColor)),
-        const SizedBox(width: 16),
-        FilterChip(label: const Text('标签', style: TextStyle(fontSize: 10)),
-          selected: _showLabels, visualDensity: VisualDensity.compact,
-          onSelected: (v) => setState(() => _showLabels = v)),
-      ]),
-    ]);
+        const SizedBox(height: 4),
+        Text(ColorModel.colorName(_state.mixedColor), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: _state.mixedColor)),
+      ])),
+      const Divider(height: 10),
+      Center(child: FilterChip(label: const Text('标签 Labels', style: TextStyle(fontSize: 10)),
+        selected: _showLabels, visualDensity: VisualDensity.compact,
+        onSelected: (v) => setState(() => _showLabels = v))),
+    ];
   }
 
-  Widget _miniSlider(int ch, String label, Color color) {
+  Widget _readoutRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: Color(0xFF64748B))),
+        Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF6366F1))),
+      ],
+    );
+  }
+
+  Widget _miniSliderVertical(int ch, String label, Color color) {
     final v = ch == 0 ? _state.redIntensity : ch == 1 ? _state.greenIntensity : _state.blueIntensity;
-    return Expanded(child: Row(mainAxisSize: MainAxisSize.min, children: [
-      Text(label, style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700, color: color)),
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+      Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: color)),
       Expanded(child: Slider(value: v, min: 0, max: 100, activeColor: color,
         inactiveColor: color.withAlpha(40), onChanged: (val) => setState(() => _state.updateIntensity(ch, val)))),
       SizedBox(width: 24, child: Text('${v.round()}', style: const TextStyle(fontSize: 8, color: Color(0xFF94A3B8)))),
-    ]));
+    ]);
+  }
+
+  /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
+        ),
+      ),
+    );
   }
 
   String _nameColor(Color c) {

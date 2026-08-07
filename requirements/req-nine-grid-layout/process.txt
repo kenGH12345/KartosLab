@@ -1,0 +1,32 @@
+[2026-08-06 回溯建档: 需求提出] 用户提出"重构 ui 适配方案"· 初版描述含"PM2.5"· 主会话搜索 lib/requirements/知识库均无 PM2.5 模块 · 判定为误称
+[2026-08-06 回溯建档: 第1轮澄清] 用户修正为通用"屏幕分成9宫格 · 中间一格放实验画面 · 周边8格贴边自适应"· 主会话按等分 3×3 实现 v1
+[2026-08-06 回溯建档: 第2轮澄清] 用户否决等分: "不是等分 中间一格至少要占70%的屏幕大小" · 主会话按"宽、高各占70%"实现 v2
+[2026-08-06 回溯建档: 第3轮澄清] 用户指出违反 20-verify-before-act 信心阈值: 核心参数含义(70% 指面积)未确认就动手 · 主会话道歉并补确认
+[2026-08-07 10:00 澄清确认] 用户四问澄清: Q1=面积 ≥ 70%(宽高各 sqrt(0.7)≈0.837 屏 · 边条各≈8%) · Q2=周边格信息展示+交互控件混合(各 sim 自行决定)
+[2026-08-07 10:05 澄清确认] 落地决策: 全部 7 sim 立即迁移 + 规则写入 80-phet-sim-checklist 阻塞级条款
+[2026-08-07 10:10 组件实现] 创建 lib/common/widgets/nine_grid_layout.dart · centerAreaRatio 默认0.7(面积) · kMinCenterAreaRatio=0.7 下限 clamp · 宽高各 sqrt(面积比) · 无 Positioned/无硬编码像素
+[2026-08-07 10:20 组件验证] test/common/nine_grid_layout_test.dart · 6 用例全通过(面积70%精确断言/贴边/600×300自适应/下限强制/自定义0.8/空边格) · flutter analyze No issues
+[2026-08-07 10:30 规则落地] 80-phet-sim-checklist.mdc §七新增 L0-4(九宫格布局强制·阻塞级) + §六违反后果表 + 变更历史 · 用户拍板"写入(阻塞级条款)"
+[2026-08-07 10:40 知识库登记] shared-abstraction-plan.md 候选7 升级为"强制通用方案" · 含面积70%规则/路径/落地义务
+[2026-08-07 11:00 迁移-1] radio_waves ✓ wave_interference ✓ sound ✓ · analyze 通过 · sound 22 + radio 21 + wave 18 测试通过
+[2026-08-07 11:10 迁移-2] color_vision single_bulb ✓ MagicLab(rgb_bulbs) ✓ · 修正 rgb_bulbs 挑战模式 LinearProgressIndicator 少1括号 + 删死代码 _subtitle
+[2026-08-07 11:15 迁移-3] forces netforce ✓ motion ✓ · analyze 仅存原有 INFO · forces 无模型测试文件(场景测试另述)
+[2026-08-07 11:20 迁移-4] optics ✓ circuit ✓ · 知识卡→AppBar info 弹窗 · DragDropWorkspace 整体放中间格
+[2026-08-07 11:25 全量验证] flutter analyze 全量: 无 error/warning(仅原有 INFO) · 全量测试 167/168 通过
+[2026-08-07 11:25 既有失败] test/forces/forces_scenario_test.dart netforce-tug testWidgets 超时(10分钟) · 依赖链(forces_scenario/scenario_manager/scenario_manager_base)均未改动 · 单独运行稳定复现 → 判定既有环境问题 · 非本次迁移引入
+[2026-08-07 11:30 建档] 用户选择"沉淀为正式 requirement" · 建 requirements/req-nine-grid-layout/ · meta.yaml + process.txt + spec/需求简述.md(回溯)
+[2026-08-07 11:35] phase 3.iteration → 4.closing: 用户拍板"推进收尾" · 设置 test_exempt=true(回溯建档理由) · 委派 code-reviewer
+[2026-08-07 11:40] code-reviewer 完成评审: passed（0 Blocker / 0 Major / 3 Minor / 2 Nit）· 报告 design/代码评审.md · 豁免 test_exempt 已注明
+[2026-08-07 11:42] 主会话补 3 处 Minor 精简理由至 notes.md（sound hint 文案 / rgb_bulbs 副标题 / motion 图表弹窗）· 委派 closer
+[2026-08-07 11:45] 委派 closer 返回 API 失败（code=10006 Too Many Requests）· 实为误报 · closer 已成功完成收尾（其日志见下）· 主会话误判后已清理重复留底（11:55 观察）
+[2026-08-07 11:33 closer 内部时间 · 主会话观察时间以主会话留底为准] closer 完成收尾
+  → spec/最终需求.md（含 3.1 验收项覆盖段 agile-vibe 轻量版 · AC-1~AC-4 均 covered）
+  → notes.md（已追加知识沉淀段 · 含回溯建档收尾要点 + 5 条可复用经验 + 工具环境备注）
+  代码评审: 通过（0 Blocker / 0 Major / 3 Minor / 2 Nit · Minor 理由已留底）
+  测试: test_exempt=true（回溯建档豁免 · 证据 flutter test 167/168 + widget 6/6 + analyze 无 error/warning）
+  验收项覆盖: 4 / 4 covered · 0 partial · 0 waived · 0 unknown/missing
+  涉及 revisions: git 未提交（回溯建档 · 改动位于工作区，待主会话审批后 commit）
+  工具备注: .workflow/scripts/auto-extract-failures.sh 在 phet 工程不存在（.workflow 目录不存在）→ 步骤 1.5 / 4.5.1 自动失败提取跳过，以人工沉淀替代
+  版本控制备注: 项目为 git 仓库（非 SVN）· 收尾所有 svn* 命令改用 git*
+  ⚠️ commit 未执行：按流程停在 commit 前，待主会话请用户审批（注意排除非本需求改动 circuit_solver/circuit_state/circuit_solver_mna_test）
+[2026-08-07 12:00] knowledge-maintainer: 完成知识沉淀（主会话代行 · context/ 目录在 phet 不存在 · 沉淀落 docs/knowledge/phet/notes.md + INDEX.md 同步 · 关键经验: 9宫格面积≥70%实现要点/窄边条3应对/百分比参数先澄清） · auto-extract-failures.sh 不存在跳过 · 经验质量门禁: notes.md 已沉淀 5 条可复用经验

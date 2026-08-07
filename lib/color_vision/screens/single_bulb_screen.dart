@@ -3,6 +3,7 @@ import '../../common/simulation_clock.dart';
 import '../../common/widgets/time_control_bar.dart';
 import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
+import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/controls/spectrum_slider.dart';
 import '../model/filter.dart';
 import '../model/single_bulb_state.dart';
@@ -119,77 +120,78 @@ class _SingleBulbScreenState extends State<SingleBulbScreen>
   @override
   Widget build(BuildContext context) {
     final perceived = _perceivedColor();
-    return Column(children: [
-      Expanded(
-        flex: 5,
-        child: CustomPaint(
-          size: Size.infinite,
-          painter: SingleBulbPainter(_state),
+    return NineGridLayout(
+      // 中间格 = 主实验画面 · 面积 ≥ 70% 屏 · 自适应
+      center: CustomPaint(
+        size: Size.infinite,
+        painter: SingleBulbPainter(_state),
+      ),
+      // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
+      midRight: _buildSideControlPanel(perceived),
+      // 右下边格 = 知识点入口（知识卡过长 · 改为弹窗）
+      bottomRight: Center(
+        child: IconButton(
+          icon: const Icon(Icons.menu_book_outlined, size: 22),
+          tooltip: '知识点',
+          onPressed: _showKnowledgeDialog,
         ),
       ),
-      // 颜色过滤原理 + 知识点 (使用 L0 公共 KnowledgePanel)
-      // Layout fix (req-color-vision-layout-fix v1.1 方案B):
-      // 用 Expanded(flex:3) + SingleChildScrollView 约束知识面板高度,
-      // 防止 KnowledgeItem.active 高亮时撑高吃掉主图空间 (L0-2/L0-3 违规)。
-      Expanded(
-        flex: 3,
-        child: SingleChildScrollView(
-          child: _buildKnowledgePanel(),
-        ),
-      ),
-      PropertyControlPanel(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        spacing: 6,
+    );
+  }
+
+  /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
+  Widget _buildSideControlPanel(Color perceived) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: PropertyControlPanel(
+        padding: const EdgeInsets.all(8),
+        spacing: 10,
         children: [
-          // Bulb mode toggle
-          Row(children: [
-            const Text('Source:', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-            const SizedBox(width: 8),
-            ChoiceChip(
-              label: const Text('White', style: TextStyle(fontSize: 10)),
-              selected: _bulbMode == BulbMode.white,
-              onSelected: (_) => _setBulbMode(BulbMode.white),
-              selectedColor: const Color(0xFFE2E8F0),
-              visualDensity: VisualDensity.compact,
-            ),
-            const SizedBox(width: 4),
-            ChoiceChip(
-              label: const Text('Mono', style: TextStyle(fontSize: 10)),
-              selected: _bulbMode == BulbMode.mono,
-              onSelected: (_) => _setBulbMode(BulbMode.mono),
-              selectedColor: _state.bulbColor.withAlpha(40),
-              visualDensity: VisualDensity.compact,
-            ),
-          ]),
-          // SpectrumSlider (visible in mono mode)
+          const Text('Source', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF64748B))),
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: [
+              ChoiceChip(
+                label: const Text('White', style: TextStyle(fontSize: 10)),
+                selected: _bulbMode == BulbMode.white,
+                onSelected: (_) => _setBulbMode(BulbMode.white),
+                selectedColor: const Color(0xFFE2E8F0),
+                visualDensity: VisualDensity.compact,
+              ),
+              ChoiceChip(
+                label: const Text('Mono', style: TextStyle(fontSize: 10)),
+                selected: _bulbMode == BulbMode.mono,
+                onSelected: (_) => _setBulbMode(BulbMode.mono),
+                selectedColor: _state.bulbColor.withAlpha(40),
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
+          ),
           if (_bulbMode == BulbMode.mono)
             SpectrumSlider(
               wavelength: _bulbWavelength,
               onChanged: _setWavelength,
               step: 5,
             ),
-          // Filter selector
-          Row(children: [
-            const Text('Filter:', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-            const SizedBox(width: 8),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(children: FilterType.values.map((ft) => Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: ChoiceChip(
-                    label: Text(_ftLabel(ft), style: const TextStyle(fontSize: 10)),
-                    selected: _filterType == ft,
-                    onSelected: (_) => _setFilter(ft),
-                    selectedColor: _ftColor(ft).withAlpha(40),
-                    visualDensity: VisualDensity.compact,
-                  ),
-                )).toList()),
-              ),
-            ),
-          ]),
+          const Divider(height: 10),
+          const Text('Filter', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF64748B))),
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: FilterType.values.map((ft) => ChoiceChip(
+              label: Text(_ftLabel(ft), style: const TextStyle(fontSize: 10)),
+              selected: _filterType == ft,
+              onSelected: (_) => _setFilter(ft),
+              selectedColor: _ftColor(ft).withAlpha(40),
+              visualDensity: VisualDensity.compact,
+            )).toList(),
+          ),
+          const Divider(height: 10),
           // Perceived color
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Column(children: [
             Container(
               width: 24, height: 24,
               decoration: BoxDecoration(
@@ -198,16 +200,34 @@ class _SingleBulbScreenState extends State<SingleBulbScreen>
                 border: Border.all(color: const Color(0xFFCBD5E1)),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(height: 4),
             Text(
               'Person sees: ${ColorModel.colorName(perceived)}',
-              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
             ),
           ]),
-          TimeControlBar(clock: _clock),
+          const Divider(height: 10),
+          Center(child: TimeControlBar(clock: _clock)),
         ],
       ),
-    ]);
+    );
+  }
+
+  /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
+        ),
+      ),
+    );
   }
 
   String _ftLabel(FilterType ft) {

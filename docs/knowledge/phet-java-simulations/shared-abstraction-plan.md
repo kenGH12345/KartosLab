@@ -145,6 +145,25 @@ abstract class ScenarioManagerBase<TScenario> {
 - `flutter analyze lib\common\widgets\scenario_menu_button.dart lib\sound lib\radio_waves lib\wave_interference` → No issues found
 - 单测回归：sound 22 + radio-waves 21 + wave-interference 18 = **61/61 通过**
 
+### 候选 7 · NineGridLayout 九宫格屏幕适配布局（✅ 已落地 · 2026-08-06 · **强制通用方案**）
+
+**状态**：**非候选 · 已升级为所有 sim 强制屏幕适配方案**（2026-08-06 用户明确："公共通用方案 · 所有 sim 都要支持 · 强制要遵守"）。第 1 版等分实现被用户否决 → 改为非等分。
+
+**尺寸规则**（非等分 · 强制约束 · 2026-08-07 用户确认"面积 ≥ 70%"）：
+- 中间格（第 5 格）**面积 ≥ 70% 屏幕**：默认 `centerAreaRatio = 0.7` · 宽、高各取 `sqrt(面积比)`（≈ 0.837 屏 · 边条各 ≈ 8%）· `kMinCenterAreaRatio = 0.7` 强制下限 clamp · 传值 < 0.7 自动抬升 · 承载实验主画面
+- 其余 8 个周边格贴各自屏幕边缘 · 均分剩余空间 · 内容为信息展示 + 交互控件混合（各 sim 自行安排）
+- 所有格子尺寸随视口自动计算 · 无硬编码像素 · 无 `Positioned` 绝对定位（Row/Column flex 分配 · 满足 L0-1/L0-3）
+
+**已抽象内容**：
+- 9 格参数化（`center` 必填 + 8 边格可选 · 空参自动占位不崩溃）
+- `centerAreaRatio` 面积比例可调（默认 0.7 · 下限 clamp 0.7 · 上限 0.9025）
+- 可选 `padding` + `backgroundColor`
+- 格子内内容用 `LayoutBuilder` 自适应渲染（组件只分格 · 不约束内容尺寸）
+
+**路径**：`lib/common/widgets/nine_grid_layout.dart`（+ `test/common/nine_grid_layout_test.dart` · 6 用例全通过：面积 70% / 贴边 / 自适应 / 下限强制 / 自定义比例 / 空边格）
+
+**落地义务**：所有现有 + 未来 sim 的屏幕适配**必须**基于本组件，禁止各 sim 自造平行布局方案。
+
 ---
 
 ## 三、明确不抽象（L2 · 模块专属）

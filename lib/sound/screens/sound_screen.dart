@@ -2,6 +2,8 @@
 import "../../common/simulation_clock.dart";
 import "../../common/widgets/time_control_bar.dart";
 import "../../common/widgets/knowledge_panel.dart";
+import "../../common/widgets/nine_grid_layout.dart";
+import "../../common/widgets/property_control_panel.dart";
 import "../config/sound_scenario.dart";
 import "../config/sound_scenario_manager.dart";
 import "../model/sound_state.dart";
@@ -88,33 +90,23 @@ class _SoundScreenState extends State<SoundScreen>
         backgroundColor: const Color(0xFF0D9488),
         foregroundColor: Colors.white,
         toolbarHeight: 44,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline, size: 20),
+            tooltip: '知识点',
+            onPressed: _showKnowledgeDialog,
+          ),
+        ],
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          // 屏幕适配 · 依据总高度分配主图区 / 面板区
-          final isNarrow = constraints.maxWidth < 640;
-          return SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: constraints.maxHeight),
-              child: Column(
-                children: [
-                  const SizedBox(height: 8),
-                  _buildTabBar(),
-                  const SizedBox(height: 8),
-                  // 主图区域 · 居中 + 适配
-                  _buildStageArea(constraints),
-                  const SizedBox(height: 12),
-                  _buildControlPanel(isNarrow),
-                  const SizedBox(height: 8),
-                  _buildScenarioBar(),
-                  const SizedBox(height: 12),
-                  _buildKnowledgePanel(),
-                  const SizedBox(height: 12),
-                ],
-              ),
-            ),
-          );
-        },
+      body: NineGridLayout(
+        // 中间格 = 主图（含 Tab 切换的两种视图）· 面积 ≥ 70% 屏 · 自适应
+        center: _buildStageArea(),
+        // 顶部中格 = 视角 Tab 栏
+        topCenter: _buildTabBar(),
+        // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
+        midRight: _buildSideControlPanel(),
+        // 底部中格 = 场景快切条
+        bottomCenter: _buildScenarioBar(),
       ),
     );
   }
@@ -173,47 +165,36 @@ class _SoundScreenState extends State<SoundScreen>
     );
   }
 
-  // ============ 主图区域（居中 + 屏幕适配）============
-  Widget _buildStageArea(BoxConstraints outer) {
-    // 目标尺寸：宽度不超过 960，长宽比 16:10 · 高度自适应但受最大 620 限制
-    final double targetW =
-        (outer.maxWidth - 32).clamp(280.0, 960.0);
-    final double targetH = (targetW / 1.6).clamp(320.0, 620.0);
-
-    return Center(
-      child: SizedBox(
-        width: targetW,
-        height: targetH,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Stack(
-            children: [
-              Positioned.fill(child: _buildStageContent()),
-              // 左上信息卡（频率 / 波长 / 波速 / 响度 · 四合一）
-              Positioned(
-                top: 12,
-                left: 12,
-                child: SoundInfoCard(
-                  frequencyHz: _state.frequency,
-                  wavelengthMeters: _wavelength,
-                  speedMetersPerSecond: _kSoundSpeed,
-                  loudnessPercent: _state.amplitude * 100,
-                ),
-              ),
-              // 底部图例（不同 Tab 显示不同图例）
-              Positioned(
-                bottom: 10,
-                left: 0,
-                right: 0,
-                child: Center(
-                  child: _tabController.index == 0
-                      ? const SphericalLegend()
-                      : const ProfileLegend(),
-                ),
-              ),
-            ],
+  // ============ 主图区域（填满中间格 · 9 宫格保证面积 ≥ 70% 屏）============
+  Widget _buildStageArea() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Stack(
+        children: [
+          Positioned.fill(child: _buildStageContent()),
+          // 左上信息卡（频率 / 波长 / 波速 / 响度 · 四合一）
+          Positioned(
+            top: 12,
+            left: 12,
+            child: SoundInfoCard(
+              frequencyHz: _state.frequency,
+              wavelengthMeters: _wavelength,
+              speedMetersPerSecond: _kSoundSpeed,
+              loudnessPercent: _state.amplitude * 100,
+            ),
           ),
-        ),
+          // 底部图例（不同 Tab 显示不同图例）
+          Positioned(
+            bottom: 10,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: _tabController.index == 0
+                  ? const SphericalLegend()
+                  : const ProfileLegend(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -234,55 +215,94 @@ class _SoundScreenState extends State<SoundScreen>
     );
   }
 
-  // ============ 频率 / 振幅 / 时钟控制 ============
-  Widget _buildControlPanel(bool isNarrow) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: const Color(0xFFE2E8F0)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+  // ============ 频率 / 振幅 / 时钟控制（右侧边格 · 竖排紧凑）============
+  Widget _buildSideControlPanel() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: PropertyControlPanel(
+        padding: const EdgeInsets.all(8),
+        spacing: 12,
+        children: [
+          _compactSlider(
+            icon: '\ud83d\udd0a',
+            label: '频率 Frequency',
+            value: _state.frequency,
+            min: 0,
+            max: 1000,
+            divisions: 100,
+            valueText: '${_state.frequency.round()} Hz',
+            accent: const Color(0xFF0D9488),
+            onChanged: (v) => setState(() => _state.setFrequency(v)),
+          ),
+          _compactSlider(
+            icon: '\ud83d\udce2',
+            label: '振幅 Amplitude',
+            value: _state.amplitude,
+            min: 0,
+            max: 1,
+            divisions: 20,
+            valueText: _state.amplitude.toStringAsFixed(2),
+            accent: const Color(0xFFEF4444),
+            onChanged: (v) => setState(() => _state.setAmplitude(v)),
+          ),
+          const Divider(height: 12),
+          Center(child: _timeControls()),
+        ],
+      ),
+    );
+  }
+
+  Widget _compactSlider({
+    required String icon,
+    required String label,
+    required double value,
+    required double min,
+    required double max,
+    required int divisions,
+    required String valueText,
+    required Color accent,
+    required ValueChanged<double> onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _sliderRow(
-              icon: '\ud83d\udd0a',
-              titleZh: '频率',
-              titleEn: 'Frequency',
-              value: _state.frequency,
-              min: 0,
-              max: 1000,
-              divisions: 100,
-              valueText: '${_state.frequency.round()} Hz',
-              valueColor: const Color(0xFF3B82F6),
-              accentColor: const Color(0xFF0D9488),
-              hint: '频率↑ = 弧/波变密 + 波长变短 + 音调变高',
-              trailing: !isNarrow ? _timeControls() : null,
-              onChanged: (v) => setState(() => _state.setFrequency(v)),
+            Flexible(
+              child: Text('$icon $label',
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
             ),
-            const SizedBox(height: 4),
-            _sliderRow(
-              icon: '\ud83d\udce2',
-              titleZh: '振幅',
-              titleEn: 'Amplitude',
-              value: _state.amplitude,
-              min: 0,
-              max: 1,
-              divisions: 20,
-              valueText: _state.amplitude.toStringAsFixed(2),
-              valueColor: const Color(0xFFEF4444),
-              accentColor: const Color(0xFF0D9488),
-              hint: '振幅↑ = 对比度/波高↑ + 响度↑  |  振幅=0 = 全灰/直线',
-              onChanged: (v) => setState(() => _state.setAmplitude(v)),
-            ),
-            if (isNarrow) ...[
-              const Divider(height: 16, color: Color(0xFFE2E8F0)),
-              Center(child: _timeControls()),
-            ],
+            Text(valueText,
+                style: TextStyle(
+                    fontSize: 12, fontWeight: FontWeight.w800, color: accent)),
           ],
+        ),
+        Slider(
+          value: value,
+          min: min,
+          max: max,
+          divisions: divisions,
+          activeColor: accent,
+          onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+  /// 知识点卡 → AppBar Info 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
         ),
       ),
     );
@@ -293,57 +313,6 @@ class _SoundScreenState extends State<SoundScreen>
       mainAxisSize: MainAxisSize.min,
       children: [
         TimeControlBar(clock: _clock, showTimeDisplay: false),
-      ],
-    );
-  }
-
-  Widget _sliderRow({
-    required String icon,
-    required String titleZh,
-    required String titleEn,
-    required double value,
-    required double min,
-    required double max,
-    required int divisions,
-    required String valueText,
-    required Color valueColor,
-    required Color accentColor,
-    required String hint,
-    required ValueChanged<double> onChanged,
-    Widget? trailing,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(children: [
-          Text(icon, style: const TextStyle(fontSize: 14)),
-          const SizedBox(width: 6),
-          Text(titleZh,
-              style: const TextStyle(
-                  fontSize: 13, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
-          const SizedBox(width: 4),
-          Text(titleEn,
-              style: const TextStyle(
-                  fontSize: 12, color: Color(0xFF64748B))),
-          const Spacer(),
-          Text(valueText,
-              style: TextStyle(
-                  fontSize: 15, fontWeight: FontWeight.w800, color: valueColor)),
-          if (trailing != null) ...[const SizedBox(width: 8), trailing],
-        ]),
-        Slider(
-          value: value,
-          min: min,
-          max: max,
-          divisions: divisions,
-          activeColor: accentColor,
-          onChanged: onChanged,
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 4),
-          child: Text(hint,
-              style: const TextStyle(fontSize: 11, color: Color(0xFF94A3B8))),
-        ),
       ],
     );
   }

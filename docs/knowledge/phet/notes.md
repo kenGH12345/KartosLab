@@ -55,6 +55,14 @@
 | 5 | 光屏检测仅左→右单向 | 用叉积判同侧支持双向 |
 | 6 | 新旧 `SolvedOptics` / `RayPath` 混淆 | 旧求解器头部加 🗑️ legacy 注释 |
 
+### 2026-08-07 · 9宫格强制屏幕适配方案（NineGridLayout）
+
+- **授权**：用户拍板"公共通用方案 · 所有 sim 都要支持 · 强制要遵守" + "全部立即迁移"
+- **落地**：`lib/common/widgets/nine_grid_layout.dart`（L0 通用组件）+ `.codebuddy/rules/80-phet-sim-checklist.mdc` §七 L0-4（阻塞级）+ `shared-abstraction-plan.md` 候选 7
+- **核心规则**：屏幕划为 3×3 九宫格 · 中间格**面积 ≥ 70%** 屏幕（宽高各 `sqrt(0.7)`≈0.837 屏 · 边条各≈8%）· `centerAreaRatio` 下限 0.7 强制 clamp · 周边 8 格贴边放"信息展示 + 交互控件混合" · 无 `Positioned` / 无硬编码像素
+- **迁移共性**：7 sim 9 主屏已全部迁移（`req-nine-grid-layout`）· 长文本知识卡改弹窗 · 横排 chips 改 `Wrap` · 每格 `SingleChildScrollView` 兜底防溢出（L0-2 合规）· 拖拽工作区类（optics/circuit）整体入中间格
+- **教训**："占 N% 屏幕"必须先澄清含义（面积 vs 宽高）——本需求曾两次误解（先等分、后宽高各 70%），最终用户确认为面积 ≥70%
+
 ---
 
 ## 踩坑

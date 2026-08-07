@@ -140,6 +140,7 @@ alwaysApply: true
 | 未通过 §七 L0-1（主图未居中） | UI 改动退回 · 补居中包裹后重新提交 | code-reviewer |
 | 未通过 §七 L0-2（有溢出） | UI 改动阻塞 · 必修 | code-reviewer |
 | 未通过 §七 L0-3（硬编码尺寸） | UI 改动退回 · 换为 LayoutBuilder | code-reviewer |
+| 未通过 §七 L0-4（未用 NineGridLayout） | UI 改动退回 · 改用九宫格布局（中间格面积 ≥ 70%） | code-reviewer |
 | ~~未提交 §七 M1 三视口截图~~ | ~~commit 阻塞~~ · v0.2.0 起降为**可选** · 不阻塞 | · |
 
 **执行时机**：主会话在 phase 1.intake → 2.requirement 阶段切换时，必须逐条通过本表并在 `process.txt` 追加一行：
@@ -156,9 +157,9 @@ alwaysApply: true
 > **强制程度**：**阻塞级** L0 三条，与 §二-§五 同权重。
 > **性质**：跨 sim 通用工程约束 · 与项目四原则并列的第 5 条工程铁律。
 
-### L0 · 必须条款（阻塞级 · 三条）
+### L0 · 必须条款（阻塞级 · 四条）
 
-所有 phet sim 的主屏幕（`lib/<sim>/screens/<sim>_screen.dart` 或等价入口）必须同时满足：
+所有 phet sim 的主屏幕（`lib/<sim>/screens/<sim>_screen.dart` 或等价入口，含 Tab 容器下的各子屏）必须同时满足：
 
 #### L0-1 · 主图/舞台水平居中
 
@@ -188,6 +189,22 @@ grep -rn "Positioned(left:\|Padding(padding: const EdgeInsets.only(left:" lib/<s
 - [ ] 至少满足自适应下限：`side = min(viewportW × 0.6, viewportH × 0.7)` 或等价约束
 - [ ] **禁止**硬编码 `SizedBox(width: 800, height: 600)` 之类固定像素
 - [ ] 允许硬编码的是：控件面板宽度（如右侧参数条 240px）、字体级别基线、图标尺寸；不允许硬编码的是：主渲染区、主 Canvas、Tab 内容区
+
+#### L0-4 · 九宫格布局强制（NineGridLayout · 2026-08-07 用户决策）
+
+> **执法依据**：`lib/common/widgets/nine_grid_layout.dart` · 用户明确"公共通用方案 · 所有 sim 都要支持 · 强制要遵守"
+> **强制程度**：**阻塞级**，与 L0-1/L0-2/L0-3 同权重。**存量 7 sim 全部迁移**（2026-08-07 用户拍板"全部立即迁移"）。
+
+- [ ] 每个承载实验画面的主屏幕（含 Tab 容器下的子屏）布局**必须**基于 `NineGridLayout`，**禁止**各 sim 自造平行布局方案（如 clamp 固定尺寸、纯 `CustomPaint` 铺满、手动 Column 纵向堆叠等）
+- [ ] 中间格（`center`）承载实验主画面 · **面积 ≥ 70% 屏幕**（`centerAreaRatio` 默认 `0.7` · 下限 `kMinCenterAreaRatio = 0.7` 强制 clamp）
+- [ ] 实验画面内容用 `LayoutBuilder` 读取中间格实际尺寸自适应渲染
+- [ ] 周边 8 格贴各自屏幕边缘 · 均分剩余空间 · 放信息展示 + 交互控件（各 sim 自行安排）
+
+**自检 grep**：
+```
+grep -rln "NineGridLayout" lib/<sim>/screens/
+```
+每个 sim 至少一个主 screen 引用；承载实验画面的主 screen 无引用 = 违规。
 
 ### M1 · 视口证据要求（v0.2.0 起 · 可选 · 不强制）
 
@@ -237,6 +254,13 @@ UI 类改动 commit 前**建议**（非强制）提供 **3 种视口截图**：
 ---
 
 ## 变更历史
+
+> 2026-08-07 by 主会话（用户拍板"公共通用方案 · 所有 sim 都要支持 · 强制要遵守" + "全部立即迁移"）：
+> 新增 §七 L0-4 九宫格布局强制（NineGridLayout）· 阻塞级。
+> - L0-4 条款：所有承载实验画面的主屏幕必须基于 `lib/common/widgets/nine_grid_layout.dart` · 中间格面积 ≥ 70% 屏（`centerAreaRatio` 下限 0.7 强制 clamp）· 周边 8 格贴边放信息/控件 · 禁止 sim 自造平行布局
+> - §六 违反后果表：新增"未通过 §七 L0-4"退回条目（code-reviewer 执行）
+> - 存量 7 sim（circuit/optics/forces/color-vision/sound/radio-waves/wave-interference）全部迁移 · 组件登记见 `shared-abstraction-plan.md` 候选 7
+> - 触发原因：用户明确要求统一屏幕适配方案 · 中间格 ≥ 70% · 8 周边格贴边自适应
 
 > 2026-08-06 by 主会话（用户明确指令"自动化测试不用管视觉 · 不要老确认" · 直接执行 · 无 y/n 循环）：
 > §七 M1 · 3 视口截图从**强制降为可选** · 联动 self-testing SKILL v0.2.0 视觉证据降级。

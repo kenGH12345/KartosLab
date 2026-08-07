@@ -37,7 +37,7 @@ context/project/phet/
 
 | 文档 | 说明 | 最近更新 |
 |---|---|---|
-| [notes.md](notes.md) | **决策 / 踩坑 / 参考链接**（跨 session 沉淀 · 未来 agent 首读） | 2026-07-21 |
+| [notes.md](notes.md) | **决策 / 踩坑 / 参考链接**（跨 session 沉淀 · 未来 agent 首读 · 含 9宫格适配方案决策） | 2026-08-07 |
 | [architecture/overview.md](architecture/overview.md) | 项目总览、三大模块、架构分层图 | 2026-07-17 |
 | [architecture/app-entry.md](architecture/app-entry.md) | 启动链路、MaterialApp 主题、导航模型 | 2026-07-17 |
 | [architecture/project-config.md](architecture/project-config.md) | 配置三类拆分（pubspec 依赖 / 主题 / scenarios JSON），附"无数据映射类"说明 | 2026-07-17 |

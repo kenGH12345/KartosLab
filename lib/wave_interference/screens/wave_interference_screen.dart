@@ -5,6 +5,7 @@ import '../../common/widgets/time_control_bar.dart';
 import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/scenario_menu_button.dart';
+import '../../common/widgets/nine_grid_layout.dart';
 import '../config/wave_interference_scenario.dart';
 import '../config/wave_interference_scenario_manager.dart';
 import '../model/wave_engine.dart';
@@ -120,73 +121,105 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
         backgroundColor: const Color(0xFF2563EB),
         foregroundColor: Colors.white,
         toolbarHeight: 44,
-        actions: [_buildScenarioMenu()],
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline, size: 20),
+            tooltip: '知识点',
+            onPressed: _showKnowledgeDialog,
+          ),
+          _buildScenarioMenu(),
+        ],
       ),
-      body: Column(children: [
-        Expanded(flex: 5, child: CustomPaint(
+      body: NineGridLayout(
+        // 中间格 = 实验画面 · 面积 ≥ 70% 屏 · 随格子尺寸自适应
+        center: CustomPaint(
           size: Size.infinite,
           painter: WaveHeatmapPainter(_engine,
             gridW: gridW, gridH: gridH, waveType: _waveType),
-        )),
-        _buildKnowledgePanel(),
-        PropertyControlPanel(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-          spacing: 3,
-          children: [
-            // Wave type selector
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              _waveTypeChip(WaveType.water, '🌊 Water'),
-              const SizedBox(width: 4),
-              _waveTypeChip(WaveType.light, '💡 Light'),
-              const SizedBox(width: 4),
-              _waveTypeChip(WaveType.sound, '🔊 Sound'),
-            ]),
-            const SizedBox(height: 2),
-            // Barrier mode selector
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              _barrierModeChip(BarrierMode.none, 'No Barrier'),
-              const SizedBox(width: 4),
-              _barrierModeChip(BarrierMode.singleSlit, 'Single Slit'),
-              const SizedBox(width: 4),
-              _barrierModeChip(BarrierMode.doubleSlit, 'Double Slit'),
-            ]),
-            Row(children: [
-              const Text('Frequency:', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-              const SizedBox(width: 6),
-              Text((_frequency * 10).toStringAsFixed(2), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF2563EB))),
-            ]),
-            Slider(value: _frequency, min: 0.1, max: 1.0, divisions: 18, activeColor: const Color(0xFF2563EB), onChanged: _setFrequency),
-            Row(children: [
-              const Text('Amplitude:', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-              const SizedBox(width: 6),
-              Text(_amplitude.toStringAsFixed(1), style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF2563EB))),
-            ]),
-            Slider(value: _amplitude, min: 0.2, max: 3.0, divisions: 28, activeColor: const Color(0xFF2563EB), onChanged: _setAmplitude),
-            if (_barrierMode != BarrierMode.none) ...[
-              Row(children: [
-                const Text('Slit Size:', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-                const SizedBox(width: 6), Text('$_slitSize', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF2563EB))),
-                if (_barrierMode == BarrierMode.doubleSlit) ...[
-                  const SizedBox(width: 12),
-                  const Text('Separation:', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-                  const SizedBox(width: 6), Text('$_slitSeparation', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF2563EB))),
-                ],
-              ]),
-              Row(children: [
-                Expanded(child: Slider(value: _slitSize.toDouble(), min: 4, max: 20, divisions: 16, activeColor: const Color(0xFF2563EB), onChanged: _setSlitSize)),
-                if (_barrierMode == BarrierMode.doubleSlit) ...[
-                  const SizedBox(width: 8),
-                  Expanded(child: Slider(value: _slitSeparation.toDouble(), min: 12, max: 36, divisions: 24, activeColor: const Color(0xFF2563EB), onChanged: _setSlitSep)),
-                ],
-              ]),
-            ],
-            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-              FilterChip(label: const Text('Reset Wave', style: TextStyle(fontSize: 11)), selected: false, onSelected: (_) { _engine.reset(); setState(() {}); }),
-            ]),
-            TimeControlBar(clock: _clock),
-          ],
         ),
-      ]),
+        // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
+        midRight: _buildSideControlPanel(),
+      ),
+    );
+  }
+
+  /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
+  Widget _buildSideControlPanel() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: PropertyControlPanel(
+        padding: const EdgeInsets.all(8),
+        spacing: 10,
+        children: [
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: [
+              _waveTypeChip(WaveType.water, '🌊 Water'),
+              _waveTypeChip(WaveType.light, '💡 Light'),
+              _waveTypeChip(WaveType.sound, '🔊 Sound'),
+            ],
+          ),
+          const Divider(height: 10),
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            alignment: WrapAlignment.center,
+            children: [
+              _barrierModeChip(BarrierMode.none, 'No Barrier'),
+              _barrierModeChip(BarrierMode.singleSlit, 'Single Slit'),
+              _barrierModeChip(BarrierMode.doubleSlit, 'Double Slit'),
+            ],
+          ),
+          _readoutRow('Frequency', (_frequency * 10).toStringAsFixed(2)),
+          Slider(value: _frequency, min: 0.1, max: 1.0, divisions: 18, activeColor: const Color(0xFF2563EB), onChanged: _setFrequency),
+          _readoutRow('Amplitude', _amplitude.toStringAsFixed(1)),
+          Slider(value: _amplitude, min: 0.2, max: 3.0, divisions: 28, activeColor: const Color(0xFF2563EB), onChanged: _setAmplitude),
+          if (_barrierMode != BarrierMode.none) ...[
+            _readoutRow(
+              _barrierMode == BarrierMode.doubleSlit ? 'Slit Size / Sep' : 'Slit Size',
+              _barrierMode == BarrierMode.doubleSlit ? '$_slitSize / $_slitSeparation' : '$_slitSize',
+            ),
+            Column(children: [
+              Slider(value: _slitSize.toDouble(), min: 4, max: 20, divisions: 16, activeColor: const Color(0xFF2563EB), onChanged: _setSlitSize),
+              if (_barrierMode == BarrierMode.doubleSlit)
+                Slider(value: _slitSeparation.toDouble(), min: 12, max: 36, divisions: 24, activeColor: const Color(0xFF2563EB), onChanged: _setSlitSep),
+            ]),
+          ],
+          Center(
+            child: FilterChip(label: const Text('Reset Wave', style: TextStyle(fontSize: 11)), selected: false, onSelected: (_) { _engine.reset(); setState(() {}); }),
+          ),
+          const Divider(height: 10),
+          Center(child: TimeControlBar(clock: _clock)),
+        ],
+      ),
+    );
+  }
+
+  Widget _readoutRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+        Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF2563EB))),
+      ],
+    );
+  }
+
+  /// 知识点卡 → AppBar Info 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
+        ),
+      ),
     );
   }
 

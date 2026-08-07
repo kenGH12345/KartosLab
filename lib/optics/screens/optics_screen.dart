@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/drag_drop_workspace.dart';
+import '../../common/widgets/nine_grid_layout.dart';
 import '../../screens/scenario_selection_screen.dart';
 import '../config/scenario_manager.dart';
 import '../config/scenario_runtime_policy.dart';
@@ -110,6 +111,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
       title: Text(_currentScenario?.name ?? '几何光学'),
       backgroundColor: const Color(0xFFE8F6FB), foregroundColor: const Color(0xFF062A3A),
       actions: [
+        IconButton(onPressed: _showKnowledgeDialog, icon: const Icon(Icons.menu_book_outlined), tooltip: '知识点'),
         IconButton(onPressed: _showScenarioPicker, icon: const Icon(Icons.folder_open_rounded)),
         if (_selectedElementId != null)
           IconButton(onPressed: _removeSelected, icon: const Icon(Icons.delete_outline, color: Color(0xFFDC2626))),
@@ -118,31 +120,45 @@ class _OpticsScreenState extends State<OpticsScreen> {
       ],
     ),
     body: SafeArea(
-      child: Column(children: [
-        _buildKnowledgePanel(),
-        Expanded(
-          child: DragDropWorkspace<String>(
-            layout: DragDropLayout.bottomTray,
-            trayTitle: '元件库',
-            items: _trayItems,
-            traySize: 80,
-            scale: 20,
-            onItemDropped: _onComponentDrop,
-            rightPanel: _currentScenario != null
-                ? _RightPanel(scenario: _currentScenario!, world: _world)
-                : null,
-            canvasBuilder: (context, proj) => _OpticsScene(
-          world: _world, solved: _solved, selectedId: _selectedElementId,
-          projection: proj,
-          onElementTap: _selectElement,
-          onDragSelect: _dragSelectElement,
-          onElementDrag: _moveElement,
+      child: NineGridLayout(
+        // 中间格 = 光学工作区（画布 + 底部托盘 + 右侧目标面板）· 面积 ≥ 70% 屏
+        center: DragDropWorkspace<String>(
+          layout: DragDropLayout.bottomTray,
+          trayTitle: '元件库',
+          items: _trayItems,
+          traySize: 80,
+          scale: 20,
+          onItemDropped: _onComponentDrop,
+          rightPanel: _currentScenario != null
+              ? _RightPanel(scenario: _currentScenario!, world: _world)
+              : null,
+          canvasBuilder: (context, proj) => _OpticsScene(
+        world: _world, solved: _solved, selectedId: _selectedElementId,
+        projection: proj,
+        onElementTap: _selectElement,
+        onDragSelect: _dragSelectElement,
+        onElementDrag: _moveElement,
+      ),
         ),
-          ),
-        ),
-      ]),
+      ),
     ),
   );
+
+  /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
+        ),
+      ),
+    );
+  }
 
   // ---- 几何光学知识点 ----
   Widget _buildKnowledgePanel() {

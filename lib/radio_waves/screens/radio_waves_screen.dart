@@ -4,6 +4,7 @@ import '../../common/widgets/time_control_bar.dart';
 import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/scenario_menu_button.dart';
+import '../../common/widgets/nine_grid_layout.dart';
 import '../config/radio_waves_scenario.dart';
 import '../config/radio_waves_scenario_manager.dart';
 import '../model/radio_state.dart';
@@ -71,47 +72,51 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
         backgroundColor: const Color(0xFF7C3AED),
         foregroundColor: Colors.white,
         toolbarHeight: 44,
-        actions: [_buildScenarioMenu()],
-      ),
-      body: Column(children: [
-        Expanded(
-          flex: 5,
-          child: CustomPaint(
-            size: Size.infinite,
-            painter: FieldPainter(_state),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline, size: 20),
+            tooltip: '知识点',
+            onPressed: _showKnowledgeDialog,
           ),
+          _buildScenarioMenu(),
+        ],
+      ),
+      body: NineGridLayout(
+        // 中间格 = 实验画面 · 面积 ≥ 70% 屏 · 随格子尺寸自适应
+        center: CustomPaint(
+          size: Size.infinite,
+          painter: FieldPainter(_state),
         ),
-        _buildKnowledgePanel(),
-        PropertyControlPanel(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-          spacing: 4,
-          children: [
-            // Frequency
-            Row(children: [
-              const Text('Frequency:', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-              const SizedBox(width: 8),
-              Text('${_state.frequency.toStringAsFixed(2)} Hz',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF7C3AED))),
-            ]),
-            Slider(
-              value: _state.frequency, min: 0.05, max: 2.0, divisions: 39,
-              activeColor: const Color(0xFF7C3AED),
-              onChanged: (v) => setState(() => _state.setFrequency(v)),
-            ),
-            // Amplitude
-            Row(children: [
-              const Text('Amplitude:', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500)),
-              const SizedBox(width: 8),
-              Text(_state.amplitude.toStringAsFixed(2),
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(0xFF7C3AED))),
-            ]),
-            Slider(
-              value: _state.amplitude, min: 0, max: 1, divisions: 20,
-              activeColor: const Color(0xFF7C3AED),
-              onChanged: (v) => setState(() => _state.setAmplitude(v)),
-            ),
-            // Toggles
-            Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
+        midRight: _buildSideControlPanel(),
+      ),
+    );
+  }
+
+  /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
+  Widget _buildSideControlPanel() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: PropertyControlPanel(
+        padding: const EdgeInsets.all(8),
+        spacing: 12,
+        children: [
+          _readoutRow('Frequency', '${_state.frequency.toStringAsFixed(2)} Hz'),
+          Slider(
+            value: _state.frequency, min: 0.05, max: 2.0, divisions: 39,
+            activeColor: const Color(0xFF7C3AED),
+            onChanged: (v) => setState(() => _state.setFrequency(v)),
+          ),
+          _readoutRow('Amplitude', _state.amplitude.toStringAsFixed(2)),
+          Slider(
+            value: _state.amplitude, min: 0, max: 1, divisions: 20,
+            activeColor: const Color(0xFF7C3AED),
+            onChanged: (v) => setState(() => _state.setAmplitude(v)),
+          ),
+          Wrap(
+            spacing: 6,
+            runSpacing: 4,
+            children: [
               FilterChip(label: const Text('Curve', style: TextStyle(fontSize: 11)),
                 selected: _state.showCurve, selectedColor: const Color(0xFFDC2626).withAlpha(40),
                 onSelected: (_) => setState(() => _state.toggleCurve())),
@@ -121,11 +126,38 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
               FilterChip(label: const Text('Dynamic', style: TextStyle(fontSize: 11)),
                 selected: _state.dynamicFieldEnabled, selectedColor: const Color(0xFF7C3AED).withAlpha(40),
                 onSelected: (_) => setState(() => _state.toggleDynamicField())),
-            ]),
-            TimeControlBar(clock: _clock),
-          ],
+            ],
+          ),
+          const Divider(height: 12),
+          Center(child: TimeControlBar(clock: _clock)),
+        ],
+      ),
+    );
+  }
+
+  Widget _readoutRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
+        Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF7C3AED))),
+      ],
+    );
+  }
+
+  /// 知识点卡 → AppBar Info 弹窗（9 宫格边条容纳不下长文本知识卡）
+  void _showKnowledgeDialog() {
+    showDialog<void>(
+      context: context,
+      builder: (_) => Dialog(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420, maxHeight: 520),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(4),
+            child: _buildKnowledgePanel(),
+          ),
         ),
-      ]),
+      ),
     );
   }
 
