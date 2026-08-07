@@ -23,6 +23,13 @@
 - 重写大文件（430 行）比逐段 replace 更可控；replace 长 old_str 失败时改用 write_to_file 整体重写
 - PowerShell 下 `flutter analyze`/`test` 输出被 CLIXML 污染（stderr 对象序列化），`cmd /c` + 重定向到文件可读纯文本
 
+## 中间格内容边界修正（Change-1 · 2026-08-07 用户截图纠正）
+
+- **实证**：用户截图指出 optics 的"教学目标/约束条件"（DragDropWorkspace.rightPanel）与底部托盘出现在中间格内——违反"中间格只给实验本身展示 · UI 都要按适配要求靠边"
+- **根因**：迁移 optics/circuit 时把 `DragDropWorkspace` 整体（画布+托盘+面板）塞入中间格，把"工作区容器"误当"实验画面"
+- **修正**：`_Card`/`_tray`/`_DropCanvas` 提升为公共组件 `DragItemCard`/`DragTray`/`DropCanvas`；`DragDropWorkspace` 原 API 复用（零行为变化）；optics/circuit 拆为 center=DropCanvas + 边格=DragTray/面板
+- **教训**："中间格只放实验画面本身"是硬约束——工作区类容器（含面板/托盘）必须拆分，不能整体入中间格
+
 ## code-reviewer Minor 精简理由（2026-08-07 · 评审通过后补记）
 
 评审报告：`design/代码评审.md`。3 处 Minor 均为 UI 文案/交互精简，理由如下：

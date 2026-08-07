@@ -12,6 +12,10 @@ import '../widgets/circuit_controls.dart';
 import '../../common/widgets/drag_drop_workspace.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/nine_grid_layout.dart';
+import '../../common/widgets/inquiry_models.dart';
+import '../../common/widgets/inquiry_task_panel.dart';
+import '../../common/widgets/experiment_logger.dart';
+import '../../common/widgets/conclusion_panel.dart';
 import '../../common/controls/phet_combo_box.dart';
 
 /// AC-4 feature flag · true = 从 JSON scenario 加载初始状态 · false = 保留原空拓扑硬编码
@@ -41,6 +45,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
   bool _isToolboxDropActive = false;
   DateTime? _lastTapTime; String? _lastTapId; Timer? _tapTimer;
   Offset? _doubleTapWorld;
+  bool _objectiveMetNotified = false;
 
   String _vid() => 'v${_nextId++}'; String _cid() => 'c${_nextId++}'; String _wid() => 'w${_nextId++}';
 
@@ -85,6 +90,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
         _nextId = _computeNextId(next);
         _currentScenarioId = scenarioId;
       });
+      _objectiveMetNotified = false;
     } catch (e) {
       debugPrint('Failed to switch circuit scenario to $scenarioId: $e');
     }
@@ -116,6 +122,27 @@ class _CircuitScreenState extends State<CircuitScreen> {
     _history.push(_state);
     setState(() { _state = next; _solved = CircuitSolver.solve(next); });
     if (sound) _sfx?.tap();
+    _maybeNotifyObjectiveMet();
+  }
+
+  /// 探究目标达成检测（轻量 · 一次成功只提示一次）。
+  void _maybeNotifyObjectiveMet() {
+    final mgr = _scenarioManager;
+    if (mgr == null || _inquiryTask == null || _objectiveMetNotified) return;
+    final met = mgr.checkObjectives(_state);
+    if (!met) return;
+    _objectiveMetNotified = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..clearSnackBars()
+        ..showSnackBar(
+          const SnackBar(
+            content: Text('🎉 探究目标已达成！去「我的发现」写下你的结论吧', style: TextStyle(fontSize: 13)),
+            duration: Duration(seconds: 3),
+          ),
+        );
+    });
   }
 
   void _onComponentDrop(ComponentType type, Offset worldPos) {
@@ -361,18 +388,82 @@ class _CircuitScreenState extends State<CircuitScreen> {
         IconButton(icon: const Icon(Icons.restart_alt_rounded), tooltip: '清空', onPressed: _clear),
       ]),
       body: NineGridLayout(
-        // 中间格 = 电路工作区（画布 + 底部托盘 + 底部控件条）· 面积 ≥ 70% 屏
-        center: DragDropWorkspace<ComponentType>(
+        // 中间格 = 纯电路画布 · 面积 ≥ 70% 屏 · DragTarget 接收元件
+        center: DropCanvas<ComponentType>(
+          canvasBuilder: (_, wsProj) => _buildCanvas(wsProj.canvasSize),
+          onItemDropped: _onComponentDrop,
+          scale: 1.0,
+        ),
+        // 顶部中格 = 电路控件条（电池/开关/灯泡... · 贴边）
+        topCenter: SizedBox(height: 50, child: CircuitControls(state: _state, solved: _solved, onValueChanged: _adjustValue)),
+        // 底部中格 = 元件托盘（贴边）
+        bottomCenter: DragTray<ComponentType>(
           layout: DragDropLayout.bottomTray,
           trayTitle: '元件',
-          traySize: 80,
           items: _trayItems,
-          onItemDropped: _onComponentDrop,
-          bottomPanel: SizedBox(height: 50, child: CircuitControls(state: _state, solved: _solved, onValueChanged: _adjustValue)),
-          canvasBuilder: (_, wsProj) => _buildCanvas(wsProj.canvasSize),
+          traySize: 80,
         ),
+        // 左侧中格 = 探究工作流（任务卡 + 实验记录 + 结论归纳 · 无 inquiryTask 时不渲染）
+        midLeft: _buildInquiryPanel(),
       ),
     ));
+  }
+
+  /// 当前 scenario 的探究任务（无 inquiryTask 时为 null → 三组件不渲染）。
+  InquiryTask? get _inquiryTask => _scenarioManager?.currentScenario?.inquiryTask;
+
+  /// circuit 快照：从 _state（元件 value）+ _solved（currentFor/voltageFor/brightnessFor）读取。
+  ///
+  /// key 与 simple-series.json inquiryTask.snapshotColumns 的 key 一致（AC-2.4）。
+  Map<String, dynamic> _circuitSnapshot() {
+    final res = _state.findComp('res_1');
+    return {
+      'resistance': res?.value,
+      'voltage': _solved.voltageFor('res_1'),
+      'current': _solved.currentFor('res_1'),
+      'brightness': _solved.brightnessFor('bulb_1'),
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'resistance', label: '电阻(Ω)', isParam: true),
+        ColumnDef(key: 'current', label: '电流(A)'),
+        ColumnDef(key: 'brightness', label: '灯泡亮度'),
+      ];
+    }
+    return task.snapshotColumns
+        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .toList(growable: false);
+  }
+
+  /// 探究工作流三组件（任务卡 + 实验记录器 + 结论归纳）· 无 inquiryTask 时不渲染。
+  Widget _buildInquiryPanel() {
+    final task = _inquiryTask;
+    if (task == null) return const SizedBox.shrink();
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          InquiryTaskPanel(task: task, compact: true),
+          const SizedBox(height: 8),
+          ExperimentLogger(
+            columns: _inquiryColumns(task),
+            snapshotProvider: _circuitSnapshot,
+            compact: true,
+          ),
+          const SizedBox(height: 8),
+          ConclusionPanel(
+            question: task.question,
+            referenceConclusion: task.referenceConclusion,
+            compact: true,
+          ),
+        ],
+      ),
+    );
   }
 
   /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）

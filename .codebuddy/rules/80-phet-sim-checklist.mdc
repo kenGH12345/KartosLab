@@ -196,6 +196,7 @@ grep -rn "Positioned(left:\|Padding(padding: const EdgeInsets.only(left:" lib/<s
 > **强制程度**：**阻塞级**，与 L0-1/L0-2/L0-3 同权重。**存量 7 sim 全部迁移**（2026-08-07 用户拍板"全部立即迁移"）。
 
 - [ ] 每个承载实验画面的主屏幕（含 Tab 容器下的子屏）布局**必须**基于 `NineGridLayout`，**禁止**各 sim 自造平行布局方案（如 clamp 固定尺寸、纯 `CustomPaint` 铺满、手动 Column 纵向堆叠等）
+- [ ] **中间格（`center`）只允许实验画面本身**——禁止把工作区/控件/信息面板整体塞入中间格；拖拽工作区类（`DragDropWorkspace`）必须拆分为 `DropCanvas`（中间格）+ `DragTray`（边格）+ 面板（边格）（2026-08-07 用户纠正实证：optics rightPanel/托盘曾整体入中间格）
 - [ ] 中间格（`center`）承载实验主画面 · **面积 ≥ 70% 屏幕**（`centerAreaRatio` 默认 `0.7` · 下限 `kMinCenterAreaRatio = 0.7` 强制 clamp）
 - [ ] 实验画面内容用 `LayoutBuilder` 读取中间格实际尺寸自适应渲染
 - [ ] 周边 8 格贴各自屏幕边缘 · 均分剩余空间 · 放信息展示 + 交互控件（各 sim 自行安排）

@@ -121,25 +121,29 @@ class _OpticsScreenState extends State<OpticsScreen> {
     ),
     body: SafeArea(
       child: NineGridLayout(
-        // 中间格 = 光学工作区（画布 + 底部托盘 + 右侧目标面板）· 面积 ≥ 70% 屏
-        center: DragDropWorkspace<String>(
+        // 中间格 = 纯实验画布（光路图）· 面积 ≥ 70% 屏 · DragTarget 接收元件
+        center: DropCanvas<String>(
+          canvasBuilder: (context, proj) => _OpticsScene(
+            world: _world, solved: _solved, selectedId: _selectedElementId,
+            projection: proj,
+            onElementTap: _selectElement,
+            onDragSelect: _dragSelectElement,
+            onElementDrag: _moveElement,
+          ),
+          onItemDropped: _onComponentDrop,
+          scale: 20,
+        ),
+        // 底部中格 = 元件库托盘（贴边）
+        bottomCenter: DragTray<String>(
           layout: DragDropLayout.bottomTray,
           trayTitle: '元件库',
           items: _trayItems,
           traySize: 80,
-          scale: 20,
-          onItemDropped: _onComponentDrop,
-          rightPanel: _currentScenario != null
-              ? _RightPanel(scenario: _currentScenario!, world: _world)
-              : null,
-          canvasBuilder: (context, proj) => _OpticsScene(
-        world: _world, solved: _solved, selectedId: _selectedElementId,
-        projection: proj,
-        onElementTap: _selectElement,
-        onDragSelect: _dragSelectElement,
-        onElementDrag: _moveElement,
-      ),
         ),
+        // 右侧边格 = 教学目标 + 约束条件（贴边 · 窄条可滚动）
+        midRight: _currentScenario != null
+            ? SingleChildScrollView(child: _RightPanel(scenario: _currentScenario!, world: _world))
+            : null,
       ),
     ),
   );
@@ -626,26 +630,26 @@ class _RightPanel extends StatelessWidget {
   final LabScenario scenario; final OpticsWorld world;
   const _RightPanel({required this.scenario, required this.world});
 
-  @override Widget build(_) => Container(width: 250, color: const Color(0xFFF9FAFB),
+  @override Widget build(_) => Container(width: double.infinity, color: const Color(0xFFF9FAFB),
     child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       _header('教学目标', const Color(0xFF059669), Icons.flag_rounded),
       Expanded(child: ListView(padding: const EdgeInsets.all(8), children: [
         for (final c in scenario.objectives?.successCriteria ?? <SuccessCriterion>[])
-          _listCard(const Icon(Icons.radio_button_unchecked, color: Color(0xFF9CA3AF), size: 20), c.description),
+          _listCard(const Icon(Icons.radio_button_unchecked, color: Color(0xFF9CA3AF), size: 16), c.description),
       ])),
       const Divider(height: 1),
       _header('约束条件', const Color(0xFF7C3AED), Icons.rule_rounded),
       Expanded(child: ListView(padding: const EdgeInsets.all(8), children: [
         for (final c in scenario.constraints)
           _listCard(Icon(c.validate(world) ? Icons.info_rounded : Icons.warning_rounded,
-              color: c.validate(world) ? const Color(0xFF3B82F6) : const Color(0xFFF59E0B), size: 20), c.description),
+              color: c.validate(world) ? const Color(0xFF3B82F6) : const Color(0xFFF59E0B), size: 16), c.description),
       ])),
     ]));
 
-  Widget _header(String title, Color color, IconData icon) => Container(padding: const EdgeInsets.all(12), color: color,
-      child: Row(children: [Icon(icon, color: Colors.white, size: 18), const SizedBox(width: 8),
-        Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))]));
-  Widget _listCard(Widget icon, String desc) => Card(margin: const EdgeInsets.only(bottom: 8), child: Padding(
-    padding: const EdgeInsets.all(12), child: Row(children: [icon, const SizedBox(width: 8),
+  Widget _header(String title, Color color, IconData icon) => Container(padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8), color: color,
+      child: Row(children: [Icon(icon, color: Colors.white, size: 16), const SizedBox(width: 6),
+        Flexible(child: Text(title, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)))]));
+  Widget _listCard(Widget icon, String desc) => Card(margin: const EdgeInsets.only(bottom: 6), child: Padding(
+    padding: const EdgeInsets.all(8), child: Row(children: [icon, const SizedBox(width: 6),
       Expanded(child: Text(desc, style: const TextStyle(fontSize: 11, color: Color(0xFF6B7280))))])));
 }
