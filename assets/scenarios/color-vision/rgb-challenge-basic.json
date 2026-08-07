@@ -1,0 +1,44 @@
+{
+  "scenarioId": "rgb-challenge-basic",
+  "name": "颜色匹配挑战 · 初级",
+  "description": "按目标色调整 RGB 滑块，在倒计时内精确匹配颜色。目标色与难度由配置驱动。",
+  "version": "1.0",
+  "screen": "rgb",
+  "initialParams": {
+    "redIntensity": 0,
+    "greenIntensity": 0,
+    "blueIntensity": 0,
+    "personPosition": 300
+  },
+  "challenge": {
+    "enabled": true,
+    "mode": "colorMatch",
+    "difficulty": "easy",
+    "timeLimit": 30,
+    "timeBonusPerLevel": 5,
+    "accuracyThreshold": 95.0,
+    "targets": [
+      { "color": "#FFFF00", "label": "黄色（红+绿）" },
+      { "color": "#00FFFF", "label": "青色（绿+蓝）" },
+      { "color": "#FF00FF", "label": "品红（红+蓝）" }
+    ],
+    "randomTargets": { "enabled": true, "count": 5, "excludeGrayscale": true }
+  },
+  "successCriteria": [
+    { "id": "sc-1", "type": "colorMatch", "description": "匹配出黄色", "params": {"targetColor": "yellow", "tolerance": 30} }
+  ],
+  "inquiryTask": {
+    "question": "挑战开始前想一想：要调出黄色，应该同时打开哪两盏灯？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "观察右上角的目标色，调整 R/G/B 滑块向它靠近。"
+      },
+      {
+        "id": "step-2",
+        "instruction": "匹配度达到阈值即挑战成功；观察每关目标色的规律，思考加色法原理。"
+      }
+    ],
+    "referenceConclusion": "黄=红+绿、青=绿+蓝、品红=红+蓝。挑战中的每个目标色都能拆成两种原色光的组合——这就是加色法的应用。"
+  }
+}

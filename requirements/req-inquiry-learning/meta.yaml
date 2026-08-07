@@ -1,0 +1,19 @@
+# meta.yaml — 做中学（Inquiry Learning）整体升级
+req_id: req-inquiry-learning
+title: 从"可视化可操作"到"做中学"——探究工作流整体升级（通用组件 + 2 pilot sim）
+sop: agile-vibe
+phase: 4.closing
+status: done
+created_at: "2026-08-07 14:00"
+updated_at: "2026-08-07 18:05"
+completed_at: "2026-08-07 18:05"
+final_summary_path: "spec/最终需求.md"
+edd_template_version: v2.0
+# 性质: 既有 sim 交互层升级 · 非新 sim 复刻 · 通用能力上抽 lib/common/
+# 核心决策(用户确认 4 问):
+#   Q1 范围 = 通用层 + 2 pilot sim（circuit + color_vision）· 验收后再推广其余 5 sim
+#   Q2 结论验证 = 学生自评 + 可对照标准结论（结论先消失 · 学生先建构）
+#   Q3 数据记录 = 手动快照表（学生点"记录本次实验"· 多次记录成对比表）
+#   Q4 挑战模式 = color_vision 硬编码挑战迁移到 JSON 驱动
+# 依据文章: ICAP 框架(Chi & Wylie 2014) · 从展示层(看/按)升级到建构层(探)
+# 关联规则: shared-abstraction-plan.md 门禁 · 新组件需登记 L1 候选

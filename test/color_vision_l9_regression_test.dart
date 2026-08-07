@@ -6,11 +6,11 @@ import 'package:geometric_optics/color_vision/config/color_vision_scenario_manag
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  test('L9 regression: all 8 scenarios load and pass schema validation', () async {
+  test('L9 regression: all 10 scenarios load and pass schema validation', () async {
     final mgr = ColorVisionScenarioManager();
     await mgr.loadScenarios();
 
-    expect(mgr.scenarios.length, 8, reason: 'Should have 8 scenarios after L9');
+    expect(mgr.scenarios.length, 10, reason: '8 L9 场景 + req-inquiry-learning 新增 rgb-inquiry-additive / rgb-challenge-basic');
 
     for (final s in mgr.scenarios) {
       // Verify each field populates correctly
@@ -79,5 +79,41 @@ void main() {
       }
     }
     debugPrint('All successCriteria and hints parse correctly');
+  });
+
+  test('req-inquiry-learning: new scenarios parse inquiryTask and challenge', () async {
+    final mgr = ColorVisionScenarioManager();
+    await mgr.loadScenarios();
+
+    // rgb-inquiry-additive: 探究任务齐全
+    final inquiry = mgr.findById('rgb-inquiry-additive');
+    expect(inquiry, isNotNull);
+    expect(inquiry!.inquiryTask, isNotNull);
+    expect(inquiry.inquiryTask!.question, isNotEmpty);
+    expect(inquiry.inquiryTask!.steps.length, 3);
+    expect(inquiry.inquiryTask!.referenceConclusion, isNotNull);
+    expect(inquiry.inquiryTask!.snapshotColumns.length, 4);
+
+    // rgb-challenge-basic: challenge 配置齐全
+    final challenge = mgr.findById('rgb-challenge-basic');
+    expect(challenge, isNotNull);
+    expect(challenge!.challenge, isNotNull);
+    expect(challenge.challenge!.enabled, isTrue);
+    expect(challenge.challenge!.timeLimit, 30);
+    expect(challenge.challenge!.accuracyThreshold, 95.0);
+    expect(challenge.challenge!.targets.length, 3);
+    expect(challenge.challenge!.randomTargets, isNotNull);
+
+    // rgb-default: challenge 已补充
+    final def = mgr.findById('rgb-default');
+    expect(def, isNotNull);
+    expect(def!.challenge, isNotNull);
+    expect(def.challenge!.targets.length, 3);
+
+    // 旧场景无新字段不崩（向后兼容）
+    final old = mgr.findById('single-white-red-filter');
+    expect(old, isNotNull);
+    expect(old!.inquiryTask, isNull);
+    expect(old.challenge, isNull);
   });
 }

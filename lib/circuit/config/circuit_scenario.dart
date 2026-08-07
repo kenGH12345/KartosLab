@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/foundation.dart';
 
+import '../../common/widgets/inquiry_models.dart';
 import '../models/circuit_state.dart';
 import 'circuit_constraint.dart';
 import 'circuit_inventory.dart';
@@ -26,6 +27,7 @@ class CircuitScenario {
     this.inventory,
     this.constraints = const [],
     this.objectives,
+    this.inquiryTask,
   });
 
   final String scenarioId;
@@ -36,6 +38,7 @@ class CircuitScenario {
   final CircuitComponentInventory? inventory;
   final List<CircuitConstraint> constraints;
   final CircuitLearningObjective? objectives;
+  final InquiryTask? inquiryTask;
 
   factory CircuitScenario.fromJson(Map<String, dynamic> json) {
     return CircuitScenario(
@@ -59,6 +62,9 @@ class CircuitScenario {
           ? CircuitLearningObjective.fromJson(
               json['objectives'] as Map<String, dynamic>)
           : null,
+      inquiryTask: json['inquiryTask'] != null
+          ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -73,6 +79,7 @@ class CircuitScenario {
       if (constraints.isNotEmpty)
         'constraints': constraints.map((e) => e.toJson()).toList(),
       if (objectives != null) 'objectives': objectives!.toJson(),
+      if (inquiryTask != null) 'inquiryTask': inquiryTask!.toJson(),
     };
   }
 }

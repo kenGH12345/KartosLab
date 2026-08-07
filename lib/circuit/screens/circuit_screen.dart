@@ -13,9 +13,8 @@ import '../../common/widgets/drag_drop_workspace.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/widgets/inquiry_models.dart';
-import '../../common/widgets/inquiry_task_panel.dart';
+import '../../common/widgets/inquiry_drawer.dart';
 import '../../common/widgets/experiment_logger.dart';
-import '../../common/widgets/conclusion_panel.dart';
 import '../../common/controls/phet_combo_box.dart';
 
 /// AC-4 feature flag · true = 从 JSON scenario 加载初始状态 · false = 保留原空拓扑硬编码
@@ -46,6 +45,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
   DateTime? _lastTapTime; String? _lastTapId; Timer? _tapTimer;
   Offset? _doubleTapWorld;
   bool _objectiveMetNotified = false;
+  bool _inquiryOpen = false;
 
   String _vid() => 'v${_nextId++}'; String _cid() => 'c${_nextId++}'; String _wid() => 'w${_nextId++}';
 
@@ -387,26 +387,51 @@ class _CircuitScreenState extends State<CircuitScreen> {
         IconButton(icon: const Icon(Icons.zoom_in, size: 20), tooltip: '放大', onPressed: () => _setZoom(_state.zoom + 0.1)),
         IconButton(icon: const Icon(Icons.restart_alt_rounded), tooltip: '清空', onPressed: _clear),
       ]),
-      body: NineGridLayout(
-        // 中间格 = 纯电路画布 · 面积 ≥ 70% 屏 · DragTarget 接收元件
-        center: DropCanvas<ComponentType>(
-          canvasBuilder: (_, wsProj) => _buildCanvas(wsProj.canvasSize),
-          onItemDropped: _onComponentDrop,
-          scale: 1.0,
-        ),
-        // 顶部中格 = 电路控件条（电池/开关/灯泡... · 贴边）
-        topCenter: SizedBox(height: 50, child: CircuitControls(state: _state, solved: _solved, onValueChanged: _adjustValue)),
-        // 底部中格 = 元件托盘（贴边）
-        bottomCenter: DragTray<ComponentType>(
-          layout: DragDropLayout.bottomTray,
-          trayTitle: '元件',
-          items: _trayItems,
-          traySize: 80,
-        ),
-        // 左侧中格 = 探究工作流（任务卡 + 实验记录 + 结论归纳 · 无 inquiryTask 时不渲染）
-        midLeft: _buildInquiryPanel(),
+      body: Stack(
+        children: [
+          NineGridLayout(
+            // 中间格 = 纯电路画布 · 面积 ≥ 70% 屏 · DragTarget 接收元件
+            center: DropCanvas<ComponentType>(
+              canvasBuilder: (_, wsProj) => _buildCanvas(wsProj.canvasSize),
+              onItemDropped: _onComponentDrop,
+              scale: 1.0,
+            ),
+            // 顶部中格 = 电路控件条（电池/开关/灯泡... · 贴边）
+            topCenter: SizedBox(height: 50, child: CircuitControls(state: _state, solved: _solved, onValueChanged: _adjustValue)),
+            // 底部中格 = 元件托盘（贴边）
+            bottomCenter: DragTray<ComponentType>(
+              layout: DragDropLayout.bottomTray,
+              trayTitle: '元件',
+              items: _trayItems,
+              traySize: 80,
+            ),
+            // 左侧中格 = 探究入口按钮（窄边条放不下三组件 → 抽屉方案）
+            midLeft: _buildInquiryEntryButton(),
+          ),
+          // 探究工作流抽屉（Offstage 保持记录/结论 State · 无 inquiryTask 不渲染）
+          InquiryDrawer(
+            task: _inquiryTask,
+            columns: _inquiryTask != null ? _inquiryColumns(_inquiryTask!) : const [],
+            snapshotProvider: _circuitSnapshot,
+            open: _inquiryOpen,
+          ),
+        ],
       ),
     ));
+  }
+
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    final task = _inquiryTask;
+    if (task == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
+      ),
+    );
   }
 
   /// 当前 scenario 的探究任务（无 inquiryTask 时为 null → 三组件不渲染）。
@@ -436,34 +461,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
     return task.snapshotColumns
         .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
         .toList(growable: false);
-  }
-
-  /// 探究工作流三组件（任务卡 + 实验记录器 + 结论归纳）· 无 inquiryTask 时不渲染。
-  Widget _buildInquiryPanel() {
-    final task = _inquiryTask;
-    if (task == null) return const SizedBox.shrink();
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InquiryTaskPanel(task: task, compact: true),
-          const SizedBox(height: 8),
-          ExperimentLogger(
-            columns: _inquiryColumns(task),
-            snapshotProvider: _circuitSnapshot,
-            compact: true,
-          ),
-          const SizedBox(height: 8),
-          ConclusionPanel(
-            question: task.question,
-            referenceConclusion: task.referenceConclusion,
-            compact: true,
-          ),
-        ],
-      ),
-    );
   }
 
   /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）

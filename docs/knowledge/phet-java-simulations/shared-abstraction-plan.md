@@ -164,6 +164,37 @@ abstract class ScenarioManagerBase<TScenario> {
 
 **落地义务**：所有现有 + 未来 sim 的屏幕适配**必须**基于本组件，禁止各 sim 自造平行布局方案。
 
+### 候选 8 · 探究工作流组件族（Inquiry Workflow · ✅ 已落地 · 2026-08-07 · req-inquiry-learning）
+
+**状态**：已落地 `lib/common/widgets/`（5 组件 + 2 已完工上抽容器）；3-Time Rule 第 2 用户门槛已触发，按规则登记。见 `requirements/req-inquiry-learning/spec/最终需求.md`。
+
+**证据**（2 使用者 · 第 2 用户门槛 ≥70% 相似已满足）：
+- 用户 1：`lib/circuit/screens/circuit_screen.dart`（simple-series 欧姆定律探究）
+- 用户 2：`lib/color_vision/screens/rgb_bulbs_screen.dart`（加色混合探究 + 挑战）
+
+**已抽象组件**（5 个 L1 候选）：
+
+| 组件 | 路径 | 职责 |
+|---|---|---|
+| `InquiryTask`/`InquiryStep`/`InquirySnapshotColumn` | `lib/common/widgets/inquiry_models.dart` | 纯数据模型（对应 scenario JSON `inquiryTask` 字段） |
+| `InquiryTaskPanel` | `lib/common/widgets/inquiry_task_panel.dart` | 探究任务卡（task==null 不渲染 · ExpansionTile 折叠） |
+| `ExperimentLogger` | `lib/common/widgets/experiment_logger.dart` | 实验记录器（`ColumnDef`+`SnapshotProvider` · maxRows 20 · 记录/删除/清空/预留 onExport） |
+| `ConclusionPanel` | `lib/common/widgets/conclusion_panel.dart` | 结论归纳面板（两阶段状态机 · 提交前参考结论不可见"结论先消失" · 提交后不可收回） |
+| `InquiryDrawer` | `lib/common/widgets/inquiry_drawer.dart` | 探究抽屉容器（`Offstage` 常驻三组件保 State · 右侧 280px 固定 · 窄视口放不下边条时的通用方案） |
+
+**共性抽象内容**：
+- 数据驱动：`inquiryTask` 可选顶层字段（缺失时 sim 传统模式运行 · 向后兼容）
+- 解耦：组件只依赖 `inquiry_models.dart` 纯数据 + `SnapshotProvider` 回调，不依赖任何 sim model（0 处 `lib/circuit/`/`lib/color_vision/` import）
+- 状态：ExperimentLogger 内存行 / ConclusionPanel 两阶段 State 各自独立，可单独复用、单独测试
+
+**3-Time Rule 说明**：
+- 已 **2 使用者**（circuit + color_vision），按"≥70% 相似则改造第 1 个为公共版"第 2 用户门槛已满足 → 本次两个 sim 均直接消费公共组件（同源同构，无"第 2 用户自造"）
+- 第 3 用户出现时（推广其余 5 sim 任一接入探究模式）→ 评估是否进一步固化 API / 上抽 `InquiryWorkflow` 容器（当前保持三组件独立，未预抽容器）
+
+**触发登记**：spec 约束 C3 / 技术方案 D8 · 登记由执行阶段完成（本条目）。
+
+**验证**：28 项新增测试全绿（组件 16 + circuit 3 + color_vision 9）· 全量 190/0（除 forces 基线）· analyze 本需求代码 0 error。
+
 ---
 
 ## 三、明确不抽象（L2 · 模块专属）

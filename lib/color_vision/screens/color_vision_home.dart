@@ -2,6 +2,7 @@
 import '../../common/widgets/phet_tab_bar.dart';
 import '../screens/rgb_bulbs_screen.dart';
 import '../screens/single_bulb_screen.dart';
+import '../config/color_vision_scenario.dart';
 import '../config/color_vision_scenario_manager.dart';
 
 class ColorVisionHome extends StatefulWidget {
@@ -34,6 +35,8 @@ class _ColorVisionHomeState extends State<ColorVisionHome> {
 
     final rgbScenario = mgr.findById('rgb-default');
     final filterScenario = mgr.findById('single-white-red-filter');
+    final rgbScenarios =
+        mgr.scenarios.where((s) => s.screen == CVScreen.rgb).toList(growable: false);
 
     return PhetTabbedScreen(
       title: 'Color Vision',
@@ -42,7 +45,11 @@ class _ColorVisionHomeState extends State<ColorVisionHome> {
         PhetTab(
           label: 'Magic Lab',
           icon: Icons.science,
-          child: MagicLabScreen(scenario: rgbScenario),
+          child: MagicLabScreen(
+            scenario: rgbScenario,
+            scenarioList: rgbScenarios,
+            manager: mgr,
+          ),
         ),
         PhetTab(
           label: 'Filter',

@@ -1,0 +1,38 @@
+{
+  "scenarioId": "rgb-inquiry-additive",
+  "name": "加色混合探究",
+  "description": "用红绿蓝三色光两两组合，动手记录混合结果，自主归纳加色法规律。",
+  "version": "1.0",
+  "screen": "rgb",
+  "initialParams": {
+    "redIntensity": 100,
+    "greenIntensity": 100,
+    "blueIntensity": 0,
+    "personPosition": 300
+  },
+  "inquiryTask": {
+    "question": "分别用红、绿、蓝三种光两两组合，观察混合出的颜色，你能找出加色法规律吗？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "调整 R/G/B 滑块，让红灯 + 绿灯同时照亮（蓝色强度 = 0），点击「记录本次实验」记下混合结果。",
+        "hint": "试试 R=100、G=100、B=0"
+      },
+      {
+        "id": "step-2",
+        "instruction": "分别尝试 红+蓝（绿=0）和 绿+蓝（红=0），各记录一次混合结果。"
+      },
+      {
+        "id": "step-3",
+        "instruction": "回顾你的记录表，两两组合得到的新颜色有什么共同规律？"
+      }
+    ],
+    "referenceConclusion": "加色法规律：红+绿=黄，红+蓝=品红，绿+蓝=青；红+绿+蓝=白。三原色光按不同强度叠加，可以产生各种颜色——这就是屏幕显示的原理。",
+    "snapshotColumns": [
+      { "key": "red", "label": "红", "source": "param" },
+      { "key": "green", "label": "绿", "source": "param" },
+      { "key": "blue", "label": "蓝", "source": "param" },
+      { "key": "colorName", "label": "混合色", "source": "reading" }
+    ]
+  }
+}

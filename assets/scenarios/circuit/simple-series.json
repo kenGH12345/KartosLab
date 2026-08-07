@@ -113,5 +113,27 @@
       { "trigger": "no_battery", "message": "请添加一个电池为电路供电" }
     ],
     "validation": { "autoCheck": true, "showFeedback": true }
+  },
+
+  "inquiryTask": {
+    "question": "保持电池电压不变，改变电阻大小，观察电流和灯泡亮度的变化，你能发现什么规律？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "选中电阻，用下方滑块将阻值从 5Ω 逐步调到 50Ω（至少 5 个档位），每次调整后点击「记录本次实验」。",
+        "hint": "保持电池电压 10V 不变，一次只改电阻"
+      },
+      {
+        "id": "step-2",
+        "instruction": "观察实验记录表，电流与电阻之间是什么关系？"
+      }
+    ],
+    "referenceConclusion": "电压不变时，电路中的电流与电阻成反比（I = V / R，欧姆定律）：电阻越大，电流越小，灯泡亮度也随之降低。",
+    "snapshotColumns": [
+      { "key": "resistance", "label": "电阻(Ω)", "source": "param" },
+      { "key": "voltage", "label": "电阻端电压(V)", "source": "reading" },
+      { "key": "current", "label": "电流(A)", "source": "reading" },
+      { "key": "brightness", "label": "灯泡亮度", "source": "reading" }
+    ]
   }
 }

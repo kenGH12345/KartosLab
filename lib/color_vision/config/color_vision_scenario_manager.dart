@@ -27,8 +27,32 @@ class ColorVisionScenarioManager
   @override
   String Function(ColorVisionScenario) get scenarioId => (s) => s.scenarioId;
 
+  ColorVisionScenario? _currentScenario;
+
+  /// 当前生效场景（checkObjectives 判定依据 · AC-4.4）。
+  ColorVisionScenario? get currentScenario => _currentScenario;
+
+  /// 记录当前生效场景（checkObjectives 判定依据 · AC-4.4）。
+  ///
+  /// screen 自行构造 state（不经过 buildInitialState）时必须显式同步，
+  /// 否则 `_currentScenario` 恒为 null、checkObjectives 恒 false。
+  void setCurrentScenario(ColorVisionScenario s) => _currentScenario = s;
+
   @override
-  ColorVisionState Function(ColorVisionScenario) get buildInitialState => _build;
+  ColorVisionState Function(ColorVisionScenario) get buildInitialState {
+    return (s) {
+      _currentScenario = s;
+      return _build(s);
+    };
+  }
+
+  /// 判定全部 successCriteria 是否达成（AC-4.4 · 挑战完成触发）。
+  @override
+  bool checkObjectives(ColorVisionState state) {
+    final s = _currentScenario;
+    if (s == null || s.successCriteria.isEmpty) return false;
+    return s.successCriteria.every((c) => c.check(state));
+  }
 
   ColorVisionState _build(ColorVisionScenario s) {
     final beams = <PhotonBeam>[

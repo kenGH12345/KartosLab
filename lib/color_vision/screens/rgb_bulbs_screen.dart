@@ -5,23 +5,35 @@ import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/celebration_dialog.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/nine_grid_layout.dart';
+import '../../common/widgets/inquiry_models.dart';
+import '../../common/widgets/inquiry_drawer.dart';
+import '../../common/widgets/experiment_logger.dart';
+import '../../common/widgets/scenario_menu_button.dart';
 import '../model/color_vision_state.dart';
 import '../solver/color_model.dart';
 import '../painters/potion_cauldron_painter.dart';
 import '../painters/challenge_painter.dart';
 import '../painters/color_wheel_painter.dart';
 import '../config/color_vision_scenario.dart';
+import '../config/color_vision_scenario_manager.dart';
 
 class MagicLabScreen extends StatefulWidget {
-  const MagicLabScreen({super.key, this.scenario});
+  const MagicLabScreen({super.key, this.scenario, this.scenarioList = const [], this.manager});
   final ColorVisionScenario? scenario;
+
+  /// 可切换的 rgb 场景列表（AppBar 场景菜单用 · 空则不显示菜单）。
+  final List<ColorVisionScenario> scenarioList;
+
+  /// 场景管理器（挑战完成触发 checkObjectives 用 · 可为空）。
+  final ColorVisionScenarioManager? manager;
   @override State<MagicLabScreen> createState() => _MagicLabScreenState();
 }
 
 enum LabMode { explore, challenge, wheel }
 
 class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStateMixin {
-  late final ColorVisionState _state;
+  late ColorVisionState _state;
+  late ColorVisionScenario? _scenario;
   Ticker? _bubbleTicker;
   double _bubblePhase = 0;
   LabMode _mode = LabMode.explore;
@@ -35,20 +47,51 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
   int _score = 0, _streak = 0, _level = 1, _timeLeft = 30;
   Ticker? _timerTicker;
   bool _challengeActive = false;
+  bool _objectivesMetNotified = false;
+  bool _inquiryOpen = false;
 
   Offset? _wheelPoint;
   Color _wheelColor = const Color(0xFF888888);
   double _wheelBrightness = 1.0;
   double _wheelCx = 0, _wheelCy = 0, _wheelR = 0;
 
+  /// 当前场景的挑战配置（缺失时为 null → 用旧硬编码 fallback）。
+  CVChallengeConfig? get _cfg => _scenario?.challenge;
+
   @override
   void initState() {
     super.initState();
-    final s = widget.scenario;
-    _state = ColorVisionState(beams: const [],
-      redIntensity: s?.redIntensity ?? 100, greenIntensity: s?.greenIntensity ?? 100, blueIntensity: s?.blueIntensity ?? 100);
+    _scenario = widget.scenario;
+    _state = _buildState(_scenario);
+    // 同步 manager 当前场景，保证 checkObjectives 判定链路可用（AC-4.4）
+    final s = _scenario;
+    if (s != null) widget.manager?.setCurrentScenario(s);
     _bubbleTicker = createTicker((_) => setState(() => _bubblePhase += 0.05))..start();
     _targetColor = _randomColor();
+  }
+
+  ColorVisionState _buildState(ColorVisionScenario? s) => ColorVisionState(
+    beams: const [],
+    redIntensity: s?.redIntensity ?? 100,
+    greenIntensity: s?.greenIntensity ?? 100,
+    blueIntensity: s?.blueIntensity ?? 100,
+    personPosition: s?.personPosition ?? 300,
+  );
+
+  /// 切换 rgb 场景：重建 state + 重置探究/挑战状态。
+  void _applyScenario(ColorVisionScenario s) {
+    setState(() {
+      _scenario = s;
+      _state.dispose();
+      _state = _buildState(s);
+      _targetColor = _randomColor();
+      _mode = LabMode.explore;
+      _challengeActive = false;
+      _timerTicker?.stop();
+      _score = 0; _streak = 0; _level = 1; _timeLeft = 30;
+      _objectivesMetNotified = false;
+    });
+    widget.manager?.setCurrentScenario(s);
   }
 
   @override
@@ -59,10 +102,52 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
 
   Color _randomColor() => Color.fromARGB(255, _rng.nextInt(256), _rng.nextInt(256), _rng.nextInt(256));
 
+  /// 挑战配置缺省时回退旧硬编码逻辑。
+  ///
+  /// 目标色来源：`challenge.targets` 按序 → 用尽后有 `randomTargets.enabled` 则随机
+  /// （排除灰度）→ 否则 `_randomColor()`。
+  Color _nextTargetColor() {
+    final cfg = _cfg;
+    if (cfg != null && cfg.enabled) {
+      if (cfg.targets.isNotEmpty && _level <= cfg.targets.length) {
+        return cfg.targets[_level - 1].toColor();
+      }
+      final rt = cfg.randomTargets;
+      if (rt != null && rt.enabled) {
+        return _randomNonGrayscale();
+      }
+    }
+    return _randomColor(); // fallback 旧逻辑
+  }
+
+  Color _randomNonGrayscale() {
+    for (var i = 0; i < 20; i++) {
+      final r = _rng.nextInt(256), g = _rng.nextInt(256), b = _rng.nextInt(256);
+      if ((r - g).abs() + (g - b).abs() + (b - r).abs() > 90) {
+        return Color.fromARGB(255, r, g, b);
+      }
+    }
+    return _randomColor();
+  }
+
+  int get _challengeTimeLimit {
+    final cfg = _cfg;
+    if (cfg != null && cfg.enabled) {
+      return cfg.timeLimit + (_level - 1) * cfg.timeBonusPerLevel;
+    }
+    return 30 + (_level - 1) * 5; // fallback 旧逻辑
+  }
+
+  double get _accuracyThreshold {
+    final cfg = _cfg;
+    if (cfg != null && cfg.enabled) return cfg.accuracyThreshold;
+    return 99.99; // fallback 旧逻辑
+  }
+
   void _startChallenge() {
-    _targetColor = _randomColor();
+    _targetColor = _nextTargetColor();
     _state.updateIntensity(0, 0); _state.updateIntensity(1, 0); _state.updateIntensity(2, 0);
-    _timeLeft = 30 + (_level - 1) * 5; _challengeActive = true;
+    _timeLeft = _challengeTimeLimit; _challengeActive = true;
     _timerTicker?.dispose();
     _timerTicker = createTicker((_) {
       if (!_challengeActive) return;
@@ -78,17 +163,18 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
     final t = _targetColor, cur = _state.mixedColor;
     final dr = (t.r - cur.r).abs(), dg = (t.g - cur.g).abs(), db = (t.b - cur.b).abs();
     final acc = ((1 - sqrt(dr*dr + dg*dg + db*db) / sqrt(3.0)) * 100).clamp(0.0, 100.0);
-    // 100% 精确匹配才算成功 · 弹喜庆弹框
-    if (acc >= 99.99 && _challengeActive && mounted) {
+    // 精度阈值来自 challenge.accuracyThreshold（缺省回退 99.99）· 达标弹喜庆弹框
+    if (acc >= _accuracyThreshold && _challengeActive && mounted) {
       _challengeActive = false; _timerTicker?.stop();
       final earnedScore = (10 + _timeLeft).clamp(10, 50);
+      final allMet = _notifyChallengeObjective();
       // 延迟一帧再弹框,避免 build 期间 showDialog
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
         showCelebrationDialog(
           context,
           title: '挑战成功！',
-          subtitle: '完美匹配 · +$earnedScore 分',
+          subtitle: allMet ? '🎯 探究目标全部达成 · +$earnedScore 分' : '完美匹配 · +$earnedScore 分',
           accentColor: const Color(0xFFF97316),
           showcaseColor: _targetColor,
           primaryLabel: '下一关',
@@ -110,6 +196,18 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
       });
     }
     return acc;
+  }
+
+  /// 挑战完成 → 复用 manager 的 checkObjectives 判定 successCriteria 是否全部达成。
+  ///
+  /// 返回是否全部达成（用于庆祝弹窗 subtitle · AC-4.4）。一次达成只通知一次。
+  bool _notifyChallengeObjective() {
+    final mgr = widget.manager;
+    if (mgr == null || _objectivesMetNotified) return false;
+    final met = mgr.checkObjectives(_state);
+    if (!met) return false;
+    _objectivesMetNotified = true;
+    return true;
   }
 
   int _hitBottle(double dx, double dy) {
@@ -136,6 +234,9 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
   }
 
   void _switchMode(LabMode m) {
+    if (m == LabMode.challenge && _cfg == null) {
+      debugPrint('DEPRECATED: challenge config missing for ${_scenario?.scenarioId}, using hardcoded fallback');
+    }
     setState(() { _mode = m;
       if (m == LabMode.challenge) { _startChallenge(); }
       else { _challengeActive = false; _timerTicker?.stop(); }
@@ -144,43 +245,114 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return NineGridLayout(
-      // 顶部中格 = 标题 + 模式切换
-      topCenter: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('三原色魔法实验室',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w800, color: Color(0xFF312E81))),
-          const SizedBox(height: 4),
-          Wrap(
-            spacing: 4,
-            runSpacing: 2,
-            alignment: WrapAlignment.center,
-            children: [
-              _modeBtn('自由探索', LabMode.explore, const Color(0xFFEF4444)),
-              _modeBtn('挑战模式', LabMode.challenge, const Color(0xFFF97316)),
-              _modeBtn('色轮探秘', LabMode.wheel, const Color(0xFFEC4899)),
-            ],
+    return Stack(
+      children: [
+        NineGridLayout(
+          // 顶部中格 = 标题 + 模式切换（单行紧凑 · 窄视口下可滚动）
+          topCenter: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('三原色魔法实验室',
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w800, color: Color(0xFF312E81))),
+                const SizedBox(width: 8),
+                _modeBtn('自由探索', LabMode.explore, const Color(0xFFEF4444)),
+                const SizedBox(width: 4),
+                _modeBtn('挑战模式', LabMode.challenge, const Color(0xFFF97316)),
+                const SizedBox(width: 4),
+                _modeBtn('色轮探秘', LabMode.wheel, const Color(0xFFEC4899)),
+              ],
+            ),
           ),
-        ],
-      ),
-      // 中间格 = 实验画面（三种模式）· 面积 ≥ 70% 屏 · 自适应
-      center: _buildCanvas(),
-      // 右侧边格 = 模式相关控制 · 竖排紧凑 · 窄条可滚动
-      midRight: _buildSideControls(),
-      // 右下边格 = 知识点入口（explore 模式 · 知识卡过长改为弹窗）
-      bottomRight: _mode == LabMode.explore
-          ? Center(
-              child: IconButton(
-                icon: const Icon(Icons.menu_book_outlined, size: 22),
-                tooltip: '知识点',
-                onPressed: _showKnowledgeDialog,
-              ),
-            )
-          : null,
+          // 顶部右格 = 场景切换菜单（独立格 · 避免滚动容器导致 PopupMenu 定位错乱）
+          topRight: widget.scenarioList.isNotEmpty ? _buildScenarioMenu() : null,
+          // 中间格 = 实验画面（三种模式）· 面积 ≥ 70% 屏 · 自适应
+          center: _buildCanvas(),
+          // 左侧边格 = 探究入口按钮（窄边条放不下三组件 → 抽屉方案）
+          midLeft: _buildInquiryEntryButton(),
+          // 右侧边格 = 模式相关控制 · 竖排紧凑 · 窄条可滚动
+          midRight: _buildSideControls(),
+          // 右下边格 = 知识点入口（explore 模式 · 知识卡过长改为弹窗）
+          bottomRight: _mode == LabMode.explore
+              ? Center(
+                  child: IconButton(
+                    icon: const Icon(Icons.menu_book_outlined, size: 22),
+                    tooltip: '知识点',
+                    onPressed: _showKnowledgeDialog,
+                  ),
+                )
+              : null,
+        ),
+        // 探究工作流抽屉（Offstage 保持记录/结论 State · 无 inquiryTask 不渲染）
+        InquiryDrawer(
+          task: _inquiryTask,
+          columns: _inquiryTask != null ? _inquiryColumns(_inquiryTask!) : const [],
+          snapshotProvider: _colorVisionSnapshot,
+          open: _inquiryOpen,
+        ),
+      ],
     );
   }
 
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    final task = _inquiryTask;
+    if (task == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
+      ),
+    );
+  }
+
+  /// 场景切换菜单（仅列 rgb 屏场景 · 切换时重建 state 并回自由探索）。
+  Widget _buildScenarioMenu() {
+    final entries = widget.scenarioList
+        .map((s) => ScenarioMenuEntry(id: s.scenarioId, name: s.name))
+        .toList(growable: false);
+    return ScenarioMenuButton(
+      entries: entries,
+      currentId: _scenario?.scenarioId,
+      onSelected: (id) {
+        final next = widget.scenarioList.where((s) => s.scenarioId == id).firstOrNull;
+        if (next != null) _applyScenario(next);
+      },
+      accentColor: const Color(0xFF7C3AED),
+    );
+  }
+
+  /// 当前 scenario 的探究任务（无 inquiryTask 时为 null → 三组件不渲染）。
+  InquiryTask? get _inquiryTask => _scenario?.inquiryTask;
+
+  /// color_vision 快照：R/G/B 强度（param）+ 混合色名称（reading）。
+  Map<String, dynamic> _colorVisionSnapshot() {
+    return {
+      'red': _state.redIntensity,
+      'green': _state.greenIntensity,
+      'blue': _state.blueIntensity,
+      'colorName': ColorModel.colorName(_state.mixedColor),
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'red', label: '红', isParam: true),
+        ColumnDef(key: 'green', label: '绿', isParam: true),
+        ColumnDef(key: 'blue', label: '蓝', isParam: true),
+        ColumnDef(key: 'colorName', label: '混合色'),
+      ];
+    }
+    return task.snapshotColumns
+        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .toList(growable: false);
+  }
+
+  /// 探究工作流三组件（任务卡 + 实验记录器 + 结论归纳）· 无 inquiryTask 时不渲染。
   Widget _buildCanvas() {
     // ====== 色轮 ======
     if (_mode == LabMode.wheel) {
@@ -293,7 +465,8 @@ class _MagicLabScreenState extends State<MagicLabScreen> with TickerProviderStat
     // ====== 挑战模式 ======
     if (_mode == LabMode.challenge) {
       final acc = _calcAccuracy();
-      final totalTime = (30 + (_level - 1) * 5).toDouble();
+      // 进度条分母与 _challengeTimeLimit 保持同源（JSON 驱动 · Minor-1 修复）
+      final totalTime = _challengeTimeLimit.toDouble();
       return [
         Row(children: [
           Expanded(child: SizedBox(height: 6, child: ClipRRect(borderRadius: BorderRadius.circular(3),

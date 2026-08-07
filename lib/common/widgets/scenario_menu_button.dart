@@ -66,6 +66,7 @@ class ScenarioMenuButton extends StatelessWidget {
         final selected = e.id == currentId;
         return PopupMenuItem<String>(
           value: e.id,
+          // Row 内 Text 用 Flexible + ellipsis，避免超长场景名溢出菜单（窄视口）
           child: Row(children: [
             Icon(
               selected
@@ -75,7 +76,12 @@ class ScenarioMenuButton extends StatelessWidget {
               color: selected ? accentColor : Colors.grey,
             ),
             const SizedBox(width: 8),
-            Text(e.name, style: const TextStyle(fontSize: 13)),
+            Flexible(
+              child: Text(e.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 13)),
+            ),
           ]),
         );
       }).toList(),

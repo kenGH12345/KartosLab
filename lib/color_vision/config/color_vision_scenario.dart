@@ -1,5 +1,9 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../common/widgets/inquiry_models.dart';
+import '../model/color_vision_state.dart';
+import '../solver/color_model.dart';
+
 /// Color vision screen type.
 enum CVScreen { rgb, singleBulb }
 
@@ -30,6 +34,21 @@ class CVCriterionConfig {
   factory CVCriterionConfig.fromJson(Map<String, dynamic> json) => CVCriterionConfig(
     id: json['id'] as String, type: json['type'] as String,
     description: json['description'] as String, params: (json['params'] as Map<String, dynamic>?) ?? {});
+
+  /// 判定当前 [state] 是否达成该成功标准。
+  ///
+  /// 当前仅实现 `colorMatch`（按 targetColor 命名色匹配 · tolerance 默认 30）。
+  bool check(ColorVisionState state) {
+    switch (type) {
+      case 'colorMatch':
+        final target = params['targetColor'] as String?;
+        if (target == null) return false;
+        final tolerance = (params['tolerance'] as num?)?.toInt() ?? 30;
+        return ColorModel.colorMatches(state.mixedColor, target, tolerance: tolerance);
+      default:
+        return false;
+    }
+  }
 }
 
 /// Hint message with trigger condition.
@@ -38,6 +57,91 @@ class CVHintConfig {
   const CVHintConfig({required this.trigger, required this.message});
   factory CVHintConfig.fromJson(Map<String, dynamic> json) => CVHintConfig(
     trigger: json['trigger'] as String, message: json['message'] as String);
+}
+
+/// 挑战模式配置（对应 scenario JSON `challenge` 顶层字段 · 替代硬编码）。
+@immutable
+class CVChallengeConfig {
+  final bool enabled;
+  final String mode;            // 当前仅 'colorMatch'
+  final String difficulty;      // 'easy' | 'medium' | 'hard'
+  final int timeLimit;          // 基础倒计时秒数
+  final int timeBonusPerLevel;  // 每过一关额外秒数
+  final double accuracyThreshold; // 匹配精度阈值 0-100
+  final List<CVTargetColor> targets;    // 预设目标色（按序出题）
+  final CVRandomTargets? randomTargets; // 随机目标配置
+
+  const CVChallengeConfig({
+    this.enabled = true,
+    this.mode = 'colorMatch',
+    this.difficulty = 'easy',
+    this.timeLimit = 30,
+    this.timeBonusPerLevel = 5,
+    this.accuracyThreshold = 95.0,
+    this.targets = const [],
+    this.randomTargets,
+  });
+
+  factory CVChallengeConfig.fromJson(Map<String, dynamic> json) =>
+      CVChallengeConfig(
+        enabled: json['enabled'] as bool? ?? true,
+        mode: json['mode'] as String? ?? 'colorMatch',
+        difficulty: json['difficulty'] as String? ?? 'easy',
+        timeLimit: (json['timeLimit'] as num?)?.toInt() ?? 30,
+        timeBonusPerLevel: (json['timeBonusPerLevel'] as num?)?.toInt() ?? 5,
+        accuracyThreshold: (json['accuracyThreshold'] as num?)?.toDouble() ?? 95.0,
+        targets: (json['targets'] as List<dynamic>? ?? const [])
+            .map((e) => CVTargetColor.fromJson(e as Map<String, dynamic>))
+            .toList(growable: false),
+        randomTargets: json['randomTargets'] != null
+            ? CVRandomTargets.fromJson(json['randomTargets'] as Map<String, dynamic>)
+            : null,
+      );
+}
+
+/// 预设目标色。
+@immutable
+class CVTargetColor {
+  final String color; // 形如 "#FFFF00"
+  final String label; // 如 "黄色（红+绿）"
+
+  const CVTargetColor({required this.color, required this.label});
+
+  factory CVTargetColor.fromJson(Map<String, dynamic> json) => CVTargetColor(
+        color: json['color'] as String,
+        label: json['label'] as String? ?? '',
+      );
+
+  /// 解析 "#RRGGBB" → Flutter Color；无法解析时返回黑色并告警。
+  Color toColor() {
+    final hex = color.replaceFirst('#', '');
+    final v = int.tryParse(hex, radix: 16);
+    if (v == null || hex.length != 6) {
+      debugPrint('Invalid target color hex: $color');
+      return const Color(0xFF000000);
+    }
+    return Color(0xFF000000 | v);
+  }
+}
+
+/// 随机目标色配置（targets 用尽后使用）。
+@immutable
+class CVRandomTargets {
+  final bool enabled;
+  final int count;
+  final bool excludeGrayscale;
+
+  const CVRandomTargets({
+    this.enabled = true,
+    this.count = 5,
+    this.excludeGrayscale = true,
+  });
+
+  factory CVRandomTargets.fromJson(Map<String, dynamic> json) => CVRandomTargets(
+        enabled: json['enabled'] as bool? ?? true,
+        count: (json['count'] as num?)?.toInt() ?? 5,
+        excludeGrayscale: json['excludeGrayscale'] as bool? ?? true,
+      );
 }
 
 /// Color-vision scenario data model.
@@ -56,6 +160,8 @@ class ColorVisionScenario {
   final double personPosition;
   final List<CVCriterionConfig> successCriteria;
   final List<CVHintConfig> hints;
+  final InquiryTask? inquiryTask;
+  final CVChallengeConfig? challenge;
 
   const ColorVisionScenario({
     required this.scenarioId,
@@ -76,6 +182,8 @@ class ColorVisionScenario {
     this.personPosition = 300,
     this.successCriteria = const [],
     this.hints = const [],
+    this.inquiryTask,
+    this.challenge,
   });
 
   factory ColorVisionScenario.fromJson(Map<String, dynamic> json) {
@@ -100,6 +208,12 @@ class ColorVisionScenario {
       personPosition: (ip?['personPosition'] as num?)?.toDouble() ?? 300,
       successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => CVCriterionConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       hints: (json['hints'] as List<dynamic>?)?.map((e) => CVHintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+      inquiryTask: json['inquiryTask'] != null
+          ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)
+          : null,
+      challenge: json['challenge'] != null
+          ? CVChallengeConfig.fromJson(json['challenge'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
