@@ -8,6 +8,8 @@
 [2026-08-10 11:40] code-reviewer 完成: verdict=passed（0 Blocker / 1 Major 流程性证据链 / 1 Minor / 1 Suggestion）· 报告已写入 design/代码评审.md
 [2026-08-10 11:42] Major 证据链补齐: 产出 test-report/ac-verification.md（5 验收项全 ✅）+ integration-test.log（全量 205/205 真实输出）· Minor 措辞已修（"有效数值数据不足 2 组"）+ 测试断言同步
 [2026-08-10 11:42] 重跑验证: 全量 205/205 · 委派 closer 收尾
+[2026-08-10 11:50] closer 完成收尾: status=done · 产出 spec/最终需求.md + notes.md + test-report/ac-verification.md · 门禁核对通过（check-before-done.ps1 2 处失败均为脚本编码缺陷误报 · 实际内容门禁全过）· 待审批 commit
+[2026-08-10 11:55] commit 02c2cf3 成功(用户 y 审批 · 9 files · +303/-5) · 已隔离品牌迁移/MNA/中文化等范围外改动 · integration-test.log 被 .gitignore *.log 忽略（项目惯例 · 与前置需求一致）· 需求闭环
 
 [2026-08-10 19:18] closer 完成收尾(closer 内部时间 · 主会话观察时间请以主会话当下 date 为准覆盖本行 · 勿照抄)
   → spec/最终需求.md(元数据 · 决策演进 D1-D4 · 逐验收项覆盖表 5/5 · 交付清单 3 文件 · 测试与质量 · 已知遗留 · 变更时间线)
