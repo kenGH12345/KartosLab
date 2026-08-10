@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../chart/snapshot_chart.dart';
 import 'conclusion_panel.dart';
 import 'experiment_logger.dart';
 import 'inquiry_models.dart';
@@ -29,6 +30,9 @@ class InquiryDrawer extends StatefulWidget {
 }
 
 class _InquiryDrawerState extends State<InquiryDrawer> {
+  // ExperimentLogger 记录行的镜像（经 onRowsChanged 同步）· 供 SnapshotChart 消费
+  List<Map<String, dynamic>> _rows = [];
+
   @override
   Widget build(BuildContext context) {
     final task = widget.task;
@@ -54,7 +58,12 @@ class _InquiryDrawerState extends State<InquiryDrawer> {
                     columns: widget.columns,
                     snapshotProvider: widget.snapshotProvider,
                     compact: true,
+                    onRowsChanged: (rows) => setState(() => _rows = rows),
                   ),
+                  if (widget.columns.isNotEmpty) ...[
+                    const SizedBox(height: 10),
+                    SnapshotChart(rows: _rows, columns: widget.columns),
+                  ],
                   const SizedBox(height: 10),
                   ConclusionPanel(
                     question: task.question,

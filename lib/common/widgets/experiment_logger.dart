@@ -19,6 +19,8 @@ class ColumnDef {
 /// - 数据仅内存（session 级）· 不持久化
 /// - 容量上限 [maxRows]（默认 20），超出拒绝新增并提示
 /// - [onExport] 预留导出回调，null 时不显示导出按钮（本轮不实现导出）
+/// - [onRowsChanged] 可选：每次记录/删除/清空后回调当前行列表，供外部消费
+///   （如 SnapshotChart 图表联动）；null 时行为与旧版一致（向后兼容）
 class ExperimentLogger extends StatefulWidget {
   const ExperimentLogger({
     super.key,
@@ -27,6 +29,7 @@ class ExperimentLogger extends StatefulWidget {
     this.maxRows = 20,
     this.compact = false,
     this.onExport,
+    this.onRowsChanged,
   });
 
   final List<ColumnDef> columns;
@@ -34,6 +37,7 @@ class ExperimentLogger extends StatefulWidget {
   final int maxRows;
   final bool compact;
   final VoidCallback? onExport;
+  final ValueChanged<List<Map<String, dynamic>>>? onRowsChanged;
 
   @override
   State<ExperimentLogger> createState() => _ExperimentLoggerState();
@@ -43,18 +47,18 @@ class _ExperimentLoggerState extends State<ExperimentLogger> {
   final List<Map<String, dynamic>> _rows = [];
 
   void _record() {
-    final provider = widget.snapshotProvider;
-    final snapshot = provider();
+    if (_rows.length >= widget.maxRows) {
+      _showFullNotice();
+      return;
+    }
+    final snapshot = widget.snapshotProvider();
     setState(() {
-      if (_rows.length >= widget.maxRows) {
-        _showFullNotice();
-        return;
-      }
       _rows.insert(0, {
         'ts': _now(),
         ...snapshot,
       });
     });
+    widget.onRowsChanged?.call(_rows);
   }
 
   String _now() {
@@ -75,9 +79,15 @@ class _ExperimentLoggerState extends State<ExperimentLogger> {
       );
   }
 
-  void _removeAt(int index) => setState(() => _rows.removeAt(index));
+  void _removeAt(int index) {
+    setState(() => _rows.removeAt(index));
+    widget.onRowsChanged?.call(_rows);
+  }
 
-  void _clearAll() => setState(() => _rows.clear());
+  void _clearAll() {
+    setState(() => _rows.clear());
+    widget.onRowsChanged?.call(_rows);
+  }
 
   String _cellText(Map<String, dynamic> row, String key) {
     final v = row[key];

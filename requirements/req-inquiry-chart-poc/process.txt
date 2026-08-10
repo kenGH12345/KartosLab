@@ -1,0 +1,10 @@
+[2026-08-10 10:30] POC 启动: 用户选 B 路径（先 POC 跑通再推广）· 落点 circuit simple-series（电阻×电流反比 · resistance(param)+current(reading) 列齐备）
+[2026-08-10 10:30] 现状确认: ExperimentLogger._rows 私有 State（experiment_logger.dart:43）· 外部无法访问 → 需加可选 onRowsChanged 回调；KratosChart 为实时时间序列图（TimeDataPoint 两元组）与快照数据不匹配 → 不扩展，新建 SnapshotChart
+[2026-08-10 10:45] 编码完成（3 文件 + 1 测试）: 新建 lib/common/chart/snapshot_chart.dart（纯展示散点图 · 默认 x=第一个 param 列 y=第一个 reading 列 · 非数值行跳过 · rows<2 空态提示）· experiment_logger.dart +onRowsChanged 可选回调（_record/_removeAt/_clearAll 三处 · 向后兼容）· inquiry_drawer.dart +SnapshotChart 区块（columns 非空时渲染）
+[2026-08-10 10:50] 测试 2 轮: 首轮 5/6（1 失败 = 测试自身缺陷: find.byType(CustomPaint) 误匹配 Material 内部 CustomPaint → 改精确断言）· 修复后 6/6 全通过
+[2026-08-10 10:52] 回归: common+circuit 57/57 全通过 · flutter analyze 4 文件 No issues found · POC 跑通
+[2026-08-10 11:00] phase 3.iteration → 4.closing: 用户验收 POC · 委派 code-reviewer 评审（4 文件 · 只读不改）
+[2026-08-10 11:05] code-reviewer 完成: verdict=approve（0 Blocker / 0 Major / 3 Minor / 2 Suggestion）· 报告落盘 design/代码评审.md
+[2026-08-10 11:10] Minor 修复（3 项）: ①补"删除单行后 onRowsChanged 联动"用例 ②补"maxRows 满额不触发回调"用例 ③shouldRepaint 改 listEquals 内容比较（原恒 true）+ 补"全相等值单点退化"用例（Suggestion）
+[2026-08-10 11:12] 验证: test/common 36/36 · 除 forces 外全量 204/204 · analyze 4 文件 No issues found · POC 验收通过
+[2026-08-10 11:12] 验收结论: POC approve → 可推广（7 sim 零 screen 改动即获图表能力）· 待用户拍板是否立推广需求

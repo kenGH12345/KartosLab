@@ -1,0 +1,20 @@
+# meta.yaml — 做中学记录数据图表化 POC
+req_id: req-inquiry-chart-poc
+title: 记录数据图表化 POC——SnapshotChart 公共组件 + ExperimentLogger 数据暴露 + circuit 单 sim 验证
+sop: agile-vibe
+phase: 4.closing
+status: in_progress
+created_at: "2026-08-10 10:30"
+updated_at: "2026-08-10 11:00"
+final_summary_path: ""
+edd_template_version: v2.0
+# 性质: 新功能 POC（用户选 B 路径: 先 POC 跑通再推广）· 非完整需求流程
+# 前置: req-inquiry-learning + req-inquiry-extend 已 done（7 sim 全量接入 InquiryDrawer）
+# 范围: 3 文件改动 + 1 测试文件
+#   1. 新建 lib/common/chart/snapshot_chart.dart（纯展示散点/关系图）
+#   2. lib/common/widgets/experiment_logger.dart + 可选 onRowsChanged 回调（向后兼容）
+#   3. lib/common/widgets/inquiry_drawer.dart + 图表区块（记录 ≥2 行显示）
+#   4. test/common/snapshot_chart_test.dart
+# 验证: flutter test test/common/ + circuit 相关回归 + flutter analyze（已通过 57/57 + No issues）
+# 当前: phase 3.iteration → 4.closing · 用户验收 POC · 委派 code-reviewer 评审
+# 推广: POC 验收通过后另立完整需求推广其余 sim
