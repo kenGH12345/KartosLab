@@ -74,5 +74,31 @@
       "trigger": "always",
       "message": "增加质量会让加速度变小——验证 F=ma！"
     }
-  ]
+  ],
+  "inquiryTask": {
+    "question": "保持施加力不变，改变物体的总质量，观察加速度的变化，你能发现 F 与 m、a 的关系吗？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "只放 1 个小箱（10kg），施加力拉到 100N，开始运行并记录。",
+        "hint": "加速度 = 合力 ÷ 质量"
+      },
+      {
+        "id": "step-2",
+        "instruction": "再叠上中箱（总质量 30kg），同样的力再运行一次并记录。",
+        "hint": "保持施加力不变，只改变质量"
+      },
+      {
+        "id": "step-3",
+        "instruction": "对比两次加速度，归纳质量与加速度的关系。"
+      }
+    ],
+    "referenceConclusion": "力相同时，质量越大加速度越小——a = F / m（牛顿第二定律）。要获得更大的加速度，要么增大推力，要么减小质量。",
+    "snapshotColumns": [
+      { "key": "appliedForce", "label": "施加力(N)", "source": "param" },
+      { "key": "mass", "label": "总质量(kg)", "source": "param" },
+      { "key": "acceleration", "label": "加速度(m/s²)", "source": "reading" },
+      { "key": "speed", "label": "速度(m/s)", "source": "reading" }
+    ]
+  }
 }

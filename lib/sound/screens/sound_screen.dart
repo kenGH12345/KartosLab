@@ -4,6 +4,9 @@ import "../../common/widgets/time_control_bar.dart";
 import "../../common/widgets/knowledge_panel.dart";
 import "../../common/widgets/nine_grid_layout.dart";
 import "../../common/widgets/property_control_panel.dart";
+import "../../common/widgets/inquiry_models.dart";
+import "../../common/widgets/inquiry_drawer.dart";
+import "../../common/widgets/experiment_logger.dart";
 import "../config/sound_scenario.dart";
 import "../config/sound_scenario_manager.dart";
 import "../model/sound_state.dart";
@@ -32,6 +35,7 @@ class _SoundScreenState extends State<SoundScreen>
   final SoundScenarioManager _manager = SoundScenarioManager();
   String _currentScenarioId = 'default';
   bool _scenariosLoaded = false;
+  bool _inquiryOpen = false;
 
   // 声速常量 · 空气中约 343 m/s（20°C）
   static const double _kSoundSpeed = 343.0;
@@ -67,6 +71,8 @@ class _SoundScreenState extends State<SoundScreen>
     _state.setFrequency(scenario.frequency);
     _state.setAmplitude(scenario.amplitude);
     _currentScenarioId = id;
+    // 场景切换时复位探究抽屉（Major-2 · 与 circuit 先例一致）
+    _inquiryOpen = false;
   }
 
   @override
@@ -86,7 +92,7 @@ class _SoundScreenState extends State<SoundScreen>
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       appBar: AppBar(
-        title: const Text('Sound Waves 声波', style: TextStyle(fontSize: 16)),
+        title: const Text('声波', style: TextStyle(fontSize: 16)),
         backgroundColor: const Color(0xFF0D9488),
         foregroundColor: Colors.white,
         toolbarHeight: 44,
@@ -98,17 +104,70 @@ class _SoundScreenState extends State<SoundScreen>
           ),
         ],
       ),
-      body: NineGridLayout(
-        // 中间格 = 主图（含 Tab 切换的两种视图）· 面积 ≥ 70% 屏 · 自适应
-        center: _buildStageArea(),
-        // 顶部中格 = 视角 Tab 栏
-        topCenter: _buildTabBar(),
-        // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
-        midRight: _buildSideControlPanel(),
-        // 底部中格 = 场景快切条
-        bottomCenter: _buildScenarioBar(),
+      body: Stack(
+        children: [
+          NineGridLayout(
+            // 中间格 = 主图（含 Tab 切换的两种视图）· 面积 ≥ 70% 屏 · 自适应
+            center: _buildStageArea(),
+            // 顶部中格 = 视角 Tab 栏
+            topCenter: _buildTabBar(),
+            // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
+            midRight: _buildSideControlPanel(),
+            // 底部中格 = 场景快切条
+            bottomCenter: _buildScenarioBar(),
+            // 顶部右格 = 探究入口按钮
+            topRight: _buildInquiryEntryButton(),
+          ),
+          // 探究工作流抽屉
+          InquiryDrawer(
+            task: _currentScenario?.inquiryTask,
+            columns: _currentScenario?.inquiryTask != null
+                ? _inquiryColumns(_currentScenario!.inquiryTask!)
+                : const [],
+            snapshotProvider: _soundSnapshot,
+            open: _inquiryOpen,
+          ),
+        ],
       ),
     );
+  }
+
+  /// 当前 scenario（经 manager 按 id 取 · 无则 null）。
+  SoundScenario? get _currentScenario => _manager.findById(_currentScenarioId);
+
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    if (_currentScenario?.inquiryTask == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
+      ),
+    );
+  }
+
+  /// sound 快照：频率/振幅（param）+ 波长（reading）。
+  Map<String, dynamic> _soundSnapshot() {
+    return {
+      'frequency': _state.frequency,
+      'amplitude': _state.amplitude,
+      'wavelength': _wavelength,
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'frequency', label: '频率(Hz)', isParam: true),
+        ColumnDef(key: 'amplitude', label: '振幅', isParam: true),
+        ColumnDef(key: 'wavelength', label: '波长(m)'),
+      ];
+    }
+    return task.snapshotColumns
+        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .toList(growable: false);
   }
 
   // ============ 顶部 Tab ============
@@ -225,7 +284,7 @@ class _SoundScreenState extends State<SoundScreen>
         children: [
           _compactSlider(
             icon: '\ud83d\udd0a',
-            label: '频率 Frequency',
+            label: '频率',
             value: _state.frequency,
             min: 0,
             max: 1000,
@@ -236,7 +295,7 @@ class _SoundScreenState extends State<SoundScreen>
           ),
           _compactSlider(
             icon: '\ud83d\udce2',
-            label: '振幅 Amplitude',
+            label: '振幅',
             value: _state.amplitude,
             min: 0,
             max: 1,
@@ -391,33 +450,33 @@ class _SoundScreenState extends State<SoundScreen>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: KnowledgePanel(
-        title: 'Sound Wave Principles',
+        title: '声波原理',
         titleIcon: '\ud83d\udd0a',
         titleColor: const Color(0xFF0D9488),
         sections: [
           KnowledgeSection.grid(items: const [
             KnowledgeItem(
                 icon: '\u3030\ufe0f',
-                title: 'Frequency',
+                title: '频率',
                 titleColor: Color(0xFF0F766E),
                 desc:
-                    'Number of vibrations per second (Hz). Higher frequency = higher pitch.'),
+                    '每秒钟振动的次数（Hz）。频率越高，音调越高。'),
             KnowledgeItem(
                 icon: '\ud83d\udcf6',
-                title: 'Amplitude',
+                title: '振幅',
                 titleColor: Color(0xFF0F766E),
                 desc:
-                    'Maximum displacement. Larger amplitude = louder sound.'),
+                    '最大位移量。振幅越大，声音越响。'),
             KnowledgeItem(
                 icon: '\ud83c\udf0a',
-                title: 'Wavelength',
+                title: '波长',
                 titleColor: Color(0xFF0EA5E9),
-                desc: 'Distance between peaks. Wavelength = speed / frequency.'),
+                desc: '相邻波峰之间的距离。波长 = 波速 / 频率。'),
             KnowledgeItem(
                 icon: '\ud83d\udcd0',
-                title: 'Spherical Attenuation',
+                title: '球面衰减',
                 titleColor: Color(0xFF8B5CF6),
-                desc: 'Amplitude falls with distance from point source.'),
+                desc: '振幅随距点声源的距离增大而衰减。'),
           ]),
         ],
       ),

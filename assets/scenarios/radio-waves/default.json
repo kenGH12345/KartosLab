@@ -22,5 +22,30 @@
   "hints": [
     {"trigger":"always","message":"Drag Frequency slider to change how fast the electron oscillates"},
     {"trigger":"always","message":"The red curve shows the wave envelope; green arrows show field strength at each point"}
-  ]
+  ],
+  "inquiryTask": {
+    "question": "改变天线上电子的振荡频率，观察远处电场的变化，电磁波传播的快慢受频率影响吗？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "把频率调到 0.2，观察远处电场随时间的滞后，点击「记录本次实验」。",
+        "hint": "远处的场反映的是电子在 d/c 秒前的行为"
+      },
+      {
+        "id": "step-2",
+        "instruction": "把频率调到 1.5，再次观察并记录。",
+        "hint": "注意：波的速度始终是光速 c"
+      },
+      {
+        "id": "step-3",
+        "instruction": "归纳：频率变化对波速有影响吗？对波的疏密呢？"
+      }
+    ],
+    "referenceConclusion": "电磁波总是以光速 c = 3×10⁸ m/s 传播，与频率无关。频率只决定波的疏密（波长 λ = c/f）：频率越高波长越短。",
+    "snapshotColumns": [
+      { "key": "frequency", "label": "频率", "source": "param" },
+      { "key": "amplitude", "label": "振幅", "source": "param" },
+      { "key": "waveCount", "label": "可见波峰数", "source": "reading" }
+    ]
+  }
 }

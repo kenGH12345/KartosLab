@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/widgets/inquiry_models.dart';
+
 /// Radio-waves screen type.
 enum RWScreen { singleAntenna }
 
@@ -63,6 +65,7 @@ class RadioWavesScenario {
   final RWParamRange amplitudeRange;
   final List<RWCriterionConfig> successCriteria;
   final List<RWHintConfig> hints;
+  final InquiryTask? inquiryTask;
 
   const RadioWavesScenario({
     required this.scenarioId,
@@ -79,6 +82,7 @@ class RadioWavesScenario {
     this.amplitudeRange = const RWParamRange(min: 0, max: 1, step: 0.05),
     this.successCriteria = const [],
     this.hints = const [],
+    this.inquiryTask,
   });
 
   factory RadioWavesScenario.fromJson(Map<String, dynamic> json) {
@@ -99,6 +103,9 @@ class RadioWavesScenario {
       amplitudeRange: _parseARange(pr),
       successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => RWCriterionConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       hints: (json['hints'] as List<dynamic>?)?.map((e) => RWHintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+      inquiryTask: json['inquiryTask'] != null
+          ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

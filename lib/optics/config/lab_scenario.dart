@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/widgets/inquiry_models.dart';
 import '../models/optical_element.dart';
 import 'component_inventory.dart';
 import 'constraint.dart';
@@ -29,6 +30,7 @@ class LabScenario {
     this.objectives,
     this.gameRules,
     required this.ui,
+    this.inquiryTask,
   });
 
   final String scenarioId;
@@ -44,6 +46,7 @@ class LabScenario {
   final LearningObjective? objectives;
   final GameRules? gameRules;
   final ScenarioUIConfig ui;
+  final InquiryTask? inquiryTask;
 
   // 从 JSON 加载
   factory LabScenario.fromJson(Map<String, dynamic> json) {
@@ -68,6 +71,9 @@ class LabScenario {
           ? GameRules.fromJson(json['gameRules'] as Map<String, dynamic>)
           : null,
       ui: ScenarioUIConfig.fromJson(json['ui'] as Map<String, dynamic>),
+      inquiryTask: json['inquiryTask'] != null
+          ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)
+          : null,
     );
   }
 
@@ -86,6 +92,7 @@ class LabScenario {
       if (objectives != null) 'objectives': objectives!.toJson(),
       if (gameRules != null) 'gameRules': gameRules!.toJson(),
       'ui': ui.toJson(),
+      if (inquiryTask != null) 'inquiryTask': inquiryTask!.toJson(),
     };
   }
 

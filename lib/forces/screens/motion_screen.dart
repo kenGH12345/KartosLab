@@ -18,6 +18,9 @@ import '../../common/widgets/knowledge_panel.dart';
 import '../../common/chart/graph_suite.dart';
 import '../../common/controls/phet_number_field.dart';
 import '../../common/widgets/nine_grid_layout.dart';
+import '../../common/widgets/inquiry_models.dart';
+import '../../common/widgets/inquiry_drawer.dart';
+import '../../common/widgets/experiment_logger.dart';
 
 /// Motion屏幕（无摩擦滑板模式）
 class MotionScreen extends StatefulWidget {
@@ -37,6 +40,7 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
   bool _showChart = false;
   int _chartMode = 0;
   double _friction = 0;
+  bool _inquiryOpen = false;
 
   @override void initState() {
     super.initState();
@@ -63,22 +67,75 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
 
   void _addItem(ForceItem item) { if (_model.canAdd) setState(() => _model.addItem(item)); }
 
-  @override Widget build(BuildContext context) => NineGridLayout(
-      // 中间格 = 运动画布 · 面积 ≥ 70% 屏 · 自适应
-      center: _buildCanvas(),
-      // 右侧边格 = 控制面板 · 竖排紧凑 · 窄条可滚动
-      midRight: _buildSidePanel(),
-      // 底部中格 = 物体托盘
-      bottomCenter: _buildItemTrays(),
-      // 右下边格 = 知识点入口（知识卡过长改为弹窗）
-      bottomRight: Center(
-        child: IconButton(
-          icon: const Icon(Icons.menu_book_outlined, size: 22),
-          tooltip: '知识点',
-          onPressed: _showKnowledgeDialog,
+  @override Widget build(BuildContext context) => Stack(
+    children: [
+      NineGridLayout(
+        // 中间格 = 运动画布 · 面积 ≥ 70% 屏 · 自适应
+        center: _buildCanvas(),
+        // 右侧边格 = 控制面板 · 竖排紧凑 · 窄条可滚动
+        midRight: _buildSidePanel(),
+        // 底部中格 = 物体托盘
+        bottomCenter: _buildItemTrays(),
+        // 右下边格 = 知识点入口（知识卡过长改为弹窗）
+        bottomRight: Center(
+          child: IconButton(
+            icon: const Icon(Icons.menu_book_outlined, size: 22),
+            tooltip: '知识点',
+            onPressed: _showKnowledgeDialog,
+          ),
         ),
+        // 顶部中格 = 探究入口按钮
+        topCenter: _buildInquiryEntryButton(),
       ),
+      // 探究工作流抽屉
+      InquiryDrawer(
+        task: widget.scenario?.inquiryTask,
+        columns: widget.scenario?.inquiryTask != null
+            ? _inquiryColumns(widget.scenario!.inquiryTask!)
+            : const [],
+        snapshotProvider: _motionSnapshot,
+        open: _inquiryOpen,
+      ),
+    ],
   );
+
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    if (widget.scenario?.inquiryTask == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
+      ),
+    );
+  }
+
+  /// motion 快照：施加力/质量（param）+ 加速度/速度（reading）。
+  /// 质量取 sim.mass（物理引擎实际使用值 · 与加速度计算同源 · Major-1 修复）。
+  Map<String, dynamic> _motionSnapshot() {
+    return {
+      'appliedForce': _model.sim.appliedForce,
+      'mass': _model.sim.mass,
+      'acceleration': _model.sim.acceleration,
+      'speed': _model.sim.speed,
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'appliedForce', label: '施加力(N)', isParam: true),
+        ColumnDef(key: 'mass', label: '总质量(kg)', isParam: true),
+        ColumnDef(key: 'acceleration', label: '加速度(m/s²)'),
+        ColumnDef(key: 'speed', label: '速度(m/s)'),
+      ];
+    }
+    return task.snapshotColumns
+        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .toList(growable: false);
+  }
 
   /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
   Widget _buildSidePanel() {
@@ -302,8 +359,8 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
 
   Widget _buildChart() {
     const allSeries = [
-      ChartSeries(title: 'Position', abbr: 'x', unit: 'm', color: Color(0xFF3B82F6)),
-      ChartSeries(title: 'Velocity', abbr: 'v', unit: 'm/s', color: Color(0xFFEF4444)),
+      ChartSeries(title: '位置', abbr: 'x', unit: 'm', color: Color(0xFF3B82F6)),
+      ChartSeries(title: '速度', abbr: 'v', unit: 'm/s', color: Color(0xFFEF4444)),
     ];
     final suites = [
       GraphSuite(label: '全部', series: allSeries),
@@ -330,7 +387,7 @@ class _MotionScreenState extends State<MotionScreen> with TickerProviderStateMix
             domainRange: Range(0, maxDomain),
             rangeRange: const Range(-20, 20),
             currentTime: _clock.totalTime,
-            domainLabel: 'Time (s)',
+            domainLabel: '时间 (s)',
             showGrid: true,
             height: 150,
           ),

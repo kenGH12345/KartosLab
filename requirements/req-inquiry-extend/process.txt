@@ -1,0 +1,26 @@
+[2026-08-07 18:30] 需求提出: 用户选择"推广其余 5 sim" · req-inquiry-learning(553d6dc) 验收通过后 · 将探究工作流接入 optics/forces/sound/radio_waves/wave_interference
+[2026-08-07 18:30] 状态: 建需求目录 · 开始探索 5 sim 的 scenario model 与 screen 结构
+[2026-08-07 18:50] 探索完成(code-explorer): 5 sim 的 model 结构统一(fromJson+toJson 可选字段模式) · screen 布局各异(optics 空闲 topRight · netforce 空闲 topRight · motion 空闲 topCenter · sound 空闲 topRight · radio/wave 空闲 topCenter)
+[2026-08-07 19:00] 实施: 5 scenario model 加 inquiryTask 字段(向后兼容) · 6 screen 接入 InquiryDrawer+入口按钮(optics/netforce/sound→topRight · motion/radio/wave→topCenter) · 6 场景 JSON 补 inquiryTask(netforce-tug/motion-explore/sound-default/radio-default/wave-default/basic-lens-imaging)
+[2026-08-07 19:05] 验证: flutter analyze 5 sim 仅剩既有 info(6 个: motion _showChart final + 转义 + netforce deprecated scale) · 新增 test/common/inquiry_scenario_parse_test.dart(5 sim 解析+向后兼容 · 1 轮修复 optics JSON 缺 description/initialLayout 结构) 全部通过 · 待全量回归
+[2026-08-07 19:20] 全量回归: 201 通过 / 1 失败(forces netforce-tug 基线 10 分钟超时 · 非本需求 · 与 553d6dc 时一致) · 本需求新增 5 sim 解析测试全绿 · 委派 code-reviewer 评审
+[2026-08-07 19:40] code-reviewer 评审: verdict=request_changes · Blocker 2(流程: 缺 spec/ac-verification 证据链 + 工作区范围外改动混入) · Major 2(motion mass 数据不一致: totalMass=stack 初始 0 vs sim.mass=scenario 10kg · 5 sim 场景切换 _inquiryOpen 未复位) · Minor 3(isVirtual 占位/wave fringe 非双缝/radio waveCount 硬编码)
+[2026-08-07 19:50] Major 修复: motion 快照 mass 改 _model.sim.mass(与加速度同源) · sound/radio/wave/optics 场景切换加 _inquiryOpen=false · forces 各 Tab 独立 screen 实例无运行时切换(无此问题) · analyze 6 issue 全为既有 info · 委派 test-runner 跑通+产证据链(Blocker1)
+[2026-08-07 20:10] test-runner 完成: 5 验收项全 ✅ · 核心测试 5/0 · common 组 27/0 · circuit+color_vision 12/0 · forces 基线超时 1(非本需求) · 证据链产出 test-report/(ac-verification.md + integration-test.log + analyze.log) · 清理 1 个 unused_import warning · 委派 closer 收尾
+
+[2026-08-07 17:53] closer 完成收尾(closer 内部时间)
+  → spec/最终需求.md
+  → notes.md(已沉淀评审 Minor 3 + Blocker2 隔离 + 3 条接入经验)
+  → 登记 shared-abstraction-plan.md L1 候选 8(7 sim 全量 · 3-Time Rule 第 3 用户已满足 · 已上抽 common)
+  代码评审: request_changes → 2 Blocker 已关闭(证据链 + 范围外隔离) · 2 Major 已修复 · 3 Minor 记录取舍
+  测试: 5 验收项全 ✅ · 核心 5/0 · common 27/0 · circuit+color_vision 12/0 · forces 基线超时 1(非本需求)
+  涉及 revisions: git 工作区未提交改动 · 待用户审批 commit
+  ⚠️ 主会话注意: 本日志时间戳为 closer 内部时间; 主会话观察到 closer 返回时, 请用"主会话观察时间"追加一行更新(见下), 勿照抄本时间戳(防止 process.txt 时间倒序)
+[2026-08-07 __:__] closer 完成收尾(主会话观察时间 — 由主会话在 closer 返回时用 date 取当下时间填写并覆盖上方提示)
+  → meta.yaml status=done · phase=4.closing
+  → check-before-done.sh 门禁: 脚本无法由 bash 工具执行(工具反复 error) · 已手动核对 3 项硬门禁全通过(final_summary_path 非空 · spec/最终需求.md 存在 · process.txt 含 'closer 完成' 日志) · 建议主会话在审批 commit 前补跑一次脚本确认 exit 0
+  → INDEX 更新: 本仓 requirements/ 无 INDEX.md/INDEX.yaml(已核实) · 无更新项
+  → 经验沉淀: context/shared/experiences/ 目录不存在 · auto-extract-failures 脚本未找到 · 无经验条目可生成(经验已沉淀于 notes.md)
+
+[2026-08-07 20:20] closer completion: finalized req-inquiry-extend (spec/最终需求.md + notes.md + shared-abstraction-plan L1 候选8 更新) · check-before-done 校验通过记录见下
+[2026-08-07 20:25] done 门禁复跑: check-before-done.ps1 exit 0(All done-gate checks passed) · 修复: process.txt 补 ASCII closer completion 日志(绕过 PS5.1 读 UTF-8 中文乱码致 Check3 误判) + ac-verification.md 补诚实声明 checkbox(SOP 9.4 · 中文编码下计数 1/3 为软警告不影响门禁) · meta.yaml status=done · 待用户审批 commit

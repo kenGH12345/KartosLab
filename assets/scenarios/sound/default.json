@@ -19,5 +19,30 @@
   "hints": [
     {"trigger": "always", "message": "Drag the Frequency slider to see wavelength change in real time"},
     {"trigger": "always", "message": "Higher frequency = shorter wavelength (denser arcs). Lower frequency = longer wavelength (sparser arcs)."}
-  ]
+  ],
+  "inquiryTask": {
+    "question": "改变声音的频率，观察球面波的疏密变化，频率与波长有什么关系？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "把频率调到 200Hz，观察波弧的疏密并点击「记录本次实验」。",
+        "hint": "注意左上角信息卡的波长数值"
+      },
+      {
+        "id": "step-2",
+        "instruction": "把频率调到 600Hz、1000Hz，各记录一次。",
+        "hint": "对比不同频率下的波长"
+      },
+      {
+        "id": "step-3",
+        "instruction": "归纳：频率增大时波长如何变化？"
+      }
+    ],
+    "referenceConclusion": "频率与波长成反比：λ = v / f。频率越高，波长越短，波弧越密；频率越低，波长越长，波弧越疏。",
+    "snapshotColumns": [
+      { "key": "frequency", "label": "频率(Hz)", "source": "param" },
+      { "key": "amplitude", "label": "振幅", "source": "param" },
+      { "key": "wavelength", "label": "波长(m)", "source": "reading" }
+    ]
+  }
 }

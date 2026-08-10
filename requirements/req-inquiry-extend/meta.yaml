@@ -1,0 +1,14 @@
+# meta.yaml — 做中学探究工作流推广（5 sim）
+req_id: req-inquiry-extend
+title: 做中学探究工作流推广——optics/forces/sound/radio_waves/wave_interference 接入
+sop: agile-vibe
+phase: 4.closing
+status: done
+created_at: "2026-08-07 18:30"
+updated_at: "2026-08-07 17:54"
+completed_at: "2026-08-07 17:54"
+final_summary_path: "spec/最终需求.md"
+edd_template_version: v2.0
+# 性质: req-inquiry-learning 验收后的推广需求 · 通用组件已就绪(L1 候选8) · 本需求只做接线
+# 前置: commit 553d6dc 完成 · 通用组件 5 个 + 2 pilot(circuit/color_vision) 已验证 190/0
+# 范围: 5 sim 各补 scenario JSON inquiryTask + screen 接入 InquiryDrawer + scenario model 加字段

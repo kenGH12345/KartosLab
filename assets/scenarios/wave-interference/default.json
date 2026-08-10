@@ -24,5 +24,30 @@
   "hints": [
     {"trigger":"always","message":"The two slits act as independent wave sources. Where crests overlap = bright band; crest + trough = dark band."},
     {"trigger":"always","message":"Drag Frequency to change wavelength; Slit Size/Separation to change the interference geometry."}
-  ]
+  ],
+  "inquiryTask": {
+    "question": "改变缝间距和波长，观察双缝干涉条纹的疏密变化，条纹间距与什么有关？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "保持频率 0.4，把缝间距调到 12（最小），观察条纹并点击「记录本次实验」。",
+        "hint": "注意条纹的疏密"
+      },
+      {
+        "id": "step-2",
+        "instruction": "把缝间距调到 36（最大），再次观察并记录。",
+        "hint": "缝间距越大，条纹越密还是越疏？"
+      },
+      {
+        "id": "step-3",
+        "instruction": "再试试改变频率，归纳条纹间距的影响因素。"
+      }
+    ],
+    "referenceConclusion": "缝间距 d 越大，条纹越密；波长 λ 越大（频率越低），条纹越疏。公式：d·sinθ = n·λ，条纹间距与缝间距成反比、与波长成正比。",
+    "snapshotColumns": [
+      { "key": "frequency", "label": "频率", "source": "param" },
+      { "key": "slitSeparation", "label": "缝间距", "source": "param" },
+      { "key": "fringeSpacing", "label": "条纹间距(估)", "source": "reading" }
+    ]
+  }
 }

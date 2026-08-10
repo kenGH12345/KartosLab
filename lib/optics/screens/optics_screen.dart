@@ -4,6 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/drag_drop_workspace.dart';
 import '../../common/widgets/nine_grid_layout.dart';
+import '../../common/widgets/inquiry_models.dart';
+import '../../common/widgets/inquiry_drawer.dart';
+import '../../common/widgets/experiment_logger.dart';
 import '../../screens/scenario_selection_screen.dart';
 import '../config/scenario_manager.dart';
 import '../config/scenario_runtime_policy.dart';
@@ -33,6 +36,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
   LabScenario? _currentScenario;
   String? _selectedElementId;
   int _nextElementId = 1; // 单调自增，避免 elements.length+1 在删元件后重号冲突
+  bool _inquiryOpen = false;
 
   // 可拖拽元件定义（与 circuits 的 ComponentType 同模式，供 DragDropWorkspace 使用）
   //
@@ -62,7 +66,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
       await _scenarioManager.loadScenarios();
       final world = _scenarioManager.loadScenario(widget.initialScenarioId ?? 'basic-lens-imaging');
       if (!mounted) return;
-      setState(() { _world = world; _currentScenario = _scenarioManager.currentScenario; _nextElementId = _world.elements.length + 1; _solve(); });
+      setState(() { _world = world; _currentScenario = _scenarioManager.currentScenario; _nextElementId = _world.elements.length + 1; _inquiryOpen = false; _solve(); });
     } catch (_) { if (mounted) setState(() { _world = OpticsWorld.empty(); _nextElementId = 1; _solve(); }); }
   }
 
@@ -120,33 +124,86 @@ class _OpticsScreenState extends State<OpticsScreen> {
       ],
     ),
     body: SafeArea(
-      child: NineGridLayout(
-        // 中间格 = 纯实验画布（光路图）· 面积 ≥ 70% 屏 · DragTarget 接收元件
-        center: DropCanvas<String>(
-          canvasBuilder: (context, proj) => _OpticsScene(
-            world: _world, solved: _solved, selectedId: _selectedElementId,
-            projection: proj,
-            onElementTap: _selectElement,
-            onDragSelect: _dragSelectElement,
-            onElementDrag: _moveElement,
+      child: Stack(
+        children: [
+          NineGridLayout(
+            // 中间格 = 纯实验画布（光路图）· 面积 ≥ 70% 屏 · DragTarget 接收元件
+            center: DropCanvas<String>(
+              canvasBuilder: (context, proj) => _OpticsScene(
+                world: _world, solved: _solved, selectedId: _selectedElementId,
+                projection: proj,
+                onElementTap: _selectElement,
+                onDragSelect: _dragSelectElement,
+                onElementDrag: _moveElement,
+              ),
+              onItemDropped: _onComponentDrop,
+              scale: 20,
+            ),
+            // 底部中格 = 元件库托盘（贴边）
+            bottomCenter: DragTray<String>(
+              layout: DragDropLayout.bottomTray,
+              trayTitle: '元件库',
+              items: _trayItems,
+              traySize: 80,
+            ),
+            // 右侧边格 = 教学目标 + 约束条件（贴边 · 窄条可滚动）
+            midRight: _currentScenario != null
+                ? SingleChildScrollView(child: _RightPanel(scenario: _currentScenario!, world: _world))
+                : null,
+            // 顶部右格 = 探究入口按钮（窄边条放不下三组件 → 抽屉方案）
+            topRight: _buildInquiryEntryButton(),
           ),
-          onItemDropped: _onComponentDrop,
-          scale: 20,
-        ),
-        // 底部中格 = 元件库托盘（贴边）
-        bottomCenter: DragTray<String>(
-          layout: DragDropLayout.bottomTray,
-          trayTitle: '元件库',
-          items: _trayItems,
-          traySize: 80,
-        ),
-        // 右侧边格 = 教学目标 + 约束条件（贴边 · 窄条可滚动）
-        midRight: _currentScenario != null
-            ? SingleChildScrollView(child: _RightPanel(scenario: _currentScenario!, world: _world))
-            : null,
+          // 探究工作流抽屉（Offstage 保持记录/结论 State · 无 inquiryTask 不渲染）
+          InquiryDrawer(
+            task: _currentScenario?.inquiryTask,
+            columns: _inquiryTask != null ? _inquiryColumns(_inquiryTask!) : const [],
+            snapshotProvider: _opticsSnapshot,
+            open: _inquiryOpen,
+          ),
+        ],
       ),
     ),
   );
+
+  InquiryTask? get _inquiryTask => _currentScenario?.inquiryTask;
+
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    if (_inquiryTask == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
+      ),
+    );
+  }
+
+  /// optics 快照：物距（param）+ 像距/放大率/虚实（reading）。
+  Map<String, dynamic> _opticsSnapshot() {
+    final stage = _solved?.imageStages.isNotEmpty == true ? _solved!.imageStages.last : null;
+    return {
+      'objectDistance': stage?.objectDistance,
+      'imageDistance': stage?.imageDistance,
+      'magnification': stage?.magnification,
+      'isVirtual': stage?.isVirtual == true ? '虚像' : '实像',
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'objectDistance', label: '物距', isParam: true),
+        ColumnDef(key: 'imageDistance', label: '像距'),
+        ColumnDef(key: 'magnification', label: '放大率'),
+        ColumnDef(key: 'isVirtual', label: '虚实'),
+      ];
+    }
+    return task.snapshotColumns
+        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .toList(growable: false);
+  }
 
   /// 知识点卡 → 弹窗（9 宫格边条容纳不下长文本知识卡）
   void _showKnowledgeDialog() {
@@ -236,7 +293,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
     if (r != null && mounted) {
       await _scenarioManager.loadScenarios();
       final world = _scenarioManager.loadScenario(r);
-      setState(() { _world = world; _currentScenario = _scenarioManager.currentScenario; _nextElementId = _world.elements.length + 1; _solve(); });
+      setState(() { _world = world; _currentScenario = _scenarioManager.currentScenario; _nextElementId = _world.elements.length + 1; _inquiryOpen = false; _solve(); });
     }
   }
 }

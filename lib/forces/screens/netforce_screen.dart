@@ -12,6 +12,9 @@ import '../../common/widgets/game_scoreboard.dart';
 import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/nine_grid_layout.dart';
+import '../../common/widgets/inquiry_models.dart';
+import '../../common/widgets/inquiry_drawer.dart';
+import '../../common/widgets/experiment_logger.dart';
 
 class NetForceScreen extends StatefulWidget {
   const NetForceScreen({super.key, this.scenario});
@@ -26,6 +29,7 @@ class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStat
   bool _showValues = true, _showSum = true, _showSpeed = true;
   final GameTimer _gameTimer = GameTimer();
   bool _gameOverShown = false;
+  bool _inquiryOpen = false;
 
   // 拖拽悬停状态
   bool? _hoverSide;
@@ -73,28 +77,80 @@ class _NetForceScreenState extends State<NetForceScreen> with TickerProviderStat
     }
     return Material(
       type: MaterialType.transparency,
-      child: NineGridLayout(
-        // 顶部中格 = 玩法提示条
-        topCenter: Container(
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-          color: const Color(0xFFFEF3C7),
-          child: const Text(
-            '🎯 拔河游戏：① 拖小人到绿点摆阵 → ② 点画面中央 ▶ 开始 → ③ ⏸ 可暂停观察',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF92400E)),
+      child: Stack(
+        children: [
+          NineGridLayout(
+            // 顶部中格 = 玩法提示条
+            topCenter: Container(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+              color: const Color(0xFFFEF3C7),
+              child: const Text(
+                '🎯 拔河游戏：① 拖小人到绿点摆阵 → ② 点画面中央 ▶ 开始 → ③ ⏸ 可暂停观察',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600, color: Color(0xFF92400E)),
+              ),
+            ),
+            // 中间格 = 拔河主画面 · 面积 ≥ 70% 屏 · 自适应
+            center: _buildForceDisplay(),
+            // 右侧边格 = 控制面板 · 竖排紧凑 · 窄条可滚动
+            midRight: _buildSidePanel(),
+            // 左侧边格 = 速度表 + 知识点入口
+            midLeft: _buildSideInfo(),
+            // 底部中格 = 双队拖拽托盘
+            bottomCenter: _buildBottomTray(),
+            // 顶部右格 = 探究入口按钮
+            topRight: _buildInquiryEntryButton(),
           ),
-        ),
-        // 中间格 = 拔河主画面 · 面积 ≥ 70% 屏 · 自适应
-        center: _buildForceDisplay(),
-        // 右侧边格 = 控制面板 · 竖排紧凑 · 窄条可滚动
-        midRight: _buildSidePanel(),
-        // 左侧边格 = 速度表 + 知识点入口
-        midLeft: _buildSideInfo(),
-        // 底部中格 = 双队拖拽托盘
-        bottomCenter: _buildBottomTray(),
+          // 探究工作流抽屉
+          InquiryDrawer(
+            task: widget.scenario?.inquiryTask,
+            columns: widget.scenario?.inquiryTask != null
+                ? _inquiryColumns(widget.scenario!.inquiryTask!)
+                : const [],
+            snapshotProvider: _netforceSnapshot,
+            open: _inquiryOpen,
+          ),
+        ],
       ),
     );
+  }
 
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    if (widget.scenario?.inquiryTask == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
+      ),
+    );
+  }
+
+  /// netforce 快照：左力/右力（param）+ 合力/获胜方（reading）。
+  Map<String, dynamic> _netforceSnapshot() {
+    final winner = _model.winner;
+    return {
+      'leftForce': _model.leftForce,
+      'rightForce': _model.rightForce,
+      'netForce': _model.netForce,
+      'winner': winner == null ? '进行中' : (winner == 'right' ? '红队' : '蓝队'),
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'leftForce', label: '左力(N)', isParam: true),
+        ColumnDef(key: 'rightForce', label: '右力(N)', isParam: true),
+        ColumnDef(key: 'netForce', label: '合力(N)'),
+        ColumnDef(key: 'winner', label: '获胜方'),
+      ];
+    }
+    return task.snapshotColumns
+        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .toList(growable: false);
   }
 
   /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动

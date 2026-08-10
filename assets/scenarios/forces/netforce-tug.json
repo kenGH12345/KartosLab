@@ -88,5 +88,31 @@
       "trigger": "always",
       "message": "拖拽拉绳者到绳结上参与拔河，点击开始按钮开始比赛"
     }
-  ]
+  ],
+  "inquiryTask": {
+    "question": "摆出不同的拔河阵容，观察小车移动方向与两侧拉力的关系，你能发现什么规律？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "先摆一个左 2 人、右 2 人的对称阵容，点击开始观察结果，然后点击「记录本次实验」。",
+        "hint": "对称阵容左右力相等，小车应该保持不动"
+      },
+      {
+        "id": "step-2",
+        "instruction": "在左侧多放 1 人（如左 3 右 2），再次开始并记录。",
+        "hint": "想想：小车会向哪边移动？为什么？"
+      },
+      {
+        "id": "step-3",
+        "instruction": "对比你的记录，归纳小车移动方向由什么决定。"
+      }
+    ],
+    "referenceConclusion": "小车移动方向由合力方向决定：合力向右则向右移动，合力向左则向左移动。左右力相等（合力为零）时小车保持不动。",
+    "snapshotColumns": [
+      { "key": "leftForce", "label": "左力(N)", "source": "param" },
+      { "key": "rightForce", "label": "右力(N)", "source": "param" },
+      { "key": "netForce", "label": "合力(N)", "source": "reading" },
+      { "key": "winner", "label": "获胜方", "source": "reading" }
+    ]
+  }
 }

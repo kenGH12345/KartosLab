@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../common/widgets/inquiry_models.dart';
+
 enum ForcesMode { netForce, motion, friction, acceleration }
 
 ForcesMode _parseMode(String s) {
@@ -71,6 +73,7 @@ class ForcesScenario {
   final List<ForcesConstraintConfig> constraints;
   final List<ForcesCriterionConfig> successCriteria;
   final List<ForcesHintConfig> hints;
+  final InquiryTask? inquiryTask;
 
   const ForcesScenario({
     required this.scenarioId, required this.name, required this.mode,
@@ -81,6 +84,7 @@ class ForcesScenario {
     this.pullers = const [], this.objects = const [],
     this.showAccelerometer = false,
     this.constraints = const [], this.successCriteria = const [], this.hints = const [],
+    this.inquiryTask,
   });
 
   factory ForcesScenario.fromJson(Map<String, dynamic> json) {
@@ -106,6 +110,9 @@ class ForcesScenario {
       constraints: (json['constraints'] as List<dynamic>?)?.map((e) => ForcesConstraintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => ForcesCriterionConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       hints: (json['hints'] as List<dynamic>?)?.map((e) => ForcesHintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+      inquiryTask: json['inquiryTask'] != null
+          ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

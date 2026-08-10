@@ -84,6 +84,33 @@
 
   "gameRules": { "enabled": false, "penalties": [] },
 
+  "inquiryTask": {
+    "question": "移动蜡烛（物体）与透镜的距离，观察光屏上像的大小和正倒变化，凸透镜成像有什么规律？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "把物体放在透镜左侧很远（物距 > 2f），拖动光屏找到清晰的像，点击「记录本次实验」。",
+        "hint": "此时像是放大还是缩小？正立还是倒立？"
+      },
+      {
+        "id": "step-2",
+        "instruction": "把物体移到 2f 与 f 之间，再次找像并记录。",
+        "hint": "注意像的大小发生了变化"
+      },
+      {
+        "id": "step-3",
+        "instruction": "对比两次记录，归纳像的大小与物距的关系。"
+      }
+    ],
+    "referenceConclusion": "凸透镜成像规律：物距 u > 2f 时成缩小倒立实像；2f > u > f 时成放大倒立实像；u < f 时成正立放大虚像。物距越小（大于 f 时），像越大。",
+    "snapshotColumns": [
+      { "key": "objectDistance", "label": "物距", "source": "param" },
+      { "key": "imageDistance", "label": "像距", "source": "reading" },
+      { "key": "magnification", "label": "放大率", "source": "reading" },
+      { "key": "isVirtual", "label": "虚像?", "source": "reading" }
+    ]
+  },
+
   "ui": {
     "showGrid": true,
     "showRuler": true,

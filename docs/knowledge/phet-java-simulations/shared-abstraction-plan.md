@@ -27,23 +27,25 @@
 
 **规则**：以下候选**不预抽**，等各需求 spec/design 阶段自然触发；一旦累计 ≥ 3 使用者证据（含本文列举的候选使用者），由 tech-leader 决策提取到 `lib/common/`。
 
-### 候选 1 · PositionElementBase 位置元件基类
+### 候选 1 · PositionElementBase 位置元件基类（✅ 已上抽 · 2026-08-07）
 
-**证据**：
-- 现有 1 用户：`lib/optics/models/optical_element.dart` 的 `OpticalElement` 抽象基类（含 id/type/x/y/rotation/width/height/copyWith/hitTest）
-- 4 新模块候选使用者：
-  - `color-vision`：光源 / 滤色片 / 屏
-  - `wave-interference`：波源 / 挡板 / 缝 / 屏
-  - `radio-waves`：发射天线 / 接收天线
-  - `sound`：波源 / 探测器
+**证据**（已 2 用户 · 第 2 用户门槛触发 · 相似度 ~100%）：
+- 用户 1：`lib/optics/models/optical_element.dart` 的 `OpticalElement` 抽象基类（id/type/x/y/rotation/width/height + copyWith + hitTest）
+- 用户 2：`lib/circuit/models/circuit_state.dart` 的 `CircuitComponent`（id/type/x/y/rotation + copyWith + hitTest · width/height 为按 type 计算的 getter）——与 OpticalElement 平行重复
+- 4 新模块候选使用者评估结论：
+  - `color-vision`：`SpotLight` **不上抽**（无 id/type/rotation/尺寸 · 纯色光逻辑对象 · 不符合位置元件形态）
+  - `wave-interference` / `radio-waves` / `sound`：未建元件对象（波源/天线直接写在 state）· 后续建元件时可直接复用本基类
 
-**抽哪些**：
-- ✅ **抽**：`id / type / x / y / rotation / width / height` 6 字段 + `copyWith` + `hitTest` 命中检测
-- ❌ **不抽**：`interact(rays)` `intersect(ray)`（光学特化 · 波动/电磁场不适用）
-- 🟡 待评估：`paint(Canvas, Paint, World)` —— 每模块的 world 类型不同，可能用泛型 `PositionElement<TWorld>` 或干脆让子类各自定义
+**抽哪些（实际执行 · 与规划 2 处偏差）**：
+- ✅ **抽**：`id / type(泛型 TType) / x / y / rotation` 5 字段 + `width`/`height` 抽象 getter + `hitTest` 默认实现（中心矩形）
+- ⚠️ **偏差 1 · width/height 用抽象 getter 而非字段**：circuit 尺寸是按 type 计算的 getter（非 final 字段）· 抽象 getter 让"字段式"（optics）与"计算式"（circuit）都自然实现
+- ⚠️ **偏差 2 · copyWith 不上抽**：optics 返回 `OpticalElement` / circuit 返回 `CircuitComponent` · 可变字段集不同（circuit 有 value/vertexIds）· 基类无法统一签名 · 留子类各自实现
+- ❌ **不抽**：`interact(rays)` `intersect(ray)`（光学特化 · 波动/电磁场不适用）· `paint`（world 类型各异）
+- 🟡 泛型定案：`PositionElement<TType>`（optics 传 `OpticalElementType` · circuit 传 `ComponentType`）
 
-**建议路径**：`lib/common/elements/position_element.dart`
-**触发时机**：第 3 个新模块（如 wave-interference）开工 spec 阶段，若确认需要相同 6 字段 + copyWith → 立即提取（届时已有 optics + 3 新模块 = 4 用户）
+**实际路径**：`lib/common/elements/position_element.dart`（1.5 KB · 2026-08-07 上抽）
+**触发时机**：optics + circuit 已达 2 用户且相似度 ~100% → 满足 §七 门禁"≥ 2 具体使用者"即抽 · 无需等第 3 用户
+**验证**：`flutter analyze` 0 issue · `optics_solver_test` + `circuit_solver_mna_test` + `widget_test` 全绿（对外 API 不变 · 字段上移）
 
 ### 候选 2 · ScenarioManagerBase 场景管理器基类
 
@@ -191,9 +193,11 @@ abstract class ScenarioManagerBase<TScenario> {
 - 已 **2 使用者**（circuit + color_vision），按"≥70% 相似则改造第 1 个为公共版"第 2 用户门槛已满足 → 本次两个 sim 均直接消费公共组件（同源同构，无"第 2 用户自造"）
 - 第 3 用户出现时（推广其余 5 sim 任一接入探究模式）→ 评估是否进一步固化 API / 上抽 `InquiryWorkflow` 容器（当前保持三组件独立，未预抽容器）
 
+> **状态更新（2026-08-07 · req-inquiry-extend 推广收尾）**：第 3 用户门槛已满足 → **7 sim 全量接入**（circuit / color_vision / optics / forces / sound / radio_waves / wave_interference）。5 组件（`inquiry_models` / `inquiry_task_panel` / `experiment_logger` / `conclusion_panel` / `inquiry_drawer`）使用者达 7 sim，**已上抽为 `lib/common/widgets/` 公共版**（非预抽容器，三组件仍独立、可单独复用/单独测试）。接入模式已固化为：① model 加 `inquiryTask?` 可空字段 + `fromJson` 判空（向后兼容）② screen 接 `InquiryDrawer`（四参数签名一致）③ JSON 补 `inquiryTask`。5 sim 推广接线全绿（核心测试 5/0 · common 27/0 · circuit+color_vision 12/0 · forces 基线超时非本需求）。
+
 **触发登记**：spec 约束 C3 / 技术方案 D8 · 登记由执行阶段完成（本条目）。
 
-**验证**：28 项新增测试全绿（组件 16 + circuit 3 + color_vision 9）· 全量 190/0（除 forces 基线）· analyze 本需求代码 0 error。
+**验证**：28 项新增测试全绿（组件 16 + circuit 3 + color_vision 9）· 全量 190/0（除 forces 基线）· analyze 本需求代码 0 error。req-inquiry-extend 推广后 5 sim 接入全绿（见 `requirements/req-inquiry-extend/test-report/ac-verification.md`）。
 
 ---
 

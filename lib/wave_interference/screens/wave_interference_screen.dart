@@ -6,6 +6,9 @@ import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/scenario_menu_button.dart';
 import '../../common/widgets/nine_grid_layout.dart';
+import '../../common/widgets/inquiry_models.dart';
+import '../../common/widgets/inquiry_drawer.dart';
+import '../../common/widgets/experiment_logger.dart';
 import '../config/wave_interference_scenario.dart';
 import '../config/wave_interference_scenario_manager.dart';
 import '../model/wave_engine.dart';
@@ -38,6 +41,7 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
   final int _barrierX = 35;
   int _slitSize = 10;
   int _slitSeparation = 24;
+  bool _inquiryOpen = false;
 
   @override
   void initState() {
@@ -78,6 +82,8 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
     }
     _currentScenarioId = id;
     _rebuildBarriers();
+    // 场景切换时复位探究抽屉（Major-2 · 与 circuit 先例一致）
+    _inquiryOpen = false;
   }
 
   void _rebuildBarriers() {
@@ -117,7 +123,7 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wave Interference', style: TextStyle(fontSize: 16)),
+        title: const Text('波的干涉', style: TextStyle(fontSize: 16)),
         backgroundColor: const Color(0xFF2563EB),
         foregroundColor: Colors.white,
         toolbarHeight: 44,
@@ -130,17 +136,74 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
           _buildScenarioMenu(),
         ],
       ),
-      body: NineGridLayout(
-        // 中间格 = 实验画面 · 面积 ≥ 70% 屏 · 随格子尺寸自适应
-        center: CustomPaint(
-          size: Size.infinite,
-          painter: WaveHeatmapPainter(_engine,
-            gridW: gridW, gridH: gridH, waveType: _waveType),
-        ),
-        // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
-        midRight: _buildSideControlPanel(),
+      body: Stack(
+        children: [
+          NineGridLayout(
+            // 中间格 = 实验画面 · 面积 ≥ 70% 屏 · 随格子尺寸自适应
+            center: CustomPaint(
+              size: Size.infinite,
+              painter: WaveHeatmapPainter(_engine,
+                gridW: gridW, gridH: gridH, waveType: _waveType),
+            ),
+            // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
+            midRight: _buildSideControlPanel(),
+            // 顶部中格 = 探究入口按钮
+            topCenter: _buildInquiryEntryButton(),
+          ),
+          // 探究工作流抽屉
+          InquiryDrawer(
+            task: _currentScenario?.inquiryTask,
+            columns: _currentScenario?.inquiryTask != null
+                ? _inquiryColumns(_currentScenario!.inquiryTask!)
+                : const [],
+            snapshotProvider: _waveSnapshot,
+            open: _inquiryOpen,
+          ),
+        ],
       ),
     );
+  }
+
+  /// 当前 scenario（经 manager 按 id 取 · 无则 null）。
+  WaveInterferenceScenario? get _currentScenario => _manager.findById(_currentScenarioId);
+
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    if (_currentScenario?.inquiryTask == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
+      ),
+    );
+  }
+
+  /// wave-interference 快照：频率/缝间距（param）+ 条纹间距估算（reading）。
+  Map<String, dynamic> _waveSnapshot() {
+    // 条纹间距估算：模拟内 d·sinθ = n·λ，间距 ∝ λ/d = c/(f·d)
+    final waveSpeed = 0.5; // FDTD c^2=0.25 → c=0.5
+    final lambda = waveSpeed / _frequency;
+    final fringe = lambda / _slitSeparation;
+    return {
+      'frequency': _frequency,
+      'slitSeparation': _slitSeparation.toDouble(),
+      'fringeSpacing': fringe,
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'frequency', label: '频率', isParam: true),
+        ColumnDef(key: 'slitSeparation', label: '缝间距', isParam: true),
+        ColumnDef(key: 'fringeSpacing', label: '条纹间距(估)'),
+      ];
+    }
+    return task.snapshotColumns
+        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .toList(growable: false);
   }
 
   /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
@@ -156,9 +219,9 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
             runSpacing: 4,
             alignment: WrapAlignment.center,
             children: [
-              _waveTypeChip(WaveType.water, '🌊 Water'),
-              _waveTypeChip(WaveType.light, '💡 Light'),
-              _waveTypeChip(WaveType.sound, '🔊 Sound'),
+              _waveTypeChip(WaveType.water, '🌊 水波'),
+              _waveTypeChip(WaveType.light, '💡 光波'),
+              _waveTypeChip(WaveType.sound, '🔊 声波'),
             ],
           ),
           const Divider(height: 10),
@@ -167,18 +230,18 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
             runSpacing: 4,
             alignment: WrapAlignment.center,
             children: [
-              _barrierModeChip(BarrierMode.none, 'No Barrier'),
-              _barrierModeChip(BarrierMode.singleSlit, 'Single Slit'),
-              _barrierModeChip(BarrierMode.doubleSlit, 'Double Slit'),
+              _barrierModeChip(BarrierMode.none, '无挡板'),
+              _barrierModeChip(BarrierMode.singleSlit, '单缝'),
+              _barrierModeChip(BarrierMode.doubleSlit, '双缝'),
             ],
           ),
-          _readoutRow('Frequency', (_frequency * 10).toStringAsFixed(2)),
+          _readoutRow('频率', (_frequency * 10).toStringAsFixed(2)),
           Slider(value: _frequency, min: 0.1, max: 1.0, divisions: 18, activeColor: const Color(0xFF2563EB), onChanged: _setFrequency),
-          _readoutRow('Amplitude', _amplitude.toStringAsFixed(1)),
+          _readoutRow('振幅', _amplitude.toStringAsFixed(1)),
           Slider(value: _amplitude, min: 0.2, max: 3.0, divisions: 28, activeColor: const Color(0xFF2563EB), onChanged: _setAmplitude),
           if (_barrierMode != BarrierMode.none) ...[
             _readoutRow(
-              _barrierMode == BarrierMode.doubleSlit ? 'Slit Size / Sep' : 'Slit Size',
+              _barrierMode == BarrierMode.doubleSlit ? '缝宽 / 间距' : '缝宽',
               _barrierMode == BarrierMode.doubleSlit ? '$_slitSize / $_slitSeparation' : '$_slitSize',
             ),
             Column(children: [
@@ -188,7 +251,7 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
             ]),
           ],
           Center(
-            child: FilterChip(label: const Text('Reset Wave', style: TextStyle(fontSize: 11)), selected: false, onSelected: (_) { _engine.reset(); setState(() {}); }),
+            child: FilterChip(label: const Text('重置波形', style: TextStyle(fontSize: 11)), selected: false, onSelected: (_) { _engine.reset(); setState(() {}); }),
           ),
           const Divider(height: 10),
           Center(child: TimeControlBar(clock: _clock)),
@@ -258,21 +321,21 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
 
   Widget _buildKnowledgePanel() {
     return KnowledgePanel(
-      title: 'Wave Interference Principles',
+      title: '波的干涉原理',
       titleIcon: '\ud83c\udf0a',
       titleColor: const Color(0xFF2563EB),
       sections: [
         KnowledgeSection.grid(items: const [
-          KnowledgeItem(icon: '\ud83d\udca7', title: 'Wave Source', titleColor: Color(0xFF2563EB), desc: 'An oscillator creates circular ripples that spread outward, like dropping a pebble in water.'),
-          KnowledgeItem(icon: '\ud83d\udcd0', title: 'Double Slit', titleColor: Color(0xFF0891B2), desc: 'When waves pass through two slits, they emerge as two new circular sources. These sources interfere constructively and destructively.'),
-          KnowledgeItem(icon: '\u2795', title: 'Constructive Interference', titleColor: Color(0xFF16A34A), desc: 'Peak meets peak or trough meets trough: amplitudes add up for brighter bands.'),
-          KnowledgeItem(icon: '\u2796', title: 'Destructive Interference', titleColor: Color(0xFFDC2626), desc: 'Peak meets trough: they cancel out for dark bands.'),
+          KnowledgeItem(icon: '\ud83d\udca7', title: '波源', titleColor: Color(0xFF2563EB), desc: '振荡器产生向外扩散的圆形涟漪，就像往水里扔石子。'),
+          KnowledgeItem(icon: '\ud83d\udcd0', title: '双缝', titleColor: Color(0xFF0891B2), desc: '波通过两条缝后，从缝中发出两列新的圆形波。这两列波相互干涉，产生加强和减弱。'),
+          KnowledgeItem(icon: '\u2795', title: '相长干涉', titleColor: Color(0xFF16A34A), desc: '波峰遇波峰、波谷遇波谷：振幅叠加，形成更亮的条纹。'),
+          KnowledgeItem(icon: '\u2796', title: '相消干涉', titleColor: Color(0xFFDC2626), desc: '波峰遇波谷：相互抵消，形成暗条纹。'),
         ]),
-        KnowledgeSection.list(subtitle: 'Key Concepts', subtitleIcon: '\ud83d\udcda', subtitleColor: const Color(0xFF60A5FA), items: const [
-          KnowledgeItem(icon: '\ud83c\udf0a', title: 'Water Wave Interference (Young Double-Slit)', titleColor: Color(0xFF2563EB), desc: 'Thomas Young first demonstrated the wave nature of light in 1801. Here we see the same principle with water waves: two coherent sources create an interference pattern of alternating bright and dark bands radiating outward.'),
-          KnowledgeItem(icon: '\ud83d\udcd0', title: 'The Double-Slit Equation', titleColor: Color(0xFF0891B2), desc: 'Bright fringes occur at angles where d sin(theta) = n * lambda, where d = slit separation, lambda = wavelength, n = 0, 1, 2... Adjust the separation slider to see how wider slit spacing creates more closely spaced interference fringes.'),
-          KnowledgeItem(icon: '\ud83d\udd0d', title: 'Wavelength and Frequency', titleColor: Color(0xFF22C55E), desc: 'Higher frequency -> shorter wavelength -> closer interference fringes. The wave speed (c) is fixed by the simulation''s c^2=0.25 parameter, so lambda is inversely proportional to frequency.'),
-          KnowledgeItem(icon: '\ud83d\udd2c', title: 'FDTD Wave Equation', titleColor: Color(0xFFA855F7), desc: 'This simulation solves the 2D wave equation using a finite-difference time-domain (FDTD) method. Each grid cell''s value is updated based on its neighbors. Absorbing boundaries on all edges prevent wave reflections.'),
+        KnowledgeSection.list(subtitle: '核心概念', subtitleIcon: '\ud83d\udcda', subtitleColor: const Color(0xFF60A5FA), items: const [
+          KnowledgeItem(icon: '\ud83c\udf0a', title: '水波干涉（杨氏双缝实验）', titleColor: Color(0xFF2563EB), desc: '托马斯·杨在 1801 年首次用实验证明了光的波动性。这里用水波看到同样的原理：两个相干波源产生明暗相间的干涉条纹向外辐射。'),
+          KnowledgeItem(icon: '\ud83d\udcd0', title: '双缝干涉公式', titleColor: Color(0xFF0891B2), desc: '明条纹出现在满足 d·sinθ = n·λ 的角度，其中 d = 缝间距，λ = 波长，n = 0, 1, 2... 调整"间距"滑块，可以看到缝间距越大、干涉条纹越密。'),
+          KnowledgeItem(icon: '\ud83d\udd0d', title: '波长与频率', titleColor: Color(0xFF22C55E), desc: '频率越高 → 波长越短 → 干涉条纹越密。波的传播速度（由模拟中的 c^2=0.25 参数决定）固定，因此 λ 与频率成反比。'),
+          KnowledgeItem(icon: '\ud83d\udd2c', title: 'FDTD 波动方程', titleColor: Color(0xFFA855F7), desc: '本模拟用时域有限差分法（FDTD）求解二维波动方程。每个网格单元的值根据相邻单元更新。所有边缘的吸收边界防止波的反射。'),
         ]),
       ],
     );

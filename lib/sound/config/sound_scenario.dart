@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/widgets/inquiry_models.dart';
+
 /// Sound screen type.
 enum SoundScreenType { singleSource }
 
@@ -69,6 +71,7 @@ class SoundScenario {
   final ParamRange amplitudeRange;
   final List<SoundCriterionConfig> successCriteria;
   final List<SoundHintConfig> hints;
+  final InquiryTask? inquiryTask;
 
   const SoundScenario({
     required this.scenarioId,
@@ -82,6 +85,7 @@ class SoundScenario {
     this.amplitudeRange = const ParamRange(min: 0, max: 1, step: 0.05),
     this.successCriteria = const [],
     this.hints = const [],
+    this.inquiryTask,
   });
 
   factory SoundScenario.fromJson(Map<String, dynamic> json) {
@@ -108,6 +112,9 @@ class SoundScenario {
               ?.map((e) => SoundHintConfig.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
+      inquiryTask: json['inquiryTask'] != null
+          ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)
+          : null,
     );
   }
 }
