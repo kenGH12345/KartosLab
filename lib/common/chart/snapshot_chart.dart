@@ -74,10 +74,15 @@ class SnapshotChart extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             if (points.length < 2)
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 14),
-                child: Text('记录 ≥ 2 组数据后自动生成关系图，可直接观察规律。',
-                    style: TextStyle(fontSize: 10.5, color: Color(0xFF94A3B8))),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Text(
+                  // 区分"还没记录够"与"轴有效数值不足"（如 color_vision 的混合色文本列）
+                  rows.length >= 2
+                      ? '所选轴（$xLabel × $yLabel）有效数值数据不足 2 组，无法生成关系图。'
+                      : '记录 ≥ 2 组数据后自动生成关系图，可直接观察规律。',
+                  style: const TextStyle(fontSize: 10.5, color: Color(0xFF94A3B8)),
+                ),
               )
             else
               SizedBox(

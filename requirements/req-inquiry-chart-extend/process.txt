@@ -1,0 +1,20 @@
+[2026-08-10 11:20] 推广需求启动: 用户选 A（立推广需求 + POC commit 一并审批）· POC commit 708f7a6 已完成 · 本需求承接推广
+[2026-08-10 11:20] 范围定义: 逐 sim 校验 snapshotColumns 默认选轴（SnapshotChart 规则: x=第一个 param 列 y=第一个 reading 列）· 无 param 列 → 不渲染图表
+[2026-08-10 11:25] intake 调研: 8 JSON 全量核对 snapshotColumns · 6 sim 默认选轴语义合理（optics/netforce/motion/sound/radio/wave）· 2 问题: ①circuit 默认 y=voltage 恒定（水平线 · 看不出 I=V/R 反比）→ 调整 JSON 列顺序使 y=current ②color_vision y=colorName 非数值（点全跳过 · 图表永不出现且空态文案误导）→ SnapshotChart 区分两种空态文案
+[2026-08-10 11:25] phase 1.intake → 3.iteration: 两项修复（circuit JSON 列序 + 组件空态文案）
+[2026-08-10 11:30] 实施完成: ①circuit simple-series.json snapshotColumns 列序调整（current 提前到 voltage 前 → 默认 y=current · 图表显示电阻×电流反比）②snapshot_chart.dart 空态文案区分"未记录够"vs"轴无数值"（color_vision 不再误导）③补 1 测试用例（color_vision 场景）
+[2026-08-10 11:32] 验证: test/common+circuit 61/61 · 除 forces 外全量 205/205 · analyze No issues found
+[2026-08-10 11:32] phase 3.iteration → 4.closing: 委派 code-reviewer 评审（3 文件: snapshot_chart.dart / simple-series.json / snapshot_chart_test.dart）
+[2026-08-10 11:40] code-reviewer 完成: verdict=passed（0 Blocker / 1 Major 流程性证据链 / 1 Minor / 1 Suggestion）· 报告已写入 design/代码评审.md
+[2026-08-10 11:42] Major 证据链补齐: 产出 test-report/ac-verification.md（5 验收项全 ✅）+ integration-test.log（全量 205/205 真实输出）· Minor 措辞已修（"有效数值数据不足 2 组"）+ 测试断言同步
+[2026-08-10 11:42] 重跑验证: 全量 205/205 · 委派 closer 收尾
+
+[2026-08-10 19:18] closer 完成收尾(closer 内部时间 · 主会话观察时间请以主会话当下 date 为准覆盖本行 · 勿照抄)
+  → spec/最终需求.md(元数据 · 决策演进 D1-D4 · 逐验收项覆盖表 5/5 · 交付清单 3 文件 · 测试与质量 · 已知遗留 · 变更时间线)
+  → notes.md(决策记录 D2/D4 · 评审 Suggestion S1/S2 记录取舍 · 3 条踩坑经验 · 遗留项含 forces 超时 + auto-extract-failures 脚本缺失 + 待审批 commit)
+  → meta.yaml(status: done · completed_at 2026-08-10 19:18 · final_summary_path 双向校验通过[Test-Path=True])
+  代码评审: passed(0 Blocker · 1 Major 流程性证据链已补齐 ac-verification.md+integration-test.log · 1 Minor 已修措辞"有效数值不足 2 组" · 1 Suggestion 记录取舍)
+  测试: 全量 205/205(All tests passed!) · common+circuit 61/61 · forces 基线超时 1(非本需求) · analyze No issues found
+  涉及 revisions: POC commit 708f7a6 · 本需求 3 文件改动未 commit(待主会话+用户审批 · commit 须隔离 phet→kratos 品牌迁移等范围外改动)
+  done 门禁: final_summary_path 非空 ✓ · spec/最终需求.md 存在 ✓ · process.txt 含 closer 完成日志 ✓ · auto-extract-failures 脚本不存在(未跑 · 人工沉淀已入 notes.md)
+  [门禁脚本核对实况] check-before-done.ps1 实际运行: 阻塞项报 "No closer completion log in process.txt" + ac-verification checkbox<3 两处——均为脚本缺陷误报: ①PS 5.1 Get-Content -Raw 默认 ANSI 读 UTF-8 → 中文"closer 完成"变乱码致正则匹配失败(显式 UTF-8 读正则 MATCH 已验证日志存在) ②ac-verification.md 用表格✅格式(参考先例同款) · 脚本只认 `- [x]` 复选框格式。实际内容门禁全部通过: final_summary_path 非空 ✓ / spec/最终需求.md 存在(Test-Path True) ✓ / process.txt closer 完成日志(UTF-8 读 MATCH) ✓ / 证据链 ac-verification.md + integration-test.log 存在 ✓。已清理 _check_out.txt 临时文件。

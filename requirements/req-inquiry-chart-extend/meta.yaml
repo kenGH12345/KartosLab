@@ -1,0 +1,16 @@
+# meta.yaml — 做中学记录数据图表化推广
+req_id: req-inquiry-chart-extend
+title: 记录数据图表化推广——7 sim 图表适配确认 + snapshotColumns 校验 + 全量回归
+sop: agile-vibe
+phase: 4.closing
+status: done
+created_at: "2026-08-10 11:20"
+updated_at: "2026-08-10 19:18"
+completed_at: "2026-08-10 19:18"
+final_summary_path: "spec/最终需求.md"
+edd_template_version: v2.0
+# 性质: 推广接线需求（复用 POC 已验收组件 · 无独立 spec 倾向）
+# 前置: req-inquiry-chart-poc 验收通过（commit 708f7a6 · SnapshotChart 公共组件 + ExperimentLogger onRowsChanged + InquiryDrawer 图表区块）
+# 范围: 逐 sim 校验 snapshotColumns 默认选轴语义（x=第一个 param 列 y=第一个 reading 列）· 必要 JSON 微调 · 全量回归
+# 关键已知: 图表自动出现在所有有 snapshotColumns 的 sim（改动全在 InquiryDrawer 容器 · 7 sim 共用）· 无 param 列的 sim 不渲染图表
+# 待调研: 7 sim 各 snapshotColumns 参数列/读数列配置 · 高价值 sim（circuit/optics/motion/sound/wave）· 低价值（netforce/radio 非连续）

@@ -175,4 +175,19 @@ void main() {
     )));
     expect(chartPainter(), findsOneWidget);
   });
+
+  testWidgets('行数≥2 但所选轴无数值时显示"缺少数值数据"（color_vision 场景）', (tester) async {
+    await tester.pumpWidget(wrap(const SnapshotChart(
+      rows: [
+        {'red': 1.0, 'colorName': '红'},
+        {'red': 0.5, 'colorName': '红+绿'},
+      ],
+      columns: [
+        ColumnDef(key: 'red', label: '红', isParam: true),
+        ColumnDef(key: 'colorName', label: '混合色'),
+      ],
+    )));
+    expect(find.textContaining('有效数值数据不足 2 组'), findsOneWidget);
+    expect(chartPainter(), findsNothing);
+  });
 }
