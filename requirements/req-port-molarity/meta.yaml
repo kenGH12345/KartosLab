@@ -1,0 +1,17 @@
+# meta.yaml — molarity（摩尔浓度）复刻
+req_id: req-port-molarity
+title: molarity 摩尔浓度 sim 复刻——Flutter 化学模块首个（24 文件最小蓝本 · EDD v2.0 全流程）
+sop: agile-vibe
+phase: 4.closing
+status: done
+created_at: "2026-08-10 12:00"
+updated_at: "2026-08-11 10:31"
+completed_at: "2026-08-11 10:31"
+final_summary_path: "spec/最终需求.md"
+edd_template_version: v2.0
+# 性质: 新 sim 复刻 · 化学模块首个（Wave B · shortlist Top-3 · 4.05 分）
+# 蓝本: C:\workspace\phetTrunk\phetTrunk\simulations-java\simulations\molarity\（8 Java 文件 · 24 文件 · piccolo-kartos + chemistry · 🟡 PC+ · ★★★）
+# 前置知识: docs/knowledge/kratos-java-simulations/（overview/shared-abstraction-plan/edd-template/shortlist 已读）
+# 注意: 知识库路径映射 kartosTrunk 已漂移（真实为 phetTrunk）· 需在需求中记录并修正知识库
+# 强制约束: 80-kratos-sim-checklist 开工必读 + 四原则（MVC/组件化/通用化/配置化）+ L0-4 九宫格 + EDD 12 章 v2.0
+# 蓝本文件: MolarityModel(4.3K) + MolarityCanvas(9.3K) + Constants/Symbols/Resources/Module/Application + design-doc.pdf(4MB)

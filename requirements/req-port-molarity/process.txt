@@ -1,0 +1,47 @@
+[2026-08-10 12:00] 需求启动: 用户指令"迁移 molarity 严格遵守规范约束跟知识库、框架等"· 走 80-kratos-sim-checklist + agile-vibe 全流程
+[2026-08-10 12:00] 蓝本路径确认: 知识库映射 kartosTrunk 不存在 → 实测 C:\workspace\phetTrunk\phetTrunk\simulations-java\simulations\molarity\ 存在（8 Java 文件 + design-doc.pdf 4MB + 40 语言 strings）· 知识库路径映射需修正（记入遗留）
+[2026-08-10 12:00] 开工必读完成: overview / shared-abstraction-plan / edd-template(v2.0 12 章) / module-catalog / shortlist 已读 · 80-kratos-sim-checklist 逐条执行中
+[2026-08-10 12:10] 蓝本深读完成（8 核心 Java 文件）: MolarityModel（9 溶质 ROYGBIV 色序 · 每摩尔 200 粒子 · 粒子 5px 方）· Solution（concentration=min(饱和, n/V) · precipitateAmount=max(0, 超饱和) 双 Derived · isSaturated）· Solute（不可变：name/formula/饱和浓度/ColorRange/粒子色）· Solvent.Water(0xE0FFFF) · SolutionNode（体积→圆柱高度线性 · 浓度→ColorRange 淡到深插值）· PrecipitateNode（粒子数=200×沉淀量 · 随机椭圆分布）· Canvas 布局（溶质选择/双滑块/浓度条/ShowValues/ResetAll）
+[2026-08-10 12:12] 80-kratos-sim-checklist 自检: 四原则全过（MVC: Solution(model)/Screen+painters(view)/ScenarioManager(controller) · 组件化: 一元件一 Painter(Beaker/Solution/Precipitate/ConcentrationBar) · 通用化: G1 复用 L0(KratosComboBox 溶质选择/KratosSlider×2/PropertyControlPanel/NineGridLayout/InquiryDrawer/SimulationClock) · G2 无新增组件(沉淀随机分布/颜色插值为 L2 sim 专属) · G3 未触发第 3 用户 · 配置化: 9 溶质参数+范围全入 JSON(对齐 §9 配置化边界) · EDD=v2.0 · layout=居中✓+无溢出✓+响应式✓+NineGridLayout✓）
+[2026-08-10 12:12] phase 1.intake → 2.requirement: 委派 product-manager 产出 spec + EDD v2.0 12 章（蓝本路径已提供）
+[2026-08-10 12:25] product-manager 完成: spec/需求简述.md（11 功能点 · 5 组 22 条 AC）+ edd/molarity-EDD.md（12 章全 · [x] 全勾）+ notes.md + spec/context/来源归档.md · 待确认项=0 · 技术待确认 T1(ScenarioManagerBase 是否就绪) T2(KratosSlider 是否支持垂直)
+[2026-08-10 12:25] phase 2.requirement → 3.design: 委派 tech-leader 出技术方案（优先处理 T1/T2）
+[2026-08-10 12:35] 用户决策: 协作模式=TechLeader only（用户确认 · 未委派子 leader）
+[2026-08-10 12:42] tech-leader 完成方案: design/技术方案.md（medium · T1✓ScenarioManagerBase 就绪 · T2✓KratosSlider 垂直可用 · 16 文件 lib/chemistry/molarity/ · 4 scenario · S1-S10 任务拆分 · 风险 R1-R6）· 待用户 verdict 进入阶段 3 编码
+[2026-08-10 12:50] verdict=approve_go [by user]: 用户批准进入 S1-S10 编码 · phase 3.design → 3.iteration
+[2026-08-10 13:40] S1-S9 编码完成: 产物 = lib/chemistry/molarity/ 16 文件（model 5 + config 3 + controller 1 + view/painters 4 + view/widgets 4 + screen 1）· 4 scenario JSON + schema + docs/prompts + pubspec 资产声明 + home_screen 入口
+[2026-08-10 13:40] 调试记录（编码中修复）: ①相对路径层级（config 3 级 / view/widgets 4 级）②InquiryStep JSON 契约（id+instruction 非 text）③窄格溢出 → CompactSlider（FittedBox scaleDown · sound _compactSlider 第 2 用户 · 3-Time Rule 登记 notes）④SoluteComboBox 窄格 arrow icon 缩 14px ⑤测试 rootBundle 真实 IO → tester.runAsync 预加载 manager + 固定帧 pump + 卸载树（color_vision 同款）⑥Controller.init 支持已预加载 manager 跳过异步（同步构建）
+[2026-08-10 13:42] 验证: molarity 24/24 · 除 forces 外全量 229/229 · analyze（lib/chemistry + home + test/chemistry）No issues found · S9 测试完成
+[2026-08-11 09:00] S10 完成: ①浓度条 +Semantics 可访问性播报（浓度值+饱和状态）②i18n 决策: 项目无 arb 体系（全 sim 中文硬编码）→ molarity 对齐现状 · 记录 notes
+[2026-08-11 09:00] phase 3.iteration → 4.closing: 委派 code-reviewer 评审（22 文件 + 4 JSON + schema + prompt）
+[2026-08-11 09:20] code-reviewer 完成: verdict=request_changes（1 Blocker B1 证据链/integration test + 1 Major M1 Cobalt chloride 颜色 + 5 Minor + 3 Suggestion）
+[2026-08-11 09:30] 评审修复完成: M1 4 JSON 颜色 #006A6A→#FF6A6A（蓝本 0xFF6A6A 暗红 · CoCl₂ 粉红正确）· m4 solutionColor 除零防御 · m5 controller clamp 物理范围 · m1-m3 notes.md 登记（D5-D8）· 补 2 回归测试（Cobalt 颜色 + sat≤0 防御）
+[2026-08-11 09:35] B1 证据链补齐: integration_test/molarity_test.dart（≥2 场景冒烟）+ test-report/ac-verification.md（逐 AC 对照）+ integration-test.log（231/231 真实输出）· Suggestion s1-s3 记录取舍（notes）
+[2026-08-11 09:40] 复验: 全量 231/231 · analyze（lib/chemistry + home + test + integration_test）No issues found · 评审修复闭环 · 委派 closer 收尾
+[2026-08-10 12:30] product-manager 完成: spec/需求简述.md(v1.0) + edd/molarity-EDD.md(v2.0全12章) + notes.md + spec/context/来源归档.md(16条来源)
+  - 功能点11个 · AC清单5组22条(AC-1.x物理模型7/AC-2.x交互6/AC-3.x配置化6/AC-4.x布局5/AC-5.x质量5)
+  - EDD 12章全覆盖 · 所有必答项已勾选[x]
+  - 技术待确认2项(ScenarioManagerBase就绪性/KratosSlider垂直支持)
+  - 无需用户追问(蓝本信息充分·无歧义点)
+[2026-08-10 12:40] tech-leader 完成终版技术方案: requirements/req-port-molarity/design/技术方案.md
+  - 复杂度判定: medium · 协作模式: TechLeader only（用户批准 · 不委派子 leader）
+  - T1 确认: lib/common/scenario/scenario_manager_base.dart 已就绪（ScenarioManagerBase<TScenario,TState> 泛型契约完整）→ config 层直接继承 · 无 P2 阻塞
+  - T2 确认: lib/common/controls/kratos_slider.dart:25/41/91-104 支持 direction: Axis.vertical + trackLength（RotatedBox 实现）→ 双垂直滑块直接复用 · 无需新增组件/G2 审批
+  - 化学公式证据锁定: 蓝本 Solution.java:31-56（concentration=min(sat, n/V) · precipitateAmount=max(0, V×(n/V−sat)) · volume=0 兜底）
+  - 架构: MVC + 配置化四原则 · 目录 lib/chemistry/molarity/（model/view/config/controller 16 文件）
+  - L0 复用: KratosComboBox/KratosSlider(vertical)/PropertyControlPanel/NineGridLayout/InquiryDrawer/ScenarioManagerBase · SimulationClock 不使用（无 tick）
+  - 新组件判定: 沉淀粒子=L2专属 · 烧杯/ColorRange/VerticalGradientBar=L1候选登记 · G2/G3 门禁未触发
+  - scenario: 4 场景(manifest/default/saturation-challenge/quantitative-practice/dilution-effect) · schema + prompt 文档 · 降级 default
+  - 测试: Solution 公式单测(AC-1.x) + widget/golden/integration + 60fps
+  - 实施顺序: S1-S10 任务(每任务30分钟级 · AC 锚点 · 责任端 Full-stack)
+  - 待主会话: 方案评审建议委派 design-reviewer · 通过后进入阶段 3(写代码)
+
+[2026-08-11 10:31] closer 完成收尾(closer 内部时间 · 主会话观察时间以主会话 date 为准，非本文 · 那栏留空)
+  → spec/最终需求.md(元数据 · 关键决策 D1-D10 · 交付清单 + 逐 AC 覆盖表 28/29 + 1 偏离 · 测试质量 · 已知问题 7 项 · 变更时间线骨架)
+  → notes.md(追加收尾经验沉淀 3 条: AC 计数 22 vs 29 偏差 · closing 门禁脚本缺失 · 对后续化学 sim 提示)
+  → meta.yaml(status: done · completed_at 2026-08-11 10:31 · final_summary_path 双向校验通过[Test-Path=True])
+  代码评审: request_changes → 已修复闭环(1 Blocker B1 证据链/integration test 已补 · 1 Major M1 Cobalt 颜色已改 · 5 Minor m1-m5 已改 · 3 Suggestion 记录取舍)
+  测试: 全量 231/231 All tests passed!(integration-test.log) · molarity 26/26 · 除 forces 外 229/229 · analyze No issues found
+  涉及 revisions: 本需求全部产物未 commit(untracked: lib/chemistry/molarity 16 + assets/scenarios/molarity 4+manifest + schemas + prompt + integration_test + 需求目录 · 修改: home_screen/pubspec) · 待主会话+用户审批 · commit 须隔离 phet→kratos 品牌迁移等范围外改动
+  done 门禁(人工核对 · 脚本缺失): final_summary_path 非空 ✓ · spec/最终需求.md 存在(Test-Path True) ✓ · process.txt 含 closer 完成日志 ✓ · 证据链 ac-verification.md + integration-test.log 存在 ✓
+  [门禁说明] auto-extract-failures.{sh,ps1} 与 check-before-done.ps1 在本仓均不存在(先例同记) · 门禁人工核对完成 · 本项目无顶层 requirements/INDEX.md / INDEX.yaml(先例同样跳过 INDEX 更新)

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../circuit/screens/circuit_screen.dart';
 import '../optics/screens/optics_screen.dart';
 import '../forces/screens/forces_home.dart';
+import '../chemistry/molarity/view/screens/molarity_screen.dart';
 import '../color_vision/screens/color_vision_home.dart';
 import '../sound/screens/sound_screen.dart';
 import '../radio_waves/screens/radio_waves_screen.dart';
@@ -231,6 +232,32 @@ class HomeScreen extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                       backgroundColor: const Color(0xFF7C3AED),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  FilledButton.icon(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (_) => const MolarityScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(Icons.science_rounded),
+                    label: const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 14),
+                      child: Text('摩尔浓度 · 溶液配比 知识点'),
+                    ),
+                    style: FilledButton.styleFrom(
+                      textStyle: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                      ),
+                      backgroundColor: const Color(0xFF0891B2),
                       foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),

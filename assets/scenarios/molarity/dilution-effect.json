@@ -1,0 +1,35 @@
+{
+  "scenarioId": "dilution-effect",
+  "name": "稀释效应",
+  "description": "高溶质量的 CuSO\u2084 溶液，加水稀释观察浓度降低与颜色变淡。",
+  "version": "1.0",
+  "initialParams": {
+    "soluteIndex": 7,
+    "soluteAmount": 0.9,
+    "volume": 0.5,
+    "valuesVisible": false
+  },
+  "paramRanges": {
+    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.01, "unit": "mol" },
+    "volume": { "min": 0.2, "max": 1.0, "step": 0.01, "unit": "L" }
+  },
+  "concentrationMax": 5.0,
+  "solutes": [
+    { "name": "Drink mix", "formula": "Drink mix", "saturatedConcentration": 5.95, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "Cobalt(II) nitrate", "formula": "Co(NO\u2083)\u2082", "saturatedConcentration": 5.65, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "Cobalt chloride", "formula": "CoCl\u2082", "saturatedConcentration": 4.35, "solutionColorMin": "#FFF2F2", "solutionColorMax": "#FF6A6A", "particleColor": "#FF6A6A" },
+    { "name": "Potassium dichromate", "formula": "K\u2082Cr\u2082O\u2087", "saturatedConcentration": 0.50, "solutionColorMin": "#FFE8D2", "solutionColorMax": "#FF7F00", "particleColor": "#FF7F00" },
+    { "name": "Gold(III) chloride", "formula": "AuCl\u2083", "saturatedConcentration": 2.25, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFD700", "particleColor": "#FFD700" },
+    { "name": "Potassium chromate", "formula": "K\u2082CrO\u2084", "saturatedConcentration": 3.35, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFFF00", "particleColor": "#FFFF00" },
+    { "name": "Nickel(II) chloride", "formula": "NiCl\u2082", "saturatedConcentration": 5.2, "solutionColorMin": "#EAF4EA", "solutionColorMax": "#008000", "particleColor": "#008000" },
+    { "name": "Copper sulfate", "formula": "CuSO\u2084", "saturatedConcentration": 1.40, "solutionColorMin": "#DEEEFF", "solutionColorMax": "#1E90FF", "particleColor": "#1E90FF" },
+    { "name": "Potassium permanganate", "formula": "KMnO\u2084", "saturatedConcentration": 0.50, "solutionColorMin": "#FF00FF", "solutionColorMax": "#8B008B", "particleColor": "#000000" }
+  ],
+  "performance": { "particlesPerMole": 200, "particleSize": 5 },
+  "successCriteria": [
+    { "id": "sc-1", "type": "precipitateVisible", "description": "观察到沉淀颗粒（高溶质量开始会超饱和）", "params": {} }
+  ],
+  "hints": [
+    { "trigger": "precipitateAmount > 0", "message": "现在有沉淀！增加体积（稀释）观察沉淀是否溶解。" }
+  ]
+}

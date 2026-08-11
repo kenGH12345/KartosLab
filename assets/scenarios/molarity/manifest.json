@@ -1,0 +1,8 @@
+{
+  "scenarios": [
+    { "id": "default", "file": "default.json" },
+    { "id": "saturation-challenge", "file": "saturation-challenge.json" },
+    { "id": "quantitative-practice", "file": "quantitative-practice.json" },
+    { "id": "dilution-effect", "file": "dilution-effect.json" }
+  ]
+}

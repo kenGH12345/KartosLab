@@ -1,0 +1,49 @@
+{
+  "scenarioId": "default",
+  "name": "Molarity 自由探索",
+  "description": "自由调节溶质量与体积，观察摩尔浓度的变化与饱和现象。",
+  "version": "1.0",
+  "initialParams": {
+    "soluteIndex": 0,
+    "soluteAmount": 0.5,
+    "volume": 0.5,
+    "valuesVisible": false
+  },
+  "paramRanges": {
+    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.01, "unit": "mol" },
+    "volume": { "min": 0.2, "max": 1.0, "step": 0.01, "unit": "L" }
+  },
+  "concentrationMax": 5.0,
+  "solutes": [
+    { "name": "Drink mix", "formula": "Drink mix", "saturatedConcentration": 5.95, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "Cobalt(II) nitrate", "formula": "Co(NO\u2083)\u2082", "saturatedConcentration": 5.65, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "Cobalt chloride", "formula": "CoCl\u2082", "saturatedConcentration": 4.35, "solutionColorMin": "#FFF2F2", "solutionColorMax": "#FF6A6A", "particleColor": "#FF6A6A" },
+    { "name": "Potassium dichromate", "formula": "K\u2082Cr\u2082O\u2087", "saturatedConcentration": 0.50, "solutionColorMin": "#FFE8D2", "solutionColorMax": "#FF7F00", "particleColor": "#FF7F00" },
+    { "name": "Gold(III) chloride", "formula": "AuCl\u2083", "saturatedConcentration": 2.25, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFD700", "particleColor": "#FFD700" },
+    { "name": "Potassium chromate", "formula": "K\u2082CrO\u2084", "saturatedConcentration": 3.35, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFFF00", "particleColor": "#FFFF00" },
+    { "name": "Nickel(II) chloride", "formula": "NiCl\u2082", "saturatedConcentration": 5.2, "solutionColorMin": "#EAF4EA", "solutionColorMax": "#008000", "particleColor": "#008000" },
+    { "name": "Copper sulfate", "formula": "CuSO\u2084", "saturatedConcentration": 1.40, "solutionColorMin": "#DEEEFF", "solutionColorMax": "#1E90FF", "particleColor": "#1E90FF" },
+    { "name": "Potassium permanganate", "formula": "KMnO\u2084", "saturatedConcentration": 0.50, "solutionColorMin": "#FF00FF", "solutionColorMax": "#8B008B", "particleColor": "#000000" }
+  ],
+  "performance": { "particlesPerMole": 200, "particleSize": 5 },
+  "successCriteria": [],
+  "hints": [
+    { "trigger": "precipitateAmount == 0", "message": "试试增加溶质量或减小体积，观察什么时候开始饱和。" },
+    { "trigger": "isSaturated && soluteAmount < 0.8", "message": "溶液已经饱和了！继续加溶质会发生什么？浓度会继续升高吗？" }
+  ],
+  "inquiryTask": {
+    "question": "浓度 C = 溶质量 n ÷ 体积 V。改变 n 和 V，观察浓度与沉淀如何变化。",
+    "steps": [
+      { "id": "step-1", "instruction": "固定体积为 0.5L，从 0.2mol 逐步增加到 1.0mol，记录浓度变化。", "hint": "每次调整后观察浓度条读数" },
+      { "id": "step-2", "instruction": "固定溶质量为 0.5mol，把体积从 1.0L 减小到 0.2L，观察浓度。", "hint": "体积减小，浓度增大" },
+      { "id": "step-3", "instruction": "选饱和浓度低的溶质（如 K\u2082Cr\u2082O\u2087），加到饱和后继续加溶质，观察沉淀。", "hint": "饱和后浓度不再升高，多出的溶质变成沉淀" }
+    ],
+    "snapshotColumns": [
+      { "key": "soluteAmount", "label": "溶质(mol)", "source": "param" },
+      { "key": "volume", "label": "体积(L)", "source": "param" },
+      { "key": "concentration", "label": "浓度(M)", "source": "reading" },
+      { "key": "precipitate", "label": "沉淀(mol)", "source": "reading" }
+    ],
+    "referenceConclusion": "浓度 = 溶质量 ÷ 体积（C = n/V）。当浓度达到饱和浓度后，继续增加溶质不会升高浓度，多余的溶质会以沉淀形式析出。"
+  }
+}
