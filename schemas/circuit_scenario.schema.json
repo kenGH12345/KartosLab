@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phet/circuit-scenario.schema.json",
+  "$id": "https://kartos/circuit-scenario.schema.json",
   "title": "Circuit Scenario",
   "description": "Schema for circuit module scenario JSON files. Each scenario defines an initial circuit topology as a 3-layer graph (components + wires + vertices). Corresponds to lib/circuit/config/circuit_scenario.dart.",
   "type": "object",

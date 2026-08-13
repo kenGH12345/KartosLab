@@ -19,7 +19,7 @@ import 'package:flutter/material.dart';
 /// （组件只负责分格，不约束内容尺寸）。
 ///
 /// 工程约束自检：无 `Positioned` 绝对定位、无硬编码像素尺寸，
-/// 中间格由 Row/Column 天然居中（80-phet-sim-checklist L0-1/L0-3）。
+/// 中间格由 Row/Column 天然居中（80-kratos-sim-checklist L0-1/L0-3）。
 class NineGridLayout extends StatelessWidget {
   const NineGridLayout({
     super.key,
@@ -32,6 +32,11 @@ class NineGridLayout extends StatelessWidget {
     this.bottomLeft,
     this.bottomCenter,
     this.bottomRight,
+
+    /// 底部横条（可选）· 横跨整个屏幕底部的控件条（如操作面板底部横排）。
+    /// 默认放在底部行之下 · 高度由本组件自适应（`min(footerMaxHeight, 屏高×0.16)` ·
+    /// 矮视口自动压缩）· 不参与 3×3 分格。
+    this.footer,
     this.centerAreaRatio = kMinCenterAreaRatio,
     this.padding = EdgeInsets.zero,
     this.backgroundColor,
@@ -39,6 +44,9 @@ class NineGridLayout extends StatelessWidget {
 
   /// 中间格面积占屏幕的最小比例（强制下限 · 对应"至少 70%"）。
   static const double kMinCenterAreaRatio = 0.7;
+
+  /// 底部横条最大高度（高视口封顶 · 矮视口按 `屏高×0.16` 压缩）。
+  static const double _footerMaxHeight = 96;
 
   /// 中间格面积占屏面积比例，低于 [kMinCenterAreaRatio] 时强制抬升到下限。
   final double centerAreaRatio;
@@ -60,6 +68,9 @@ class NineGridLayout extends StatelessWidget {
   final Widget? bottomCenter;
   final Widget? bottomRight;
 
+  /// 底部横条（可选）· 高度 = `min(96, 屏高×0.16)` · 内容自行处理横向滚动/自适应。
+  final Widget? footer;
+
   /// 整体内边距（默认 0 · 边缘格保持贴边）。
   final EdgeInsetsGeometry padding;
 
@@ -76,9 +87,22 @@ class NineGridLayout extends StatelessWidget {
           builder: (context, constraints) {
             final area = _clampArea(centerAreaRatio);
             // 宽、高各占 sqrt(面积比) → 中间格面积 = 面积比 × 屏面积
-            final side = math.sqrt(area);
-            final centerW = constraints.maxWidth * side;
-            final centerH = constraints.maxHeight * side;
+    final side = math.sqrt(area);
+    // Major-2 评审修复：footer 高度从 centerH 扣除，
+    // 避免 footer(0.16H) + center(0.837H) 占满屏高导致上下边格被压到近 0（AC-5.4）。
+    final footerH = footer != null
+        ? math.min(_footerMaxHeight, constraints.maxHeight * 0.16)
+        : 0.0;
+    final centerW = constraints.maxWidth * side;
+    // 极端矮视口降级（req-panel-bottom-migrate 批次1 实证）：顶部/底部行低于 48px
+    // （控件最小可操作高）时压缩 center，保证边格内容（TabBar/说明条/按钮）不溢出。
+    // 正常视口 sideH ≥ 48 → 保持 70% 面积；仅 320×480 类极端视口 center 面积 < 70%。
+    final idealCenterH = (constraints.maxHeight - footerH) * side;
+    final sideH = (constraints.maxHeight - footerH - idealCenterH) / 2;
+    const minSideH = 48.0;
+    final centerH = sideH < minSideH
+        ? constraints.maxHeight - footerH - 2 * minSideH
+        : idealCenterH;
             return Column(
               children: [
                 Expanded(
@@ -89,8 +113,17 @@ class NineGridLayout extends StatelessWidget {
                   child: _buildRow([midLeft, center, midRight], centerW),
                 ),
                 Expanded(
-                  child: _buildRow([bottomLeft, bottomCenter, bottomRight], centerW),
+                  child: _buildRow([
+                    bottomLeft,
+                    bottomCenter,
+                    bottomRight,
+                  ], centerW),
                 ),
+                if (footer != null)
+                  SizedBox(
+                    height: footerH,
+                    child: footer,
+                  ),
               ],
             );
           },
@@ -111,7 +144,10 @@ class NineGridLayout extends StatelessWidget {
     return Row(
       children: [
         Expanded(child: cells[0] ?? const SizedBox.shrink()),
-        SizedBox(width: centerWidth, child: cells[1] ?? const SizedBox.shrink()),
+        SizedBox(
+          width: centerWidth,
+          child: cells[1] ?? const SizedBox.shrink(),
+        ),
         Expanded(child: cells[2] ?? const SizedBox.shrink()),
       ],
     );

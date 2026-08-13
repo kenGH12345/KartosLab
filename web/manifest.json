@@ -1,6 +1,6 @@
 {
-    "name": "geometric_optics",
-    "short_name": "geometric_optics",
+    "name": "kratos",
+    "short_name": "kratos",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

@@ -1,6 +1,6 @@
-# phet · AIVibe 协作框架
+# kratos · AIVibe 协作框架
 
-> 本工程（phet Flutter 复刻）已自体集成 AIVibe 协作框架，由 **AIVibeCodingProj 模板 v0.1.0-alpha** 适配而来。
+> 本工程（kratos Flutter 复刻）已自体集成 AIVibe 协作框架，由 **AIVibeCodingProj 模板 v0.1.0-alpha** 适配而来。
 > **Cursor / Claude Code / CodeBuddy 三端原生**：所有资产以原生约定组织，三端通过 symlink 共享单一源（详见 [ADR-0005](.codebuddy/docs/ADR/0005-symlink-three-way-share.md)）。
 > 以 **git 仓库**形式管理：`clone → init → 30 秒后开始 vibecoding`。
 
@@ -8,7 +8,7 @@
 
 ## 这是什么
 
-phet 工程内集成的 AIVibe 协作框架不是一个库，也不是一个产品。它是一个**协作脚手架**——由 AIVibeCodingProj 模板 clone 并适配到本项目，跑 `init.ps1` 后即得到本工程自带的 AI 工作区，里面已经配好：
+kratos 工程内集成的 AIVibe 协作框架不是一个库，也不是一个产品。它是一个**协作脚手架**——由 AIVibeCodingProj 模板 clone 并适配到本项目，跑 `init.ps1` 后即得到本工程自带的 AI 工作区，里面已经配好：
 
 - 一套完整的**规则**（`.codebuddy/rules/*.mdc`）：工程原则、追问原则、技能自进化、状态同步、SVN 分支安全
 - 一组**Subagents**（`.codebuddy/agents/*.md`）：PM / Tech Leader / Frontend / Backend / Reviewer / Tester / Closer / Knowledge Maintainer / Skill Architect

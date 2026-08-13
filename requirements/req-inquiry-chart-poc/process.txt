@@ -8,3 +8,4 @@
 [2026-08-10 11:10] Minor 修复（3 项）: ①补"删除单行后 onRowsChanged 联动"用例 ②补"maxRows 满额不触发回调"用例 ③shouldRepaint 改 listEquals 内容比较（原恒 true）+ 补"全相等值单点退化"用例（Suggestion）
 [2026-08-10 11:12] 验证: test/common 36/36 · 除 forces 外全量 204/204 · analyze 4 文件 No issues found · POC 验收通过
 [2026-08-10 11:12] 验收结论: POC approve → 可推广（7 sim 零 screen 改动即获图表能力）· 待用户拍板是否立推广需求
+[2026-08-10 11:20] commit 708f7a6 成功(用户 y 审批 · 7 files · +490/-8) · 已排除品牌迁移(phet→kratos)与 chart_painter.dart 遗留改动 · POC 部分闭环 · 推广需求 req-inquiry-chart-extend 已立

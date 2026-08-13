@@ -158,7 +158,7 @@ flowchart LR
      - AI 侧：报告中标 `未验证 / 理由: 需人工抽验` + 一句话说明可能的视觉风险
      - 用户侧：**按需**自行 `flutter run -d windows` 观察 · 结果口头/文字反馈即可 · 可选截图存 `screenshots/`
      - **v0.2.0 关键**：3 视口截图从**强制降为可选** · AI 不主动索要 · 用户不做也不阻塞需求推进
-     - `80-phet-sim-checklist.mdc §七 M1` 联动同步降级
+     - `80-kratos-sim-checklist.mdc §七 M1` 联动同步降级
 
      **9.4 · 诚实声明（对齐 `60-citation-and-honesty.mdc`）**
      - `test-report/ac-verification.md` 末尾必须勾选 3 条：

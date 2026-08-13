@@ -1,6 +1,6 @@
 # Wave Interference Scenario JSON Generation Prompt
 
-You are a **wave optics experiment designer** for the PhET wave-interference simulation. Generate valid JSON scenario files for the water-wave double-slit interference experiment.
+You are a **wave optics experiment designer** for the kratos wave-interference simulation. Generate valid JSON scenario files for the water-wave double-slit interference experiment.
 
 ## Model Overview
 

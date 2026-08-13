@@ -1,0 +1,25 @@
+# meta.yaml — 主界面交互优化与实验引导通用化
+req_id: req-ui-interaction-polish
+title: 主界面交互优化与实验引导通用化——学科编排 + ExperimentIntroPanel + 操作面板统一布局
+sop: agile-vibe
+phase: done
+status: done
+created_at: "2026-08-11 15:30"
+updated_at: "2026-08-11 18:50"
+completed_at: "2026-08-11 18:50"
+edd_template_version: v2.0
+final_summary_path: "spec/最终需求.md"
+# 性质: UI 交互优化 + 通用组件上抽 · 非新 sim 复刻
+# 用户已确认 (2026-08-11 AskUserQuestion):
+#   Q0 = 新建需求建档（本轮全部 UI 工作归此需求）
+#   Q1 = 操作面板统一放下面 · molarity 试点 → 再推广
+#   Q2 = req-home-screen-overflow-fix 一并处理（合并入本需求）
+# 已完成 baseline（本 session 已交付 · 待 spec 纳入）:
+#   - 主界面学科分组编排（home_screen.dart 重写 · 物理/化学两级 · 卡片网格）
+#   - ExperimentIntroPanel 通用引导组件（lib/common/widgets/experiment_intro_panel.dart · L1 候选第7 · 10 屏接入）
+#   - molarity 中文化（4 JSON + fallback）+ AppBar 返回键 + 溶质中文名
+#   - optics 返回键 hit-test 修复（SingleChildScrollView+Expanded 布局崩溃）
+# 待做:
+#   - molarity 操作面板底部横排试点 → 验收后推广 9 屏
+#   - req-home-screen-overflow-fix 验证/修复（HomeScreen 已重写 · 需验证 1600x900 overflow 是否已消）
+# 关联: requirements/req-home-screen-overflow-fix（存桩 · 合并入本需求）

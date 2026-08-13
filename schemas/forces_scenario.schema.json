@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phet/forces-scenario.schema.json",
+  "$id": "https://kartos/forces-scenario.schema.json",
   "title": "Forces Scenario",
   "type": "object",
   "required": [

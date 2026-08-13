@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../controls/phet_slider.dart';
-import '../controls/phet_radio_group.dart';
-import '../controls/phet_combo_box.dart';
-import '../controls/phet_number_field.dart';
+import '../controls/kratos_slider.dart';
+import '../controls/kratos_radio_group.dart';
+import '../controls/kratos_combo_box.dart';
+import '../controls/kratos_number_field.dart';
 
 /// 将多个属性控件垂直排列的聚合容器——对应 Java 版右侧 ControlPanel。
 ///
@@ -11,8 +11,8 @@ import '../controls/phet_number_field.dart';
 /// ```dart
 /// PropertyControlPanel(
 ///   children: [
-///     PhetSlider(label: '焦距', unit: 'cm', min: 5, max: 50, value: f, onChanged: ...),
-///     PhetRadioGroup<String>(label: '类型', items: ['凸透镜', '凹透镜'], value: t, onChanged: ...),
+///     KratosSlider(label: '焦距', unit: 'cm', min: 5, max: 50, value: f, onChanged: ...),
+///     KratosRadioGroup<String>(label: '类型', items: ['凸透镜', '凹透镜'], value: t, onChanged: ...),
 ///   ],
 /// )
 /// ```
@@ -85,7 +85,7 @@ class PropertyControlPanel extends StatelessWidget {
         final min = (param['min'] as num?)?.toDouble() ?? 0;
         final max = (param['max'] as num?)?.toDouble() ?? 100;
         final step = (param['step'] as num?)?.toDouble();
-        return PhetSlider(
+        return KratosSlider(
           label: label,
           unit: unit,
           min: min,
@@ -97,7 +97,7 @@ class PropertyControlPanel extends StatelessWidget {
 
       case 'radio':
         final options = (param['options'] as List?)?.cast<String>() ?? [];
-        return PhetRadioGroup<String>(
+        return KratosRadioGroup<String>(
           label: label,
           items: options,
           value: currentValues[key]?.toString() ?? options.first,
@@ -106,7 +106,7 @@ class PropertyControlPanel extends StatelessWidget {
 
       case 'combo':
         final options = (param['options'] as List?)?.cast<String>() ?? [];
-        return PhetComboBox<String>(
+        return KratosComboBox<String>(
           label: label,
           items: options,
           value: currentValues[key]?.toString() ?? options.first,
@@ -116,7 +116,7 @@ class PropertyControlPanel extends StatelessWidget {
       case 'number':
         final min = (param['min'] as num?)?.toDouble();
         final max = (param['max'] as num?)?.toDouble();
-        return PhetNumberField(
+        return KratosNumberField(
           label: label,
           unit: unit,
           min: min,

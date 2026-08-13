@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:geometric_optics/radio_waves/model/radio_state.dart';
+import 'package:kratos/radio_waves/model/radio_state.dart';
 
 void main() {
   group('RadioState', () {

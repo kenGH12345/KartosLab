@@ -10,7 +10,7 @@
 [2026-08-04 20:08] 根因修正: 原失败有两层bug, param位置问题掩盖了真正的 Join-Path 三参数非法; B方案绕开param后才暴露并修复Join-Path
 [2026-08-05 17:22] 补测 · 3 张实证截图落盘 screenshots/: ac-2-step-1-white-nofilter.png(297KB) · ac-2-step-2-white-redfilter.png(307KB) · ac-BUG-layout-overflow-red.png(101KB) · 由本会话通过 PowerShell WebClient 从会话附件 URL 直接下载,非历史缓存
 [2026-08-05 17:23] 用户拍板 1a/2/3a: (1)AC-3 Blue 保持静态推演待后续偿还; (2)图3确认为 L0-2/L0-3 违规(用户故意缩窄验证适配) → 立独立需求 req-color-vision-layout-fix; (3)保留原时间戳追加补测段
-[2026-08-05 17:24] 衍生发现: single_bulb_screen.dart:118-125 Column 三层布局中知识面板+控制面板无高度约束,Filter=Red 时 KnowledgeItem.active border 撑高知识面板挤压 Expanded(flex:5) 主图空间 → 主图消失 · 违反 80-phet-sim-checklist §七 L0-2(响应式无溢出)+L0-3(主图尺寸随视口缩放,未用LayoutBuilder+min保底) · 立独立需求跟进
+[2026-08-05 17:24] 衍生发现: single_bulb_screen.dart:118-125 Column 三层布局中知识面板+控制面板无高度约束,Filter=Red 时 KnowledgeItem.active border 撑高知识面板挤压 Expanded(flex:5) 主图空间 → 主图消失 · 违反 80-kartos-sim-checklist §七 L0-2(响应式无溢出)+L0-3(主图尺寸随视口缩放,未用LayoutBuilder+min保底) · 立独立需求跟进
 [2026-08-06 11:55] γ 收尾启动: 用户拍板 A=y/B=y/C=c2/D=简化 · 三处 Diff 并行落地
 [2026-08-06 11:56] Diff-1: .claude/agents/code-reviewer.md 删除"上下文加载增强(Experience 自动注入)"死引用段(原 line 19-40) · 变更历史追加 γ-1 · 触发原因 grep 全仓 0 匹配 .workflow/scripts/experience-injector.sh
 [2026-08-06 11:56] Diff-2: check-before-done.ps1 v1.1.0→v1.2.0 · 豁免关键字 'skip closer'|'跳过 closer' 双语对齐(line 48) · 完成日志匹配 completed|done|finished|完成 双语对齐(line 73) · 与 sh 端行为一致

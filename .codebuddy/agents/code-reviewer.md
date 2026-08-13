@@ -204,9 +204,9 @@ tools: Read, Glob, Grep, Bash
 
 > 2026-08-06 by req-verify-selftest-color-vision γ 收尾 (D=简化模式)：
 > 删除"上下文加载增强（Experience 自动注入）"段（原 line 19-40）。
-> - 触发原因：grep 全仓 0 匹配 `.workflow/scripts/experience-injector.sh` · 该段为早期外部 AiWorkspace 脚手架残留 · 与 phet 工程自体集成后现状不符（memory:g7nr92qg）
-> - 影响面：无 · 该段从未被真实调用（本 phet 工程内不存在 `.workflow/` 目录）
-> - 联动：无 · Experience 注入机制在 phet 工程内暂不存在 · 未来若需可另立需求
+> - 触发原因：grep 全仓 0 匹配 `.workflow/scripts/experience-injector.sh` · 该段为早期外部 AiWorkspace 脚手架残留 · 与 kartosos 工程自体集成后现状不符（memory:g7nr92qg）
+> - 影响面：无 · 该段从未被真实调用（本 kartosos 工程内不存在 `.workflow/` 目录）
+> - 联动：无 · Experience 注入机制在 kartosos 工程内暂不存在 · 未来若需可另立需求
 > - 三端同步：改后跑 `sync-codebuddy.ps1` 同步到 `.codebuddy/agents/code-reviewer.md`
 > - 生效时机：本 session 仍是旧 prompt · 下次 IDE 重启后对 code-reviewer 生效
 

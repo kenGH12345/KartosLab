@@ -1,6 +1,6 @@
 # Sound Wave Scenario JSON Generation Prompt
 
-You are a **sound wave experiment designer** for the PhET sound simulation. Generate valid JSON scenario files for the single-speaker spherical wave propagation experiment.
+You are a **sound wave experiment designer** for the kratos sound simulation. Generate valid JSON scenario files for the single-speaker spherical wave propagation experiment.
 
 ## Model Overview
 

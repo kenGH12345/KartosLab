@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 
-import 'package:geometric_optics/circuit/config/circuit_scenario.dart';
-import 'package:geometric_optics/circuit/config/scenario_manager.dart';
-import 'package:geometric_optics/circuit/models/circuit_solver.dart';
+import 'package:kratos/circuit/config/circuit_scenario.dart';
+import 'package:kratos/circuit/config/scenario_manager.dart';
+import 'package:kratos/circuit/models/circuit_solver.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

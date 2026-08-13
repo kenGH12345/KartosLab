@@ -12,7 +12,7 @@
 
 2. **`snapshotColumns` key 与 snapshotProvider 返回 Map key 必须一一对应**（AC-④）：6 screen 逐一核对通过。这是接入时最常见的坑——key 不一致会导致表格列显示占位符。JSON 表头与 screen 快照回调是**双点**，改一处必须同步另一处。
 
-3. **forces 无运行时场景切换的架构差异**：netforce/motion 是各 Tab 独立 screen 实例（`PhetTabbedScreen` 内建），无"运行中切换场景"的路径，故无需 `_inquiryOpen` 复位（Major-2 只涉及 sound/radio/wave/optics）。
+3. **forces 无运行时场景切换的架构差异**：netforce/motion 是各 Tab 独立 screen 实例（`KratosTabBar` 内建），无"运行中切换场景"的路径，故无需 `_inquiryOpen` 复位（Major-2 只涉及 sound/radio/wave/optics）。
 
 ### 踩坑经验
 
@@ -42,7 +42,7 @@ code-reviewer 首轮指出工作区混入范围外改动。经确认，以下为
 ### 遗留项（后续迭代候选 · 全部非阻塞）
 
 1. **forces 基线超时（独立任务）**：`forces_scenario_test.dart` netforce-tug 10 分钟死循环超时，forces 零改动。建议独立排查 `flutter_test` 二次 rootBundle 加载。
-2. **docs/knowledge/phet-common/ 历史 analyze error（独立任务）**：参考文档 8 个 error（历史引入，非运行代码）。
+2. **docs/knowledge/kartosos-common/ 历史 analyze error（独立任务）**：参考文档 8 个 error（历史引入，非运行代码）。
 3. **M1/M2/M3 快照占位语义优化（可选）**：见上表，无 stage/无双缝/无真实计数时的列语义可进一步精确化，但当前不影响核心探究功能。
 
 ### 对后续需求的提示

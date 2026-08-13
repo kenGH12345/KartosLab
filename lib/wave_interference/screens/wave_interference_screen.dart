@@ -2,13 +2,13 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../common/simulation_clock.dart';
 import '../../common/widgets/time_control_bar.dart';
-import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/scenario_menu_button.dart';
 import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/widgets/inquiry_models.dart';
 import '../../common/widgets/inquiry_drawer.dart';
 import '../../common/widgets/experiment_logger.dart';
+import '../../common/widgets/experiment_intro_panel.dart';
 import '../config/wave_interference_scenario.dart';
 import '../config/wave_interference_scenario_manager.dart';
 import '../model/wave_engine.dart';
@@ -29,7 +29,8 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
 
   late final WaveEngine _engine;
   late final SimulationClock _clock;
-  final WaveInterferenceScenarioManager _manager = WaveInterferenceScenarioManager();
+  final WaveInterferenceScenarioManager _manager =
+      WaveInterferenceScenarioManager();
   String _currentScenarioId = 'default';
   bool _scenariosLoaded = false;
 
@@ -114,9 +115,24 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
 
   void _setFrequency(double v) => setState(() => _frequency = v);
   void _setAmplitude(double v) => setState(() => _amplitude = v);
-  void _setSlitSize(double v) { _slitSize = v.round(); _rebuildBarriers(); setState(() {}); }
-  void _setSlitSep(double v) { _slitSeparation = v.round(); _rebuildBarriers(); setState(() {}); }
-  void _setBarrierMode(BarrierMode m) { _barrierMode = m; _rebuildBarriers(); setState(() {}); }
+  void _setSlitSize(double v) {
+    _slitSize = v.round();
+    _rebuildBarriers();
+    setState(() {});
+  }
+
+  void _setSlitSep(double v) {
+    _slitSeparation = v.round();
+    _rebuildBarriers();
+    setState(() {});
+  }
+
+  void _setBarrierMode(BarrierMode m) {
+    _barrierMode = m;
+    _rebuildBarriers();
+    setState(() {});
+  }
+
   void _setWaveType(WaveType t) => setState(() => _waveType = t);
 
   @override
@@ -142,13 +158,24 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
             // 中间格 = 实验画面 · 面积 ≥ 70% 屏 · 随格子尺寸自适应
             center: CustomPaint(
               size: Size.infinite,
-              painter: WaveHeatmapPainter(_engine,
-                gridW: gridW, gridH: gridH, waveType: _waveType),
+              painter: WaveHeatmapPainter(
+                _engine,
+                gridW: gridW,
+                gridH: gridH,
+                waveType: _waveType,
+              ),
             ),
             // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
-            midRight: _buildSideControlPanel(),
+            // 底部横条：操作面板横排（molarity footer 方案推广 · 窄视口横向滚动+缩放）
+            footer: _buildSideControlPanel(),
             // 顶部中格 = 探究入口按钮
             topCenter: _buildInquiryEntryButton(),
+            // 顶部右格 = 实验说明 + 操作指引（通用引导组件）
+            topRight: ExperimentIntroPanel(
+              description: _currentScenario?.description ?? '',
+              task: _currentScenario?.inquiryTask,
+              color: const Color(0xFF2563EB),
+            ),
           ),
           // 探究工作流抽屉
           InquiryDrawer(
@@ -165,7 +192,8 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
   }
 
   /// 当前 scenario（经 manager 按 id 取 · 无则 null）。
-  WaveInterferenceScenario? get _currentScenario => _manager.findById(_currentScenarioId);
+  WaveInterferenceScenario? get _currentScenario =>
+      _manager.findById(_currentScenarioId);
 
   /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
   Widget _buildInquiryEntryButton() {
@@ -202,60 +230,137 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
       ];
     }
     return task.snapshotColumns
-        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .map(
+          (c) => ColumnDef(
+            key: c.key,
+            label: c.label,
+            isParam: c.source == 'param',
+          ),
+        )
         .toList(growable: false);
   }
 
   /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
+  /// 底部横排操作面板：波类型/挡板 chips + 频率/振幅/缝宽滑块 + 重置 + 时间控制
+  /// （molarity footer 方案推广 · 窄视口 FittedBox 缩放 + 横向滚动）。
   Widget _buildSideControlPanel() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-      child: PropertyControlPanel(
-        padding: const EdgeInsets.all(8),
-        spacing: 10,
-        children: [
-          Wrap(
-            spacing: 6,
-            runSpacing: 4,
-            alignment: WrapAlignment.center,
-            children: [
-              _waveTypeChip(WaveType.water, '🌊 水波'),
-              _waveTypeChip(WaveType.light, '💡 光波'),
-              _waveTypeChip(WaveType.sound, '🔊 声波'),
-            ],
-          ),
-          const Divider(height: 10),
-          Wrap(
-            spacing: 6,
-            runSpacing: 4,
-            alignment: WrapAlignment.center,
-            children: [
-              _barrierModeChip(BarrierMode.none, '无挡板'),
-              _barrierModeChip(BarrierMode.singleSlit, '单缝'),
-              _barrierModeChip(BarrierMode.doubleSlit, '双缝'),
-            ],
-          ),
-          _readoutRow('频率', (_frequency * 10).toStringAsFixed(2)),
-          Slider(value: _frequency, min: 0.1, max: 1.0, divisions: 18, activeColor: const Color(0xFF2563EB), onChanged: _setFrequency),
-          _readoutRow('振幅', _amplitude.toStringAsFixed(1)),
-          Slider(value: _amplitude, min: 0.2, max: 3.0, divisions: 28, activeColor: const Color(0xFF2563EB), onChanged: _setAmplitude),
-          if (_barrierMode != BarrierMode.none) ...[
-            _readoutRow(
-              _barrierMode == BarrierMode.doubleSlit ? '缝宽 / 间距' : '缝宽',
-              _barrierMode == BarrierMode.doubleSlit ? '$_slitSize / $_slitSeparation' : '$_slitSize',
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            // Wrap 包 SizedBox 限宽（FittedBox 无界宽下 Wrap 无限展开的通用约束 · 同其他屏）
+            SizedBox(
+              width: 240,
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  _waveTypeChip(WaveType.water, '🌊 水波'),
+                  _waveTypeChip(WaveType.light, '💡 光波'),
+                  _waveTypeChip(WaveType.sound, '🔊 声波'),
+                ],
+              ),
             ),
-            Column(children: [
-              Slider(value: _slitSize.toDouble(), min: 4, max: 20, divisions: 16, activeColor: const Color(0xFF2563EB), onChanged: _setSlitSize),
-              if (_barrierMode == BarrierMode.doubleSlit)
-                Slider(value: _slitSeparation.toDouble(), min: 12, max: 36, divisions: 24, activeColor: const Color(0xFF2563EB), onChanged: _setSlitSep),
-            ]),
+            const SizedBox(width: 14),
+            SizedBox(
+              width: 240,
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  _barrierModeChip(BarrierMode.none, '无挡板'),
+                  _barrierModeChip(BarrierMode.singleSlit, '单缝'),
+                  _barrierModeChip(BarrierMode.doubleSlit, '双缝'),
+                ],
+              ),
+            ),
+            const SizedBox(width: 14),
+            SizedBox(
+              width: 180,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _readoutRow('频率', (_frequency * 10).toStringAsFixed(2)),
+                  Slider(
+                    value: _frequency,
+                    min: 0.1,
+                    max: 1.0,
+                    divisions: 18,
+                    activeColor: const Color(0xFF2563EB),
+                    onChanged: _setFrequency,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 14),
+            SizedBox(
+              width: 180,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _readoutRow('振幅', _amplitude.toStringAsFixed(1)),
+                  Slider(
+                    value: _amplitude,
+                    min: 0.2,
+                    max: 3.0,
+                    divisions: 28,
+                    activeColor: const Color(0xFF2563EB),
+                    onChanged: _setAmplitude,
+                  ),
+                ],
+              ),
+            ),
+            if (_barrierMode != BarrierMode.none) ...[
+              const SizedBox(width: 14),
+              SizedBox(
+                width: 180,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _readoutRow(
+                      _barrierMode == BarrierMode.doubleSlit ? '缝宽 / 间距' : '缝宽',
+                      _barrierMode == BarrierMode.doubleSlit
+                          ? '$_slitSize / $_slitSeparation'
+                          : '$_slitSize',
+                    ),
+                    Slider(
+                      value: _slitSize.toDouble(),
+                      min: 4,
+                      max: 20,
+                      divisions: 16,
+                      activeColor: const Color(0xFF2563EB),
+                      onChanged: _setSlitSize,
+                    ),
+                    if (_barrierMode == BarrierMode.doubleSlit)
+                      Slider(
+                        value: _slitSeparation.toDouble(),
+                        min: 12,
+                        max: 36,
+                        divisions: 24,
+                        activeColor: const Color(0xFF2563EB),
+                        onChanged: _setSlitSep,
+                      ),
+                  ],
+                ),
+              ),
+            ],
+            const SizedBox(width: 14),
+            FilterChip(
+              label: const Text('重置波形', style: TextStyle(fontSize: 11)),
+              selected: false,
+              onSelected: (_) {
+                _engine.reset();
+                setState(() {});
+              },
+            ),
+            const SizedBox(width: 14),
+            TimeControlBar(clock: _clock),
           ],
-          Center(
-            child: FilterChip(label: const Text('重置波形', style: TextStyle(fontSize: 11)), selected: false, onSelected: (_) { _engine.reset(); setState(() {}); }),
-          ),
-          const Divider(height: 10),
-          Center(child: TimeControlBar(clock: _clock)),
-        ],
+        ),
       ),
     );
   }
@@ -264,8 +369,18 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-        Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF2563EB))),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF2563EB),
+          ),
+        ),
       ],
     );
   }
@@ -290,7 +405,10 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
   Widget _buildScenarioMenu() {
     return ScenarioMenuButton(
       entries: _manager.scenarios
-          .map((WaveInterferenceScenario s) => ScenarioMenuEntry(id: s.scenarioId, name: s.name))
+          .map(
+            (WaveInterferenceScenario s) =>
+                ScenarioMenuEntry(id: s.scenarioId, name: s.name),
+          )
           .toList(),
       currentId: _currentScenarioId,
       loading: !_scenariosLoaded,
@@ -325,18 +443,69 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
       titleIcon: '\ud83c\udf0a',
       titleColor: const Color(0xFF2563EB),
       sections: [
-        KnowledgeSection.grid(items: const [
-          KnowledgeItem(icon: '\ud83d\udca7', title: '波源', titleColor: Color(0xFF2563EB), desc: '振荡器产生向外扩散的圆形涟漪，就像往水里扔石子。'),
-          KnowledgeItem(icon: '\ud83d\udcd0', title: '双缝', titleColor: Color(0xFF0891B2), desc: '波通过两条缝后，从缝中发出两列新的圆形波。这两列波相互干涉，产生加强和减弱。'),
-          KnowledgeItem(icon: '\u2795', title: '相长干涉', titleColor: Color(0xFF16A34A), desc: '波峰遇波峰、波谷遇波谷：振幅叠加，形成更亮的条纹。'),
-          KnowledgeItem(icon: '\u2796', title: '相消干涉', titleColor: Color(0xFFDC2626), desc: '波峰遇波谷：相互抵消，形成暗条纹。'),
-        ]),
-        KnowledgeSection.list(subtitle: '核心概念', subtitleIcon: '\ud83d\udcda', subtitleColor: const Color(0xFF60A5FA), items: const [
-          KnowledgeItem(icon: '\ud83c\udf0a', title: '水波干涉（杨氏双缝实验）', titleColor: Color(0xFF2563EB), desc: '托马斯·杨在 1801 年首次用实验证明了光的波动性。这里用水波看到同样的原理：两个相干波源产生明暗相间的干涉条纹向外辐射。'),
-          KnowledgeItem(icon: '\ud83d\udcd0', title: '双缝干涉公式', titleColor: Color(0xFF0891B2), desc: '明条纹出现在满足 d·sinθ = n·λ 的角度，其中 d = 缝间距，λ = 波长，n = 0, 1, 2... 调整"间距"滑块，可以看到缝间距越大、干涉条纹越密。'),
-          KnowledgeItem(icon: '\ud83d\udd0d', title: '波长与频率', titleColor: Color(0xFF22C55E), desc: '频率越高 → 波长越短 → 干涉条纹越密。波的传播速度（由模拟中的 c^2=0.25 参数决定）固定，因此 λ 与频率成反比。'),
-          KnowledgeItem(icon: '\ud83d\udd2c', title: 'FDTD 波动方程', titleColor: Color(0xFFA855F7), desc: '本模拟用时域有限差分法（FDTD）求解二维波动方程。每个网格单元的值根据相邻单元更新。所有边缘的吸收边界防止波的反射。'),
-        ]),
+        KnowledgeSection.grid(
+          items: const [
+            KnowledgeItem(
+              icon: '\ud83d\udca7',
+              title: '波源',
+              titleColor: Color(0xFF2563EB),
+              desc: '振荡器产生向外扩散的圆形涟漪，就像往水里扔石子。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udcd0',
+              title: '双缝',
+              titleColor: Color(0xFF0891B2),
+              desc: '波通过两条缝后，从缝中发出两列新的圆形波。这两列波相互干涉，产生加强和减弱。',
+            ),
+            KnowledgeItem(
+              icon: '\u2795',
+              title: '相长干涉',
+              titleColor: Color(0xFF16A34A),
+              desc: '波峰遇波峰、波谷遇波谷：振幅叠加，形成更亮的条纹。',
+            ),
+            KnowledgeItem(
+              icon: '\u2796',
+              title: '相消干涉',
+              titleColor: Color(0xFFDC2626),
+              desc: '波峰遇波谷：相互抵消，形成暗条纹。',
+            ),
+          ],
+        ),
+        KnowledgeSection.list(
+          subtitle: '核心概念',
+          subtitleIcon: '\ud83d\udcda',
+          subtitleColor: const Color(0xFF60A5FA),
+          items: const [
+            KnowledgeItem(
+              icon: '\ud83c\udf0a',
+              title: '水波干涉（杨氏双缝实验）',
+              titleColor: Color(0xFF2563EB),
+              desc:
+                  '托马斯·杨在 1801 年首次用实验证明了光的波动性。这里用水波看到同样的原理：两个相干波源产生明暗相间的干涉条纹向外辐射。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udcd0',
+              title: '双缝干涉公式',
+              titleColor: Color(0xFF0891B2),
+              desc:
+                  '明条纹出现在满足 d·sinθ = n·λ 的角度，其中 d = 缝间距，λ = 波长，n = 0, 1, 2... 调整"间距"滑块，可以看到缝间距越大、干涉条纹越密。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udd0d',
+              title: '波长与频率',
+              titleColor: Color(0xFF22C55E),
+              desc:
+                  '频率越高 → 波长越短 → 干涉条纹越密。波的传播速度（由模拟中的 c^2=0.25 参数决定）固定，因此 λ 与频率成反比。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udd2c',
+              title: 'FDTD 波动方程',
+              titleColor: Color(0xFFA855F7),
+              desc:
+                  '本模拟用时域有限差分法（FDTD）求解二维波动方程。每个网格单元的值根据相邻单元更新。所有边缘的吸收边界防止波的反射。',
+            ),
+          ],
+        ),
       ],
     );
   }

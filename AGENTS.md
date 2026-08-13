@@ -1,15 +1,15 @@
-# Phet Java Simulations — Flutter 复刻 · AI 协作指引
+# Kratos Java Simulations — Flutter 复刻 · AI 协作指引
 
-> 项目代号：phet-java-simulations（Flutter Port）
-> 代码工程：`c:\workspace\phet`
+> 项目代号：kratos-java-simulations（Flutter Port）
+> 代码工程：`c:\workspace\kratos`
 > 主要 AI 工具：codebuddy, claude, cursor
-> 适配于：2026-07-30（从 PhetAIVibeCodingProj 模板裁剪）
+> 适配于：2026-07-30（从 KratosAIVibeCodingProj 模板裁剪）
 
 ---
 
 ## 我是谁
 
-我是 **phet-java-simulations** Flutter 复刻项目的 AI 协作伙伴。
+我是 **kratos-java-simulations** Flutter 复刻项目的 AI 协作伙伴。
 目标是把 PhET Java 科学模拟逐批复刻到 Flutter，建立可配置、可 AI 生成的现代化交互模拟平台。
 
 当前已完成 4 个 sim：`sound` / `radio-waves` / `color-vision` / `wave-interference`
@@ -38,7 +38,7 @@
 | `45-state-sync-protocol.mdc` | 状态同步（四件套、阶段切换三步顺序） | always |
 | `60-citation-and-honesty.mdc` | 引用先行、诚实边界 | always |
 | `70-progressive-output.mdc` | 渐进式输出（摘要先行 + 选项呈现） | always |
-| `80-phet-sim-checklist.mdc` | **Phet Sim 开工自检表**（四原则 + L0-L2 复用 + §七 布局硬性要求） | phase 1→2 · 阻塞级 |
+| `80-kratos-sim-checklist.mdc` | **Kratos Sim 开工自检表**（四原则 + L0-L2 复用 + §七 布局硬性要求） | phase 1→2 · 阻塞级 |
 
 ---
 
@@ -46,18 +46,17 @@
 
 ### 代码工程位置
 
-**单一代码库**：所有业务代码改动**必须**落在 `c:\workspace\phet`（Flutter 工程 · Git 管理）。
+**单一代码库**：所有业务代码改动**必须**落在 `c:\workspace\kratos`（Flutter 工程 · Git 管理）。
 
-### 知识库位置（均在 phet 工程内）
+### 知识库位置（均在 kratos 工程内）
 
-- 核心项目知识：`docs/knowledge/phet-java-simulations/`
+- 核心项目知识：`docs/knowledge/kratos-java-simulations/`
   - `overview.md` — 项目四原则（MVC / 组件化 / 通用化 / 配置化）
   - `shared-abstraction-plan.md` — L0/L1/L2 三层组件体系 + 3-Time Rule
   - `edd-template.md` — 12 章 EDD 模板（v2.0）
   - `edd/` — 4 sim 完整 EDD（sound / radio-waves / color-vision / wave-interference）
   - `module-catalog.md` — 模块全景目录
-- 项目规范：`docs/knowledge/phet/`（architecture / conventions / flows / systems）
-- L0 通用组件参考：`docs/knowledge/phet-common/`（14 个 dart 文件）
+- 项目规范：`docs/knowledge/kratos/`（architecture / conventions / flows / systems）
 - JSON Schema：`schemas/`
 - 需求产物：`requirements/<req-id>/`
 
@@ -66,7 +65,7 @@
 任何 agent 做技术判断前**必须**按此顺序查：
 
 1. 当前需求：`requirements/<req-id>/`（spec / design / notes.md）
-2. 项目知识库：`docs/knowledge/phet-java-simulations/`
+2. 项目知识库：`docs/knowledge/kratos-java-simulations/`
 3. L0 通用组件：`lib/common/`
 4. 源码搜索：grep `lib/`
 
@@ -74,7 +73,7 @@
 
 ## 开发流程（3 阶段）
 
-phet sim 开发采用精简 3 阶段流程：
+kratos sim 开发采用精简 3 阶段流程：
 
 ```
 1. Intake（接收）  →  2. Build（建造 · Vibe Loop）  →  3. Close（收尾）
@@ -82,7 +81,7 @@ phet sim 开发采用精简 3 阶段流程：
 
 ### 阶段 1 · Intake（接收）
 
-- 读 Java 蓝本 + 对应 EDD + 通过 `80-phet-sim-checklist.mdc` 全表
+- 读 Java 蓝本 + 对应 EDD + 通过 `80-kratos-sim-checklist.mdc` 全表
 - 确认 sim 范围（单屏 / 多屏 / MVP 目标）
 - 产物：`spec/需求简述.md`（含 AC）+ `meta.yaml` 初始化
 
@@ -106,7 +105,7 @@ phet sim 开发采用精简 3 阶段流程：
 
 ## Agent 委派表
 
-| Agent | 职责 | phet 适用 |
+| Agent | 职责 | kratos 适用 |
 |---|---|---|
 | `product-manager` | 需求澄清 · 出 spec | ✅ |
 | `tech-leader` | 方案设计 · 架构决策 | ✅ |
@@ -143,4 +142,4 @@ phet sim 开发采用精简 3 阶段流程：
 - **遇到新模式或教训时**：主动提议沉淀到 `docs/knowledge/` 或 Skill
 
 ---
-*基于 AIVibeCodingProj v0.1.0-alpha · 2026-07-30 适配 phet-java-simulations*
+*基于 AIVibeCodingProj v0.1.0-alpha · 2026-07-30 适配 kratos-java-simulations*

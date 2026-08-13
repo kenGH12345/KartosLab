@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../common/simulation_clock.dart';
 import '../../common/widgets/time_control_bar.dart';
-import '../../common/widgets/property_control_panel.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/scenario_menu_button.dart';
 import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/widgets/inquiry_models.dart';
 import '../../common/widgets/inquiry_drawer.dart';
 import '../../common/widgets/experiment_logger.dart';
+import '../../common/widgets/experiment_intro_panel.dart';
 import '../config/radio_waves_scenario.dart';
 import '../config/radio_waves_scenario_manager.dart';
 import '../model/radio_state.dart';
@@ -96,9 +96,16 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
               painter: FieldPainter(_state),
             ),
             // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
-            midRight: _buildSideControlPanel(),
+            // 底部横条：操作面板横排（molarity footer 方案推广 · 窄视口横向滚动+缩放）
+            footer: _buildSideControlPanel(),
             // 顶部中格 = 探究入口按钮
             topCenter: _buildInquiryEntryButton(),
+            // 顶部右格 = 实验说明 + 操作指引（通用引导组件）
+            topRight: ExperimentIntroPanel(
+              description: _currentScenario?.description ?? '',
+              task: _currentScenario?.inquiryTask,
+              color: const Color(0xFF7C3AED),
+            ),
           ),
           // 探究工作流抽屉
           InquiryDrawer(
@@ -115,7 +122,8 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
   }
 
   /// 当前 scenario（经 manager 按 id 取 · 无则 null）。
-  RadioWavesScenario? get _currentScenario => _manager.findById(_currentScenarioId);
+  RadioWavesScenario? get _currentScenario =>
+      _manager.findById(_currentScenarioId);
 
   /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
   Widget _buildInquiryEntryButton() {
@@ -150,48 +158,91 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
       ];
     }
     return task.snapshotColumns
-        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .map(
+          (c) => ColumnDef(
+            key: c.key,
+            label: c.label,
+            isParam: c.source == 'param',
+          ),
+        )
         .toList(growable: false);
   }
 
   /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动
+  /// 底部横排操作面板：频率/振幅滑块 + 视图 chips + 时间控制
+  /// （molarity footer 方案推广 · 窄视口 FittedBox 缩放 + 横向滚动）。
   Widget _buildSideControlPanel() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-      child: PropertyControlPanel(
-        padding: const EdgeInsets.all(8),
-        spacing: 12,
-        children: [
-          _readoutRow('频率', '${_state.frequency.toStringAsFixed(2)} Hz'),
-          Slider(
-            value: _state.frequency, min: 0.05, max: 2.0, divisions: 39,
-            activeColor: const Color(0xFF7C3AED),
-            onChanged: (v) => setState(() => _state.setFrequency(v)),
-          ),
-          _readoutRow('振幅', _state.amplitude.toStringAsFixed(2)),
-          Slider(
-            value: _state.amplitude, min: 0, max: 1, divisions: 20,
-            activeColor: const Color(0xFF7C3AED),
-            onChanged: (v) => setState(() => _state.setAmplitude(v)),
-          ),
-          Wrap(
-            spacing: 6,
-            runSpacing: 4,
-            children: [
-              FilterChip(label: const Text('曲线', style: TextStyle(fontSize: 11)),
-                selected: _state.showCurve, selectedColor: const Color(0xFFDC2626).withAlpha(40),
-                onSelected: (_) => setState(() => _state.toggleCurve())),
-              FilterChip(label: const Text('箭头', style: TextStyle(fontSize: 11)),
-                selected: _state.showArrows, selectedColor: const Color(0xFF22C55E).withAlpha(40),
-                onSelected: (_) => setState(() => _state.toggleArrows())),
-              FilterChip(label: const Text('动态', style: TextStyle(fontSize: 11)),
-                selected: _state.dynamicFieldEnabled, selectedColor: const Color(0xFF7C3AED).withAlpha(40),
-                onSelected: (_) => setState(() => _state.toggleDynamicField())),
-            ],
-          ),
-          const Divider(height: 12),
-          Center(child: TimeControlBar(clock: _clock)),
-        ],
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 180,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _readoutRow('频率', '${_state.frequency.toStringAsFixed(2)} Hz'),
+                  Slider(
+                    value: _state.frequency,
+                    min: 0.05,
+                    max: 2.0,
+                    divisions: 39,
+                    activeColor: const Color(0xFF7C3AED),
+                    onChanged: (v) => setState(() => _state.setFrequency(v)),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 14),
+            SizedBox(
+              width: 180,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _readoutRow('振幅', _state.amplitude.toStringAsFixed(2)),
+                  Slider(
+                    value: _state.amplitude,
+                    min: 0,
+                    max: 1,
+                    divisions: 20,
+                    activeColor: const Color(0xFF7C3AED),
+                    onChanged: (v) => setState(() => _state.setAmplitude(v)),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 14),
+            Wrap(
+              spacing: 6,
+              children: [
+                FilterChip(
+                  label: const Text('曲线', style: TextStyle(fontSize: 11)),
+                  selected: _state.showCurve,
+                  selectedColor: const Color(0xFFDC2626).withAlpha(40),
+                  onSelected: (_) => setState(() => _state.toggleCurve()),
+                ),
+                FilterChip(
+                  label: const Text('箭头', style: TextStyle(fontSize: 11)),
+                  selected: _state.showArrows,
+                  selectedColor: const Color(0xFF22C55E).withAlpha(40),
+                  onSelected: (_) => setState(() => _state.toggleArrows()),
+                ),
+                FilterChip(
+                  label: const Text('动态', style: TextStyle(fontSize: 11)),
+                  selected: _state.dynamicFieldEnabled,
+                  selectedColor: const Color(0xFF7C3AED).withAlpha(40),
+                  onSelected: (_) => setState(() => _state.toggleDynamicField()),
+                ),
+              ],
+            ),
+            const SizedBox(width: 14),
+            TimeControlBar(clock: _clock),
+          ],
+        ),
       ),
     );
   }
@@ -200,8 +251,18 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
-        Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: Color(0xFF7C3AED))),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF7C3AED),
+          ),
+        ),
       ],
     );
   }
@@ -226,7 +287,10 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
   Widget _buildScenarioMenu() {
     return ScenarioMenuButton(
       entries: _manager.scenarios
-          .map((RadioWavesScenario s) => ScenarioMenuEntry(id: s.scenarioId, name: s.name))
+          .map(
+            (RadioWavesScenario s) =>
+                ScenarioMenuEntry(id: s.scenarioId, name: s.name),
+          )
           .toList(),
       currentId: _currentScenarioId,
       loading: !_scenariosLoaded,
@@ -241,31 +305,67 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
       titleIcon: '\ud83d\udcfb',
       titleColor: const Color(0xFF7C3AED),
       sections: [
-        KnowledgeSection.grid(items: const [
-          KnowledgeItem(icon: '\u26a1', title: '振荡电子', titleColor: Color(0xFF3B82F6),
-            desc: '天线上的电子振荡产生变化的电场，以电磁波的形式向外传播。'),
-          KnowledgeItem(icon: '\ud83c\udf00', title: '滞后场（推迟场）', titleColor: Color(0xFF22C55E),
-            desc: '距离 d 处的场滞后 d/c（光传播时间）。你在远处看到的场，其实是电子在过去时刻的行为。'),
-          KnowledgeItem(icon: '\ud83d\udcc8', title: '加速即辐射', titleColor: Color(0xFFDC2626),
-            desc: '只有加速运动的电荷才会辐射电磁波。匀速运动只产生静电场；加速运动才产生向外传播的波。'),
-          KnowledgeItem(icon: '\ud83d\udce1', title: '天线物理', titleColor: Color(0xFFF59E0B),
-            desc: '无线电天线通过驱动电子振荡来工作，振荡的电荷以相同频率辐射电磁波。'),
-        ]),
-        KnowledgeSection.list(
-          subtitle: '核心概念', subtitleIcon: '\ud83d\udcda', subtitleColor: const Color(0xFF60A5FA),
+        KnowledgeSection.grid(
           items: const [
-            KnowledgeItem(icon: '\ud83d\udc49', title: '无线电发射如何工作',
-              titleColor: Color(0xFFF59E0B),
-              desc: '1) 发射电路以选定频率驱动电子在天线上往复运动。2) 加速电子产生变化的电场和磁场。3) 这些场以光速向外传播。4) 接收天线拾取振荡的场，感应出微小电流。所有无线通信都靠这个原理——从 AM/FM 收音机到 WiFi 再到 5G。'),
-            KnowledgeItem(icon: '\ud83d\udd0d', title: '静态场 vs 动态场',
-              titleColor: Color(0xFF22C55E),
-              desc: '静态场（库仑场）：按 1/r^2 衰减，始终指向/背离电荷。动态场（辐射场）：按 1/r 衰减，以波的形式传播。在远距离处只有动态场起作用——这就是无线电信号能传得很远的原因。'),
-            KnowledgeItem(icon: '\ud83c\udf0d', title: '与光速的联系',
+            KnowledgeItem(
+              icon: '\u26a1',
+              title: '振荡电子',
               titleColor: Color(0xFF3B82F6),
-              desc: '电磁波以光速（c = 3×10^8 m/s）传播。本模拟中的滞后效应显示：远处某点的场反映的是电子 d/c 秒前的行为。这与遥远恒星发出的光让我们看到过去是同一个原理。'),
-            KnowledgeItem(icon: '\ud83d\udcfb', title: 'AM 与 FM 广播',
+              desc: '天线上的电子振荡产生变化的电场，以电磁波的形式向外传播。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83c\udf00',
+              title: '滞后场（推迟场）',
+              titleColor: Color(0xFF22C55E),
+              desc: '距离 d 处的场滞后 d/c（光传播时间）。你在远处看到的场，其实是电子在过去时刻的行为。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udcc8',
+              title: '加速即辐射',
+              titleColor: Color(0xFFDC2626),
+              desc: '只有加速运动的电荷才会辐射电磁波。匀速运动只产生静电场；加速运动才产生向外传播的波。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udce1',
+              title: '天线物理',
+              titleColor: Color(0xFFF59E0B),
+              desc: '无线电天线通过驱动电子振荡来工作，振荡的电荷以相同频率辐射电磁波。',
+            ),
+          ],
+        ),
+        KnowledgeSection.list(
+          subtitle: '核心概念',
+          subtitleIcon: '\ud83d\udcda',
+          subtitleColor: const Color(0xFF60A5FA),
+          items: const [
+            KnowledgeItem(
+              icon: '\ud83d\udc49',
+              title: '无线电发射如何工作',
+              titleColor: Color(0xFFF59E0B),
+              desc:
+                  '1) 发射电路以选定频率驱动电子在天线上往复运动。2) 加速电子产生变化的电场和磁场。3) 这些场以光速向外传播。4) 接收天线拾取振荡的场，感应出微小电流。所有无线通信都靠这个原理——从 AM/FM 收音机到 WiFi 再到 5G。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udd0d',
+              title: '静态场 vs 动态场',
+              titleColor: Color(0xFF22C55E),
+              desc:
+                  '静态场（库仑场）：按 1/r^2 衰减，始终指向/背离电荷。动态场（辐射场）：按 1/r 衰减，以波的形式传播。在远距离处只有动态场起作用——这就是无线电信号能传得很远的原因。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83c\udf0d',
+              title: '与光速的联系',
+              titleColor: Color(0xFF3B82F6),
+              desc:
+                  '电磁波以光速（c = 3×10^8 m/s）传播。本模拟中的滞后效应显示：远处某点的场反映的是电子 d/c 秒前的行为。这与遥远恒星发出的光让我们看到过去是同一个原理。',
+            ),
+            KnowledgeItem(
+              icon: '\ud83d\udcfb',
+              title: 'AM 与 FM 广播',
               titleColor: Color(0xFFA855F7),
-              desc: 'AM（调幅）：通过改变波的振幅来编码声音。FM（调频）：通过改变波的频率来编码声音。两者使用相同的底层物理——发射天线中振荡的电子——但调制的载波属性不同。'),
+              desc:
+                  'AM（调幅）：通过改变波的振幅来编码声音。FM（调频）：通过改变波的频率来编码声音。两者使用相同的底层物理——发射天线中振荡的电子——但调制的载波属性不同。',
+            ),
           ],
         ),
       ],

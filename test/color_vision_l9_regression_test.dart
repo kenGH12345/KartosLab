@@ -1,7 +1,7 @@
 ﻿import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:geometric_optics/color_vision/config/color_vision_scenario.dart';
-import 'package:geometric_optics/color_vision/config/color_vision_scenario_manager.dart';
+import 'package:kratos/color_vision/config/color_vision_scenario.dart';
+import 'package:kratos/color_vision/config/color_vision_scenario_manager.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -218,7 +218,7 @@ tools: Read, Write, Edit, Glob, Grep, AskUserQuestion
 > 删除两处"经验注入"行（引用不存在的 `.workflow/scripts/experience-injector.{sh,ps1}`）。
 > - 场景 A 步骤 4 删除（workflow 变体）
 > - 场景 B 步骤 4 删除（architecture 变体）
-> - 触发原因：grep 全仓 0 匹配 · phet 工程自体集成后无此脚本（memory:g7nr92qg）
+> - 触发原因：grep 全仓 0 匹配 · kartosos 工程自体集成后无此脚本（memory:g7nr92qg）
 > - 影响面：无 · shell 块从未真实执行 · agent 行为无退化
 > - 三端同步：无需 · `.claude/agents/` 是 `.codebuddy/` 的 symlink · 自动跟随
 > - 生效时机：下次 IDE 重启后对该 agent 生效

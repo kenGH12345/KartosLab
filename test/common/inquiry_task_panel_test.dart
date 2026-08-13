@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geometric_optics/common/widgets/inquiry_models.dart';
-import 'package:geometric_optics/common/widgets/inquiry_task_panel.dart';
+import 'package:kratos/common/widgets/inquiry_models.dart';
+import 'package:kratos/common/widgets/inquiry_task_panel.dart';
 
 void main() {
   group('InquiryTaskPanel', () {

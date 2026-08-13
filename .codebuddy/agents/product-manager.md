@@ -176,7 +176,7 @@ Socratic 追问不是让 LLM 自由发挥，而是**按标准路径遍历四层�
 
 > 2026-08-06 by req-verify-selftest-color-vision γ 收尾续（用户 A=y）：
 > 删除上下文加载步骤 5 的"经验注入"行（引用不存在的 `.workflow/scripts/experience-injector.{sh,ps1}`）。
-> - 触发原因：grep 全仓 0 匹配 · phet 工程自体集成后无此脚本（memory:g7nr92qg）
+> - 触发原因：grep 全仓 0 匹配 · kartosos 工程自体集成后无此脚本（memory:g7nr92qg）
 > - 影响面：无 · shell 块从未真实执行 · agent 行为无退化
 > - 三端同步：无需 · `.claude/agents/` 是 `.codebuddy/` 的 symlink · 自动跟随
 > - 生效时机：下次 IDE 重启后对该 agent 生效

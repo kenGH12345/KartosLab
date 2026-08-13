@@ -414,7 +414,7 @@ svn diff
 > - 步骤 0 「经验自动注入」整段删除（原 line 23-32）
 > - 步骤 1 编号 4「经验注入」条目删除（原 line 39）
 > - 步骤 1.5 编号 2「经验注入」子段删除并改为「经验沉淀深化」制度化描述（原 line 98-102）
-> - 触发原因：grep 全仓 0 匹配 · phet 工程自体集成后无此脚本（memory:g7nr92qg）
+> - 触发原因：grep 全仓 0 匹配 · kartosos 工程自体集成后无此脚本（memory:g7nr92qg）
 > - 影响面：无 · shell 块从未真实执行 · agent 行为无退化（step 1.5 的经验沉淀仍由 knowledge-maintainer 承担）
 > - 三端同步：无需 · `.claude/agents/` 是 `.codebuddy/` 的 symlink · 自动跟随
 > - 生效时机：下次 IDE 重启后对该 agent 生效

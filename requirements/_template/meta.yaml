@@ -1,17 +1,17 @@
 ﻿# Phet Sim 需求模板 meta.yaml
 # 复制此文件到 requirements/<req-id>/meta.yaml 后填写
 req_id: req-port-<sim-name>
-title: 复刻 PhET <sim-name> 到 Flutter phet 工程
+title: 复刻 PhET <sim-name> 到 Flutter kartos 工程
 status: intake
 phase: '1.intake'
 created_at: '<YYYY-MM-DD HH:MM>'
 updated_at: '<YYYY-MM-DD HH:MM>'
-repo_path: 'C:\workspace\phet'
+repo_path: 'C:\workspace\kartos'
 
 java_source:
-  path: 'c:\workspace\phetTrunk\phetTrunk\simulations-java\simulations\<sim-name>\src\edu\colorado\phet\<sim-package>\'
+  path: 'c:\workspace\kartosTrunk\kartosTrunk\simulations-java\simulations\<sim-name>\src\edu\colorado\kartos\<sim-package>\'
   file_count: <N>
-  tech_stack: <phetgraphics | piccolo-phet>
+  tech_stack: <kartosgraphics | piccolo-kartos>
   edu_value: '<★ ~ ★★★>'
 
 edd_template_version: v2.0

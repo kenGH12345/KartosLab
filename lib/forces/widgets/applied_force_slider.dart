@@ -6,10 +6,12 @@ class AppliedForceSlider extends StatelessWidget {
   final double value;
   final ValueChanged<double> onChanged;
 
-  @override Widget build(BuildContext context) => Row(mainAxisSize: MainAxisSize.min, children: [
+  // 注：Slider 用 Expanded 自适应宽度（修复窄格溢出——原固定 SizedBox(200) 在
+  // midRight 130px 窄格放不下（255px 溢出）；宽度由外部约束（SizedBox）定。
+  @override Widget build(BuildContext context) => Row(children: [
     _arrowButton(Icons.remove, -50),
     const SizedBox(width: 4),
-    SizedBox(width: 200, child: SliderTheme(
+    Expanded(child: SliderTheme(
       data: SliderThemeData(trackHeight: 8, thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
         activeTrackColor: value < 0 ? const Color(0xFF3B82F6) : const Color(0xFFEF4444),
         inactiveTrackColor: const Color(0xFFE2E8F0), thumbColor: const Color(0xFF1E293B)),

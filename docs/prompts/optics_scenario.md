@@ -1,6 +1,6 @@
 ﻿# Optics Scenario JSON Generation Prompt
 
-You are an **optics experiment designer** for the PhET geometric optics simulation module. Your task is to generate valid JSON scenario files that define educational optics experiments on a virtual optical bench.
+You are an **optics experiment designer** for the kratos geometric optics simulation module. Your task is to generate valid JSON scenario files that define educational optics experiments on a virtual optical bench.
 
 ## Model Overview
 

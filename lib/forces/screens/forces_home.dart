@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'netforce_screen.dart';
 import 'motion_screen.dart';
 import '../config/scenario_manager.dart';
-import '../../common/widgets/phet_tab_bar.dart';
+import '../../common/widgets/kratos_tab_bar.dart';
 
 /// 力与运动主页：Tab 切换 4 个实验模式 · 支持 JSON scenario 加载（§C1 合规）
 class ForcesHome extends StatefulWidget {
@@ -42,24 +42,24 @@ class _ForcesHomeState extends State<ForcesHome> {
     if (mgr == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    return PhetTabbedScreen(
+    return KratosTabbedScreen(
       title: '力与运动',
       accentColor: const Color(0xFF166534),
       tabBarPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       tabs: [
-        PhetTab(
+        KratosTab(
           label: '合力', icon: Icons.sports_kabaddi,
           child: NetForceScreen(scenario: mgr.tryLoad(_scenarioMap['合力'] ?? '')),
         ),
-        PhetTab(
+        KratosTab(
           label: '运动', icon: Icons.speed,
           child: MotionScreen(mode: MotionScreenMode.motion, scenario: mgr.tryLoad(_scenarioMap['运动'] ?? '')),
         ),
-        PhetTab(
+        KratosTab(
           label: '摩擦', icon: Icons.sledding,
           child: MotionScreen(mode: MotionScreenMode.friction, scenario: mgr.tryLoad(_scenarioMap['摩擦'] ?? '')),
         ),
-        PhetTab(
+        KratosTab(
           label: '加速度', icon: Icons.sensors,
           child: MotionScreen(mode: MotionScreenMode.acceleration, scenario: mgr.tryLoad(_scenarioMap['加速度'] ?? '')),
         ),

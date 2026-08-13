@@ -1,7 +1,7 @@
 ﻿# 电路场景 JSON Schema（Step 1a · draft）
 
 > 权威源：`lib/circuit/config/circuit_scenario.dart`  
-> 需求：`req-phet-circuit-config-json` Step 1a  
+> 需求：`req-kartosos-circuit-config-json` Step 1a  
 > 版本：1.0
 
 ## 顶层结构

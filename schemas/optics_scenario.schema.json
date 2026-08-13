@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phet/optics-scenario.schema.json",
+  "$id": "https://kartos/optics-scenario.schema.json",
   "title": "Optics Scenario",
   "description": "Schema for optics module scenario JSON files. Each scenario defines initial optical element placements, inventory, constraints, learning objectives, game rules, and UI config. Corresponds to lib/optics/config/lab_scenario.dart.",
   "type": "object",

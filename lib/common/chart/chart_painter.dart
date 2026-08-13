@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'chart_series.dart';
 
-/// 绘制时间序列折线图。遵循 Flutter phet CustomPainter 规范：
+/// 绘制时间序列折线图。遵循 Flutter kratos CustomPainter 规范：
 /// - 构造注入不可变数据
 /// - paint(Canvas, Size) 命令式绘制
 /// - shouldRepaint 引用比较

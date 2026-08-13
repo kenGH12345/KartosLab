@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:geometric_optics/forces/config/forces_scenario.dart';
-import 'package:geometric_optics/forces/config/scenario_manager.dart';
+import 'package:kratos/forces/config/forces_scenario.dart';
+import 'package:kratos/forces/config/scenario_manager.dart';
 
 void main() {
   const jsonDefault = '''

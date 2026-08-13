@@ -71,7 +71,12 @@ class ComponentIconWidget extends StatelessWidget {
       content.add(Text(_s.label, style: TextStyle(color: color.withValues(alpha: 0.9), fontSize: fontSize, fontWeight: FontWeight.w600)));
     }
 
-    return Column(mainAxisSize: MainAxisSize.min, children: content);
+    // FittedBox scaleDown：DropCanvas 元件 cell 高度受限（如 h<=60）时整体缩放，
+    // 避免 icon+label Column 自然高超出导致 RenderFlex overflow（component_icon 历史 bug）。
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Column(mainAxisSize: MainAxisSize.min, children: content),
+    );
   }
 
   static Widget dragFeedback(ComponentType type) {

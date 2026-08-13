@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:geometric_optics/common/widgets/nine_grid_layout.dart';
+import 'package:kratos/common/widgets/nine_grid_layout.dart';
 
 void main() {
   Future<void> pump(

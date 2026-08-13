@@ -2,10 +2,10 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geometric_optics/circuit/config/circuit_scenario.dart';
-import 'package:geometric_optics/circuit/config/circuit_learning_objective.dart';
-import 'package:geometric_optics/circuit/config/scenario_manager.dart';
-import 'package:geometric_optics/circuit/models/circuit_state.dart';
+import 'package:kratos/circuit/config/circuit_scenario.dart';
+import 'package:kratos/circuit/config/circuit_learning_objective.dart';
+import 'package:kratos/circuit/config/scenario_manager.dart';
+import 'package:kratos/circuit/models/circuit_state.dart';
 
 void main() {
   // ---------- 1 · default scenario (empty topology) ----------

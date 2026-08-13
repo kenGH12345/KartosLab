@@ -1,5 +1,5 @@
 ﻿import 'package:flutter/material.dart';
-import '../../common/widgets/phet_tab_bar.dart';
+import '../../common/widgets/kratos_tab_bar.dart';
 import '../screens/rgb_bulbs_screen.dart';
 import '../screens/single_bulb_screen.dart';
 import '../config/color_vision_scenario.dart';
@@ -38,12 +38,12 @@ class _ColorVisionHomeState extends State<ColorVisionHome> {
     final rgbScenarios =
         mgr.scenarios.where((s) => s.screen == CVScreen.rgb).toList(growable: false);
 
-    return PhetTabbedScreen(
-      title: 'Color Vision',
+    return KratosTabbedScreen(
+      title: '色彩视觉',
       accentColor: const Color(0xFF7C3AED),
       tabs: [
-        PhetTab(
-          label: 'Magic Lab',
+        KratosTab(
+          label: '魔法实验室',
           icon: Icons.science,
           child: MagicLabScreen(
             scenario: rgbScenario,
@@ -51,8 +51,8 @@ class _ColorVisionHomeState extends State<ColorVisionHome> {
             manager: mgr,
           ),
         ),
-        PhetTab(
-          label: 'Filter',
+        KratosTab(
+          label: '滤光镜',
           icon: Icons.filter_vintage,
           child: SingleBulbScreen(scenario: filterScenario),
         ),

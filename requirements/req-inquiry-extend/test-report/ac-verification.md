@@ -13,7 +13,7 @@
 | # | 验收项 | 验证方式 | 测试引用 / analyze 输出 | 结果 | 备注 |
 |---|--------|----------|--------------------------|------|------|
 | ① | 5 model 解析 inquiryTask + 向后兼容 | 单测真实执行 | `test/common/inquiry_scenario_parse_test.dart:30-101`（5 个 test，各含「解析 inquiryTask + 向后兼容」断言）| ✅ | Forces/Lab(optics)/Sound/RadioWaves/WaveInterference 5 model 均 `inquiryTask?` 可空字段 + `fromJson` 判空解析；测试断言有 `inquiryTask` 时解析成功、无字段时 `== null` 不崩 |
-| ② | 6 screen 编译 + analyze 干净 | `flutter analyze` | `analyze.log`：5 sim 6 screen（optics/netforce/motion/sound/radio_waves/wave_interference）**0 error**；本需求文件仅 1 warning（`inquiry_scenario_parse_test.dart:1` unused_import `dart:convert`）| ✅ | analyze 中全部 error 位于 `docs/knowledge/phet-common/*.dart`（知识库参考代码，非本需求代码）；forces/motion 的 `_showChart` final、转义、netforce `scale` deprecated 等 6 条 info 为既有（553d6dc 已有）|
+| ② | 6 screen 编译 + analyze 干净 | `flutter analyze` | `analyze.log`：5 sim 6 screen（optics/netforce/motion/sound/radio_waves/wave_interference）**0 error**；本需求文件仅 1 warning（`inquiry_scenario_parse_test.dart:1` unused_import `dart:convert`）| ✅ | analyze 中全部 error 位于 `docs/knowledge/kartosos-common/*.dart`（知识库参考代码，非本需求代码）；forces/motion 的 `_showChart` final、转义、netforce `scale` deprecated 等 6 条 info 为既有（553d6dc 已有）|
 | ③ | 6 JSON 解析 | 静态检查 + 测试 | 6 个 JSON 均含 `inquiryTask` 块（`assets/scenarios/basic-lens-imaging.json:87`、`forces/netforce-tug.json:92`、`forces/motion-explore.json:78`、`sound/default.json:23`、`radio-waves/default.json:26`、`wave-interference/default.json:28`）；解析路径经 ① 测试验证（`inquiry_scenario_parse_test.dart` 内联 JSON 结构同源）| ✅ | 各 JSON 的 `inquiryTask.question/steps/referenceConclusion/snapshotColumns` 结构完整 |
 | ④ | 快照 key 与 JSON snapshotColumns 一致 | 静态核对 | 见下表「快照 key 对照」| ✅ | 6 screen 的 snapshotProvider 返回 key 与对应 JSON `snapshotColumns[].key` 逐项一致 |
 | ⑤ | 与先例（circuit/color_vision）接入模式一致 | 静态对照 | `lib/circuit/screens/circuit_screen.dart:412-417`、`lib/color_vision/screens/rgb_bulbs_screen.dart:288-293` 与 5 sim 的 `InquiryDrawer` 均传 `task`+`columns`+`snapshotProvider`+`open` 四参数 | ✅ | 5 sim（如 `lib/optics/screens/optics_screen.dart:157-162`）接入签名与两先例完全一致；columns 均由 `inquiryTask.snapshotColumns` 映射 |
@@ -45,7 +45,7 @@
 - 5 sim 6 screen + 5 model：**0 error**
 - 本需求新增 warning：`test/common/inquiry_scenario_parse_test.dart:1` unused_import `dart:convert`（import 未使用，不影响编译运行）
 - 既有 info（553d6dc 已有）：`motion_screen.dart` `_showChart` final、334 行转义；`netforce_screen.dart:375` `scale` deprecated
-- 全部 error 位于 `docs/knowledge/phet-common/`（知识库参考代码，非本需求范围）
+- 全部 error 位于 `docs/knowledge/kartosos-common/`（知识库参考代码，非本需求范围）
 
 ## 诚实声明（SOP 9.4）
 

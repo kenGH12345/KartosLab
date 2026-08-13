@@ -35,7 +35,7 @@ class MotionModel {
   final ForcesSimulation sim;
   bool showAccelerometer;
 
-  // 图表数据源（可用于 PhetChart）
+  // 图表数据源（可用于 KratosChart）
   final MemorySeriesDataProvider posData = MemorySeriesDataProvider();
   final MemorySeriesDataProvider velData = MemorySeriesDataProvider();
 

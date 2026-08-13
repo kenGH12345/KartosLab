@@ -55,7 +55,7 @@ class MolarityScenarioManager
         'initialParams': {'soluteIndex': 0, 'soluteAmount': 0.5, 'volume': 0.5},
         'solutes': [
           {
-            'name': 'Drink mix',
+            'name': '饮料粉',
             'formula': 'Drink mix',
             'saturatedConcentration': 5.95,
             'solutionColorMin': '#FFE1E1',

@@ -21,8 +21,8 @@ cp workflow/project-init-template/workflow.config.js     <your-project>/workflow
 Open `<your-project>/AGENTS.md` and replace all `{PLACEHOLDERS}`:
 | Placeholder | What to fill |
 |-------------|-------------|
-| `phet` | Your project name (auto-detected from directory name) |
-| `phet – Unknown project` | e.g., `Flutter I-Ching oracle app` |
+| `kratos` | Your project name (auto-detected from directory name) |
+| `kartosos – Unknown project` | e.g., `Flutter I-Ching oracle app` |
 | `Unknown` | e.g., `Flutter/Dart`, `Unity/Lua`, `Go/React` |
 | `TBD` | e.g., `iOS, Android, Windows` |
 | `{DIRECTORY_TREE}` | Paste your actual directory structure |

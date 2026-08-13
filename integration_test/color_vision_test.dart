@@ -23,8 +23,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:geometric_optics/color_vision/screens/single_bulb_screen.dart';
-import 'package:geometric_optics/color_vision/painters/single_bulb_painter.dart';
+import 'package:kratos/color_vision/screens/single_bulb_screen.dart';
+import 'package:kratos/color_vision/painters/single_bulb_painter.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

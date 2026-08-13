@@ -4,11 +4,11 @@ import 'dart:ui' show Color;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geometric_optics/color_vision/config/color_vision_scenario.dart';
-import 'package:geometric_optics/color_vision/config/color_vision_scenario_manager.dart';
-import 'package:geometric_optics/color_vision/model/color_vision_state.dart';
-import 'package:geometric_optics/color_vision/screens/rgb_bulbs_screen.dart';
-import 'package:geometric_optics/color_vision/solver/photon_beam.dart';
+import 'package:kratos/color_vision/config/color_vision_scenario.dart';
+import 'package:kratos/color_vision/config/color_vision_scenario_manager.dart';
+import 'package:kratos/color_vision/model/color_vision_state.dart';
+import 'package:kratos/color_vision/screens/rgb_bulbs_screen.dart';
+import 'package:kratos/color_vision/solver/photon_beam.dart';
 
 ColorVisionState _state(double r, double g, double b) {
   final beams = <PhotonBeam>[

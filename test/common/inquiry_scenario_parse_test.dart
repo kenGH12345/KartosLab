@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geometric_optics/forces/config/forces_scenario.dart';
-import 'package:geometric_optics/optics/config/lab_scenario.dart';
-import 'package:geometric_optics/radio_waves/config/radio_waves_scenario.dart';
-import 'package:geometric_optics/sound/config/sound_scenario.dart';
-import 'package:geometric_optics/wave_interference/config/wave_interference_scenario.dart';
+import 'package:kratos/forces/config/forces_scenario.dart';
+import 'package:kratos/optics/config/lab_scenario.dart';
+import 'package:kratos/radio_waves/config/radio_waves_scenario.dart';
+import 'package:kratos/sound/config/sound_scenario.dart';
+import 'package:kratos/wave_interference/config/wave_interference_scenario.dart';
 
 /// 5 sim 推广需求：scenario model 解析 inquiryTask（AC 向后兼容 + 新字段）。
 ///

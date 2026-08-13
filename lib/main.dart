@@ -10,17 +10,17 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  runApp(const GeometricOpticsApp());
+  runApp(const KratosApp());
 }
 
-class GeometricOpticsApp extends StatelessWidget {
-  const GeometricOpticsApp({super.key});
+class KratosApp extends StatelessWidget {
+  const KratosApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: '几何光学',
+      title: 'kratos',
       builder: (context, child) {
         final app = child ?? const SizedBox.shrink();
         if (!kIsWeb && defaultTargetPlatform == TargetPlatform.windows) {

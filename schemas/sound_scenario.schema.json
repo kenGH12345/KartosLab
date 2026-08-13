@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phet/sound-scenario.schema.json",
+  "$id": "https://kartos/sound-scenario.schema.json",
   "title": "Sound Wave Scenario",
   "type": "object",
   "required": ["scenarioId", "name", "screen"],

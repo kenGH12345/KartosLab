@@ -9,4 +9,4 @@ updated_at: "2026-08-06 09:52"
 edd_template_version: v2.0
 # 来源: req-verify-selftest-color-vision 衍生发现
 # 证据: requirements/req-verify-selftest-color-vision/screenshots/ac-BUG-layout-overflow-red.png
-# 违规: .codebuddy/rules/80-phet-sim-checklist.mdc §七 L0-2 + L0-3
+# 违规: .codebuddy/rules/80-kartos-sim-checklist.mdc §七 L0-2 + L0-3

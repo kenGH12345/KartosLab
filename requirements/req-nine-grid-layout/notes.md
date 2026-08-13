@@ -58,5 +58,5 @@
 - **PowerShell 下 flutter 输出污染**：`flutter analyze`/`test` 输出被 CLIXML 污染（stderr 对象序列化），用 `cmd /c` + 重定向到文件可读纯文本。
 
 ### 对本需求自身 process 的工具环境备注
-- 收尾时 `.workflow/scripts/auto-extract-failures.sh` 在 phet 工程**不存在**（.workflow 目录不存在）→ 步骤 1.5 / 4.5.1 自动失败提取跳过，此段为人工沉淀替代。
+- 收尾时 `.workflow/scripts/auto-extract-failures.sh` 在 kartosos 工程**不存在**（.workflow 目录不存在）→ 步骤 1.5 / 4.5.1 自动失败提取跳过，此段为人工沉淀替代。
 - 项目实际是 git 仓库（非 SVN），收尾的所有 `svn *` 命令改用 `git *`。

@@ -3,10 +3,10 @@
 [2026-08-06 回溯建档: 第2轮澄清] 用户否决等分: "不是等分 中间一格至少要占70%的屏幕大小" · 主会话按"宽、高各占70%"实现 v2
 [2026-08-06 回溯建档: 第3轮澄清] 用户指出违反 20-verify-before-act 信心阈值: 核心参数含义(70% 指面积)未确认就动手 · 主会话道歉并补确认
 [2026-08-07 10:00 澄清确认] 用户四问澄清: Q1=面积 ≥ 70%(宽高各 sqrt(0.7)≈0.837 屏 · 边条各≈8%) · Q2=周边格信息展示+交互控件混合(各 sim 自行决定)
-[2026-08-07 10:05 澄清确认] 落地决策: 全部 7 sim 立即迁移 + 规则写入 80-phet-sim-checklist 阻塞级条款
+[2026-08-07 10:05 澄清确认] 落地决策: 全部 7 sim 立即迁移 + 规则写入 80-kartos-sim-checklist 阻塞级条款
 [2026-08-07 10:10 组件实现] 创建 lib/common/widgets/nine_grid_layout.dart · centerAreaRatio 默认0.7(面积) · kMinCenterAreaRatio=0.7 下限 clamp · 宽高各 sqrt(面积比) · 无 Positioned/无硬编码像素
 [2026-08-07 10:20 组件验证] test/common/nine_grid_layout_test.dart · 6 用例全通过(面积70%精确断言/贴边/600×300自适应/下限强制/自定义0.8/空边格) · flutter analyze No issues
-[2026-08-07 10:30 规则落地] 80-phet-sim-checklist.mdc §七新增 L0-4(九宫格布局强制·阻塞级) + §六违反后果表 + 变更历史 · 用户拍板"写入(阻塞级条款)"
+[2026-08-07 10:30 规则落地] 80-kartos-sim-checklist.mdc §七新增 L0-4(九宫格布局强制·阻塞级) + §六违反后果表 + 变更历史 · 用户拍板"写入(阻塞级条款)"
 [2026-08-07 10:40 知识库登记] shared-abstraction-plan.md 候选7 升级为"强制通用方案" · 含面积70%规则/路径/落地义务
 [2026-08-07 11:00 迁移-1] radio_waves ✓ wave_interference ✓ sound ✓ · analyze 通过 · sound 22 + radio 21 + wave 18 测试通过
 [2026-08-07 11:10 迁移-2] color_vision single_bulb ✓ MagicLab(rgb_bulbs) ✓ · 修正 rgb_bulbs 挑战模式 LinearProgressIndicator 少1括号 + 删死代码 _subtitle
@@ -26,10 +26,10 @@
   测试: test_exempt=true（回溯建档豁免 · 证据 flutter test 167/168 + widget 6/6 + analyze 无 error/warning）
   验收项覆盖: 4 / 4 covered · 0 partial · 0 waived · 0 unknown/missing
   涉及 revisions: git 未提交（回溯建档 · 改动位于工作区，待主会话审批后 commit）
-  工具备注: .workflow/scripts/auto-extract-failures.sh 在 phet 工程不存在（.workflow 目录不存在）→ 步骤 1.5 / 4.5.1 自动失败提取跳过，以人工沉淀替代
+  工具备注: .workflow/scripts/auto-extract-failures.sh 在 kartos 工程不存在（.workflow 目录不存在）→ 步骤 1.5 / 4.5.1 自动失败提取跳过，以人工沉淀替代
   版本控制备注: 项目为 git 仓库（非 SVN）· 收尾所有 svn* 命令改用 git*
   ⚠️ commit 未执行：按流程停在 commit 前，待主会话请用户审批（注意排除非本需求改动 circuit_solver/circuit_state/circuit_solver_mna_test）
-[2026-08-07 12:00] knowledge-maintainer: 完成知识沉淀（主会话代行 · context/ 目录在 phet 不存在 · 沉淀落 docs/knowledge/phet/notes.md + INDEX.md 同步 · 关键经验: 9宫格面积≥70%实现要点/窄边条3应对/百分比参数先澄清） · auto-extract-failures.sh 不存在跳过 · 经验质量门禁: notes.md 已沉淀 5 条可复用经验
+[2026-08-07 12:00] knowledge-maintainer: 完成知识沉淀（主会话代行 · context/ 目录在 kartos 不存在 · 沉淀落 docs/knowledge/kartos/notes.md + INDEX.md 同步 · 关键经验: 9宫格面积≥70%实现要点/窄边条3应对/百分比参数先澄清） · auto-extract-failures.sh 不存在跳过 · 经验质量门禁: notes.md 已沉淀 5 条可复用经验
 [2026-08-07 12:05] done 门禁 check-before-done.ps1 首次失败（process.txt 中文被 PowerShell 5.1 按 ANSI 解码乱码 → 'closer.*完成' 无法匹配）· 修正 closer 日志行含英文 completed 仍失败 → 追加 ASCII 标记行后通过（All done-gate checks passed · Safe to mark status=done）
 [2026-08-07 12:06] 门禁通过后把 ASCII 标记行规范化为文件末尾注释块（不影响门禁结果）· 收尾修正（process.txt/spec 完成时间）待 follow-up commit
 [2026-08-07 12:30] Change-1 · 用户截图纠正: optics 教学目标/约束(rightPanel)与底部托盘仍在中间格内 · 违反"中间格只给实验本身展示 · ui都要按适配要求靠边"

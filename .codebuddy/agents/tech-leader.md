@@ -175,7 +175,7 @@ tools: Read, Write, Edit, Glob, Grep, AskUserQuestion, Task
 > 2026-08-06 by req-verify-selftest-color-vision γ 收尾续（用户 A=y）：
 > 删除"经验自动注入"段（上一条演进引入的）。
 > - 步骤 3 的 `bash .workflow/scripts/experience-injector.sh architecture` shell 块整段删除（原 line 20-25）；后续编号步骤 4 保持为步骤 3 （仅删除无后续重编，不影响可读性）
-> - 触发原因：grep 全仓 0 匹配 `.workflow/scripts/experience-injector.sh` · phet 工程自体集成后无此脚本（memory:g7nr92qg）
+> - 触发原因：grep 全仓 0 匹配 `.workflow/scripts/experience-injector.sh` · kartosos 工程自体集成后无此脚本（memory:g7nr92qg）
 > - 影响面：无 · shell 块从未真实执行 · agent 行为无退化
 > - 三端同步：无需 · `.claude/agents/` 是 `.codebuddy/` 的 symlink · 自动跟随
 > - 生效时机：下次 IDE 重启后对该 agent 生效

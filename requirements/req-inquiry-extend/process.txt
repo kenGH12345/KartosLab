@@ -24,3 +24,4 @@
 
 [2026-08-07 20:20] closer completion: finalized req-inquiry-extend (spec/最终需求.md + notes.md + shared-abstraction-plan L1 候选8 更新) · check-before-done 校验通过记录见下
 [2026-08-07 20:25] done 门禁复跑: check-before-done.ps1 exit 0(All done-gate checks passed) · 修复: process.txt 补 ASCII closer completion 日志(绕过 PS5.1 读 UTF-8 中文乱码致 Check3 误判) + ac-verification.md 补诚实声明 checkbox(SOP 9.4 · 中文编码下计数 1/3 为软警告不影响门禁) · meta.yaml status=done · 待用户审批 commit
+[2026-08-10 10:30] commit 2047d32 成功(用户审批 · 25 files · +1114/-167) · 已排除: circuit_solver/state MNA 工作 + color_vision 中文化(home/single_bulb/optical_element/sound_info_cards) + .codebuddy.backup-20260729/ + scripts/ + lib/common/elements/ + 前置需求 req-inquiry-learning/process.txt 的 commit 记录(归属前置) · 需求闭环

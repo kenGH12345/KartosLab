@@ -8,7 +8,7 @@
 
 ## Subagents 使用
 
-**常用委派**（phet 适用 agent 清单见 `AGENTS.md` 委派表）：
+**常用委派**（kratos 适用 agent 清单见 `AGENTS.md` 委派表）：
 
 | 场景 | 委派给 |
 |---|---|
@@ -25,4 +25,4 @@
 - 用户回答某 Subagent 的提问时，**必须**重新委派该 Subagent 继续整理
 
 ---
-*基于 AIVibe 框架（由 AIVibeCodingProj 模板 v0.1.0-alpha 适配）· 2026-07-30 落地于 phet*
+*基于 AIVibe 框架（由 AIVibeCodingProj 模板 v0.1.0-alpha 适配）· 2026-07-30 落地于 kratos*

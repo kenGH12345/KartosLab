@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-/// 浓度条 painter：竖直渐变条（0→max）+ 指针箭头 + 饱和灰段 + 数值/定性双视图。
+/// 浓度条方向：竖直（默认 · 右侧窄条用）或横向（底部横排用）。
+enum ConcentrationBarOrientation { vertical, horizontal }
+
+/// 浓度条 painter：渐变条（0→max）+ 指针箭头 + 饱和灰段 + 数值/定性双视图。
+/// 支持竖直（右侧窄条）与横向（底部横排）两种方向。
 class ConcentrationBarPainter extends CustomPainter {
   const ConcentrationBarPainter({
     required this.concentration,
@@ -8,6 +12,7 @@ class ConcentrationBarPainter extends CustomPainter {
     required this.color,
     this.showValue = false,
     this.isSaturated = false,
+    this.orientation = ConcentrationBarOrientation.vertical,
   });
 
   final double concentration;
@@ -18,8 +23,19 @@ class ConcentrationBarPainter extends CustomPainter {
   final bool showValue;
   final bool isSaturated;
 
+  /// 条方向：默认竖直（0→max 自下而上），横向（0→max 自左而右）。
+  final ConcentrationBarOrientation orientation;
+
   @override
   void paint(Canvas canvas, Size size) {
+    if (orientation == ConcentrationBarOrientation.horizontal) {
+      _paintHorizontal(canvas, size);
+    } else {
+      _paintVertical(canvas, size);
+    }
+  }
+
+  void _paintVertical(Canvas canvas, Size size) {
     const padLeft = 18.0;
     const padBottom = 18.0;
     final barW = size.width - padLeft - 8;
@@ -40,7 +56,11 @@ class ConcentrationBarPainter extends CustomPainter {
     );
 
     // 刻度（0 / max/2 / max）
-    final ts = TextStyle(fontSize: 9, color: const Color(0xFF64748B), height: 1.2);
+    final ts = TextStyle(
+      fontSize: 9,
+      color: const Color(0xFF64748B),
+      height: 1.2,
+    );
     for (final frac in [0.0, 0.5, 1.0]) {
       final y = barTop + barH * (1 - frac);
       canvas.drawLine(
@@ -50,8 +70,13 @@ class ConcentrationBarPainter extends CustomPainter {
           ..color = const Color(0xFF94A3B8)
           ..strokeWidth = 1,
       );
-      _text(canvas, (maxConcentration * frac).toStringAsFixed(1),
-          Offset(padLeft - 4, y - 6), ts, TextAlign.right);
+      _text(
+        canvas,
+        (maxConcentration * frac).toStringAsFixed(1),
+        Offset(padLeft - 4, y - 6),
+        ts,
+        TextAlign.right,
+      );
     }
 
     // 指针：指向当前浓度位置
@@ -93,12 +118,101 @@ class ConcentrationBarPainter extends CustomPainter {
     );
   }
 
-  void _text(Canvas canvas, String text, Offset pos, TextStyle style, TextAlign align) {
+  void _paintHorizontal(Canvas canvas, Size size) {
+    const padTop = 14.0;
+    const padBottom = 16.0;
+    final barLeft = 8.0;
+    final barW = size.width - 16;
+    final barH = size.height - padTop - padBottom;
+    if (barW <= 0 || barH <= 0) return;
+
+    // 渐变条背景（左淡→右浓 → 浓度升高颜色变深）
+    final rect = Rect.fromLTWH(barLeft, padTop, barW, barH);
+    final grad = LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [color.withValues(alpha: 0.25), color],
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(rect, const Radius.circular(4)),
+      Paint()..shader = grad.createShader(rect),
+    );
+
+    // 刻度（0 / max/2 / max · 底部竖刻度线 + 数值）
+    final ts = TextStyle(
+      fontSize: 9,
+      color: const Color(0xFF64748B),
+      height: 1.2,
+    );
+    for (final frac in [0.0, 0.5, 1.0]) {
+      final x = barLeft + barW * frac;
+      canvas.drawLine(
+        Offset(x, padTop + barH),
+        Offset(x, padTop + barH + 4),
+        Paint()
+          ..color = const Color(0xFF94A3B8)
+          ..strokeWidth = 1,
+      );
+      _text(
+        canvas,
+        (maxConcentration * frac).toStringAsFixed(1),
+        Offset(x - 6, padTop + barH + 5),
+        ts,
+        TextAlign.left,
+      );
+    }
+
+    // 指针：指向当前浓度位置（顶部三角）
+    final f = maxConcentration <= 0
+        ? 0.0
+        : (concentration / maxConcentration).clamp(0.0, 1.0);
+    final pointerX = barLeft + barW * f;
+    final pointer = Path()
+      ..moveTo(pointerX - 5, padTop - 6)
+      ..lineTo(pointerX + 5, padTop - 6)
+      ..lineTo(pointerX, padTop - 2)
+      ..close();
+    canvas.drawPath(pointer, Paint()..color = const Color(0xFF1E293B));
+
+    // 饱和灰段（max 右端）· 超饱和时不显示（指针封顶）
+    if (isSaturated) {
+      canvas.drawRect(
+        Rect.fromLTWH(barLeft + barW, padTop, barW * 0.06, barH),
+        Paint()
+          ..color = const Color(0xFFB0BEC5).withValues(alpha: 0.35)
+          ..style = PaintingStyle.stroke,
+      );
+    }
+
+    // 数值 / 定性标签（右下角）
+    final labelStyle = TextStyle(
+      fontSize: 10,
+      fontWeight: FontWeight.w700,
+      color: isSaturated ? const Color(0xFFB45309) : const Color(0xFF334155),
+    );
+    _text(
+      canvas,
+      showValue
+          ? '${concentration.toStringAsFixed(2)} M'
+          : (isSaturated ? 'HIGH' : (f < 0.5 ? 'LOW' : 'HIGH')),
+      Offset(size.width - 44, size.height - 14),
+      labelStyle,
+      TextAlign.left,
+    );
+  }
+
+  void _text(
+    Canvas canvas,
+    String text,
+    Offset pos,
+    TextStyle style,
+    TextAlign align,
+  ) {
     final tp = TextPainter(
-        text: TextSpan(text: text, style: style),
-        textAlign: align,
-        textDirection: TextDirection.ltr)
-      ..layout();
+      text: TextSpan(text: text, style: style),
+      textAlign: align,
+      textDirection: TextDirection.ltr,
+    )..layout();
     final dx = align == TextAlign.right ? pos.dx - tp.width : pos.dx;
     tp.paint(canvas, Offset(dx, pos.dy));
   }
@@ -109,5 +223,6 @@ class ConcentrationBarPainter extends CustomPainter {
       old.maxConcentration != maxConcentration ||
       old.color != color ||
       old.showValue != showValue ||
-      old.isSaturated != isSaturated;
+      old.isSaturated != isSaturated ||
+      old.orientation != orientation;
 }

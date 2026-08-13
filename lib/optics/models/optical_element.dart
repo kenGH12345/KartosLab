@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../common/elements/position_element.dart';
 import 'optics_world.dart';
 
 // 光学元件类型枚举
@@ -104,23 +106,20 @@ class InteractionResult {
 
 // 光学元件抽象基类
 @immutable
-abstract class OpticalElement {
+abstract class OpticalElement extends PositionElement<OpticalElementType> {
   const OpticalElement({
-    required this.id,
-    required this.type,
-    required this.x,
-    required this.y,
-    this.rotation = 0,
+    required super.id,
+    required super.type,
+    required super.x,
+    required super.y,
+    super.rotation = 0,
     required this.width,
     required this.height,
   });
 
-  final String id;
-  final OpticalElementType type;
-  final double x;
-  final double y;
-  final double rotation;
+  @override
   final double width;
+  @override
   final double height;
 
   // 核心方法：光线与元件交互
@@ -132,16 +131,6 @@ abstract class OpticalElement {
   // 单条光线在指定命中点交互：默认复用批量 interact
   InteractionResult interactAt(Ray ray, OpticalHit hit, OpticsWorld world) {
     return interact([ray], world);
-  }
-
-  // 命中检测
-  bool hitTest(Offset position) {
-    final rect = Rect.fromCenter(
-      center: Offset(x, y),
-      width: width,
-      height: height,
-    );
-    return rect.contains(position);
   }
 
   // 渲染

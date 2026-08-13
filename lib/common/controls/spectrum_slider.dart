@@ -88,7 +88,7 @@ class _SpectrumTrackPainter extends CustomPainter {
   bool shouldRepaint(_SpectrumTrackPainter oldDelegate) => false;
 }
 
-/// PhET-style spectrum slider: selects a wavelength (380–780 nm) on a
+/// Kratos-style spectrum slider: selects a wavelength (380–780 nm) on a
 /// visible rainbow track. The knob shows the current wavelength color.
 ///
 /// Usage:

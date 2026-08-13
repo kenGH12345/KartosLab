@@ -14,5 +14,5 @@ test_exempt_reason: "回溯建档 · UI 布局迁移需求(组件 + 7 sim 重构
 # 性质: 通用布局基础设施重构 · 非新 sim 复刻
 # 核心决策(用户确认): 中间格面积 ≥ 70% 屏幕(宽高各 sqrt(0.7)) · 周边8格贴边放"信息展示+交互控件混合"
 # 强制范围: 所有现有 + 未来 sim 必须基于 NineGridLayout · 禁止平行布局方案
-# 规则落地: .codebuddy/rules/80-phet-sim-checklist.mdc §七 L0-4(阻塞级)
-# 组件登记: docs/knowledge/phet-java-simulations/shared-abstraction-plan.md 候选7
+# 规则落地: .codebuddy/rules/80-kartos-sim-checklist.mdc §七 L0-4(阻塞级)
+# 组件登记: docs/knowledge/kartos-java-simulations/shared-abstraction-plan.md 候选7

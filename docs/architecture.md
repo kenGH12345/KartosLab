@@ -1,11 +1,11 @@
-# phet Architecture Decisions
+# kratos Architecture Decisions
 
 > Last updated: 2026-06-15
 > Maintained by: AI Agent + Human review
 
 ## Project Overview
 
-**phet** is a Unknown project.
+**kratos** is a Unknown project.
 Target platforms: TBD.
 
 ---

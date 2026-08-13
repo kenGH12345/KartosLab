@@ -1,0 +1,19 @@
+# meta.yaml — 操作面板底部迁移推广
+req_id: req-panel-bottom-migrate
+title: 操作面板底部横排推广——其余 9 屏底部迁移（molarity 试点验收后的推广迭代）
+sop: agile-vibe
+phase: done
+status: done
+created_at: "2026-08-12 10:00"
+updated_at: "2026-08-12 18:20"
+completed_at: "2026-08-12 18:20"
+final_summary_path: "spec/最终需求.md"
+edd_template_version: v2.0
+# 性质: UI 布局推广迭代 · 非新 sim 复刻 · 复用 req-ui-interaction-polish 试点方案
+# 前置: req-ui-interaction-polish done（molarity 底部横排试点验收 · NineGridLayout.footer + ConcentrationBarPainter.horizontal + FittedBox scaleDown + 横向滚动降级）
+# 用户已确认 (2026-08-12 /pm): 启动"操作面板推广：其余 9 屏底部迁移"
+# 范围: 实际迁移 9 屏（sound / wave / radio / rgb_bulbs / single_bulb / motion / netforce / circuit）+ molarity 试点（req-ui-interaction-polish）
+#       optics 不迁移——midRight 是"教学目标/约束条件"信息面板（非操作面板），场景参数面板位置不同，无需底部横排（code-reviewer AC-G.3 确认）
+# 关键先例: molarity footer 方案（lib/common/widgets/nine_grid_layout.dart footer 参数 · 320px 无溢出已验证）
+# 关联: requirements/req-ui-interaction-polish（试点 + 遗留项）
+# 遗留联动: circuit 选中工具条 skip 测试（NineGridLayout 顶部行 ~51px 空间）可在本次推广中一并评估

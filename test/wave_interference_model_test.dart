@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:geometric_optics/wave_interference/model/wave_engine.dart';
+import 'package:kratos/wave_interference/model/wave_engine.dart';
 
 void main() {
   group('WaveEngine', () {

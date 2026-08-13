@@ -221,7 +221,7 @@ skills/<group>/<name>/
 > 2026-08-06 by req-verify-selftest-color-vision γ 收尾续（用户 A=y）：
 > 删除"经验注入"段（引用不存在的 `.workflow/scripts/experience-injector.{sh,ps1}`）。
 > - 演进场景步骤 3 中删除 `bash .workflow/scripts/experience-injector.sh workflow skill-evolution` 行
-> - 触发原因：grep 全仓 0 匹配 · phet 工程自体集成后无此脚本（memory:g7nr92qg）
+> - 触发原因：grep 全仓 0 匹配 · kartosos 工程自体集成后无此脚本（memory:g7nr92qg）
 > - 影响面：无 · shell 块从未真实执行 · agent 行为无退化
 > - 三端同步：无需 · `.claude/agents/` 是 `.codebuddy/` 的 symlink · 自动跟随
 > - 生效时机：下次 IDE 重启后对该 agent 生效

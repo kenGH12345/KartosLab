@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:geometric_optics/sound/model/sound_state.dart';
+import 'package:kratos/sound/model/sound_state.dart';
 
 void main() {
   group('SoundState', () {

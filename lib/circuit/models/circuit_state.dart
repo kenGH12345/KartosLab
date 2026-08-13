@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../common/elements/position_element.dart';
+
 enum ComponentType { battery, resistor, lightBulb, switch_, wire, fuse, ground }
 enum WireDragSide { from, to }
 enum SnapType { terminal, vertex } // 新增：磁吸类型
@@ -45,28 +47,29 @@ class Vertex {
 }
 
 @immutable
-class CircuitComponent {
-  final String id;
-  final ComponentType type;
-  final double x, y, rotation, value;
+class CircuitComponent extends PositionElement<ComponentType> {
+  final double value;
   final bool isClosed;
   final String startVertexId, endVertexId;
 
   const CircuitComponent({
-    required this.id, required this.type, required this.x, required this.y,
-    this.rotation = 0.0, this.value = 10.0, this.isClosed = true,
+    required super.id, required super.type, required super.x, required super.y,
+    super.rotation = 0.0, this.value = 10.0, this.isClosed = true,
     required this.startVertexId, required this.endVertexId,
   });
 
+  @override
   double get width { return type == ComponentType.wire ? 100 : type == ComponentType.fuse ? 80 : type == ComponentType.ground ? 40 : 120; }
+  @override
   double get height { return type == ComponentType.wire ? 4 : type == ComponentType.ground ? 30 : 60; }
   String get label {
     if (type == ComponentType.lightBulb || type == ComponentType.wire || type == ComponentType.ground) return '';
-    if (type == ComponentType.switch_) return isClosed ? 'ON' : 'OFF';
+    if (type == ComponentType.switch_) return isClosed ? '开' : '关';
     return '${value.toInt()}${type.unit}';
   }
   Rect get hitRect => Rect.fromCenter(center: Offset(x, y), width: width + 40, height: height + 40);
-  bool hitTest(Offset w) => hitRect.contains(w);
+  @override
+  bool hitTest(Offset position) => hitRect.contains(position);
 
   CircuitComponent copyWith({
     String? id, ComponentType? type, double? x, double? y, double? rotation,
@@ -210,13 +213,30 @@ class SolvedCircuit {
   final Map<String, bool> componentStates;
   final Set<String> openNodes, shortedNodes;
 
-  const SolvedCircuit({this.bulbBrightness = const {}, this.componentStates = const {},
-    this.openNodes = const {}, this.shortedNodes = const {}});
+  /// MNA 求解结果扩展：每元件电流 (A) 与端电压 (V)。
+  /// 供黑盒行为对比等下游使用（向后兼容，未启用时为默认空）。
+  final Map<String, double> currents;
+  final Map<String, double> voltages;
+
+  const SolvedCircuit({
+    this.bulbBrightness = const {},
+    this.componentStates = const {},
+    this.openNodes = const {},
+    this.shortedNodes = const {},
+    this.currents = const {},
+    this.voltages = const {},
+  });
   static const empty = SolvedCircuit();
   double brightnessFor(String id) => bulbBrightness[id] ?? 0.0;
   bool isPowered(String id) => componentStates[id] == true;
   bool isOpen(String id) => openNodes.contains(id);
   bool isShorted(String id) => shortedNodes.contains(id);
+
+  /// 元件电流（A）；未求解或无电流时为 0。
+  double currentFor(String id) => currents[id] ?? 0.0;
+
+  /// 元件端电压（V）。
+  double voltageFor(String id) => voltages[id] ?? 0.0;
 }
 
 /// Sentinel 用于区分"未提供"和"显式设为 null"。

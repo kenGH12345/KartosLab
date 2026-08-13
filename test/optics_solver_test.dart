@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:geometric_optics/optics/solvers/optics_solver.dart';
-import 'package:geometric_optics/optics/models/optical_element.dart';
-import 'package:geometric_optics/optics/models/lens_element.dart';
-import 'package:geometric_optics/optics/models/light_source_element.dart';
-import 'package:geometric_optics/optics/models/screen_element.dart';
-import 'package:geometric_optics/optics/models/optics_world.dart';
+import 'package:kratos/optics/solvers/optics_solver.dart';
+import 'package:kratos/optics/models/optical_element.dart';
+import 'package:kratos/optics/models/lens_element.dart';
+import 'package:kratos/optics/models/light_source_element.dart';
+import 'package:kratos/optics/models/screen_element.dart';
+import 'package:kratos/optics/models/optics_world.dart';
 
 void main() {
   test('Single convex lens produces image', () {

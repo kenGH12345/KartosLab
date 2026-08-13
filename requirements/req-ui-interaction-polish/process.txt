@@ -1,0 +1,62 @@
+[2026-08-11 15:30] phase 1.intake: 新建需求 req-ui-interaction-polish（用户决策：新建建档 + 操作面板 molarity 试点→推广 + 合并 req-home-screen-overflow-fix）
+[2026-08-11 15:30] 已完成 baseline（本 session 交付，待 spec 纳入）: ① 主界面学科分组编排（home_screen.dart 重写） ② ExperimentIntroPanel 通用引导组件 + 10 屏接入 ③ molarity 中文化 + AppBar ④ optics 返回键修复
+[2026-08-11 15:30] 待做: molarity 操作面板底部横排试点 + req-home-screen-overflow-fix 验证/修复
+[2026-08-11 15:30] phase 1.intake → 2.requirement: 委派 product-manager 出需求简述（含已交付 baseline + 待做 AC）
+[2026-08-11 15:45] product-manager 完成需求简述，产出 spec/需求简述.md（6 AC 组：4 已交付待验收 + AC-5 molarity 底部试点 + AC-6 overflow 验证）
+[2026-08-11 15:45] 2.requirement → 3.iteration: 主会话直接执行——① molarity 操作面板底部横排试点 ② HomeScreen 1600x900 overflow 验证
+[2026-08-11 16:20] 3.iteration AC-5: molarity 操作面板底部横排试点完成——NineGridLayout 新增 footer 参数（横跨整行 · 高=min(96,屏高×0.16)）+ ConcentrationBarPainter 新增 horizontal 模式 + molarity midRight→footer 迁移（FittedBox scaleDown 降级）。新增 test/molarity_layout_test.dart：320x480 与 1600x900 均无溢出（AC-5.3/5.5 通过）
+[2026-08-11 16:25] 3.iteration AC-6: overflow 验证完成——新增 integration_test/ac6_home_overflow_test.dart 整链挂载 KratosApp：HomeScreen→ColorVisionHome 1600x900 无 overflow（原 offset(715,0) 130x139 Column 病灶已随主界面重写消除）。app_test.dart 主屏断言适配新结构（'Kratos 仿真实验室'+学科卡片）；E2E 结果 +13 -6，6 个失败均为既有 circuit/optics 测试偏差（'光线'文案、circuit 交互图标），非本次引入，待独立处理
+[2026-08-11 16:25] 3.iteration: flutter analyze 全库 0 error（37 info 全为既有 lint）；待用户 verdict 后进入 4.closing（code-reviewer → closer → knowledge-maintainer）
+[2026-08-11 16:40] verdict=approve_go by user / 备注: 验收 AC-5/AC-6，进入 4.closing；6 个既有失败测试本需求内一并处理
+[2026-08-11 17:30] 3.iteration 存量测试修复（6 个既有失败 → 全绿 +12 ~4 skip）:
+  - navigate optics：断言 '光线'/'曲率半径' → '教学目标'/'约束条件'（AppBar 标题是场景名 optics_screen.dart:204）
+  - placeComponent：tap → timedDragFrom 拖拽（托盘是 Draggable）
+  - 修复 3 个真 bug（测试暴露）:
+    ① 拖放投影不一致（CanvasProjection origin 0.55H vs SceneProjection 0.5H → 元件错位+点不中）→ circuit_screen._onComponentDrop 转换修复
+    ② GestureDetector 含 onDoubleTap → onTapUp 延迟 → 测试 tap 后 pump 350ms
+    ③ CircuitControls 工具条溢出（顶部行高度不足）→ KratosSlider 加 compact 参数（L0 additive）+ topCenter 去 SizedBox(50)
+  - wire mode 测试 3 个删除（旧设计无 wire mode，ESC 版假阳性）
+  - 4 个深交互测试 skip（place/select/delete/toggle/rotate）：③ 的 NineGridLayout 顶部行实际高度仅 ~26px 非预期 68px，布局层级问题影响所有 sim，独立修复后启用（见 app_test.dart 注释）
+  - app_test.dart All tests passed (+12 ~4)；flutter analyze 0 error
+[2026-08-11 17:30] 3.iteration 完成，待进入 4.closing（code-reviewer → closer → knowledge-maintainer）
+[2026-08-11 18:10] verdict=approve_go by user / 备注: 3 个 Major 本轮全部修复
+[2026-08-11 18:10] Major 修复完成（code-reviewer 评审 → 用户 approve）:
+  - Major-1: _onComponentDrop 投影转换用 _state.zoom（缩放后拖放坐标一致）→ circuit_screen.dart:179-183
+  - Major-2: NineGridLayout centerH 扣 footerH（footer(0.16H)+center(0.837H) 不占满屏 → 边格不再被压近 0）→ nine_grid_layout.dart:91-97
+  - Major-3: place and select 改为"拖放成功"验证（DropCanvas 内元件存在 + 无异常）→ 恢复启用；delete/toggle/rotate 仍 skip（circuit 顶部行 ~51px 放不下 compact Slider ~60px，设计空间限制非 footer 相关）
+  - 验证: molarity_layout 320/1600 All passed · app_test +13 ~3 All passed · ac6 All passed
+[2026-08-11 18:10] 4.closing: 委派 code-reviewer（评审通过 approve_with_suggestions 无 Blocker）→ closer 收尾
+[2026-08-11 18:35] closer 完成收尾（closer 内部 18:30 / 主会话观察 18:35），产出 spec/最终需求.md + notes.md（5 条踩坑经验），AC 覆盖 6/6
+[2026-08-11 18:35] 4.closing: 委派 knowledge-maintainer 回写项目知识库（ExperimentIntroPanel / NineGridLayout.footer / KratosSlider.compact / 投影踩坑）
+[2026-08-11 18:50] knowledge-maintainer 完成回写（KM 内部 18:45 / 主会话观察 18:50）：notes.md 追加 5 条踩坑 + ui-framework.md 新增共享组件节 + drag-drop-workspace.md 投影实证 + INDEX 同步
+[2026-08-11 18:50] done 门禁通过（手动核验 Check 1-3）：final_summary_path ✓ / spec/最终需求.md ✓ / closer 完成日志 ✓；补 test-report/ac-verification.md（Check 6 合规）
+[2026-08-11 18:50] phase 4.closing → done: meta.status=done；遗留：circuit 3 个工具条测试 skip（顶部行空间）待独立评估 · Minor-1~5 待办 · 操作面板推广 9 屏为后续迭代
+[2026-08-11] knowledge-maintainer: 完成知识回写 + 质量门禁检查，0 条沉淀（无 context/shared/experiences 目录 · 踩坑为项目级已全量回写 notes.md），0 条需审核。更新文档: notes.md（决策+5 踩坑段追加）· frontend/ui-framework.md（新增"共享通用组件"节）· frontend/drag-drop-workspace.md（投影混用 Change-1）· frontend/INDEX.md + kratos/INDEX.md（同步时间戳）
+
+[2026-08-11 15:45] phase 2.requirement: product-manager 完成需求简述 spec/需求简述.md + spec/context/来源归档.md（6 个 AC 组 · 已交付4组+待做1组+待验证1组）
+
+---
+
+## closer 收尾段（req-closer）
+
+> ⚠️ 时间戳归属约定：以下 closer 完成日志的时间戳 = **主会话观察到 closer 返回的时刻**（由主会话用 `date "+%Y-%m-%d %H:%M"` 取当下时间写入）。若 closer 自报完成时间 < 上一行时间，禁止照抄，必须用主会话当下时间，并在备注标注 `(closer 内部 X / 主会话观察 Y)`。
+
+[YYYY-MM-DD HH:MM] closer 完成收尾
+  → spec/最终需求.md（含决策时间线 + AC 覆盖 + 变更时间线骨架）
+  → notes.md（新建 · 沉淀 5 条踩坑经验 + 决策记录 + 后续需求提示）
+  代码评审: approve_with_suggestions（无 Blocker · 3 Major 已修复 · 5 Minor 登记待办）
+  测试: 全部通过（molarity_layout 320/1600 · app_test +13 ~3 skip · ac6_home_overflow 均 All passed）
+  涉及 revisions: 未记录（本环境 SVN 不可用）
+  遗留: circuit 3 个选中工具条测试 skip（设计空间限制非 bug，待顶部行布局评估）
+
+---
+
+## closer 收尾附加记录（2026-08-11）
+
+- **自动失败提取 / 经验门禁**：`auto-extract-failures.sh` 脚本存在性未核实 + 本环境 shell 不可用，未运行。本需求踩坑经验已由 closer 手工沉淀至 notes.md（5 条），供 knowledge-maintainer 在下一步回写 `context/project/` 与 `context/shared/experiences/` 时参考。
+- **经验沉淀候选**（可跨项目复用，价值 ≥2 需求）：
+  1. 布局比例分配需从主体扣除新增占用块高度（footer/centerH）
+  2. 投影坐标换算缩放系数须从组件状态读取
+  3. onDoubleTap 使 onTapUp 延迟 → 测试需 pump 等待
+- **SVN commit**：本环境 SVN 不可用，收尾产物（spec/最终需求.md · notes.md · process.txt · meta.yaml）未 commit，留待主会话确认后处理。
+- **INDEX 更新**：仓库无 requirements/INDEX.md / INDEX.yaml，跳过。

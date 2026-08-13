@@ -1,6 +1,6 @@
 ﻿# Color Vision Scenario JSON Generation Prompt
 
-You are a **color vision experiment designer** for the PhET color-vision simulation. Generate valid JSON scenario files for RGB additive color mixing and light filtering experiments.
+You are a **color vision experiment designer** for the kratos color-vision simulation. Generate valid JSON scenario files for RGB additive color mixing and light filtering experiments.
 
 ## Model Overview
 

@@ -1,12 +1,12 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import "../../common/simulation_clock.dart";
 import "../../common/widgets/time_control_bar.dart";
 import "../../common/widgets/knowledge_panel.dart";
 import "../../common/widgets/nine_grid_layout.dart";
-import "../../common/widgets/property_control_panel.dart";
 import "../../common/widgets/inquiry_models.dart";
 import "../../common/widgets/inquiry_drawer.dart";
 import "../../common/widgets/experiment_logger.dart";
+import "../../common/widgets/experiment_intro_panel.dart";
 import "../config/sound_scenario.dart";
 import "../config/sound_scenario_manager.dart";
 import "../model/sound_state.dart";
@@ -109,10 +109,16 @@ class _SoundScreenState extends State<SoundScreen>
           NineGridLayout(
             // 中间格 = 主图（含 Tab 切换的两种视图）· 面积 ≥ 70% 屏 · 自适应
             center: _buildStageArea(),
+            // 左上格 = 实验说明 + 操作指引（通用引导组件）
+            topLeft: ExperimentIntroPanel(
+              description: _currentScenario?.description ?? '',
+              task: _currentScenario?.inquiryTask,
+              color: const Color(0xFF0D9488),
+            ),
             // 顶部中格 = 视角 Tab 栏
             topCenter: _buildTabBar(),
-            // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
-            midRight: _buildSideControlPanel(),
+            // 底部横条：操作面板横排（molarity footer 方案推广 · 窄视口横向滚动+缩放）
+            footer: _buildFooterControls(),
             // 底部中格 = 场景快切条
             bottomCenter: _buildScenarioBar(),
             // 顶部右格 = 探究入口按钮
@@ -166,7 +172,13 @@ class _SoundScreenState extends State<SoundScreen>
       ];
     }
     return task.snapshotColumns
-        .map((c) => ColumnDef(key: c.key, label: c.label, isParam: c.source == 'param'))
+        .map(
+          (c) => ColumnDef(
+            key: c.key,
+            label: c.label,
+            isParam: c.source == 'param',
+          ),
+        )
         .toList(growable: false);
   }
 
@@ -188,34 +200,45 @@ class _SoundScreenState extends State<SoundScreen>
             borderRadius: BorderRadius.circular(10),
             boxShadow: const [
               BoxShadow(
-                  color: Color(0x1F000000), blurRadius: 4, offset: Offset(0, 1)),
+                color: Color(0x1F000000),
+                blurRadius: 4,
+                offset: Offset(0, 1),
+              ),
             ],
           ),
           indicatorSize: TabBarIndicatorSize.tab,
           labelColor: const Color(0xFF0F172A),
           unselectedLabelColor: const Color(0xFF64748B),
-          labelStyle:
-              const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          labelStyle: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+          ),
           dividerColor: Colors.transparent,
           tabs: const [
             Tab(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.blur_circular, size: 16),
-                  SizedBox(width: 6),
-                  Text('球面波俯视图'),
-                ]),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.blur_circular, size: 16),
+                    SizedBox(width: 6),
+                    Text('球面波俯视图'),
+                  ],
+                ),
               ),
             ),
             Tab(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(Icons.waves, size: 16),
-                  SizedBox(width: 6),
-                  Text('一维波形剖面图'),
-                ]),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.waves, size: 16),
+                    SizedBox(width: 6),
+                    Text('一维波形剖面图'),
+                  ],
+                ),
               ),
             ),
           ],
@@ -262,10 +285,7 @@ class _SoundScreenState extends State<SoundScreen>
     return IndexedStack(
       index: _tabController.index,
       children: [
-        CustomPaint(
-          size: Size.infinite,
-          painter: SphericalViewPainter(_state),
-        ),
+        CustomPaint(size: Size.infinite, painter: SphericalViewPainter(_state)),
         CustomPaint(
           size: Size.infinite,
           painter: WaveformProfilePainter(_state),
@@ -275,38 +295,50 @@ class _SoundScreenState extends State<SoundScreen>
   }
 
   // ============ 频率 / 振幅 / 时钟控制（右侧边格 · 竖排紧凑）============
-  Widget _buildSideControlPanel() {
+  /// 底部横排操作面板：频率/振幅滑块 + 时间控制（molarity footer 方案推广）。
+  /// 窄视口用 FittedBox scaleDown + 横向滚动兜底（320px 无溢出，对齐 AC-5.3/5.4）。
+  Widget _buildFooterControls() {
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-      child: PropertyControlPanel(
-        padding: const EdgeInsets.all(8),
-        spacing: 12,
-        children: [
-          _compactSlider(
-            icon: '\ud83d\udd0a',
-            label: '频率',
-            value: _state.frequency,
-            min: 0,
-            max: 1000,
-            divisions: 100,
-            valueText: '${_state.frequency.round()} Hz',
-            accent: const Color(0xFF0D9488),
-            onChanged: (v) => setState(() => _state.setFrequency(v)),
-          ),
-          _compactSlider(
-            icon: '\ud83d\udce2',
-            label: '振幅',
-            value: _state.amplitude,
-            min: 0,
-            max: 1,
-            divisions: 20,
-            valueText: _state.amplitude.toStringAsFixed(2),
-            accent: const Color(0xFFEF4444),
-            onChanged: (v) => setState(() => _state.setAmplitude(v)),
-          ),
-          const Divider(height: 12),
-          Center(child: _timeControls()),
-        ],
+      scrollDirection: Axis.horizontal,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 200,
+              child: _compactSlider(
+                icon: '\ud83d\udd0a',
+                label: '频率',
+                value: _state.frequency,
+                min: 0,
+                max: 1000,
+                divisions: 100,
+                valueText: '${_state.frequency.round()} Hz',
+                accent: const Color(0xFF0D9488),
+                onChanged: (v) => setState(() => _state.setFrequency(v)),
+              ),
+            ),
+            const SizedBox(width: 14),
+            SizedBox(
+              width: 200,
+              child: _compactSlider(
+                icon: '\ud83d\udce2',
+                label: '振幅',
+                value: _state.amplitude,
+                min: 0,
+                max: 1,
+                divisions: 20,
+                valueText: _state.amplitude.toStringAsFixed(2),
+                accent: const Color(0xFFEF4444),
+                onChanged: (v) => setState(() => _state.setAmplitude(v)),
+              ),
+            ),
+            const SizedBox(width: 14),
+            _timeControls(),
+          ],
+        ),
       ),
     );
   }
@@ -329,14 +361,24 @@ class _SoundScreenState extends State<SoundScreen>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: Text('$icon $label',
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      fontSize: 11, fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
+              child: Text(
+                '$icon $label',
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF0F172A),
+                ),
+              ),
             ),
-            Text(valueText,
-                style: TextStyle(
-                    fontSize: 12, fontWeight: FontWeight.w800, color: accent)),
+            Text(
+              valueText,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                color: accent,
+              ),
+            ),
           ],
         ),
         Slider(
@@ -370,9 +412,7 @@ class _SoundScreenState extends State<SoundScreen>
   Widget _timeControls() {
     return Row(
       mainAxisSize: MainAxisSize.min,
-      children: [
-        TimeControlBar(clock: _clock, showTimeDisplay: false),
-      ],
+      children: [TimeControlBar(clock: _clock, showTimeDisplay: false)],
     );
   }
 
@@ -380,16 +420,17 @@ class _SoundScreenState extends State<SoundScreen>
   Widget _buildScenarioBar() {
     if (!_scenariosLoaded) {
       return const SizedBox(
-          height: 40,
-          child: Center(child: CircularProgressIndicator(strokeWidth: 2)));
+        height: 40,
+        child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+      );
     }
     // 场景 ID → (图标, 标签) 的展示映射（对齐视觉稿）
     const iconMap = <String, String>{
-      'default': '\ud83c\udfb5',      // 🎵 音符
+      'default': '\ud83c\udfb5', // 🎵 音符
       'low-frequency': '\ud83e\udd41', // 🥁 大鼓（低频）
       'high-frequency': '\ud83c\udfbb', // 🎻 小提琴（高频）
-      'loud-low': '\ud83c\udfb8',      // 🎸 低音吉他（低音大鼓）
-      'silent': '\ud83d\udd07',        // 🔇 静音
+      'loud-low': '\ud83c\udfb8', // 🎸 低音吉他（低音大鼓）
+      'silent': '\ud83d\udd07', // 🔇 静音
     };
     return SizedBox(
       height: 44,
@@ -427,19 +468,22 @@ class _SoundScreenState extends State<SoundScreen>
           color: selected ? const Color(0xFF0F172A) : Colors.white,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-              color:
-                  selected ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0)),
+            color: selected ? const Color(0xFF0F172A) : const Color(0xFFE2E8F0),
+          ),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(icon, style: const TextStyle(fontSize: 14)),
             const SizedBox(width: 6),
-            Text(label,
-                style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: selected ? Colors.white : const Color(0xFF334155))),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: selected ? Colors.white : const Color(0xFF334155),
+              ),
+            ),
           ],
         ),
       ),
@@ -454,30 +498,34 @@ class _SoundScreenState extends State<SoundScreen>
         titleIcon: '\ud83d\udd0a',
         titleColor: const Color(0xFF0D9488),
         sections: [
-          KnowledgeSection.grid(items: const [
-            KnowledgeItem(
+          KnowledgeSection.grid(
+            items: const [
+              KnowledgeItem(
                 icon: '\u3030\ufe0f',
                 title: '频率',
                 titleColor: Color(0xFF0F766E),
-                desc:
-                    '每秒钟振动的次数（Hz）。频率越高，音调越高。'),
-            KnowledgeItem(
+                desc: '每秒钟振动的次数（Hz）。频率越高，音调越高。',
+              ),
+              KnowledgeItem(
                 icon: '\ud83d\udcf6',
                 title: '振幅',
                 titleColor: Color(0xFF0F766E),
-                desc:
-                    '最大位移量。振幅越大，声音越响。'),
-            KnowledgeItem(
+                desc: '最大位移量。振幅越大，声音越响。',
+              ),
+              KnowledgeItem(
                 icon: '\ud83c\udf0a',
                 title: '波长',
                 titleColor: Color(0xFF0EA5E9),
-                desc: '相邻波峰之间的距离。波长 = 波速 / 频率。'),
-            KnowledgeItem(
+                desc: '相邻波峰之间的距离。波长 = 波速 / 频率。',
+              ),
+              KnowledgeItem(
                 icon: '\ud83d\udcd0',
                 title: '球面衰减',
                 titleColor: Color(0xFF8B5CF6),
-                desc: '振幅随距点声源的距离增大而衰减。'),
-          ]),
+                desc: '振幅随距点声源的距离增大而衰减。',
+              ),
+            ],
+          ),
         ],
       ),
     );

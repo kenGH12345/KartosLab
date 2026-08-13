@@ -18,6 +18,8 @@
 [2026-08-11 09:30] 评审修复完成: M1 4 JSON 颜色 #006A6A→#FF6A6A（蓝本 0xFF6A6A 暗红 · CoCl₂ 粉红正确）· m4 solutionColor 除零防御 · m5 controller clamp 物理范围 · m1-m3 notes.md 登记（D5-D8）· 补 2 回归测试（Cobalt 颜色 + sat≤0 防御）
 [2026-08-11 09:35] B1 证据链补齐: integration_test/molarity_test.dart（≥2 场景冒烟）+ test-report/ac-verification.md（逐 AC 对照）+ integration-test.log（231/231 真实输出）· Suggestion s1-s3 记录取舍（notes）
 [2026-08-11 09:40] 复验: 全量 231/231 · analyze（lib/chemistry + home + test + integration_test）No issues found · 评审修复闭环 · 委派 closer 收尾
+[2026-08-11 09:50] closer 完成收尾: status=done · 产出 spec/最终需求.md · 门禁核对通过（final_summary_path/最终需求/process日志/证据链全就位 · 备注: 实际 AC=29 条（早前"22 条"统计偏差已记 notes）· 覆盖 28/29 + 1 偏离 AC-5.3）
+[2026-08-11 09:55] commit 8a331fa 成功(用户 y 审批 · molarity 全量产物 32 files · +2300 级) · 已隔离品牌迁移/agents 修改等范围外改动 · 需求闭环
 [2026-08-10 12:30] product-manager 完成: spec/需求简述.md(v1.0) + edd/molarity-EDD.md(v2.0全12章) + notes.md + spec/context/来源归档.md(16条来源)
   - 功能点11个 · AC清单5组22条(AC-1.x物理模型7/AC-2.x交互6/AC-3.x配置化6/AC-4.x布局5/AC-5.x质量5)
   - EDD 12章全覆盖 · 所有必答项已勾选[x]

@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class DragItem<T extends Object> {
@@ -22,12 +23,14 @@ class CanvasProjection {
 
 /// 拖拽元件卡片（Draggable · 供托盘 / 任意容器复用）。
 class DragItemCard<T extends Object> extends StatelessWidget {
-  const DragItemCard({super.key, required this.item, required this.pad, required this.iconSize, required this.fontSize});
+  const DragItemCard({super.key, required this.item, required this.pad, required this.iconSize, required this.fontSize, this.minWidth = 0});
 
   final DragItem<T> item;
   final EdgeInsets pad;
   final double iconSize;
   final double fontSize;
+  /// 卡片最小宽度（0=自然宽）· 用于确保 label 文字不被父约束压缩成"电"竖线
+  final double minWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +49,24 @@ class DragItemCard<T extends Object> extends StatelessWidget {
     final feedback = item.customFeedback != null
         ? Material(color: Colors.transparent, child: item.customFeedback!())
         : card();
-    return Draggable<T>(data: item.data, feedback: feedback, childWhenDragging: Opacity(opacity: 0.4, child: card()), child: card());
+    // minWidth>0 时仅 wrap child（ListView 静态槽位）· feedback 拖拽时反复渲染需保持轻量
+    final childWidget = minWidth > 0
+        ? ConstrainedBox(constraints: BoxConstraints(minWidth: minWidth), child: card())
+        : card();
+    return Draggable<T>(data: item.data, feedback: feedback, childWhenDragging: Opacity(opacity: 0.4, child: childWidget), child: childWidget);
   }
 }
 
 /// 元件托盘（原 DragDropWorkspace._tray · 供 NineGridLayout 边格单独使用）。
 class DragTray<T extends Object> extends StatelessWidget {
-  const DragTray({super.key, required this.layout, required this.trayTitle, required this.items, this.traySize = 200});
+  const DragTray({super.key, required this.layout, required this.trayTitle, required this.items, this.traySize = 200, this.itemMinWidth = 0});
 
   final DragDropLayout layout;
   final String trayTitle;
   final List<DragItem<T>> items;
   final double traySize;
+  /// 每个拖盘 item 最小宽度（0=自然宽）· 防止父约束压缩 label 为"电"竖线
+  final double itemMinWidth;
 
   @override
   Widget build(BuildContext ctx) {
@@ -72,7 +81,7 @@ class DragTray<T extends Object> extends StatelessWidget {
                 child: DragItemCard<T>(item: items[i], pad: pad, iconSize: isz, fontSize: fsz)))
         : ListView.builder(scrollDirection: Axis.horizontal, padding: const EdgeInsets.symmetric(horizontal: 4), itemCount: items.length,
             itemBuilder: (_, i) => Padding(padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: DragItemCard<T>(item: items[i], pad: pad, iconSize: isz, fontSize: fsz)));
+                child: DragItemCard<T>(item: items[i], pad: pad, iconSize: isz, fontSize: fsz, minWidth: itemMinWidth)));
 
     if (isSide) {
       return SizedBox(width: traySize, child: Container(color: const Color(0xFFF0F4F8),
@@ -85,9 +94,25 @@ class DragTray<T extends Object> extends StatelessWidget {
             Expanded(child: list),
           ])));
     } else {
-      return SizedBox(height: traySize,
-          child: Container(decoration: const BoxDecoration(color: Color(0xFF0B2B3D),
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16))), child: list));
+      // 高度自适应：不超过 traySize，也不超过父约束（矮视口 bottom 行 < traySize 时收缩，
+      // 避免 SizedBox 固定高溢出）。
+      return LayoutBuilder(
+        builder: (_, c) {
+          final h = c.maxHeight.isFinite
+              ? math.min(traySize, c.maxHeight)
+              : traySize;
+          return SizedBox(
+            height: h,
+            child: Container(
+              decoration: const BoxDecoration(
+                color: Color(0xFF0B2B3D),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+              ),
+              child: list,
+            ),
+          );
+        },
+      );
     }
   }
 }

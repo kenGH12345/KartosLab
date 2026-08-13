@@ -120,7 +120,7 @@ flowchart TD
 
 - **默认**：integration_test 若含 `expect(find.byType(RenderFlex), matcher_no_overflow)` 类 layout 断言 → 跳过截图
 - **推荐但不强制**：新 sim 首次上线 / 大改 layout · 用户可自主决定是否补 3 视口截图
-- **`80-phet-sim-checklist.mdc §七 M1` 联动**：M1 段同步降为可选（批次 4 联动改动）
+- **`80-kratos-sim-checklist.mdc §七 M1` 联动**：M1 段同步降为可选（批次 4 联动改动）
 
 ### ⚠️ 边界
 
@@ -170,7 +170,7 @@ flowchart TD
 | `.codebuddy/sop/agile-vibe.md` §阶段 3 第 9 条 | 本 skill 是该强制约束的**执行手册**（v0.2.0 联动改 9.1/9.3） |
 | `.claude/agents/code-reviewer.md` 步骤 2.5 | v0.2.0 联动改：Blocker 从"缺截图"变为"缺 integration_test 通过 log" |
 | `.codebuddy/scripts/check-before-done.{sh,ps1}` 检查 6 | v0.2.0 联动改：脚本查 integration-test.log 而非截图 |
-| `.codebuddy/rules/80-phet-sim-checklist.mdc §七 M1` | v0.2.0 联动改：3 视口截图从强制降为可选 |
+| `.codebuddy/rules/80-kratos-sim-checklist.mdc §七 M1` | v0.2.0 联动改：3 视口截图从强制降为可选 |
 | `.codebuddy/rules/60-citation-and-honesty.mdc` | 诚实声明的规则依据（不变） |
 | `.codebuddy/rules/10-vibecoding-protocol.mdc` 第 3 条"可视反馈优先" | v0.2.0 重解释：integration_test 通过 log 也是"可视反馈"的一种（自动化反馈） |
 
@@ -185,7 +185,7 @@ flowchart TD
 > - 零真操作判定从"截图 ≥ 1"改为"integration_test 通过 AC ≥ 1"
 > - 绝对禁止段新增第 5 条："AI 不允许主动索要用户截图作为强制门禁证据"
 > - 触发原因：3 次以上用户表达"每次都让截图" / "自动化测试不用管视觉"（3-Time Rule 触发）
-> - 联动改动：references/ac-verification-template.md（本批次同步）· agile-vibe.md 9.1/9.3（批次 2）· code-reviewer.md 步骤 2.5（批次 3）· 80-phet-sim-checklist.mdc §七 M1 + check-before-done.{sh,ps1}（批次 4）
+> - 联动改动：references/ac-verification-template.md（本批次同步）· agile-vibe.md 9.1/9.3（批次 2）· code-reviewer.md 步骤 2.5（批次 3）· 80-kratos-sim-checklist.mdc §七 M1 + check-before-done.{sh,ps1}（批次 4）
 
 > 2026-08-06 by req-verify-selftest-color-vision γ 收尾（用户确认 C=c2 · 简化模式）：
 > 联动脚本增强：`check-before-done.{sh,ps1}` 加"零真操作"程序化检测（警告级 · c2 模式）。

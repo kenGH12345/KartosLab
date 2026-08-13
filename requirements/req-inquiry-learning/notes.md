@@ -40,7 +40,7 @@
 2. **S1（体验优化）**：circuit `_maybeNotifyObjectiveMet` 提示时机过早风险（探究未完成即提示达成）。非 bug。
 3. **S2（非 bug）**：`_applyScenario` 里 `_timerTicker?.stop()` 可改 `dispose()` 语义更清晰。
 4. **forces 基线超时（独立任务）**：`forces_scenario_test.dart` netforce-tug 10 分钟死循环超时，forces 零改动。建议独立排查 `flutter_test` 二次 rootBundle 加载。
-5. **docs/knowledge/phet-common/ 历史 analyze error（独立任务）**：`property_control_panel.dart` 参考文档 8 个 error（历史提交 e180529，非运行代码）。
+5. **docs/knowledge/kartosos-common/ 历史 analyze error（独立任务）**：`property_control_panel.dart` 参考文档 8 个 error（历史提交 e180529，非运行代码）。
 6. **git 工作区杂项（commit 时排除）**：`lib/circuit/models/circuit_solver.dart` / `circuit_state.dart` / `test/circuit/circuit_solver_mna_test.dart`（MNA solver 历史未提交工作）+ `.codebuddy.backup-20260729/` + `scripts/`。已由 `req-nine-grid-layout` 最终需求交叉证实为会话前遗留，非本需求。
 
 ### 对后续需求的提示

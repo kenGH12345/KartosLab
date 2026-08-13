@@ -66,7 +66,7 @@ alwaysApply: true
 任何 agent 在做技术判断前**必须**按这个顺序查：
 
 1. **当前需求**：`requirements/<id>/spec/`、`design/`、`notes.md`
-2. **项目知识库**：`docs/knowledge/phet-java-simulations/INDEX.md` 及 `docs/knowledge/phet/INDEX.md` 及其引用的具体文档
+2. **项目知识库**：`docs/knowledge/kratos-java-simulations/INDEX.md` 及 `docs/knowledge/kratos/INDEX.md` 及其引用的具体文档
 3. **源码搜索**：以上都没有时再 grep `lib/`
 
 ### 自证引用（硬约束）
@@ -74,7 +74,7 @@ alwaysApply: true
 **每当你基于第 2 层（项目知识库）信息做出技术判断时，必须在回复中显式引用具体文档路径**，格式为：
 
 ```
-[来源: docs/knowledge/phet/architecture/design-patterns.md:45-67]
+[来源: docs/knowledge/kratos/architecture/design-patterns.md:45-67]
 ```
 
 - 如果回复中**没有任何 `[来源: docs/knowledge/...]` 格式的引用**，视为违规——说明你跳过了知识库，直接凭直觉或源码猜测做出判断

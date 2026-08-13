@@ -15,15 +15,15 @@
   },
   "concentrationMax": 5.0,
   "solutes": [
-    { "name": "Drink mix", "formula": "Drink mix", "saturatedConcentration": 5.95, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
-    { "name": "Cobalt(II) nitrate", "formula": "Co(NO\u2083)\u2082", "saturatedConcentration": 5.65, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
-    { "name": "Cobalt chloride", "formula": "CoCl\u2082", "saturatedConcentration": 4.35, "solutionColorMin": "#FFF2F2", "solutionColorMax": "#FF6A6A", "particleColor": "#FF6A6A" },
-    { "name": "Potassium dichromate", "formula": "K\u2082Cr\u2082O\u2087", "saturatedConcentration": 0.50, "solutionColorMin": "#FFE8D2", "solutionColorMax": "#FF7F00", "particleColor": "#FF7F00" },
-    { "name": "Gold(III) chloride", "formula": "AuCl\u2083", "saturatedConcentration": 2.25, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFD700", "particleColor": "#FFD700" },
-    { "name": "Potassium chromate", "formula": "K\u2082CrO\u2084", "saturatedConcentration": 3.35, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFFF00", "particleColor": "#FFFF00" },
-    { "name": "Nickel(II) chloride", "formula": "NiCl\u2082", "saturatedConcentration": 5.2, "solutionColorMin": "#EAF4EA", "solutionColorMax": "#008000", "particleColor": "#008000" },
-    { "name": "Copper sulfate", "formula": "CuSO\u2084", "saturatedConcentration": 1.40, "solutionColorMin": "#DEEEFF", "solutionColorMax": "#1E90FF", "particleColor": "#1E90FF" },
-    { "name": "Potassium permanganate", "formula": "KMnO\u2084", "saturatedConcentration": 0.50, "solutionColorMin": "#FF00FF", "solutionColorMax": "#8B008B", "particleColor": "#000000" }
+    { "name": "饮料粉", "formula": "Drink mix", "saturatedConcentration": 5.95, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "硝酸钴（II）", "formula": "Co(NO₃)₂", "saturatedConcentration": 5.65, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "氯化钴", "formula": "CoCl₂", "saturatedConcentration": 4.35, "solutionColorMin": "#FFF2F2", "solutionColorMax": "#FF6A6A", "particleColor": "#FF6A6A" },
+    { "name": "重铬酸钾", "formula": "K₂Cr₂O₇", "saturatedConcentration": 0.50, "solutionColorMin": "#FFE8D2", "solutionColorMax": "#FF7F00", "particleColor": "#FF7F00" },
+    { "name": "氯化金（III）", "formula": "AuCl₃", "saturatedConcentration": 2.25, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFD700", "particleColor": "#FFD700" },
+    { "name": "铬酸钾", "formula": "K₂CrO₄", "saturatedConcentration": 3.35, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFFF00", "particleColor": "#FFFF00" },
+    { "name": "氯化镍（II）", "formula": "NiCl₂", "saturatedConcentration": 5.2, "solutionColorMin": "#EAF4EA", "solutionColorMax": "#008000", "particleColor": "#008000" },
+    { "name": "硫酸铜", "formula": "CuSO₄", "saturatedConcentration": 1.40, "solutionColorMin": "#DEEEFF", "solutionColorMax": "#1E90FF", "particleColor": "#1E90FF" },
+    { "name": "高锰酸钾", "formula": "KMnO₄", "saturatedConcentration": 0.50, "solutionColorMin": "#FF00FF", "solutionColorMax": "#8B008B", "particleColor": "#000000" }
   ],
   "performance": { "particlesPerMole": 200, "particleSize": 5 },
   "successCriteria": [],
@@ -36,7 +36,7 @@
     "steps": [
       { "id": "step-1", "instruction": "固定体积为 0.5L，从 0.2mol 逐步增加到 1.0mol，记录浓度变化。", "hint": "每次调整后观察浓度条读数" },
       { "id": "step-2", "instruction": "固定溶质量为 0.5mol，把体积从 1.0L 减小到 0.2L，观察浓度。", "hint": "体积减小，浓度增大" },
-      { "id": "step-3", "instruction": "选饱和浓度低的溶质（如 K\u2082Cr\u2082O\u2087），加到饱和后继续加溶质，观察沉淀。", "hint": "饱和后浓度不再升高，多出的溶质变成沉淀" }
+      { "id": "step-3", "instruction": "选饱和浓度低的溶质（如 K₂Cr₂O₇），加到饱和后继续加溶质，观察沉淀。", "hint": "饱和后浓度不再升高，多出的溶质变成沉淀" }
     ],
     "snapshotColumns": [
       { "key": "soluteAmount", "label": "溶质(mol)", "source": "param" },

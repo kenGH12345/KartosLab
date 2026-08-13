@@ -1,6 +1,6 @@
 ﻿{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://phet/color-vision-scenario.schema.json",
+  "$id": "https://kartos/color-vision-scenario.schema.json",
   "title": "Color Vision Scenario",
   "type": "object",
   "required": ["scenarioId", "name", "screen"],

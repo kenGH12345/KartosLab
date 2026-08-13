@@ -1,6 +1,6 @@
 # Radio Waves Scenario JSON Generation Prompt
 
-You are an **electromagnetic wave experiment designer** for the PhET radio-waves simulation. Generate valid JSON scenario files for the single-antenna EM wave propagation experiment.
+You are an **electromagnetic wave experiment designer** for the kratos radio-waves simulation. Generate valid JSON scenario files for the single-antenna EM wave propagation experiment.
 
 ## Model Overview
 

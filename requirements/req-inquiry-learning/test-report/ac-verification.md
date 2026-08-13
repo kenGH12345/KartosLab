@@ -13,7 +13,7 @@
 |---|---|---|
 | 全量测试（除 `test/forces/forces_scenario_test.dart`） | **190 通过 / 0 失败** | 日志末尾 `All tests passed!` |
 | forces 模块 | 6 通过 / 1 超时 | `netforce-tug scenario has valid pullers` 死循环超时（**基线问题**，forces 零改动，见下） |
-| `flutter analyze` | 本需求代码 0 error | 唯一 error 全部位于 `docs/knowledge/phet-common/`（历史提交 e180529 引入的参考文档，非本需求，非运行代码） |
+| `flutter analyze` | 本需求代码 0 error | 唯一 error 全部位于 `docs/knowledge/kartosos-common/`（历史提交 e180529 引入的参考文档，非本需求，非运行代码） |
 
 ---
 
@@ -65,7 +65,7 @@
 
 | # | 验证点 | 验证方式 | 测试引用（file:line） | 结果 | 备注 |
 |---|---|---|---|---|---|
-| 5.1 | `flutter analyze` 无 error | 手动执行 | `test-report/analyze.log` | ⚠️ | 本需求代码 **0 error**；8 个 error 全部位于 `docs/knowledge/phet-common/`（历史参考文档，git diff 确认非本需求引入，非运行代码） |
+| 5.1 | `flutter analyze` 无 error | 手动执行 | `test-report/analyze.log` | ⚠️ | 本需求代码 **0 error**；8 个 error 全部位于 `docs/knowledge/kartosos-common/`（历史参考文档，git diff 确认非本需求引入，非运行代码） |
 | 5.2 | 全量测试通过率不降 | `flutter test` | 190 通过 / 0 失败（除 forces） | ✅ | forces 基线超时除外 |
 | 5.3 | 7 sim 传统场景正常运行 | 回归 + 全量 | `color_vision_l9_regression_test.dart`（10 场景）；全量 190 通过覆盖 circuit/optics/sound/wave/radio | ✅ | 实测通过 |
 | 5.4 | 九宫格布局未破 | 测试 + 代码审查 | `test/common/nine_grid_layout_test.dart`（中间面积≥70% 等）；InquiryDrawer 用 `Offstage` 常驻（`inquiry_drawer.dart:36-37`） | ✅ | 实测通过 |
@@ -84,7 +84,7 @@
 
 ### `flutter analyze` 预存 error（基线）
 
-- **现象**：8 个 error 全部位于 `docs/knowledge/phet-common/property_control_panel.dart`（uri 不存在 / 未定义方法）
+- **现象**：8 个 error 全部位于 `docs/knowledge/kartosos-common/property_control_panel.dart`（uri 不存在 / 未定义方法）
 - **归属**：`git diff` 确认 `docs/` 未被本需求改动，来自历史提交 e180529 → **预存参考文档问题，非本需求引入，且不在运行代码路径**
 - **本需求新增代码**：analyze 0 error；唯一 info 为 `test/color_vision/magic_lab_ac44_test.dart:2` 的 unnecessary_import（info 级，非 error/warning）
 

@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/services.dart';
 
-import 'package:geometric_optics/color_vision/config/color_vision_scenario.dart';
-import 'package:geometric_optics/color_vision/config/color_vision_scenario_manager.dart';
-import 'package:geometric_optics/color_vision/model/color_vision_state.dart';
-import 'package:geometric_optics/color_vision/solver/photon_beam.dart';
+import 'package:kratos/color_vision/config/color_vision_scenario.dart';
+import 'package:kratos/color_vision/config/color_vision_scenario_manager.dart';
+import 'package:kratos/color_vision/model/color_vision_state.dart';
+import 'package:kratos/color_vision/solver/photon_beam.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

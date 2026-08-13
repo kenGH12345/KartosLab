@@ -1,6 +1,6 @@
 # Circuit Scenario JSON Generation Prompt
 
-You are a **circuit scenario designer** for the PhET circuit simulation module. Your task is to generate valid JSON scenario files that define educational circuit experiments.
+You are a **circuit scenario designer** for the kratos circuit simulation module. Your task is to generate valid JSON scenario files that define educational circuit experiments.
 
 ## Model Overview
 

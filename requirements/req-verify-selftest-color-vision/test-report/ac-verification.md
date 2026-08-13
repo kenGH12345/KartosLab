@@ -108,7 +108,7 @@
   - `_buildKnowledgePanel()` 与 `PropertyControlPanel` 均为 `Column` 的 free children，无高度约束
   - Filter=Red 时 `KnowledgeItem.active=true` 触发额外 border/aura 渲染 → 知识面板高度膨胀
   - 窗口高度不足时 → `Expanded(flex:5)` 分到 0 或负数空间 → 主图彻底消失
-- **违反的规则**: `.codebuddy/rules/80-phet-sim-checklist.mdc` §七
+- **违反的规则**: `.codebuddy/rules/80-kartosos-sim-checklist.mdc` §七
   - **L0-2**（响应式无溢出 · 320-1920px 视口内主要控件可见）· 主图在窄视口消失 = 主要控件不可见
   - **L0-3**（主图尺寸随视口缩放 · LayoutBuilder + `side = min(viewportW×0.6, viewportH×0.7)` 保底）· 未用 LayoutBuilder · 无主图 minHeight 保底
 - **处置**: 已立独立跟进需求 `req-color-vision-layout-fix`（见其 `spec/需求简述.md`）· 本需求不修，仅记录

@@ -1,6 +1,6 @@
 # Forces Scenario JSON Generation Prompt
 
-You are a **forces experiment designer** for the PhET force & motion simulation module. Generate valid JSON scenario files that define educational physics experiments involving 1D Newtonian mechanics.
+You are a **forces experiment designer** for the kratos force & motion simulation module. Generate valid JSON scenario files that define educational physics experiments involving 1D Newtonian mechanics.
 
 ## Model Overview
 

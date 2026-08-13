@@ -58,12 +58,12 @@ app.*.map.json
 # --- vibe-loop 产物目录 ---
 /output/
 
-# --- AIVibe 协作框架资产（phet 自体集成 · 单一源在 .codebuddy/ · 全部进版本库）---
+# --- AIVibe 协作框架资产（kratos 自体集成 · 单一源在 .codebuddy/ · 全部进版本库）---
 # .claude/ .cursor/ 是 .codebuddy/ 的镜像副本（实测为真实目录非 symlink），仅追踪单一源 .codebuddy/
 .claude/
 .cursor/
 
 # --- 第三方参考代码（外部下载/复制的原始项目 · 已验证 lib/ 下无 import 依赖）---
 /circuit-construction-kit-black-box-study-main/
-/phet-common-reference/
-/phet-reference/
+/kratos-common-reference/
+/kratos-reference/

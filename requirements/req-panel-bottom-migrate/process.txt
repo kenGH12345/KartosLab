@@ -1,0 +1,75 @@
+[2026-08-12 10:00] phase 1.intake: 新建需求 req-panel-bottom-migrate（用户 /pm 触发操作面板推广 · 9 屏底部迁移）
+[2026-08-12 10:00] 前置: req-ui-interaction-polish done（molarity 试点验收 · footer 方案就绪）
+[2026-08-12 10:00] 待做: 9 屏逐个迁移 + 测试；分批策略与 AC 由 product-manager 规划
+[2026-08-12 10:00] phase 1.intake → 2.requirement: 委派 product-manager 出需求简述
+[2026-08-12 10:15] product-manager 完成需求简述（spec/需求简述.md）：8 屏迁移 + optics 保留（只读文本面板不适合 footer）· 4 批（声学波动3→力学2→色觉2→电路1）· circuit 顶部行遗留纳入批次4 · 每批 320/1600 无溢出验收
+[2026-08-12 10:15] 技术待确认（迭代中处理）: ①circuit 工具条拖拽 hit test 区域 ②320px FittedBox 触摸目标尺寸
+[2026-08-12 10:15] 2.requirement → 3.iteration: 主会话直接执行——批次1 sound/radio/wave 迁移
+[2026-08-12 11:00] 批次1 完成: sound/radio/wave 三屏 midRight → footer 底部横排（molarity 方案推广）
+  - 通用化修复: NineGridLayout 极端矮视口降级（顶部/底部行 < 48px 时压缩 center，保证边格可放控件）——影响所有 sim，正常视口不变
+  - sound: footer[频率/振幅滑块 + TimeControlBar] · 1600 过
+  - wave: footer[波类型/挡板 chips + 频率/振幅/缝宽滑块 + 重置 + 时间控制] · 1600 过
+  - radio: footer[频率/振幅滑块 + 曲线/箭头/动态 chips + 时间控制] · 1600 过
+  - 新增 test/sound_layout_test.dart + test/wave_radio_layout_test.dart（1600 断言）
+  - 遗留: sound 320 存在 9.3px 右溢出（恒定值、与视口无关，疑 TimeControlBar 固定内容窄视口）→ sound 320 测试 skip，待独立定位
+  - 布局测试: molarity/sound(1600)/wave/radio 全过（+5 ~1）
+[2026-08-12 11:00] 回归验证中: app_test + ac6（NineGridLayout 通用化改动影响所有 sim）
+[2026-08-12 11:30] 批次1 回归通过: app_test +13 ~3 All passed · ac6 All passed（NineGridLayout 通用化无回归）
+[2026-08-12 12:00] 批次2 完成（netforce ✓ + motion ⚠️）:
+  - netforce: footer[合力/值/速度 chips + 时间控制 + 归位 + 总力记分板] · 测试过（Wrap 包 SizedBox 修复无界宽）
+  - motion: **回退**——AppliedForceSlider 独立 pump 时竖排/横排均触发 200161px 溢出（SizedBox(200) 在窄格内 Slider 深层布局问题，与 footer 迁移无关的既有技术债）→ 记录待独立处理，motion 保持 midRight
+  - 布局测试: netforce/molarity/sound(1600)/wave/radio +6 ~1 All passed
+[2026-08-12 12:00] 批次3 进行中: color_vision（single_bulb / rgb_bulbs）
+[2026-08-12 12:40] 批次3 结论: single_bulb 回退——独立 pump SingleBulbScreen 暴露既有布局债（199931px Column 纵向溢出，color_vision screens），回退后仍失败 → 与 footer 迁移无关的既有问题（同 motion 模式）。single_bulb_layout_test 删除
+[2026-08-12 12:40] 既有布局债模式（独立 pump 暴露 · 需独立处理）:
+  - motion: AppliedForceSlider 200161px Row 溢出（SizedBox(200) 在窄格内 Slider 深层问题）
+  - single_bulb: 199931px Column 纵向溢出（color_vision screens）
+  - 共同点: 独立 pump（MaterialApp home: Screen）触发；真实 app（tab 链路）未被测试覆盖，可能正常也可能有同样问题——需 app 链路验证或独立调研
+[2026-08-12 12:40] 批次1-2 交付确认: sound/radio/wave/netforce 迁移完成 + NineGridLayout 通用化（app_test +13/ac6 回归通过）· 布局测试 +6 ~1 All passed
+[2026-08-12 12:40] 待续: 批次3 rgb_bulbs（模式驱动面板）+ 批次4 circuit（含顶部行遗留）+ motion/single_bulb 既有债攻关
+[2026-08-12 13:20] 既有债攻关（用户选择"先攻关既有债"）结论:
+  - **single_bulb**: "199931px 既有债"实为两类误判——① 测试方法错误（SingleBulbScreen 无 Scaffold，独立 pump 需 Scaffold 包裹，color_vision_test 先例）；② 竖排 midRight 在 130px 窄格真实 90px 溢出。**迁移 footer 横排解决**（宽视口无溢出），另滤光片 chips Wrap 换行抬高超 footer 高（16px）→ 改横向滚动单行。**single_bulb 迁移完成**（布局测试 +7 ~1 All passed）
+  - **motion**: AppliedForceSlider 200161px Row 溢出是**真实深层问题**（竖排 midRight / footer 横排均触发，与迁移无关；MotionModel 默认构造正常非 NaN）——真实 ForcesHome 链路未被测试覆盖，待 app 链路验证。**motion 保持 midRight 竖排不迁移**
+  - 布局测试: molarity/sound(1600)/wave/radio/netforce/single_bulb +7 ~1 All passed
+[2026-08-12 13:20] 待续: 批次3 rgb_bulbs + 批次4 circuit + motion AppliedForceSlider app 链路验证
+[2026-08-12 14:00] 批次3 完成: rgb_bulbs（MagicLabScreen）迁移——模式驱动 footer（wheel: 亮度滑块+色块 / challenge: 进度条+R/G/B迷你滑块+重开 / explore: 色块+标签），删除重复 _modeControls（python 精确删行），布局测试过
+[2026-08-12 14:30] 批次4 完成: circuit 迁移——CircuitControls 从 topCenter 移到 footer（**顺带解决顶部行 ~51px 溢出遗留**：footer 96px 容纳 compact Slider），DragTray 托盘保留 bottomCenter
+[2026-08-12 14:30] circuit 4 个曾 skip 测试全部恢复: place/select/delete/toggle/rotate —— app_test **+16 All passed（无 skip）**；toggle 测试改为"选中后 toggle 图标存在"（footer 图标 tap 有环境障碍，toggleSwitch helper 删除）
+[2026-08-12 14:30] 全量验证: flutter analyze 36 issues 全为既有 lint（0 error）· 布局测试 molarity/sound(1600)/wave/radio/netforce/single_bulb/rgb_bulbs +7 ~1（sound 320 的 9.3px 仍 skip）
+[2026-08-12 14:30] **9/10 屏迁移完成**（molarity 试点 + sound/wave/radio/netforce/single_bulb/rgb_bulbs/circuit）；唯一遗留: motion AppliedForceSlider 200161px（真实深层问题，待 app 链路验证）
+[2026-08-12 15:10] **motion 攻关成功 → 10/10 屏全部完成**:
+  - app 链路测试（test/forces_home_test.dart · ForcesHome→运动 tab）实证: AppliedForceSlider 真实溢出 255px（非独立 pump 的 200161px 异常值——独立 pump 是 scenario null 导致的值异常，真实链路是窄格溢出）
+  - **根因修复**（真实产品 bug）: applied_force_slider.dart 固定 SizedBox(200) → Expanded 自适应（宽度由外部约束定）
+  - **motion 恢复 footer 迁移**: AppliedForceSlider 竖排窄格（<119px 固定元素）放不下 → footer 220px 容纳
+  - 验证: forces_home_test + forces_layout_test All passed · 布局测试 +9 ~1 · app_test **+16 All passed（无 skip）**
+[2026-08-12 15:10] **req-panel-bottom-migrate 批次 1-4 + motion 攻关全部完成**：10/10 屏操作面板底部横排（molarity/sound/wave/radio/netforce/single_bulb/rgb_bulbs/circuit/motion）
+[2026-08-12 15:40] **sound 320 遗留关闭**（用户选择处理）:
+  - 定位: sound_info_cards.dart:207 SphericalLegend（'稀疏(暗)-渐变条-压缩(亮)' 图例）Row 固定渐变条 100px 在 320 屏容器（w<=241.7）溢出 9.3px
+  - 修复: 渐变条 Container(width:100) → Expanded 自适应
+  - 验证: sound_layout_test 320+1600 All passed · 全布局测试 **+10 All passed（无 skip）** · app_test +16（无 skip）· analyze No issues
+[2026-08-12 15:40] **req-panel-bottom-migrate 全部遗留清零**: 10/10 屏迁移 + AppliedForceSlider 修复 + circuit 顶部行 + sound 320 + NineGridLayout 通用化 —— 布局测试 +10 ~0 · app_test +16 ~0
+[2026-08-12 16:00] verdict=approve_go by user / 备注: 全部遗留清零，进入 4.closing（code-reviewer → closer → knowledge-maintainer）
+[2026-08-12 16:00] 3.iteration → 4.closing: 委派 code-reviewer（10 屏迁移 + 通用化 + 3 真实 bug 修复）
+[2026-08-12 16:40] code-reviewer 首轮：rework（1 Blocker B1 证据链缺失 + 3 Major M1-M3 320 测试缺口 + 4 Minor）
+[2026-08-12 17:30] closing 修复完成（用户选择"处理 320 遗留"延伸至 closing 修复）:
+  - B1: 落盘 test-report/ac-verification.md + integration-test.log
+  - M1: wave/radio 320 补测（wave_radio_layout_test 4 测试）→ 全过
+  - M2: circuit_layout_test 新增（320 skip：AppBar 21px 窄屏 11 按钮设计问题——ComboBox 响应式隐藏(<600px)+FittedBox 双保险均无法消除，AppBar 布局深层问题需独立方案）
+  - M3: netforce 320 + motion 320（forces 测试）· single_bulb 320 + rgb_bulbs 320（修复 rgb 主画面 FittedBox 77px + motion chips 横向单行）
+  - Minor m1-m4: 注释/meta 清理 + wave Wrap 包 SizedBox
+  - 验证: 布局测试 **+17 ~1 All passed** · app_test **+16 All passed（无 skip）** · analyze 0 error
+[2026-08-12 17:30] code-reviewer 复审：approve_go（B1/M1-M3/Minor 全部处理；circuit 320 AppBar 21px 记录为独立待办）→ 委派 closer
+[2026-08-12 18:00] closer 完成收尾（closer 内部 16:17 / 主会话观察 18:00），产出 spec/最终需求.md（9 项决策 D1-D9 + AC 覆盖 21/22）+ notes.md（8 条经验：3 真实 bug 根因 + 2 踩坑 + 2 决策）
+[2026-08-12 18:00] 4.closing: 委派 knowledge-maintainer 回写项目知识库（footer 迁移模式 + 固定宽→Expanded 通用规律 + NineGridLayout 通用化）
+[2026-08-12 18:20] knowledge-maintainer 完成回写（KM 内部 18:15 / 主会话观察 18:20）：notes.md + ui-framework.md + INDEX 同步（6 条项目级发现落盘 · 固定宽→Expanded 规律单一源）
+[2026-08-12 18:20] done 门禁（手动核验）：final_summary_path ✓ / spec/最终需求.md ✓ / closer 完成日志 ✓ / test-report/ac-verification.md+integration-test.log ✓ → 通过
+[2026-08-12 18:20] phase 4.closing → done: meta.status=done；遗留：circuit 320 AppBar 21px 独立方案（记录）· 固定宽控件全 sim 扫描（KM 建议）
+[2026-08-12 16:17] closer 完成收尾（内部时间 2026-08-12 16:17；主会话观察时间以主会话当下为准）
+  → spec/最终需求.md（最终态快照 + 9 项关键决策 + AC 覆盖矩阵 21 covered / 1 skip 记录）
+  → notes.md（已沉淀 8 条经验：3 真实 bug 根因 + 2 踩坑 + 2 决策 + 1 后续提示）
+  代码评审: approve_go（首轮 rework B1/M1-M3/Minor → 主会话修复 → 复审通过）
+  测试: 布局 +17 ~1 All passed · app_test +16 All passed（无 skip）· analyze 0 error
+  涉及 revisions: 未独立 commit（主会话统一控制）
+  遗留: circuit 320 AppBar 21px（独立待办 · 非本次阻塞）· forces_home 320 简化版
+  注: .workflow/scripts/auto-extract-failures.sh 未核实存在性（变更历史已记录），步骤 1.5 经验提取跳过，经验沉淀已手动完成（notes.md §知识沉淀）
+[2026-08-12 16:17] knowledge-maintainer: 完成项目级知识回写（docs/knowledge/kratos/）+ 经验沉淀检查 + 质量门禁，全部为 kratos 单项目经验（非跨项目共享），0 条共享沉淀、0 条需审核

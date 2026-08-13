@@ -18,7 +18,7 @@ class SoundStatCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _bar(
-          label: '响度 LOUDNESS',
+          label: '响度',
           valueText: '${loudnessPercent.round()}%',
           value: (loudnessPercent / 100).clamp(0.0, 1.0),
           fillColor: const Color(0xFFEF4444),
@@ -204,19 +204,20 @@ class SphericalLegend extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: const Color(0xFF1E293B)),
       ),
+      // 渐变条 Expanded 自适应：固定 100 在窄容器（320 屏 w<=241.7）溢出 9.3px
       child: Row(
-        mainAxisSize: MainAxisSize.min,
         children: [
           const Text('稀疏 (暗)',
               style: TextStyle(color: Color(0xFF94A3B8), fontSize: 11)),
           const SizedBox(width: 8),
-          Container(
-            width: 100,
-            height: 8,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(2),
-              gradient: const LinearGradient(
-                colors: [Colors.black, Color(0xFF808080), Colors.white],
+          Expanded(
+            child: Container(
+              height: 8,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                gradient: const LinearGradient(
+                  colors: [Colors.black, Color(0xFF808080), Colors.white],
+                ),
               ),
             ),
           ),

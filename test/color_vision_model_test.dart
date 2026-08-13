@@ -1,12 +1,12 @@
 ﻿import "dart:ui";
 import "package:flutter_test/flutter_test.dart";
-import "package:geometric_optics/color_vision/model/photon.dart";
-import "package:geometric_optics/color_vision/model/filter.dart";
-import "package:geometric_optics/color_vision/model/spot_light.dart";
-import "package:geometric_optics/color_vision/model/color_vision_state.dart";
-import "package:geometric_optics/color_vision/model/single_bulb_state.dart";
-import "package:geometric_optics/color_vision/solver/color_model.dart";
-import "package:geometric_optics/color_vision/solver/photon_beam.dart";
+import "package:kratos/color_vision/model/photon.dart";
+import "package:kratos/color_vision/model/filter.dart";
+import "package:kratos/color_vision/model/spot_light.dart";
+import "package:kratos/color_vision/model/color_vision_state.dart";
+import "package:kratos/color_vision/model/single_bulb_state.dart";
+import "package:kratos/color_vision/solver/color_model.dart";
+import "package:kratos/color_vision/solver/photon_beam.dart";
 
 void main() {
   group("Photon", () {
