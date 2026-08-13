@@ -1,0 +1,1 @@
+C:/workspace/phet/.codebuddy/commands/skill-new.md

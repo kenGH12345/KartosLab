@@ -1,0 +1,1 @@
+C:/workspace/phet/.codebuddy/agents/product-manager.md

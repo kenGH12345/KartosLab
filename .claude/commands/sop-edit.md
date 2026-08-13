@@ -1,0 +1,1 @@
+C:/workspace/phet/.codebuddy/commands/sop-edit.md

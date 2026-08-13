@@ -1,0 +1,1 @@
+C:/workspace/phet/.codebuddy/commands/pm-new.md

@@ -1,0 +1,1 @@
+C:/workspace/phet/.codebuddy/commands/vibe-loop.md
