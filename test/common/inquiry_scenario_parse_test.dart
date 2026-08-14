@@ -23,6 +23,23 @@ void main() {
       {'key': 'a', 'label': 'A', 'source': 'param'},
       {'key': 'b', 'label': 'B'},
     ],
+    'predictions': [
+      {
+        'id': 'p1',
+        'question': '电阻增大电流会?',
+        'options': ['增大', '减小', '不变'],
+        'answer': 1,
+        'explanation': '欧姆定律',
+      },
+    ],
+  };
+
+  // 旧 JSON 无 predictions 字段 → 向后兼容（默认空）
+  const legacyInquiryJson = {
+    'question': '旧问题',
+    'steps': [
+      {'id': 's1', 'instruction': '步骤一'},
+    ],
   };
 
   test('ForcesScenario 解析 inquiryTask + 向后兼容', () {
@@ -35,9 +52,21 @@ void main() {
     expect(s.inquiryTask!.snapshotColumns, hasLength(2));
     expect(s.inquiryTask!.snapshotColumns.first.source, 'param');
 
+    // req-predictive-inquiry：predictions 解析
+    expect(s.inquiryTask!.predictions, hasLength(1));
+    expect(s.inquiryTask!.predictions.first.id, 'p1');
+    expect(s.inquiryTask!.predictions.first.options, ['增大', '减小', '不变']);
+    expect(s.inquiryTask!.predictions.first.answer, 1);
+    expect(s.inquiryTask!.predictions.first.explanation, '欧姆定律');
+
     // 无 inquiryTask 不崩
     final old = ForcesScenario.fromJson(base('f2', {'mode': 'motion'}));
     expect(old.inquiryTask, isNull);
+
+    // 旧 JSON 无 predictions → 默认空列表（向后兼容）
+    final legacy = ForcesScenario.fromJson(
+      base('f3', {'mode': 'netForce', 'inquiryTask': legacyInquiryJson}));
+    expect(legacy.inquiryTask!.predictions, isEmpty);
   });
 
   test('LabScenario(optics) 解析 inquiryTask + 向后兼容', () {

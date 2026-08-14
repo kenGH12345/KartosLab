@@ -1,0 +1,11 @@
+req_id: req-predictive-inquiry
+title: 探究预测题（猜测→验证）功能
+status: in_progress
+sop: agile-vibe
+phase: 3.iteration
+edd_template_version: ""
+created_at: "2026-08-13"
+updated_at: "2026-08-13"
+description: >
+  给做中学探究流程补"猜测→验证"闭环：InquiryTask 增加 predictions（选项式预测题），
+  学生操作前先选猜测答案，操作后对照正确答案判定对错。试点 circuit + molarity 两个 sim。

@@ -49,7 +49,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
   Timer? _tapTimer;
   Offset? _doubleTapWorld;
   bool _objectiveMetNotified = false;
-  bool _inquiryOpen = false;
+  bool _inquiryOpen = true; // 预测阶段默认展开：进入即见预测题（置顶），可手动收起
   Size? _canvasSize; // DropCanvas 画布尺寸（拖放投影转换用）
 
   String _vid() => 'v${_nextId++}';
@@ -1013,7 +1013,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
       left: left,
       top: top,
       width: barW,
-      height: barH,
+      // 不固定 height：让 CircuitControls 用 natural height（≈50px：Slider 48+border 1），
+      // 避免窄画布被 tight 52 压崩（实测 integration_test 默认视口下画布 26px → Slider 溢出 22px）
       child: CircuitControls(
         state: _state,
         solved: _solved,

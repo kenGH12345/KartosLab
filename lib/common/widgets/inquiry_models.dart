@@ -12,11 +12,15 @@ class InquiryTask {
   final String? referenceConclusion;
   final List<InquirySnapshotColumn> snapshotColumns;
 
+  /// 预测题（做中学"猜测→验证"闭环）：操作前选答案，操作后对照判定。
+  final List<InquiryPrediction> predictions;
+
   const InquiryTask({
     required this.question,
     this.steps = const [],
     this.referenceConclusion,
     this.snapshotColumns = const [],
+    this.predictions = const [],
   });
 
   factory InquiryTask.fromJson(Map<String, dynamic> json) => InquiryTask(
@@ -29,6 +33,9 @@ class InquiryTask {
             (json['snapshotColumns'] as List<dynamic>? ?? const [])
                 .map((e) => InquirySnapshotColumn.fromJson(e as Map<String, dynamic>))
                 .toList(growable: false),
+        predictions: (json['predictions'] as List<dynamic>? ?? const [])
+            .map((e) => InquiryPrediction.fromJson(e as Map<String, dynamic>))
+            .toList(growable: false),
       );
 
   Map<String, dynamic> toJson() => {
@@ -40,6 +47,50 @@ class InquiryTask {
         if (snapshotColumns.isNotEmpty)
           'snapshotColumns':
               snapshotColumns.map((e) => e.toJson()).toList(growable: false),
+        if (predictions.isNotEmpty)
+          'predictions':
+              predictions.map((e) => e.toJson()).toList(growable: false),
+      };
+}
+
+/// 预测题：选项式猜测，操作后对照正确答案判定对错。
+@immutable
+class InquiryPrediction {
+  final String id;
+  final String question;
+
+  /// 选项（覆盖合理方向：增大/减小/不变等，避免歧义）。
+  final List<String> options;
+
+  /// 正确答案索引（0-based，对应 [options]）。
+  final int answer;
+
+  /// 验证后展示的答案解析。
+  final String? explanation;
+
+  const InquiryPrediction({
+    required this.id,
+    required this.question,
+    required this.options,
+    required this.answer,
+    this.explanation,
+  });
+
+  factory InquiryPrediction.fromJson(Map<String, dynamic> json) =>
+      InquiryPrediction(
+        id: json['id'] as String,
+        question: json['question'] as String,
+        options: (json['options'] as List<dynamic>).cast<String>(),
+        answer: json['answer'] as int,
+        explanation: json['explanation'] as String?,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'question': question,
+        'options': options,
+        'answer': answer,
+        if (explanation != null) 'explanation': explanation,
       };
 }
 

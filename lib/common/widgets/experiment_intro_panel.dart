@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'inquiry_models.dart';
 import 'inquiry_task_panel.dart';
+import 'prediction_panel.dart';
 
 /// 实验说明 + 操作指引（通用引导组件 · 所有 sim 共用的"说明/指引"界面）。
 ///
@@ -50,36 +51,37 @@ class ExperimentIntroPanel extends StatelessWidget {
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Material(
-            color: color.withValues(alpha: 0.08),
+            color: color.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(8),
             child: InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () => _showDialog(context),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                  Icon(titleIcon, size: 14, color: color),
-                  const SizedBox(width: 6),
-                  Flexible(
-                    child: Text(
-                      description.isNotEmpty ? description : '查看操作指引',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 11,
-                        color: Color(0xFF334155),
+                    Icon(titleIcon, size: 18, color: color),
+                    const SizedBox(width: 6),
+                    Flexible(
+                      child: Text(
+                        description.isNotEmpty ? description : '查看操作指引',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF1E293B),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(Icons.open_in_full_rounded, size: 12, color: color),
-                ],
+                    const SizedBox(width: 4),
+                    Icon(Icons.open_in_full_rounded, size: 14, color: color),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
         ),
       ),
     );
@@ -125,6 +127,10 @@ class ExperimentIntroPanel extends StatelessWidget {
                 if (task != null) ...[
                   const SizedBox(height: 12),
                   InquiryTaskPanel(task: task, compact: true),
+                ],
+                if (task?.predictions.isNotEmpty ?? false) ...[
+                  const SizedBox(height: 12),
+                  PredictionPanel(predictions: task!.predictions),
                 ],
               ],
             ),

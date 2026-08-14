@@ -44,6 +44,29 @@
       { "key": "concentration", "label": "浓度(M)", "source": "reading" },
       { "key": "precipitate", "label": "沉淀(mol)", "source": "reading" }
     ],
-    "referenceConclusion": "浓度 = 溶质量 ÷ 体积（C = n/V）。当浓度达到饱和浓度后，继续增加溶质不会升高浓度，多余的溶质会以沉淀形式析出。"
+    "referenceConclusion": "浓度 = 溶质量 ÷ 体积（C = n/V）。当浓度达到饱和浓度后，继续增加溶质不会升高浓度，多余的溶质会以沉淀形式析出。",
+    "predictions": [
+      {
+        "id": "p-1",
+        "question": "固定体积 0.5L，把溶质从 0.2mol 加到 1.0mol，浓度会怎样变化？",
+        "options": ["浓度升高", "浓度降低", "浓度不变"],
+        "answer": 0,
+        "explanation": "C = n / V：体积不变，溶质增加，浓度升高（成正比）。"
+      },
+      {
+        "id": "p-2",
+        "question": "固定溶质 0.5mol，把体积从 1.0L 减到 0.2L，浓度会怎样变化？",
+        "options": ["浓度升高", "浓度降低", "浓度不变"],
+        "answer": 0,
+        "explanation": "C = n / V：溶质不变，体积减小，浓度升高（成反比）。"
+      },
+      {
+        "id": "p-3",
+        "question": "溶液已经饱和后，继续加溶质，浓度会怎样？",
+        "options": ["浓度继续升高", "浓度不变（多余溶质变沉淀）", "浓度降低"],
+        "answer": 1,
+        "explanation": "饱和后浓度达到上限，多出的溶质以沉淀形式析出，浓度不再升高。"
+      }
+    ]
   }
 }

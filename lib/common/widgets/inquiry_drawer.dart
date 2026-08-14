@@ -5,6 +5,7 @@ import 'conclusion_panel.dart';
 import 'experiment_logger.dart';
 import 'inquiry_models.dart';
 import 'inquiry_task_panel.dart';
+import 'prediction_panel.dart';
 
 /// 右侧探究工作流抽屉：任务卡 + 实验记录器 + 结论归纳。
 ///
@@ -52,6 +53,11 @@ class _InquiryDrawerState extends State<InquiryDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // 预测题置顶：预测阶段默认展开，进入即可先猜（做中学"猜测→验证"第一步）
+                  if (task.predictions.isNotEmpty) ...[
+                    PredictionPanel(predictions: task.predictions),
+                    const SizedBox(height: 10),
+                  ],
                   InquiryTaskPanel(task: task, compact: true),
                   const SizedBox(height: 10),
                   ExperimentLogger(

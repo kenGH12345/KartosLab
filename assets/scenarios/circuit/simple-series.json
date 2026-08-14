@@ -134,6 +134,22 @@
       { "key": "current", "label": "电流(A)", "source": "reading" },
       { "key": "voltage", "label": "电阻端电压(V)", "source": "reading" },
       { "key": "brightness", "label": "灯泡亮度", "source": "reading" }
+    ],
+    "predictions": [
+      {
+        "id": "p-1",
+        "question": "保持电池电压 10V 不变，把电阻从 5Ω 调到 50Ω，电流会怎样变化？",
+        "options": ["电流增大", "电流减小", "电流不变"],
+        "answer": 1,
+        "explanation": "欧姆定律 I = V / R：电压不变，电阻增大，电流减小（成反比）。"
+      },
+      {
+        "id": "p-2",
+        "question": "电阻增大后，灯泡的亮度会怎样变化？",
+        "options": ["变亮", "变暗", "不变"],
+        "answer": 1,
+        "explanation": "灯泡亮度由通过的电流决定：电流减小，灯泡变暗。"
+      }
     ]
   }
 }

@@ -37,7 +37,7 @@ class MolarityScreen extends StatefulWidget {
 class _MolarityScreenState extends State<MolarityScreen> {
   late final MolarityController _controller;
   bool _loaded = false;
-  bool _inquiryOpen = false; // 首次进入自动展开探究任务卡（问题 + 分步操作指引）
+  bool _inquiryOpen = true; // 预测阶段默认展开：进入即见预测题（置顶），可手动收起
 
   MolarityScenario? get _scenario {
     final id = _controller.currentState?.scenarioId;
@@ -63,7 +63,8 @@ class _MolarityScreenState extends State<MolarityScreen> {
   void _applyScenario(MolarityScenario s) {
     setState(() {
       _controller.loadScenario(s.scenarioId);
-      _inquiryOpen = false;
+      // 有预测题则默认展开（预测阶段），无预测题收起
+      _inquiryOpen = s.inquiryTask?.predictions.isNotEmpty ?? false;
     });
   }
 
