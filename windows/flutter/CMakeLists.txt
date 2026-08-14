@@ -98,6 +98,12 @@ add_custom_command(
     ${FLUTTER_TOOL_ENVIRONMENT}
     "${FLUTTER_ROOT}/packages/flutter_tools/bin/tool_backend.bat"
       ${FLUTTER_TARGET_PLATFORM} $<CONFIG>
+  # workaround: flutter 工具 unpack_windows 有 bug（清空 ephemeral 引擎文件但不重拷，
+  # 见 https://github.com/flutter/flutter/issues/121366）→ 在 tool_backend 后强制从
+  # SDK 引擎缓存补齐 cpp_client_wrapper/.dll/.h/icudtl，避免 C1083。每次 build 自动执行。
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${FLUTTER_ROOT}/bin/cache/artifacts/engine/windows-x64"
+    "${EPHEMERAL_DIR}"
   VERBATIM
 )
 add_custom_target(flutter_assemble DEPENDS
