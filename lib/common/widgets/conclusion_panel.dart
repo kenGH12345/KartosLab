@@ -166,8 +166,8 @@ class _ConclusionPanelState extends State<ConclusionPanel> {
                     label: const Text('修改结论', style: TextStyle(fontSize: 11)),
                   ),
                 ),
-              // 参考结论对照（提交后展开 · 不可收回）
-              if (hasReference) ...[
+              // 参考结论对照（提交后展开 · 不可收回 · 编辑时隐藏防"边抄边改"）
+              if (hasReference && !_editing) ...[
                 const SizedBox(height: 6),
                 _conclusionBlock(
                   '参考结论',

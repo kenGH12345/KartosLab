@@ -4,6 +4,7 @@ import '../../../../common/widgets/experiment_logger.dart';
 import '../../../../common/widgets/inquiry_drawer.dart';
 import '../../../../common/widgets/nine_grid_layout.dart';
 import '../../../../common/widgets/experiment_intro_panel.dart';
+import '../../../../common/widgets/scenario_menu_button.dart';
 import '../../config/molarity_scenario.dart';
 import '../../config/molarity_scenario_manager.dart';
 import '../../controller/molarity_controller.dart';
@@ -331,22 +332,22 @@ class _MolarityScreenState extends State<MolarityScreen> {
   }
 
   Widget _buildScenarioMenu() {
-    return PopupMenuButton<MolarityScenario>(
-      tooltip: '切换场景',
-      onSelected: _applyScenario,
-      itemBuilder: (_) => _controller.manager.scenarios
-          .map((s) => PopupMenuItem(value: s, child: Text(s.name)))
+    // 统一用 L0 ScenarioMenuButton（与其他 sim 场景切换一致 · 单选择态 radio 高亮）
+    return ScenarioMenuButton(
+      entries: _controller.manager.scenarios
+          .map((s) => ScenarioMenuEntry(id: s.scenarioId, name: s.name))
           .toList(growable: false),
-      child: const Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            '切换场景',
-            style: TextStyle(fontSize: 11, color: Color(0xFF64748B)),
-          ),
-          Icon(Icons.arrow_drop_down, size: 18, color: Color(0xFF64748B)),
-        ],
-      ),
+      currentId: _controller.currentState?.scenarioId,
+      onSelected: (id) {
+        for (final s in _controller.manager.scenarios) {
+          if (s.scenarioId == id) {
+            _applyScenario(s);
+            break;
+          }
+        }
+      },
+      accentColor: const Color(0xFF0891B2),
+      tooltip: '切换场景',
     );
   }
 }

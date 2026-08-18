@@ -83,8 +83,8 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
     }
     _currentScenarioId = id;
     _rebuildBarriers();
-    // 场景切换时复位探究抽屉（Major-2 · 与 circuit 先例一致）
-    _inquiryOpen = false;
+    // 有 inquiryTask 即默认展开（做中学进入即见任务 · task==null 时抽屉不渲染）
+    _inquiryOpen = scenario.inquiryTask != null;
   }
 
   void _rebuildBarriers() {

@@ -51,6 +51,8 @@ class _MotionScreenState extends State<MotionScreen>
   @override
   void initState() {
     super.initState();
+    // 有 inquiryTask 即默认展开（做中学进入即见任务 · task==null 时抽屉不渲染）
+    _inquiryOpen = widget.scenario?.inquiryTask != null;
     final s = widget.scenario;
     if (s != null) {
       final defaultFriction = switch (widget.mode) {

@@ -40,6 +40,8 @@ class _NetForceScreenState extends State<NetForceScreen>
   @override
   void initState() {
     super.initState();
+    // 有 inquiryTask 即默认展开（做中学进入即见任务 · task==null 时抽屉不渲染）
+    _inquiryOpen = widget.scenario?.inquiryTask != null;
     _model = widget.scenario != null
         ? NetforceModel.fromScenario(widget.scenario!)
         : NetforceModel();

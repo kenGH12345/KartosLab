@@ -69,6 +69,8 @@ class _MagicLabScreenState extends State<MagicLabScreen>
   void initState() {
     super.initState();
     _scenario = widget.scenario;
+    // 有 inquiryTask 即默认展开（做中学进入即见任务 · task==null 时抽屉不渲染）
+    _inquiryOpen = widget.scenario?.inquiryTask != null;
     _state = _buildState(_scenario);
     // 同步 manager 当前场景，保证 checkObjectives 判定链路可用（AC-4.4）
     final s = _scenario;
@@ -101,6 +103,7 @@ class _MagicLabScreenState extends State<MagicLabScreen>
       _level = 1;
       _timeLeft = 30;
       _objectivesMetNotified = false;
+      _inquiryOpen = s.inquiryTask != null;
     });
     widget.manager?.setCurrentScenario(s);
   }

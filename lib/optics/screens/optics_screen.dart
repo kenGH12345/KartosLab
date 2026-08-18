@@ -8,7 +8,7 @@ import '../../common/widgets/inquiry_models.dart';
 import '../../common/widgets/inquiry_drawer.dart';
 import '../../common/widgets/experiment_logger.dart';
 import '../../common/widgets/experiment_intro_panel.dart';
-import '../../screens/scenario_selection_screen.dart';
+import '../../common/widgets/scenario_menu_button.dart';
 import '../config/scenario_manager.dart';
 import '../config/scenario_runtime_policy.dart';
 import '../config/lab_scenario.dart';
@@ -109,7 +109,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
         _world = world;
         _currentScenario = _scenarioManager.currentScenario;
         _nextElementId = _world.elements.length + 1;
-        _inquiryOpen = false;
+        _inquiryOpen = _currentScenario?.inquiryTask != null;
         _solve();
       });
     } catch (_) {
@@ -210,10 +210,7 @@ class _OpticsScreenState extends State<OpticsScreen> {
           icon: const Icon(Icons.menu_book_outlined),
           tooltip: '知识点',
         ),
-        IconButton(
-          onPressed: _showScenarioPicker,
-          icon: const Icon(Icons.folder_open_rounded),
-        ),
+        _buildScenarioMenu(),
         if (_selectedElementId != null)
           IconButton(
             onPressed: _removeSelected,
@@ -418,21 +415,33 @@ class _OpticsScreenState extends State<OpticsScreen> {
     );
   }
 
-  void _showScenarioPicker() async {
-    final r = await Navigator.of(context).push<String>(
-      MaterialPageRoute(builder: (_) => const ScenarioSelectionScreen()),
+  /// 场景切换（统一走 L0 ScenarioMenuButton · 替代原全屏选择页）
+  void _applyScenarioById(String id) async {
+    if (id == _currentScenario?.scenarioId) return;
+    await _scenarioManager.loadScenarios();
+    final world = _scenarioManager.loadScenario(id);
+    if (!mounted) return;
+    setState(() {
+      _world = world;
+      _currentScenario = _scenarioManager.currentScenario;
+      _nextElementId = _world.elements.length + 1;
+      _inquiryOpen = _currentScenario?.inquiryTask != null;
+      _solve();
+    });
+  }
+
+  /// 场景切换菜单（统一 L0 组件 · entries 来自已加载场景）
+  Widget _buildScenarioMenu() {
+    final scenarios = _scenarioManager.scenarios;
+    return ScenarioMenuButton(
+      entries: scenarios
+          .map((s) => ScenarioMenuEntry(id: s.scenarioId, name: s.name))
+          .toList(growable: false),
+      currentId: _currentScenario?.scenarioId,
+      onSelected: _applyScenarioById,
+      accentColor: const Color(0xFF1177AA),
+      tooltip: '切换场景',
     );
-    if (r != null && mounted) {
-      await _scenarioManager.loadScenarios();
-      final world = _scenarioManager.loadScenario(r);
-      setState(() {
-        _world = world;
-        _currentScenario = _scenarioManager.currentScenario;
-        _nextElementId = _world.elements.length + 1;
-        _inquiryOpen = false;
-        _solve();
-      });
-    }
   }
 }
 
