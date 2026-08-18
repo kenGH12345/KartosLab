@@ -39,6 +39,9 @@ class _MolarityScreenState extends State<MolarityScreen> {
   late final MolarityController _controller;
   bool _loaded = false;
   bool _inquiryOpen = true; // 预测阶段默认展开：进入即见预测题（置顶），可手动收起
+  // C6 画布拖拽：溶质瓶 / 水龙头拖拽偏移（null=未拖动 · 非空时图标跟随手指）
+  Offset? _dragBottleOffset;
+  Offset? _dragFaucetOffset;
 
   MolarityScenario? get _scenario {
     final id = _controller.currentState?.scenarioId;
@@ -71,6 +74,49 @@ class _MolarityScreenState extends State<MolarityScreen> {
 
   void _onShowValuesChanged(bool v) {
     setState(() => _controller.toggleValues(v));
+  }
+
+  /// C6 画布拖拽源（溶质瓶 / 水龙头）：
+  /// 初始位于 [base]，拖动时图标跟随手指（[onDrag] 收增量 delta · 父组件 State 累加），
+  /// 松手时由父组件用 base + 累计位移判定是否命中烧杯口（[onDrop] 无参 · 命中逻辑在调用方）。
+  Widget _buildPourSource({
+    required IconData icon,
+    required Color color,
+    required String tooltip,
+    required Offset base,
+    required Offset? dragOffset,
+    required ValueChanged<Offset> onDrag,
+    required VoidCallback onDrop,
+  }) {
+    final effective = dragOffset ?? Offset.zero;
+    return Positioned(
+      left: base.dx + effective.dx,
+      top: base.dy + effective.dy,
+      child: GestureDetector(
+        onPanUpdate: (d) => onDrag(d.delta),
+        onPanEnd: (_) => onDrop(),
+        child: Tooltip(
+          message: tooltip,
+          child: Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: color, width: 2),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x22000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(icon, size: 20, color: color),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -155,6 +201,14 @@ class _MolarityScreenState extends State<MolarityScreen> {
                     final beakerH = c.maxHeight * 0.86;
                     final maxVolume = scenario?.volumeRange.max ?? 1.0;
                     final fill = solution.volume / maxVolume;
+                    // 烧杯口判定区（全局坐标 · 供 onPanEnd 命中检测）：
+                    // 画布内烧杯矩形上 1/4（拖溶质瓶/水龙头到此处松手 → +0.1）
+                    final pourRect = Rect.fromLTWH(
+                      (c.maxWidth - beakerW) / 2,
+                      (c.maxHeight - beakerH) / 2,
+                      beakerW,
+                      beakerH * 0.25,
+                    );
                     return Stack(
                       alignment: Alignment.center,
                       children: [
@@ -191,6 +245,47 @@ class _MolarityScreenState extends State<MolarityScreen> {
                           child: SaturatedIndicator(
                             visible: solution.isSaturated,
                           ),
+                        ),
+                        // 可拖拽：溶质瓶（烧杯左下 · 拖到烧杯口 +0.1 mol）
+                        _buildPourSource(
+                          icon: Icons.science_outlined,
+                          color: solution.solute.particleColor,
+                          tooltip: '拖动到烧杯口倒入溶质（+0.1 mol）',
+                          base: Offset(c.maxWidth * 0.1, beakerH * 0.55),
+                          dragOffset: _dragBottleOffset,
+                          onDrag: (delta) => setState(() =>
+                              _dragBottleOffset =
+                                  (_dragBottleOffset ?? Offset.zero) + delta),
+                          onDrop: () {
+                            final end =
+                                Offset(c.maxWidth * 0.1, beakerH * 0.55) +
+                                    (_dragBottleOffset ?? Offset.zero);
+                            _dragBottleOffset = null;
+                            if (pourRect.contains(end)) {
+                              _controller
+                                  .setSoluteAmount(solution.soluteAmount + 0.1);
+                            }
+                          },
+                        ),
+                        // 可拖拽：水龙头（烧杯右下 · 拖到烧杯口 +0.1 L）
+                        _buildPourSource(
+                          icon: Icons.water_drop_outlined,
+                          color: const Color(0xFF0891B2),
+                          tooltip: '拖动到烧杯口加水（+0.1 L）',
+                          base: Offset(c.maxWidth * 0.8, beakerH * 0.55),
+                          dragOffset: _dragFaucetOffset,
+                          onDrag: (delta) => setState(() =>
+                              _dragFaucetOffset =
+                                  (_dragFaucetOffset ?? Offset.zero) + delta),
+                          onDrop: () {
+                            final end =
+                                Offset(c.maxWidth * 0.8, beakerH * 0.55) +
+                                    (_dragFaucetOffset ?? Offset.zero);
+                            _dragFaucetOffset = null;
+                            if (pourRect.contains(end)) {
+                              _controller.setVolume(solution.volume + 0.1);
+                            }
+                          },
                         ),
                       ],
                     );

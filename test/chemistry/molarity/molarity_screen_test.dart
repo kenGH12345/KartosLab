@@ -91,4 +91,29 @@ void main() {
 
     await teardown(tester);
   });
+
+  testWidgets('拖溶质瓶到烧杯口 → 浓度增大（C6 命中判定）', (tester) async {
+    final manager = await preloaded(tester);
+    await pumpScreen(tester, manager);
+
+    // 浓度条 Semantics label：'溶液浓度 X.XX 摩尔每升...'
+    String concentrationText() =>
+        tester.getSemantics(find.bySemanticsLabel(RegExp('^溶液浓度'))).label;
+
+    final before = concentrationText();
+    expect(before, isNotEmpty);
+
+    final bottle = find.byTooltip('拖动到烧杯口倒入溶质（+0.1 mol）');
+    expect(bottle, findsOneWidget);
+
+    // 瓶初始在烧杯左下（画布内 base≈(67,171)）→ 斜向右上拖入烧杯口（pourRect x≥94, y 25~103）
+    final start = tester.getCenter(bottle);
+    await tester.dragFrom(start, const Offset(50, -150));
+    await tester.pump(const Duration(milliseconds: 300));
+
+    final after = concentrationText();
+    expect(after, isNot(before)); // 命中烧杯口 → soluteAmount+0.1 → 浓度升高
+
+    await teardown(tester);
+  });
 }
