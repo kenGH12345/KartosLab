@@ -149,14 +149,14 @@ sound / radio / wave / molarity 有 AppBar 自动返回键；forces / color_visi
 | **第三批（P1 · 交互增强）** | 阶段进度条 + 记录/结论联动引导 + molarity/radio/wave 画布手势 | A3 C6 C7 | 待做 |
 | **第四批（P2 · 打磨）** | 结论修改防抄 + 任务卡去重 + 知识点/返回统一 + 主界面响应式 | A5 A6 C9 C10 B1 | 待做 |
 
-## 六、测试基线备注（2026-08-18）
+## 六、测试基线备注（2026-08-18）✅ 已修复
 
-`flutter test test/common/ test/chemistry/molarity/ test/circuit/` 有 **8 个预存在失败**（stash 本轮改动后重跑结果一致，非本批修复引入）：
+原 8 个预存在失败（stash 基线对比确认非本批交互修复引入），**2026-08-18 已修复**（commit `e75bf94`）：
 
-- **6 个 `nine_grid_layout_test.dart`**：中间格面积断言 `closeTo(0.7)`，实际约 `0.569`（`centerAreaRatio` 计算与测试预期不符）
-- **2 个 `molarity_screen_test.dart`**：AC-4.1 `find.textContaining('溶质量')` 期望 1 个实际 5 个；AC-5.5 `science_outlined` 图标歧义 2 个
+- **6 个 `nine_grid_layout_test.dart`**：测试过时——`nine_grid_layout.dart:97-105` 的 `minSideH=48` 矮视口降级是 req-panel-bottom-migrate 的**有意设计**（正常视口保持 70% 面积，仅 320×480 类极端视口压缩），旧测试用 300×300 视口恰好触发降级（面积 0.569）。已重写：正常视口（600×600 等）验证 70% 面积 + 新增「极端矮视口降级」分组（320×480 边格保底 48px、面积 <70%）。
+- **2 个 `molarity_screen_test.dart`**：测试过时——`req-predictive-inquiry` 引入"预测题默认展开"（`_inquiryOpen=true`），抽屉打开后任务卡含"溶质量"文本（与 footer 滑块 label 歧义）+ `science_outlined` 图标双现（midLeft 入口 + 任务卡 leading）。已更新：AC-4.1 精确匹配 `🧪 溶质量(mol)` / `🧴 体积(L)` / `byTooltip('探究任务')`；AC-5.5 改为"默认展开 → 收起 → 再展开"验证。
 
-建议另立任务排查（疑似 `nine_grid_layout.dart` 面积公式与测试断言语义不一致 + molarity 屏幕文本/图标重复），不在本批交互修复范围内。
+**全量 common + molarity 测试 73/73 通过**。剩余已知：molarity AC-2.1/2.6 的 drag 有 hit-test 警告（footer 横向滚动 + FittedBox 缩放导致），测试仍通过，非阻塞。
 
 ---
 
