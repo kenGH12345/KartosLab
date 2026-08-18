@@ -80,5 +80,26 @@ void main() {
       final second = tester.widget<FilledButton>(find.byType(FilledButton).last);
       expect(second.onPressed, isNull);
     });
+
+    testWidgets('验证后改答案 → 验证结果重置，需重新验证', (tester) async {
+      await tester.pumpWidget(const MaterialApp(
+        home: Scaffold(body: PredictionPanel(predictions: [prediction])),
+      ));
+      // 选「电流增大」（错）→ 验证 → 显示「猜错了」
+      await tester.tap(find.text('电流增大'));
+      await tester.pump();
+      await tester.tap(find.text('验证我的猜测'));
+      await tester.pump();
+      expect(find.textContaining('猜错了'), findsOneWidget);
+      // 改选「电流减小」→ 验证结果应消失，验证按钮恢复
+      await tester.tap(find.text('电流减小'));
+      await tester.pump();
+      expect(find.textContaining('猜错了'), findsNothing);
+      expect(find.text('验证我的猜测'), findsOneWidget);
+      // 重新验证 → 显示「猜对了」
+      await tester.tap(find.text('验证我的猜测'));
+      await tester.pump();
+      expect(find.text('猜对了！'), findsOneWidget);
+    });
   });
 }

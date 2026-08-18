@@ -54,6 +54,8 @@ class _PredictionPanelState extends State<PredictionPanel> {
               verified: _verified.contains(widget.predictions[i].id),
               onSelect: (v) => setState(() {
                 _selected[widget.predictions[i].id] = v;
+                // 改答案即重置验证状态，强制重新验证，避免结果停留在旧答案
+                _verified.remove(widget.predictions[i].id);
               }),
               onVerify: () => setState(() {
                 _verified.add(widget.predictions[i].id);

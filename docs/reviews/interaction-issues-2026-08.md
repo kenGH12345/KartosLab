@@ -46,11 +46,11 @@
 
 **修复方向**：预测状态提升到共享层（如 `InquirySession` ChangeNotifier），两个入口消费同一状态；或弹窗不再内嵌 PredictionPanel，改为"打开探究工作流"跳转。
 
-### A2 验证后改答案，判定结果不更新（P0）
+### A2 验证后改答案，判定结果不更新（P0）✅ 已修复
 
 `prediction_panel.dart:55-60`：`onSelect` 只写 `_selected[id]`，**不从 `_verified` 移除**。学生验证后改答案，"猜对了/猜错了"的判定仍停留在旧答案的验证结果。
 
-**修复方向**：`onSelect` 时同步从 `_verified` 移除该题，强制重新验证。
+**修复**（2026-08-18）：`onSelect` 时同步从 `_verified` 移除该题，强制重新验证。已补回归测试「验证后改答案 → 验证结果重置」。
 
 ### A3 阶段切换无进度指示，"操作"与抽屉零联动（P1）
 
@@ -88,17 +88,15 @@ circuit / molarity 为 `true`（有预测题即默认展开），其余 6 sim �
 
 ## 四、各 sim 交互问题（C 类）
 
-### C1 `ScenarioSelectionScreen` 死代码（P0）
+### C1 ~~`ScenarioSelectionScreen` 死代码~~（更正：非死代码）
 
-`lib/screens/scenario_selection_screen.dart` 仅被 optics 旧导航引用，当前场景切换已走弹窗，无活跃路径。
+**2026-08-18 更正**：初判"死代码"有误。`lib/screens/scenario_selection_screen.dart` 实为 optics 的**活跃**场景切换路径——`optics_screen.dart:213-216` AppBar folder 图标 → `_showScenarioPicker`（421-436 行）→ `Navigator.push` 全屏选择页 → pop 返回场景 id。当前正确描述：这是 optics 的"全屏页面"场景切换模式，与其他 sim 的菜单/弹窗模式不一致，应并入 **C3 一致性问题**（optics 案例），而非删除。
 
-**修复方向**：删除（或确认 optics 旧导航路径后清理引用）。
-
-### C2 rgb_bulbs 探索模式无 RGB 数值滑块（P0）
+### C2 rgb_bulbs 探索模式无 RGB 数值滑块（P0）✅ 已修复
 
 `rgb_bulbs_screen.dart:684-693`：探索模式 footer 只有色块 + 标签开关，RGB 强度只能 `onPanUpdate` 拖瓶子调，无数值滑块直接输入，发现性差。
 
-**修复方向**：footer 补 R/G/B 滑块（挑战模式已有 `_miniSliderVertical` 可复用），或加视觉引导"拖瓶子调色"。
+**修复**（2026-08-18）：探索模式 footer 复用挑战模式的 `_miniSliderVertical` 补 R/G/B 三个数值滑块（footer 已有横向滚动，无溢出风险）。
 
 ### C3 场景切换 5 种模式并存（P1）
 

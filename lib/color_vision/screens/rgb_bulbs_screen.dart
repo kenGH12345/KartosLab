@@ -690,6 +690,13 @@ class _MagicLabScreenState extends State<MagicLabScreen>
         visualDensity: VisualDensity.compact,
         onSelected: (v) => setState(() => _showLabels = v),
       ),
+      const SizedBox(width: 14),
+      // RGB 数值滑块（复用挑战模式 _miniSliderVertical，提升强度调节发现性）
+      SizedBox(width: 130, child: _miniSliderVertical(0, 'R', const Color(0xFFFF0000))),
+      const SizedBox(width: 14),
+      SizedBox(width: 130, child: _miniSliderVertical(1, 'G', const Color(0xFF00CC00))),
+      const SizedBox(width: 14),
+      SizedBox(width: 130, child: _miniSliderVertical(2, 'B', const Color(0xFF0088FF))),
     ];
   }
 
