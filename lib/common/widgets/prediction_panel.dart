@@ -7,9 +7,16 @@ import 'inquiry_models.dart';
 /// 学生操作前先选预测答案（猜测），操作实验后点「验证」对照正确答案。
 /// 选择与验证状态保留在 State（InquiryDrawer 以 Offstage 保持 State）。
 class PredictionPanel extends StatefulWidget {
-  const PredictionPanel({super.key, required this.predictions});
+  const PredictionPanel({
+    super.key,
+    required this.predictions,
+    this.onVerifiedChanged,
+  });
 
   final List<InquiryPrediction> predictions;
+
+  /// 已验证题数变化回调（做中学阶段进度用 · null 时兼容旧调用方）。
+  final ValueChanged<int>? onVerifiedChanged;
 
   @override
   State<PredictionPanel> createState() => _PredictionPanelState();
@@ -56,9 +63,11 @@ class _PredictionPanelState extends State<PredictionPanel> {
                 _selected[widget.predictions[i].id] = v;
                 // 改答案即重置验证状态，强制重新验证，避免结果停留在旧答案
                 _verified.remove(widget.predictions[i].id);
+                widget.onVerifiedChanged?.call(_verified.length);
               }),
               onVerify: () => setState(() {
                 _verified.add(widget.predictions[i].id);
+                widget.onVerifiedChanged?.call(_verified.length);
               }),
             ),
             if (i != widget.predictions.length - 1) const SizedBox(height: 8),

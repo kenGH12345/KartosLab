@@ -12,11 +12,15 @@ class ConclusionPanel extends StatefulWidget {
     required this.question,
     this.referenceConclusion,
     this.compact = false,
+    this.onSubmittedChanged,
   });
 
   final String question;
   final String? referenceConclusion;
   final bool compact;
+
+  /// 提交状态变化回调（做中学阶段进度用 · true=已提交 · null 时兼容旧调用方）。
+  final ValueChanged<bool>? onSubmittedChanged;
 
   @override
   State<ConclusionPanel> createState() => _ConclusionPanelState();
@@ -47,11 +51,18 @@ class _ConclusionPanelState extends State<ConclusionPanel> {
       _submitted = true;
       _editing = false;
     });
+    widget.onSubmittedChanged?.call(true);
   }
 
-  void _startEdit() => setState(() => _editing = true);
+  void _startEdit() {
+    setState(() => _editing = true);
+    widget.onSubmittedChanged?.call(false);
+  }
 
-  void _cancelEdit() => setState(() => _editing = false);
+  void _cancelEdit() {
+    setState(() => _editing = false);
+    widget.onSubmittedChanged?.call(true);
+  }
 
   @override
   Widget build(BuildContext context) {
