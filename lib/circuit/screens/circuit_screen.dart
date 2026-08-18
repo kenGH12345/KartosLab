@@ -819,6 +819,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                     _scenarioManager?.currentScenario?.description ?? '',
                 task: _inquiryTask,
                 color: const Color(0xFF0C4A6E),
+                onOpenInquiry: () => setState(() => _inquiryOpen = true),
               ),
             ),
             // 探究工作流抽屉（Offstage 保持记录/结论 State · 无 inquiryTask 不渲染）

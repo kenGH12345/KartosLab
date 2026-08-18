@@ -133,6 +133,7 @@ class _MolarityScreenState extends State<MolarityScreen> {
                   description: scenario?.description ?? '',
                   task: scenario?.inquiryTask,
                   color: const Color(0xFF0891B2),
+                  onOpenInquiry: () => setState(() => _inquiryOpen = true),
                 ),
                 // 左格：探究入口（窄格放窄控件）
                 midLeft: Padding(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'inquiry_models.dart';
 import 'inquiry_task_panel.dart';
-import 'prediction_panel.dart';
 
 /// 实验说明 + 操作指引（通用引导组件 · 所有 sim 共用的"说明/指引"界面）。
 ///
@@ -21,6 +20,7 @@ class ExperimentIntroPanel extends StatelessWidget {
     this.title = '实验说明',
     this.titleIcon = Icons.menu_book_outlined,
     this.color = const Color(0xFF1177AA),
+    this.onOpenInquiry,
   });
 
   /// 场景说明文案（scenario.description · 可空串）。
@@ -37,6 +37,13 @@ class ExperimentIntroPanel extends StatelessWidget {
 
   /// 主题色（各 sim 传自己的 accent 色）。
   final Color color;
+
+  /// 打开探究工作流回调。
+  ///
+  /// 预测题统一在右侧 InquiryDrawer 内做（单一入口），弹窗不再内嵌——
+  /// 当 task 含 predictions 且本回调非空时，弹窗显示"去猜一猜"跳转入口，
+  /// 点击关闭弹窗并调用本回调（各 sim 传 `setState(() => _inquiryOpen = true)`）。
+  final VoidCallback? onOpenInquiry;
 
   bool get _hasContent => description.isNotEmpty || task != null;
 
@@ -128,14 +135,63 @@ class ExperimentIntroPanel extends StatelessWidget {
                   const SizedBox(height: 12),
                   InquiryTaskPanel(task: task, compact: true),
                 ],
-                if (task?.predictions.isNotEmpty ?? false) ...[
+                // 预测题统一在右侧抽屉做（单一入口），弹窗只给跳转，不内嵌
+                if ((task?.predictions.isNotEmpty ?? false) &&
+                    onOpenInquiry != null) ...[
                   const SizedBox(height: 12),
-                  PredictionPanel(predictions: task!.predictions),
+                  _buildPredictionEntry(context),
                 ],
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  /// 预测题跳转入口（方案 B：弹窗不内嵌预测题，引导去右侧抽屉做）。
+  ///
+  /// 点击：关闭弹窗 → 调用 [onOpenInquiry] 打开 InquiryDrawer。
+  Widget _buildPredictionEntry(BuildContext context) {
+    final count = task!.predictions.length;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1976D2).withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: const Color(0xFF1976D2).withValues(alpha: 0.3),
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.psychology_outlined,
+            size: 18,
+            color: Color(0xFF1976D2),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '本实验有 $count 道预测题，去探究工作流猜一猜',
+              style: const TextStyle(fontSize: 12, color: Color(0xFF1976D2)),
+            ),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: const Color(0xFF1976D2),
+              visualDensity: VisualDensity.compact,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+              onOpenInquiry?.call();
+            },
+            child: const Text('去猜一猜', style: TextStyle(fontSize: 12)),
+          ),
+        ],
       ),
     );
   }
