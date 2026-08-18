@@ -35,7 +35,7 @@
 
 ## 二、做中学探究工作流问题（A 类 · 阶段切换）
 
-### A1 预测题状态不共享（P0）
+### A1 预测题状态不共享（P0）✅ 已修复
 
 预测题同时渲染在两处，`PredictionPanel` 各自持有 `_selected` / `_verified` State（`prediction_panel.dart:19-20`）：
 
@@ -44,7 +44,7 @@
 
 学生在弹窗答完题 → 关闭弹窗 → 打开抽屉，预测题又是空白，需重答。同一学习任务在两个入口状态不一致，**直接破坏"猜测→验证"阶段的连续性**。
 
-**修复方向**：预测状态提升到共享层（如 `InquirySession` ChangeNotifier），两个入口消费同一状态；或弹窗不再内嵌 PredictionPanel，改为"打开探究工作流"跳转。
+**修复**（2026-08-18 · 方案 B 用户确认）：弹窗移除内嵌 `PredictionPanel`，含预测题时显示"去猜一猜"跳转入口（`_buildPredictionEntry`），点击关闭弹窗并调 `onOpenInquiry` 打开抽屉；预测题统一在抽屉内做（单一入口）。circuit / molarity 已接入 `onOpenInquiry`。新增回归测试 `test/common/experiment_intro_panel_test.dart`。
 
 ### A2 验证后改答案，判定结果不更新（P0）✅ 已修复
 
@@ -142,12 +142,21 @@ sound / radio / wave / molarity 有 AppBar 自动返回键；forces / color_visi
 
 ## 五、修复优先级建议
 
-| 批次 | 内容 | 涉及问题 |
-|---|---|---|
-| **第一批（P0 · 逻辑错误）** | 预测题状态共享 + 验证后改答案重置 + rgb_bulbs 补滑块 + 删死代码 | A1 A2 C1 C2 |
-| **第二批（P1 · 一致性）** | 场景切换统一 + `_inquiryOpen` 统一 + single_bulb 垂直滑块迁移 + circuit footer 补 FittedBox | A4 C3 C4 C5 |
-| **第三批（P1 · 交互增强）** | 阶段进度条 + 记录/结论联动引导 + molarity/radio/wave 画布手势 | A3 C6 C7 |
-| **第四批（P2 · 打磨）** | 结论修改防抄 + 任务卡去重 + 知识点/返回统一 + 主界面响应式 | A5 A6 C9 C10 B1 |
+| 批次 | 内容 | 涉及问题 | 状态 |
+|---|---|---|---|
+| **第一批（P0 · 逻辑错误）** | 预测题状态共享（方案 B）+ 验证后改答案重置 + rgb_bulbs 补滑块 + 更正 C1 死代码误判 | A1 A2 C1 C2 | ✅ 已完成（commit `d1d4c4c`/`9a43c8e`） |
+| **第二批（P1 · 一致性）** | 场景切换统一 + `_inquiryOpen` 统一 + single_bulb 垂直滑块迁移 + circuit footer 补 FittedBox | A4 C3 C4 C5 | 待做 |
+| **第三批（P1 · 交互增强）** | 阶段进度条 + 记录/结论联动引导 + molarity/radio/wave 画布手势 | A3 C6 C7 | 待做 |
+| **第四批（P2 · 打磨）** | 结论修改防抄 + 任务卡去重 + 知识点/返回统一 + 主界面响应式 | A5 A6 C9 C10 B1 | 待做 |
+
+## 六、测试基线备注（2026-08-18）
+
+`flutter test test/common/ test/chemistry/molarity/ test/circuit/` 有 **8 个预存在失败**（stash 本轮改动后重跑结果一致，非本批修复引入）：
+
+- **6 个 `nine_grid_layout_test.dart`**：中间格面积断言 `closeTo(0.7)`，实际约 `0.569`（`centerAreaRatio` 计算与测试预期不符）
+- **2 个 `molarity_screen_test.dart`**：AC-4.1 `find.textContaining('溶质量')` 期望 1 个实际 5 个；AC-5.5 `science_outlined` 图标歧义 2 个
+
+建议另立任务排查（疑似 `nine_grid_layout.dart` 面积公式与测试断言语义不一致 + molarity 屏幕文本/图标重复），不在本批交互修复范围内。
 
 ---
 
