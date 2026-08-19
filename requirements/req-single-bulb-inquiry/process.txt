@@ -32,3 +32,4 @@
   → 维护报告 .vibe/cache/req-single-bulb-inquiry-knowledge-update.md；经验沉淀 0 条（B-1/m-1 均本需求首见不满足 ≥2 次跨需求门槛 · auto-extract-failures.sh 本工程不存在 · shared/experiences 目录不存在）
   → 建议项（未执行）：systems/ 三模块文档整体滞后于新增模块建议 /kb-gen 增量；req-verify-selftest-color-vision 的 3 张截图实证债务触发条件已满足待登记；L0 上抽提醒：候选 8 原文约定的"上抽 InquiryWorkflow 容器"评估点已过（8 屏接入），建议下个相关需求评估
 [2026-08-19 15:47] verdict=approve_go / 备注: 用户确认 commit（含 requirements/INDEX.md 共 8 项；排除 C7 拖拽 4 文件）
+[2026-08-19 15:49] commit: eb596de 已提交（18 文件 +1243/-25 · 用户批准含 INDEX.md · C7 拖拽 4 文件已排除未混入 · integration-test.log 因 .gitignore *.log 留本地）。hash 已回填 spec/最终需求.md §3
