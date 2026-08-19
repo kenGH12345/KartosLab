@@ -34,7 +34,9 @@ class _ColorVisionHomeState extends State<ColorVisionHome> {
     }
 
     final rgbScenario = mgr.findById('rgb-default');
-    final filterScenario = mgr.findById('single-white-red-filter');
+    // 默认加载滤光片减色探究场景（D-1 用户拍板）；场景缺失时回退纯观察场景
+    final filterScenario = mgr.findById('single-inquiry-subtractive') ??
+        mgr.findById('single-white-red-filter');
     final rgbScenarios =
         mgr.scenarios.where((s) => s.screen == CVScreen.rgb).toList(growable: false);
 

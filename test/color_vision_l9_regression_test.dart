@@ -10,7 +10,7 @@ void main() {
     final mgr = ColorVisionScenarioManager();
     await mgr.loadScenarios();
 
-    expect(mgr.scenarios.length, 10, reason: '8 L9 场景 + req-inquiry-learning 新增 rgb-inquiry-additive / rgb-challenge-basic');
+    expect(mgr.scenarios.length, 11, reason: '8 L9 场景 + req-inquiry-learning 新增 rgb-inquiry-additive / rgb-challenge-basic + req-single-bulb-inquiry 新增 single-inquiry-subtractive');
 
     for (final s in mgr.scenarios) {
       // Verify each field populates correctly

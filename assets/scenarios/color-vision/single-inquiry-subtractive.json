@@ -1,0 +1,38 @@
+{
+  "scenarioId": "single-inquiry-subtractive",
+  "name": "滤光片减色探究",
+  "description": "白光通过不同颜色的滤光片后，人眼看到什么颜色？动手记录并归纳减色法规律。",
+  "version": "1.0",
+  "screen": "singleBulb",
+  "beamMode": "photons",
+  "initialParams": {
+    "filterType": "red",
+    "showPhotonView": true,
+    "personPosition": 320
+  },
+  "inquiryTask": {
+    "question": "白光通过不同颜色的滤光片后，人眼看到什么颜色？你能总结出减色法规律吗？",
+    "steps": [
+      {
+        "id": "step-1",
+        "instruction": "选择白光 + 红色滤光片，点击「记录本次实验」记下看到的颜色。",
+        "hint": "光源保持白光，滤光片选红色"
+      },
+      {
+        "id": "step-2",
+        "instruction": "保持白光，分别换绿色、蓝色滤光片，各记录一次看到颜色。"
+      },
+      {
+        "id": "step-3",
+        "instruction": "回顾记录表：滤光片颜色与看到的颜色有什么关系？写下你的结论。"
+      }
+    ],
+    "referenceConclusion": "减色法：白光含 R+G+B，红色滤光片只透红，绿色只透绿，蓝色只透蓝。滤光片的颜色决定了透过的光——这就是舞台灯光的原理。",
+    "snapshotColumns": [
+      { "key": "bulbMode", "label": "光源", "source": "param" },
+      { "key": "wavelength", "label": "波长(nm)", "source": "param" },
+      { "key": "filter", "label": "滤光片", "source": "param" },
+      { "key": "perceivedColor", "label": "看到颜色", "source": "reading" }
+    ]
+  }
+}

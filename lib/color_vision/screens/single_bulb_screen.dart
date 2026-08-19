@@ -4,6 +4,9 @@ import '../../common/widgets/time_control_bar.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/widgets/experiment_intro_panel.dart';
+import '../../common/widgets/inquiry_models.dart';
+import '../../common/widgets/inquiry_drawer.dart';
+import '../../common/widgets/experiment_logger.dart';
 import '../../common/controls/spectrum_slider.dart';
 import '../model/filter.dart';
 import '../model/single_bulb_state.dart';
@@ -26,11 +29,14 @@ class _SingleBulbScreenState extends State<SingleBulbScreen>
   FilterType _filterType = FilterType.none;
   BulbMode _bulbMode = BulbMode.white;
   double _bulbWavelength = 550;
+  bool _inquiryOpen = false;
 
   @override
   void initState() {
     super.initState();
     final s = widget.scenario;
+    // 有 inquiryTask 即默认展开（做中学进入即见任务 · task==null 时抽屉不渲染）
+    _inquiryOpen = s?.inquiryTask != null;
 
     final filterType = _parseFilterType(s?.filterType ?? 'none');
 
@@ -133,31 +139,95 @@ class _SingleBulbScreenState extends State<SingleBulbScreen>
   @override
   Widget build(BuildContext context) {
     final perceived = _perceivedColor();
-    return NineGridLayout(
-      // 顶部中格 = 实验说明 + 操作指引（通用引导组件）
-      topCenter: ExperimentIntroPanel(
-        description: widget.scenario?.description ?? '',
-        task: widget.scenario?.inquiryTask,
-        color: const Color(0xFF7C3AED),
-      ),
-      // 中间格 = 主实验画面 · 面积 ≥ 70% 屏 · 自适应
-      center: CustomPaint(
-        size: Size.infinite,
-        painter: SingleBulbPainter(_state),
-      ),
-      // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
-      // 底部横条：操作面板横排（molarity footer 方案推广 · midRight 竖排在 130px 窄格有 90px 溢出，
-      // 横排 footer 在宽视口无溢出）
-      footer: _buildFooterControls(perceived),
-      // 右下边格 = 知识点入口（知识卡过长 · 改为弹窗）
-      bottomRight: Center(
-        child: IconButton(
-          icon: const Icon(Icons.menu_book_outlined, size: 22),
-          tooltip: '知识点',
-          onPressed: _showKnowledgeDialog,
+    return Stack(
+      children: [
+        NineGridLayout(
+          // 顶部中格 = 实验说明 + 操作指引（通用引导组件）
+          topCenter: ExperimentIntroPanel(
+            description: widget.scenario?.description ?? '',
+            task: widget.scenario?.inquiryTask,
+            color: const Color(0xFF7C3AED),
+          ),
+          // 顶部右格 = 探究抽屉入口按钮（无 inquiryTask 不渲染）
+          topRight: _buildInquiryEntryButton(),
+          // 中间格 = 主实验画面 · 面积 ≥ 70% 屏 · 自适应
+          center: CustomPaint(
+            size: Size.infinite,
+            painter: SingleBulbPainter(_state),
+          ),
+          // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
+          // 底部横条：操作面板横排（molarity footer 方案推广 · midRight 竖排在 130px 窄格有 90px 溢出，
+          // 横排 footer 在宽视口无溢出）
+          footer: _buildFooterControls(perceived),
+          // 右下边格 = 知识点入口（知识卡过长 · 改为弹窗）
+          bottomRight: Center(
+            child: IconButton(
+              icon: const Icon(Icons.menu_book_outlined, size: 22),
+              tooltip: '知识点',
+              onPressed: _showKnowledgeDialog,
+            ),
+          ),
         ),
+        // 探究工作流抽屉（Offstage 保持记录/结论 State · 无 inquiryTask 不渲染）
+        InquiryDrawer(
+          task: _inquiryTask,
+          columns: _inquiryTask != null
+              ? _inquiryColumns(_inquiryTask!)
+              : const [],
+          snapshotProvider: _singleBulbSnapshot,
+          open: _inquiryOpen,
+        ),
+      ],
+    );
+  }
+
+  /// 当前 scenario 的探究任务（无 inquiryTask 时为 null → 抽屉不渲染）。
+  InquiryTask? get _inquiryTask => widget.scenario?.inquiryTask;
+
+  /// 探究抽屉入口按钮（仅在有 inquiryTask 的 scenario 显示）。
+  Widget _buildInquiryEntryButton() {
+    final task = _inquiryTask;
+    if (task == null) return const SizedBox.shrink();
+    return Center(
+      child: IconButton.filledTonal(
+        visualDensity: VisualDensity.compact,
+        icon: const Icon(Icons.science_outlined, size: 20),
+        tooltip: '探究任务',
+        onPressed: () => setState(() => _inquiryOpen = !_inquiryOpen),
       ),
     );
+  }
+
+  /// single_bulb 快照：光源/波长/滤光片（param）+ 看到颜色（reading）。
+  Map<String, dynamic> _singleBulbSnapshot() {
+    final perceived = _perceivedColor();
+    return {
+      'bulbMode': _bulbMode == BulbMode.white ? '白光' : '单色光',
+      'wavelength':
+          _bulbMode == BulbMode.mono ? _bulbWavelength.round() : '—',
+      'filter': _ftLabel(_filterType),
+      'perceivedColor': ColorModel.colorName(perceived),
+    };
+  }
+
+  List<ColumnDef> _inquiryColumns(InquiryTask task) {
+    if (task.snapshotColumns.isEmpty) {
+      return const [
+        ColumnDef(key: 'bulbMode', label: '光源', isParam: true),
+        ColumnDef(key: 'wavelength', label: '波长(nm)', isParam: true),
+        ColumnDef(key: 'filter', label: '滤光片', isParam: true),
+        ColumnDef(key: 'perceivedColor', label: '看到颜色'),
+      ];
+    }
+    return task.snapshotColumns
+        .map(
+          (c) => ColumnDef(
+            key: c.key,
+            label: c.label,
+            isParam: c.source == 'param',
+          ),
+        )
+        .toList(growable: false);
   }
 
   /// 右侧边格控制面板 · 竖排紧凑 · 窄条可滚动

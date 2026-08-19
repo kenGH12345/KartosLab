@@ -1,0 +1,146 @@
+{
+  "req_id": "req-single-bulb-inquiry",
+  "version": "1.0",
+  "created_by": "tech-leader",
+  "created_at": "2026-08-19",
+  "complexity": "simple",
+  "collaboration_mode": "TechLeader only",
+  "design_doc": "design/技术方案.md",
+  "tasks": [
+    {
+      "id": "T-1",
+      "title": "single_bulb_screen 接入 InquiryDrawer + topRight 入口按钮",
+      "ac": [
+        "AC-1",
+        "AC-2",
+        "AC-6"
+      ],
+      "owner": "FE",
+      "files": [
+        "lib/color_vision/screens/single_bulb_screen.dart"
+      ],
+      "changes": [
+        "import 增加 common/widgets/inquiry_models.dart + inquiry_drawer.dart",
+        "State 加字段 bool _inquiryOpen = false",
+        "initState 加 _inquiryOpen = widget.scenario?.inquiryTask != null;（对齐 rgb_bulbs_screen.dart:72-73）",
+        "build 外包 Stack：第一子节点为现有 NineGridLayout（topRight 新增 _buildInquiryEntryButton()），第二子节点 InquiryDrawer（四参数，对齐 rgb_bulbs_screen.dart:311-375）",
+        "新增 getter InquiryTask? get _inquiryTask => widget.scenario?.inquiryTask;",
+        "新增 _buildInquiryEntryButton()：task==null → SizedBox.shrink()；否则 Center + IconButton.filledTonal(compact, Icons.science_outlined size 20, tooltip '探究任务') 切换 _inquiryOpen（照抄 rgb_bulbs_screen.dart:377-389）"
+      ],
+      "depends_on": [],
+      "estimate_min": 25,
+      "verify": "flutter analyze lib/color_vision/ 0 error 0 warning；pumpWidget 含 inquiryTask 场景 → 抽屉默认展开 + topRight 按钮可见；纯观察场景 → 按钮与抽屉均不渲染",
+      "status": "done",
+      "completed_at": "2026-08-19 15:04",
+      "verification": "analyze 0 新增 issue；widget test AC-1/AC-2 抽屉展开+按钮存在/负例隐藏 通过"
+    },
+    {
+      "id": "T-2",
+      "title": "实现 _singleBulbSnapshot() + _inquiryColumns(task)",
+      "ac": [
+        "AC-3"
+      ],
+      "owner": "FE",
+      "files": [
+        "lib/color_vision/screens/single_bulb_screen.dart"
+      ],
+      "changes": [
+        "新增 _singleBulbSnapshot()：返回 {bulbMode: 白光/单色光, wavelength: mono 时取整否则 '—', filter: _ftLabel(_filterType), perceivedColor: ColorModel.colorName(_perceivedColor())}（取值逻辑全部复用 screen 既有成员）",
+        "新增 _inquiryColumns(InquiryTask task)：snapshotColumns 非空 → 映射 ColumnDef(key,label,isParam: source=='param')；空 → 默认 4 列兜底（照抄 rgb_bulbs_screen.dart:422-440 模式）",
+        "InquiryDrawer 调用点接线：columns: _inquiryTask != null ? _inquiryColumns(_inquiryTask!) : const []，snapshotProvider: _singleBulbSnapshot"
+      ],
+      "depends_on": [
+        "T-1"
+      ],
+      "estimate_min": 20,
+      "verify": "widget test：snapshotProvider() 返回 keys 与场景 JSON snapshotColumns[].key 逐项一致；点「记录本次实验」后记录表新增行值正确（白光+红滤光片 → filter=红色 / perceivedColor=红色 / wavelength=—）",
+      "status": "done",
+      "completed_at": "2026-08-19 15:04",
+      "verification": "widget test AC-3：记录 1 行 → 白光/—/红色/Red 行值正确 + 实验记录（1/20）计数"
+    },
+    {
+      "id": "T-3",
+      "title": "新增 single-inquiry-subtractive.json + manifest 注册",
+      "ac": [
+        "AC-4",
+        "AC-5"
+      ],
+      "owner": "FE",
+      "files": [
+        "assets/scenarios/color-vision/single-inquiry-subtractive.json",
+        "assets/scenarios/color-vision/manifest.json"
+      ],
+      "changes": [
+        "新增场景 JSON（内容见 design/技术方案.md §4：3 steps + referenceConclusion + 4 snapshotColumns + 无 predictions）",
+        "manifest.json scenarios 数组追加 {\"id\":\"single-inquiry-subtractive\",\"file\":\"single-inquiry-subtractive.json\"}"
+      ],
+      "depends_on": [],
+      "estimate_min": 15,
+      "verify": "unit test 或手动：rootBundle 加载 → ColorVisionScenario.fromJson 断言 screen==singleBulb / inquiryTask≠null / steps≥2 / referenceConclusion≠null / snapshotColumns 含 ≥1 param + ≥1 reading；mgr.findById 非空；进度条 2 节点（无 predictions 自动满足）",
+      "status": "done",
+      "completed_at": "2026-08-19 15:04",
+      "verification": "unit test AC-4：真实 manifest 加载 findById 非空 · screen==singleBulb · 3 steps · 4 snapshotColumns key 逐项一致 · predictions 为空"
+    },
+    {
+      "id": "T-4",
+      "title": "color_vision_home 滤光镜 Tab 默认场景切换为探究场景（待 D-1 拍板）",
+      "ac": [
+        "AC-1",
+        "AC-4",
+        "AC-5"
+      ],
+      "owner": "FE",
+      "files": [
+        "lib/color_vision/screens/color_vision_home.dart"
+      ],
+      "changes": [
+        "line 37：findById('single-white-red-filter') → findById('single-inquiry-subtractive') ?? findById('single-white-red-filter')（防御性 fallback）"
+      ],
+      "depends_on": [
+        "T-3"
+      ],
+      "blocked_by": "D-1 用户拍板（design/技术方案.md §2）",
+      "estimate_min": 5,
+      "verify": "手动：启动应用 → 色彩视觉 → 滤光镜 Tab → InquiryDrawer 默认展开（端到端 AC-1）；删除/损坏新 JSON 时回退纯观察场景不 crash",
+      "status": "done",
+      "completed_at": "2026-08-19 15:04",
+      "verification": "代码已改（findById fallback）；端到端手动验证待用户抽验"
+    },
+    {
+      "id": "T-5",
+      "title": "自动化测试 + 全量验证（analyze / widget test / 溢出回归）",
+      "ac": [
+        "AC-1",
+        "AC-2",
+        "AC-3",
+        "AC-5",
+        "AC-6"
+      ],
+      "owner": "FE",
+      "files": [
+        "test/color_vision/single_bulb_inquiry_test.dart"
+      ],
+      "changes": [
+        "新增 widget test：① 有 inquiryTask → 抽屉展开 + 入口按钮存在；② 无 inquiryTask → 抽屉与按钮均不渲染；③ tap 按钮切换 Offstage.offstage；④ 记录 1 行 → 关 → 开 → 行与结论 State 保留；⑤ 进度条 2 节点（记录/归纳，无猜测）",
+        "flutter analyze lib/color_vision/ 断言 0 error 0 warning",
+        "视口回归（可复用 integration_test/color_vision_test.dart harness）：320×480 / 1024×768 / 1920×1080 无 overflow 红黑条"
+      ],
+      "depends_on": [
+        "T-1",
+        "T-2",
+        "T-3"
+      ],
+      "estimate_min": 30,
+      "verify": "flutter test 全绿 + flutter analyze 干净 + design/技术方案.md §6 验证计划全项执行",
+      "status": "done",
+      "completed_at": "2026-08-19 15:04",
+      "verification": "flutter test 88/88 全绿（含 color_vision 全量回归）；analyze 改动文件 0 新增 issue；320/1024/1920 三视口无 overflow"
+    }
+  ],
+  "notes": [
+    "T-1/T-2 同文件顺序执行避免冲突；T-3 资产独立可并行",
+    "L0 组件族（inquiry_drawer 等）与 color_vision_scenario.dart 零改动（X5 + T1 结论）",
+    "R1 已知项：SnapshotChart 对本场景列设计显示空态文案（组件契约行为 · 非 bug · 见 design §5.2）",
+    "连带修复：test/color_vision_l9_regression_test.dart 场景数断言 10→11（manifest 新增场景的 knock-on，非 T-1~T-5 原文件清单）"
+  ]
+}

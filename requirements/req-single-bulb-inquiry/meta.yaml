@@ -1,0 +1,31 @@
+# 需求元数据。本字段被主会话（PM 角色）/ managing-requirement / 各 SOP 读取。
+# 不要手工修改 phase / status——通过 /pm-continue 或 /pm-phase 切换。
+
+req_id: req-single-bulb-inquiry
+title: 色觉单光源屏接入做中学探究抽屉（InquiryDrawer）
+sop: agile-vibe
+created_at: "2026-08-18 20:28"
+updated_at: "2026-08-19 15:30"
+
+# 当前位置
+phase: 4.closing
+status: done
+
+# 收尾
+completed_at: "2026-08-19 15:30"
+final_summary_path: "spec/最终需求.md"
+
+# 关联
+repo_path: "c:\\workspace\\kratosLab"
+related_requirements:
+  - req-inquiry-learning        # 做中学工作流整体升级（源）
+  - req-inquiry-extend          # 做中学推广至 5 Sim
+  - req-predictive-inquiry      # 预测题功能（circuit/molarity 试点）
+  - req-color-vision-layout-fix # 同屏窄视口主图消失修复（进行中）
+
+# 来源：PRD v2.1 审核差异 D3
+# - PRD §5.5.3 声称色觉「探究工作流 P0 已接入做中学流程」
+# - 实际仅 rgb_bulbs_screen 接入 InquiryDrawer；single_bulb_screen 只有 ExperimentIntroPanel
+#   （lib/color_vision/screens/single_bulb_screen.dart:136-142，无 onOpenInquiry / 无 Drawer）
+
+phase_overrides: []

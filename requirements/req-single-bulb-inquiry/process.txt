@@ -1,0 +1,34 @@
+[2026-08-18 20:28] init: 创建需求骨架，sop=agile-vibe。来源：PRD v2.1 审核差异 D3（single_bulb 屏未接入 InquiryDrawer，PRD §5.5.3 声明失真）
+[2026-08-18 20:28] 80-kratos-sim-checklist: 非新 sim 复刻（既有 sim 增强），§一-§五 阻断项不适用；G1 适用——本需求核心即复用 L0 组件 InquiryDrawer/PredictionPanel/ExperimentLogger/ConclusionPanel，禁止平行实现
+[2026-08-18 20:31] phase: 1.init → 2.requirement，原因：审核差异已确认（D3 实证充分），委派 product-manager 澄清需求
+[2026-08-18 20:45] product-manager: spec/需求简述.md v1.0 完成（5 功能点 · 6 AC · 3 技术待确认项）。来源归档 spec/context/来源归档.md（12 条 S1-S12）。无需用户追问（信息充分）。
+[2026-08-19 10:55] verdict=approve_go / 备注: 认可 spec v1.0；F4 按 PM 建议不做预测题（2 节点进度条）
+[2026-08-19 10:55] phase: 2.requirement → 3.iteration，原因：用户批准，委派 tech-leader 出技术方案并处理 T1-T3
+[2026-08-19 11:03] tech-leader: 技术方案 v1.0 完成（design/技术方案.md + tasks/features.json）。复杂度=simple（单端 Flutter UI · 4 改动+1 测试 · 全证据支撑）· 协作模式=TechLeader only。T1=✅model 已支持（color_vision_scenario.dart:211-213 无 screen 分支）；T2=✅外包 Stack 照 rgb 实证模式（rgb_bulbs_screen.dart:311-375）· 入口按钮定 topRight；T3=✅layout-fix 方案B 已生效于工作区（single_bulb_screen.dart:148-151,229 注释实证）· 改动域正交。新发现 D-1：color_vision_home.dart:37 场景 ID 硬编码致新探究场景默认不可达，提 1 行 fallback 方案待用户拍板。tasks=5（T-1~T-5 · T-4 blocked_by D-1）。（时间戳由主会话按 Get-Date 真实值校正）
+[2026-08-19 14:58] verdict=approve_go / 备注: D-1 接受——home 默认场景切为 single-inquiry-subtractive（带 fallback），T-4 解锁
+[2026-08-19 14:58] iteration: 主会话直接编码实施 T-1~T-5（参照 layout-fix 先例）
+[2026-08-19 15:04] iteration: T-1~T-5 全部完成（主会话直接编码）。改动：single_bulb_screen.dart（Stack 接入 InquiryDrawer + topRight 按钮 + snapshot/columns）· 新增 single-inquiry-subtractive.json · manifest 注册 · color_vision_home.dart 默认场景 fallback（D-1）· 新增 single_bulb_inquiry_test.dart（9 用例）· l9_regression 场景数 10→11。验证：flutter test color_vision 相关 88/88 全绿；analyze 改动文件 0 新增 issue（仅 2 个既有 info 在 rgb_bulbs/magic_lab）；三视口 320/1024/1920 无 overflow。AC-1~AC-6 自动化覆盖，AC-4 端到端默认加载待用户抽验
+[2026-08-19 15:12] phase: 3.iteration → 4.closing，原因：用户指示进入收尾；委派 code-reviewer（后续 closer → knowledge-maintainer 逐个串联）
+2026-08-19 15:25 code-reviewer: 评审完成，报告 design/代码评审.md。独立复跑 flutter test（+25 全绿）+ analyze（改动文件 0 issue）。三维度：AC-1~AC-6 全覆盖 · 方案 §3 改动清单 1:1 实施 · X1-X5 未违反 · L0 零改动 · 接入模式与 rgb 一致。verdict=tweak：B-1（Blocker）test-report/ac-verification.md 与 integration-test.log 缺失待补（补文档非改代码）；M-1 工作区混入 C7 拖拽与 docs 汇总 4 文件，commit 需切分保住方案 §5.3 单 commit 回退边界；Minor 2（用例计数 9 实为 10 · AC-4 端到端待用户抽验）· Nit 2
+[2026-08-19 15:28] verdict=tweak / 备注: 接受评审结论，B-1 已补——test-report/ac-verification.md + integration-test.log（88/88 全绿落盘 · AC→test:line 引用表 · 用例计数勘误 9→10）；M-1 commit 切分移交 closer；m-2 AC-4 端到端列为用户抽验点
+[2026-08-19 15:33] closer 完成收尾
+  → spec/最终需求.md（最终态快照 · 3.1 验收项覆盖 6/6 covered · 含 m-2/R1/n-2 遗留与 M-1 切分记录）
+  → notes.md（追加沉淀：踩坑 3 条 · 决策记录 4 条 · 跨需求经验 3 条 · 遗留 TODO 3 项；另注 .workflow/auto-extract-failures 脚本本工程不存在，手工提炼等价替代）
+  → plan.md（里程碑 M3/M4/M5 → done）
+  → meta.yaml（status: done · completed_at 2026-08-19 15:30 · final_summary_path 已双向校验）
+  → requirements/INDEX.md（rebuild_index.py 重建 14 条 · 本需求 in_progress/1.init → done/4.closing）
+  代码评审: 通过（verdict=tweak · B-1 已修 · 代码层 0 返工项 · Minor 2 + Nit 2 已记录处置）
+  测试: 88/88 全绿（integration-test.log 落盘）· analyze 改动文件 0 新增 issue
+  commit: 未执行——已产出 7 项切分提案（single_bulb_screen / color_vision_home / single-inquiry-subtractive.json / manifest.json / single_bulb_inquiry_test.dart / l9_regression_test / requirements/req-single-bulb-inquiry/，另建议含 requirements/INDEX.md）+ message 含 [AC-1,2,3,4,5,6]，停在执行前等用户 y 确认（M-1 切分红线：C7 拖拽 4 文件不得混入）
+  时间戳说明: 本行时间 15:33 为 closer 内部时刻，主会话留底如倒序可按观察时间校正
+
+[2026-08-19 15:38] done-gate: check-before-done.ps1 首跑报 2 项（closer 日志未识别 + checkbox<3）。根因1=脚本 Get-Content 无 -Encoding UTF8，中文 Windows 下无 BOM UTF-8 按 ANSI 读致正则失配（python 实证 BOM=False/regex=True）——已修脚本两处；根因2=ac-verification.md 诚实声明未用 checkbox 格式——已补 3 个 - [x]。复跑 All passed，status=done 合规。委派 knowledge-maintainer
+[2026-08-19 15:46] knowledge-maintainer: 完成知识库回写（时间戳由主会话按 Get-Date 真实值校正）
+  → 新建 conventions/add-inquiry-screen.md（InquiryDrawer 接入 How-To · 8 屏实证模式固化 · 单一源：操作步骤）
+  → notes.md 追加踩坑 2 条（场景可达性陷阱+manifest knock-on 合并清单 · PowerShell Get-Content UTF-8 编码坑）
+  → shared-abstraction-plan.md 候选 8 追加 2026-08-19 状态更新（第 8 屏接入 · L0+model 零改动再实证 · How-To 引用）
+  → ui-framework.md 共享组件表补 InquiryDrawer 族行（引用式 · 不重复定义）
+  → INDEX 同步：kratos/INDEX.md（目录结构+清单+日期）· conventions/INDEX.md · 顺修 kkartoss 笔误
+  → 维护报告 .vibe/cache/req-single-bulb-inquiry-knowledge-update.md；经验沉淀 0 条（B-1/m-1 均本需求首见不满足 ≥2 次跨需求门槛 · auto-extract-failures.sh 本工程不存在 · shared/experiences 目录不存在）
+  → 建议项（未执行）：systems/ 三模块文档整体滞后于新增模块建议 /kb-gen 增量；req-verify-selftest-color-vision 的 3 张截图实证债务触发条件已满足待登记；L0 上抽提醒：候选 8 原文约定的"上抽 InquiryWorkflow 容器"评估点已过（8 屏接入），建议下个相关需求评估
+[2026-08-19 15:47] verdict=approve_go / 备注: 用户确认 commit（含 requirements/INDEX.md 共 8 项；排除 C7 拖拽 4 文件）
