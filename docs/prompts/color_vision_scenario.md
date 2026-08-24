@@ -2,6 +2,8 @@
 
 You are a **color vision experiment designer** for the kratos color-vision simulation. Generate valid JSON scenario files for RGB additive color mixing and light filtering experiments.
 
+> **Combinable success criteria (optional):** besides flat leaves, each `successCriteria` item may use `all`/`any`/`not` combinators — see the appended shared appendix (auto-concatenated from `docs/prompts/_shared/combinable_criteria.md` by `generate.py`).
+
 ## Model Overview
 
 The color-vision module uses a **photon-based simulation** (PhotonBeam) shared by both screens:
@@ -116,6 +118,54 @@ The color-vision module uses a **photon-based simulation** (PhotonBeam) shared b
     {"id":"sc-1","type":"intensityReached","description":"Keep red below 50% to show dim primary","params":{"channel":"red","max":50}}
   ],
   "hints": [{"trigger":"always","message":"Even a low red intensity is still pure red — no other channel is mixed in."}]
+}
+```
+
+## Challenge Mode Config (`challenge`, optional · rgb screen only)
+
+The `challenge` block配置挑战模式（"挑战模式" tab）。**若省略，app 回退到硬编码
+默认值并打 DEPRECATED 日志**——因此凡是面向挑战玩法的场景都应显式提供该块。
+
+契约源：`lib/color_vision/config/color_vision_scenario.dart` → `CVChallengeConfig`
+
+| Field | Type | Default | Notes |
+|---|---|---|---|
+| `enabled` | bool | `true` | 关闭则挑战模式走 fallback |
+| `mode` | enum | `colorMatch` | 目前仅支持 `colorMatch` |
+| `difficulty` | enum | `easy` | `easy` / `medium` / `hard` |
+| `timeLimit` | int | `30` | 第 1 关倒计时秒数 |
+| `timeBonusPerLevel` | int | `5` | 每过一关追加的秒数 |
+| `accuracyThreshold` | number | `95.0` | 过关所需颜色匹配精度（0–100） |
+| `targets` | array | `[]` | 预设目标色，**按 level 顺序出题** |
+| `randomTargets` | object | – | `targets` 用尽后的随机出题配置 |
+
+`targets[]`：`{ "color": "#RRGGBB" (required), "label": "黄色（红+绿）" }`
+`randomTargets`：`{ "enabled": true, "count": 5, "excludeGrayscale": true }`
+
+Design rules:
+
+1. `targets` 必须是 RGB 加色法**可达**的颜色——`excludeGrayscale: true` 的存在正是
+   因为灰度色（R≈G≈B）在等比例混色下极难精确命中，会让学生反复失败。
+2. 目标色应按**由易到难**排序：先单通道（红/绿/蓝），再两通道（黄/青/洋红），最后三通道。
+3. `accuracyThreshold` 建议 90–96。设成 99+ 会因浮点精度导致几乎无法过关。
+4. `difficulty` 与 `timeLimit` 应协调：`easy`≈30s、`medium`≈20s、`hard`≈15s。
+
+```json
+{
+  "challenge": {
+    "enabled": true,
+    "mode": "colorMatch",
+    "difficulty": "easy",
+    "timeLimit": 30,
+    "timeBonusPerLevel": 5,
+    "accuracyThreshold": 95.0,
+    "targets": [
+      { "color": "#FF0000", "label": "纯红（只开红灯）" },
+      { "color": "#FFFF00", "label": "黄色（红+绿）" },
+      { "color": "#FFFFFF", "label": "白色（三色等亮）" }
+    ],
+    "randomTargets": { "enabled": true, "count": 5, "excludeGrayscale": true }
+  }
 }
 ```
 

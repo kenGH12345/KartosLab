@@ -200,6 +200,8 @@ abstract class ScenarioManagerBase<TScenario> {
 
 > **状态更新（2026-08-10 · req-inquiry-chart-poc + req-inquiry-chart-extend 推广收尾）**：7 sim 探究抽屉自动出现"记录数据关系图"。POC（commit 708f7a6）新建第 6 组件 `SnapshotChart`（`lib/common/chart/snapshot_chart.dart` · 纯展示散点图 · 零 sim model 依赖）+ `ExperimentLogger.onRowsChanged` 可选回调 + `InquiryDrawer` 图表区块；extend（02c2cf3 + 1ace0fa）完成 7 sim 图表适配（circuit 列序调整 + 空态文案双分支）。**7 sim 零 screen 改动即获图表能力**（复用 InquiryDrawer 容器）。全量回归 205/205（除 forces 基线超时非本需求）。组件契约（快照列选轴语义）见下 §8.1。
 
+> **状态更新（2026-08-19 · req-single-bulb-inquiry 收尾）**：color_vision 第 2 屏（single_bulb · 全项目第 8 屏）接入。**L0 组件族 + model 零改动再次实证**（git status 实证；T1：`ColorVisionScenario.fromJson` 解析 `inquiryTask` 不按 screen 分支，`color_vision_scenario.dart:211-213`）。接入操作步骤已固化为 How-To：[../kratos/conventions/add-inquiry-screen.md](../kratos/conventions/add-inquiry-screen.md)（单一源 · 含回退安全四重保护 / snapshot key 一致性硬约束 / 新增场景连带检查清单）。本次新增项目级认知：**manifest 注册 ≠ 用户可达**（`color_vision_home.dart:37` 场景 ID 硬编码需 fallback 接线）——踩坑单一源见 [../kratos/notes.md](../kratos/notes.md)「场景可达性陷阱」。（来源: req-single-bulb-inquiry design/技术方案.md §1-§3 · spec/最终需求.md §3）
+
 **触发登记**：spec 约束 C3 / 技术方案 D8 · 登记由执行阶段完成（本条目）。
 
 **验证**：28 项新增测试全绿（组件 16 + circuit 3 + color_vision 9）· 全量 190/0（除 forces 基线）· analyze 本需求代码 0 error。req-inquiry-extend 推广后 5 sim 接入全绿（见 `requirements/req-inquiry-extend/test-report/ac-verification.md`）。
@@ -227,6 +229,34 @@ abstract class ScenarioManagerBase<TScenario> {
 - **第 1 个 param 列 × 第 1 个 reading 列必须构成有意义的"参数×读数"关系对**。
 - 反例：circuit 初版列序 `resistance(param)/voltage(reading)/current(reading)/brightness(reading)` → 默认 y=voltage（电压恒定时是水平线）→ 看不出 I=V/R 反比。修复走**调整 JSON 列序**（`simple-series.json` 改为 `resistance/current/voltage/brightness` 让 y=current）而非改组件选轴逻辑——改 JSON 列序最小化且天然满足"默认 y=第一个 reading 列"规则；且列序只影响默认选轴与表格展示顺序，不改数据语义（key 集合不变 · 测试用 Set 比较不受影响）。
 - **经验**：第 1 个 reading 列应是"随探究变量最显著变化"的物理量，否则默认关系图是水平线 / 空图，探究价值低。
+
+### 候选 9 · SuccessCondition 可组合成功条件树（✅ 已落地 · 2026-08-21 · req-criteria-composable）
+
+**状态**：已落地 `lib/common/scenario/success_condition.dart`。由 8 个 sim 的平铺 CriterionConfig 上抽（G3 早已超第 3 用户阈值，借「LLM 生成能力第 3 层升级」契机完成强制上抽）。
+
+**证据**（8 使用者全员改造）：
+- **A 类（判定接线）**：molarity / color_vision / circuit / optics —— `successCriteria.every((c) => c.check(...))` 全部改为 `SuccessCondition.allSatisfied(..., evaluateLeaf 回调注入)`
+- **B 类（解析层）**：sound / radio_waves / wave_interference / forces —— 平铺 CriterionConfig 类删除，字段类型改 `List<SuccessCondition>`（判定本就未接线 · 零回归）
+
+**已抽象内容**：
+- sealed class 树：`LeafCondition`（平铺格式原样承载）+ `AllCondition` / `AnyCondition` / `NotCondition`（组合算子 · 可嵌套 ≤ 4 层硬上限）
+- **JSON 契约向后兼容**：42 个存量场景的平铺格式零改动可加载（叶子与组合靠 `type` 键 / `all|any|not` 键互斥区分）
+- fail loud：非法格式（键并存 / 空数组 / 超深度）抛 FormatException → `ScenarioManagerBase.loadScenarios` 单场景降级跳过，不 crash
+- 叶子求值器注入：各 sim 的 Criterion 类降级为静态 `evaluateLeaf`（组合语义通用 · 叶子语义 sim 私有 · 未知 type 一律 false）
+
+**接入模式**（新 sim 必须遵循）：
+1. scenario model 的 `successCriteria` 字段类型直接用 `List<SuccessCondition>`，fromJson 走 `SuccessCondition.fromJson`
+2. 判定处用 `SuccessCondition.allSatisfied(list, (type, params) => XxCriterion.evaluateLeaf(type, params, state))`
+3. schema 的 criterion 定义用 `oneOf: [criterionLeaf, criterionAll, criterionAny, criterionNot]` 递归 $ref（8 份 schema 已全部此结构，可复制任一为模板）
+4. UI 展示判定进度用 `condition.collectLeaves()`（组合条件逐叶子展示 description）
+
+**配套**（AI 生成链路）：
+- prompt 共享附录 `docs/prompts/_shared/combinable_criteria.md`（generate.py 自动拼接 · 单一源 · 防止 8 份副本漂移）
+- 端到端样例 `assets/scenarios/molarity/precision-dilution.json`（all + not 组合：浓度达标且不得饱和——平铺格式无法表达的否定语义）
+
+**验证**：`test/common/success_condition_test.dart` 22 用例 + molarity 组合条件端到端 5 用例 + 全量 339 测试通过；schema 一致性守卫测试的 walk 已升级为标准 oneOf 语义（任一分支接受即通过，见 `test/tooling/ai_scenario_gen_consistency_test.dart`）。analyze 新引入 0 issue（存量 38 info 不变）。
+
+**设计边界**：仅三个组合算子（且/或/非）+ 有限嵌套深度，**不做自由 DSL**——枚举保证判定器可实现，组合扩展表达力；教师想要的「时间限制类判定」（如 60 秒内完成）属于**新叶子 type**（需 sim 侧实现求值），不属于组合算子范畴。
 
 ---
 

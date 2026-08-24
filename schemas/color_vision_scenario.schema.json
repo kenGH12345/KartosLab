@@ -1,34 +1,174 @@
-﻿{
+{
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://kartos/color-vision-scenario.schema.json",
   "title": "Color Vision Scenario",
   "type": "object",
-  "required": ["scenarioId", "name", "screen"],
+  "required": [
+    "scenarioId",
+    "name",
+    "screen"
+  ],
   "properties": {
-    "scenarioId": { "type": "string" },
-    "name": { "type": "string" },
-    "description": { "type": "string", "default": "" },
-    "version": { "type": "string", "default": "1.0" },
+    "inquiryTask": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "instruction"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "instruction": {
+                "type": "string"
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "snapshotColumns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "label",
+              "source"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "param",
+                  "reading"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "referenceConclusion": {
+          "type": "string"
+        },
+        "predictions": {
+          "type": "array",
+          "description": "先猜后验预测题。对应探究五阶段的「猜测」阶段——缺省或空数组时该阶段自动跳过，学生直接进入「任务」阶段。",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "question",
+              "options",
+              "answer"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "question": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 2,
+                "description": "选项文本列表，通常 2-4 项"
+              },
+              "answer": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "正确选项在 options 中的下标（0 基）"
+              },
+              "explanation": {
+                "type": "string",
+                "description": "验证后展示的原理解析（建议填写，学生答错时是关键反馈）"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "scenarioId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0"
+    },
     "screen": {
       "type": "string",
-      "enum": ["rgb", "singleBulb"],
+      "enum": [
+        "rgb",
+        "singleBulb"
+      ],
       "description": "rgb = RGB三色合成屏 · singleBulb = 单光源+滤光片屏"
     },
     "beamMode": {
       "type": "string",
-      "enum": ["photons", "wave"],
+      "enum": [
+        "photons",
+        "wave"
+      ],
       "default": "photons",
       "description": "photons = 光子颗粒模式 · wave = 连续光束模式（仅 singleBulb 屏有效）"
     },
     "initialParams": {
       "type": "object",
       "properties": {
-        "redIntensity":   { "type": "number", "minimum": 0, "maximum": 100, "default": 100 },
-        "greenIntensity": { "type": "number", "minimum": 0, "maximum": 100, "default": 100 },
-        "blueIntensity":  { "type": "number", "minimum": 0, "maximum": 100, "default": 100 },
+        "redIntensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 100
+        },
+        "greenIntensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 100
+        },
+        "blueIntensity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 100
+        },
         "filterType": {
           "type": "string",
-          "enum": ["none", "red", "green", "blue", "custom"],
+          "enum": [
+            "none",
+            "red",
+            "green",
+            "blue",
+            "custom"
+          ],
           "default": "none",
           "description": "滤光片类型 · 仅 singleBulb 屏有效"
         },
@@ -36,42 +176,232 @@
           "type": "object",
           "description": "自定义滤光片 RGB 透过率 (0-1)",
           "properties": {
-            "redPass":   { "type": "number", "minimum": 0, "maximum": 1 },
-            "greenPass": { "type": "number", "minimum": 0, "maximum": 1 },
-            "bluePass":  { "type": "number", "minimum": 0, "maximum": 1 }
-          }
+            "redPass": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "greenPass": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "bluePass": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "additionalProperties": false
         },
-        "showPhotonView":  { "type": "boolean", "default": true },
-        "showBeamView":    { "type": "boolean", "default": false },
-        "personPosition":  { "type": "number", "default": 300, "description": "Person 距光源像素距离" }
-      }
+        "showPhotonView": {
+          "type": "boolean",
+          "default": true
+        },
+        "showBeamView": {
+          "type": "boolean",
+          "default": false
+        },
+        "personPosition": {
+          "type": "number",
+          "default": 300,
+          "description": "Person 距光源像素距离"
+        }
+      },
+      "additionalProperties": false
     },
     "successCriteria": {
       "type": "array",
       "items": {
-        "type": "object",
-        "required": ["id", "type", "description"],
-        "properties": {
-          "id": { "type": "string" },
-          "type": {
-            "type": "string",
-            "enum": ["colorMatch", "filterPassed", "intensityReached"]
-          },
-          "description": { "type": "string" },
-          "params": { "type": "object" }
-        }
+        "$ref": "#/definitions/criterion"
       }
     },
     "hints": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["trigger", "message"],
+        "required": [
+          "trigger",
+          "message"
+        ],
         "properties": {
-          "trigger": { "type": "string" },
-          "message": { "type": "string" }
-        }
+          "trigger": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       }
+    },
+    "challenge": {
+      "type": "object",
+      "description": "挑战模式配置（替代硬编码）。缺省时 app 回退旧硬编码逻辑并打 DEPRECATED 日志。契约源：lib/color_vision/config/color_vision_scenario.dart CVChallengeConfig。",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "colorMatch"
+          ],
+          "default": "colorMatch",
+          "description": "当前仅支持 colorMatch"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": [
+            "easy",
+            "medium",
+            "hard"
+          ],
+          "default": "easy"
+        },
+        "timeLimit": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 30,
+          "description": "基础倒计时秒数"
+        },
+        "timeBonusPerLevel": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 5,
+          "description": "每过一关额外增加的秒数"
+        },
+        "accuracyThreshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 95.0,
+          "description": "判定过关的颜色匹配精度阈值（百分比）"
+        },
+        "targets": {
+          "type": "array",
+          "description": "预设目标色，按 level 顺序出题；用尽后走 randomTargets",
+          "items": {
+            "type": "object",
+            "required": [
+              "color"
+            ],
+            "properties": {
+              "color": {
+                "type": "string",
+                "pattern": "^#[0-9A-Fa-f]{6}$",
+                "description": "目标色，形如 #FFFF00"
+              },
+              "label": {
+                "type": "string",
+                "description": "提示文案，如「黄色（红+绿）」"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "randomTargets": {
+          "type": "object",
+          "description": "targets 用尽后的随机出题配置",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "count": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 5
+            },
+            "excludeGrayscale": {
+              "type": "boolean",
+              "default": true,
+              "description": "排除灰度色（R≈G≈B），避免出无法通过混色达成的题"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     }
-  }
+  },
+  "definitions": {
+    "criterion": {
+      "description": "叶子或组合条件。组合算子 all/any/not 可嵌套（解析端深度上限 4 层）。",
+      "oneOf": [
+        { "$ref": "#/definitions/criterionLeaf" },
+        { "$ref": "#/definitions/criterionAll" },
+        { "$ref": "#/definitions/criterionAny" },
+        { "$ref": "#/definitions/criterionNot" }
+      ]
+    },
+    "criterionLeaf": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "colorMatch",
+            "filterPassed",
+            "intensityReached"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionAll": {
+      "type": "object",
+      "required": ["all"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/criterion" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionAny": {
+      "type": "object",
+      "required": ["any"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/criterion" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionNot": {
+      "type": "object",
+      "required": ["not"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "not": { "$ref": "#/definitions/criterion" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
 }

@@ -3,85 +3,403 @@
   "$id": "https://kartos/wave-interference-scenario.schema.json",
   "title": "Wave Interference Scenario",
   "type": "object",
-  "required": ["scenarioId", "name", "screen"],
+  "required": [
+    "scenarioId",
+    "name",
+    "screen"
+  ],
   "properties": {
-    "scenarioId": { "type": "string" },
-    "name": { "type": "string" },
-    "description": { "type": "string", "default": "" },
-    "version": { "type": "string", "default": "1.0" },
+    "inquiryTask": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "instruction"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "instruction": {
+                "type": "string"
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "snapshotColumns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "key",
+              "label",
+              "source"
+            ],
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "param",
+                  "reading"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "referenceConclusion": {
+          "type": "string"
+        },
+        "predictions": {
+          "type": "array",
+          "description": "先猜后验预测题。对应探究五阶段的「猜测」阶段——缺省或空数组时该阶段自动跳过，学生直接进入「任务」阶段。",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "question",
+              "options",
+              "answer"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "question": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 2,
+                "description": "选项文本列表，通常 2-4 项"
+              },
+              "answer": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "正确选项在 options 中的下标（0 基）"
+              },
+              "explanation": {
+                "type": "string",
+                "description": "验证后展示的原理解析（建议填写，学生答错时是关键反馈）"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "scenarioId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string",
+      "default": ""
+    },
+    "version": {
+      "type": "string",
+      "default": "1.0"
+    },
     "screen": {
       "type": "string",
-      "enum": ["waterDoubleSlit"],
+      "enum": [
+        "waterDoubleSlit"
+      ],
       "description": "waterDoubleSlit = single point source + double-slit barrier producing interference pattern on 80x55 FDTD grid"
     },
     "initialParams": {
       "type": "object",
       "properties": {
         "frequency": {
-          "type": "number", "minimum": 0.1, "maximum": 1.0, "default": 0.4,
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 1.0,
+          "default": 0.4,
           "description": "Oscillator frequency. Higher = shorter wavelength, denser interference fringes."
         },
         "amplitude": {
-          "type": "number", "minimum": 0.2, "maximum": 3.0, "default": 1.5,
+          "type": "number",
+          "minimum": 0.2,
+          "maximum": 3.0,
+          "default": 1.5,
           "description": "Wave amplitude. Higher = brighter crests, deeper troughs in the heatmap."
         },
         "barrierEnabled": {
-          "type": "boolean", "default": true,
+          "type": "boolean",
+          "default": true,
           "description": "Show the double-slit barrier. When false, clean circular propagation from a single source."
         },
         "slitSize": {
-          "type": "integer", "minimum": 4, "maximum": 20, "default": 10,
+          "type": "integer",
+          "minimum": 4,
+          "maximum": 20,
+          "default": 10,
           "description": "Height of each slit in grid cells. Narrower slits = more ideal point sources."
         },
         "slitSeparation": {
-          "type": "integer", "minimum": 12, "maximum": 36, "default": 24,
+          "type": "integer",
+          "minimum": 12,
+          "maximum": 36,
+          "default": 24,
           "description": "Center-to-center distance between slits in grid cells. Wider = more fringes (per d sin theta = n lambda)."
         }
-      }
+      },
+      "additionalProperties": false
     },
     "paramRanges": {
       "type": "object",
       "properties": {
-        "frequency": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} },
-        "amplitude": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} },
-        "slitSize": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} },
-        "slitSeparation": { "type": "object", "required": ["min","max","step"], "properties": {"min":{"type":"number"},"max":{"type":"number"},"step":{"type":"number"},"unit":{"type":["string","null"]}} }
-      }
+        "frequency": {
+          "type": "object",
+          "required": [
+            "min",
+            "max",
+            "step"
+          ],
+          "properties": {
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "step": {
+              "type": "number"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "amplitude": {
+          "type": "object",
+          "required": [
+            "min",
+            "max",
+            "step"
+          ],
+          "properties": {
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "step": {
+              "type": "number"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "slitSize": {
+          "type": "object",
+          "required": [
+            "min",
+            "max",
+            "step"
+          ],
+          "properties": {
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "step": {
+              "type": "number"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "slitSeparation": {
+          "type": "object",
+          "required": [
+            "min",
+            "max",
+            "step"
+          ],
+          "properties": {
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "step": {
+              "type": "number"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
     },
     "successCriteria": {
       "type": "array",
       "items": {
-        "type": "object",
-        "required": ["id","type","description"],
-        "properties": {
-          "id": { "type": "string" },
-          "type": {
-            "type": "string",
-            "enum": ["observePattern","adjustSeparation","toggleBarrier","compareFrequency","compareSlitSize","countFringes","frequencyReached","amplitudeReached"]
-          },
-          "description": { "type": "string" },
-          "params": {
-            "type": "object",
-            "properties": {
-              "minFrequency": {"type":"number"}, "maxFrequency": {"type":"number"}, "exactFrequency": {"type":"number"},
-              "minAmplitude": {"type":"number"}, "maxAmplitude": {"type":"number"}, "exactAmplitude": {"type":"number"},
-              "barrierEnabled": {"type":"boolean"}, "minSlitSize": {"type":"integer"}, "maxSlitSize": {"type":"integer"},
-              "minSlitSep": {"type":"integer"}, "maxSlitSep": {"type":"integer"}
-            }
-          }
-        }
+        "$ref": "#/definitions/criterion"
       }
     },
     "hints": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["trigger","message"],
+        "required": [
+          "trigger",
+          "message"
+        ],
         "properties": {
-          "trigger": { "type": "string", "description": "'always' or condition like 'frequency > 0.7'" },
-          "message": { "type": "string" }
-        }
+          "trigger": {
+            "type": "string",
+            "description": "'always' or condition like 'frequency > 0.7'"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       }
     }
-  }
+  },
+  "definitions": {
+    "criterion": {
+      "description": "叶子或组合条件。组合算子 all/any/not 可嵌套（解析端深度上限 4 层）。",
+      "oneOf": [
+        { "$ref": "#/definitions/criterionLeaf" },
+        { "$ref": "#/definitions/criterionAll" },
+        { "$ref": "#/definitions/criterionAny" },
+        { "$ref": "#/definitions/criterionNot" }
+      ]
+    },
+    "criterionLeaf": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "observePattern",
+            "adjustSeparation",
+            "toggleBarrier",
+            "compareFrequency",
+            "compareSlitSize",
+            "countFringes",
+            "frequencyReached",
+            "amplitudeReached"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object",
+          "properties": {
+            "minFrequency": { "type": "number" },
+            "maxFrequency": { "type": "number" },
+            "exactFrequency": { "type": "number" },
+            "minAmplitude": { "type": "number" },
+            "maxAmplitude": { "type": "number" },
+            "exactAmplitude": { "type": "number" },
+            "barrierEnabled": { "type": "boolean" },
+            "minSlitSize": { "type": "integer" },
+            "maxSlitSize": { "type": "integer" },
+            "minSlitSep": { "type": "integer" },
+            "maxSlitSep": { "type": "integer" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionAll": {
+      "type": "object",
+      "required": ["all"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/criterion" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionAny": {
+      "type": "object",
+      "required": ["any"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/criterion" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionNot": {
+      "type": "object",
+      "required": ["not"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "not": { "$ref": "#/definitions/criterion" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
 }

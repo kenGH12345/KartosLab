@@ -38,11 +38,42 @@ SIM_MAP = {
     "circuit": "circuit",
     "color_vision": "color_vision",
     "forces": "forces",
+    "molarity": "molarity",
     "optics": "optics",
     "radio_waves": "radio_waves",
     "sound": "sound",
     "wave_interference": "wave_interference",
 }
+
+# assets 下的场景目录名，与 sim key 并不一致（历史原因：部分目录用连字符，
+# optics 场景平铺在 assets/scenarios 根目录）。
+#
+# 权威来源是各 sim 的 `ScenarioManager.manifestPath`（lib/<sim>/config/）——
+# 若两者不一致，生成的场景会写进 app 永远不会加载的孤儿目录。
+# 实证：曾因直接用 sim key 拼路径，在 assets/scenarios/color_vision/ 留下
+# manifest.json + rgb-default.json 两个死文件（真实加载路径是 color-vision/）。
+SCENARIO_DIR_MAP = {
+    "circuit": "circuit",
+    "color_vision": "color-vision",
+    "forces": "forces",
+    "molarity": "molarity",
+    "optics": "",  # 平铺在 assets/scenarios 根目录
+    "radio_waves": "radio-waves",
+    "sound": "sound",
+    "wave_interference": "wave-interference",
+}
+
+
+def scenario_dir(sim: str) -> str:
+    """返回该 sim 的场景目录绝对路径（与 Dart ScenarioManager 加载路径一致）。"""
+    sub = SCENARIO_DIR_MAP[sim]
+    return os.path.join(SCENARIOS_DIR, sub) if sub else SCENARIOS_DIR
+
+
+def scenario_dir_display(sim: str) -> str:
+    """用于日志展示的相对路径。"""
+    sub = SCENARIO_DIR_MAP[sim]
+    return f"assets/scenarios/{sub}/" if sub else "assets/scenarios/"
 
 
 def _load_text(path: str) -> str:
@@ -152,7 +183,7 @@ def run_dart_validate(sim: str, data: dict, tmp_path: str) -> tuple[bool, str]:
 
 
 def update_manifest(sim: str, scenario_id: str, file_name: str) -> None:
-    sim_dir = os.path.join(SCENARIOS_DIR, sim)
+    sim_dir = scenario_dir(sim)
     os.makedirs(sim_dir, exist_ok=True)
     manifest_path = os.path.join(sim_dir, "manifest.json")
     if os.path.exists(manifest_path):
@@ -189,6 +220,23 @@ def main() -> None:
         sys.exit("ERROR: set DEEPSEEK_API_KEY (or --api-key), or use --from-stdin / --print-prompt.")
 
     system_prompt = _load_text(os.path.join(PROMPTS_DIR, f"{SIM_MAP[args.sim]}_scenario.md"))
+
+    # 拼接 inquiryTask 共享附录（单一源：docs/prompts/_shared/inquiry_task.md）。
+    # 该契约对所有 sim 相同，若复制进各 sim prompt 会产生 8 份副本漂移。
+    shared_inquiry = os.path.join(PROMPTS_DIR, "_shared", "inquiry_task.md")
+    if os.path.exists(shared_inquiry):
+        system_prompt += "\n\n---\n\n" + _load_text(shared_inquiry)
+    else:
+        print(f"WARNING: 共享附录缺失 {shared_inquiry} —— 生成结果可能不含 inquiryTask")
+
+    # 拼接组合判定条件共享附录（单一源：docs/prompts/_shared/combinable_criteria.md）。
+    # all/any/not 组合算子对所有 sim 相同（解析端 lib/common/scenario/success_condition.dart）。
+    shared_criteria = os.path.join(PROMPTS_DIR, "_shared", "combinable_criteria.md")
+    if os.path.exists(shared_criteria):
+        system_prompt += "\n\n---\n\n" + _load_text(shared_criteria)
+    else:
+        print(f"WARNING: 共享附录缺失 {shared_criteria} —— 生成结果可能不含组合算子说明")
+
     user_prompt = build_user_prompt(args.sim, args.topic, args.level)
 
     if args.print_prompt:
@@ -226,13 +274,13 @@ def main() -> None:
         sys.exit("ERROR: generated JSON missing 'scenarioId'.")
 
     if args.write:
-        sim_dir = os.path.join(SCENARIOS_DIR, args.sim)
+        sim_dir = scenario_dir(args.sim)
         os.makedirs(sim_dir, exist_ok=True)
         file_name = f"{scenario_id}.json"
         with open(os.path.join(sim_dir, file_name), "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
         update_manifest(args.sim, scenario_id, file_name)
-        print(f"WROTE: assets/scenarios/{args.sim}/{file_name} (+ manifest updated)")
+        print(f"WROTE: {scenario_dir_display(args.sim)}{file_name} (+ manifest updated)")
     else:
         print("DRY RUN (no --write): generated scenario below")
         print(json.dumps(data, ensure_ascii=False, indent=2))

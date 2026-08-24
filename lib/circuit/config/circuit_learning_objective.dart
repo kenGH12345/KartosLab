@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/scenario/success_condition.dart';
 import '../models/circuit_state.dart';
 import '../models/circuit_solver.dart';
 
@@ -28,13 +29,17 @@ class CircuitLearningObjective {
 
   final CircuitObjectiveType type;
   final String description;
-  final List<CircuitSuccessCriterion> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<CircuitHint> hints;
   final CircuitValidationConfig validation;
 
   bool checkAchieved(CircuitState state) {
     final solved = CircuitSolver.solve(state);
-    return successCriteria.every((c) => c.check(state, solved));
+    return SuccessCondition.allSatisfied(
+      successCriteria,
+      (type, params) =>
+          CircuitSuccessCriterion.evaluateLeaf(type, params, state, solved),
+    );
   }
 
   /// 按 hint.trigger 表达式过滤，仅返回当前 state 下应显示的 hints。
@@ -85,7 +90,7 @@ class CircuitLearningObjective {
       type: _parseType(json['type'] as String),
       description: json['description'] as String,
       successCriteria: (json['successCriteria'] as List<dynamic>)
-          .map((e) => CircuitSuccessCriterion.fromJson(e as Map<String, dynamic>))
+          .map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>))
           .toList(),
       hints: (json['hints'] as List<dynamic>?)
               ?.map((e) => CircuitHint.fromJson(e as Map<String, dynamic>))
@@ -130,25 +135,32 @@ class CircuitSuccessCriterion {
   final String description;
   final Map<String, dynamic> params;
 
-  bool check(CircuitState state, SolvedCircuit solved) {
-    switch (type) {
+  bool check(CircuitState state, SolvedCircuit solved) =>
+      evaluateLeaf(type.name, params, state, solved);
+
+  /// 叶子求值器（type 字符串 → 枚举 → 判定 · 供条件树回调注入）。
+  /// 未知 type 解析为 circuitClosed（与既有 fromJson 行为一致）。
+  static bool evaluateLeaf(String type, Map<String, dynamic> params,
+      CircuitState state, SolvedCircuit solved) {
+    switch (_parseType(type)) {
       case CircuitCriterionType.circuitClosed:
         return _checkCircuitClosed(solved);
       case CircuitCriterionType.componentPowered:
-        return _checkComponentPowered(state, solved);
+        return _checkComponentPowered(params, state, solved);
       case CircuitCriterionType.bulbBrightness:
-        return _checkBulbBrightness(solved);
+        return _checkBulbBrightness(params, solved);
       case CircuitCriterionType.componentCount:
-        return _checkComponentCount(state);
+        return _checkComponentCount(params, state);
     }
   }
 
-  bool _checkCircuitClosed(SolvedCircuit solved) {
+  static bool _checkCircuitClosed(SolvedCircuit solved) {
     return solved.openNodes.isEmpty &&
         solved.componentStates.values.any((v) => v);
   }
 
-  bool _checkComponentPowered(CircuitState state, SolvedCircuit solved) {
+  static bool _checkComponentPowered(Map<String, dynamic> params,
+      CircuitState state, SolvedCircuit solved) {
     final targetType = params['componentType'] as String?;
     if (targetType != null) {
       final targetComps = state.components
@@ -160,13 +172,15 @@ class CircuitSuccessCriterion {
     return solved.componentStates.values.any((v) => v);
   }
 
-  bool _checkBulbBrightness(SolvedCircuit solved) {
+  static bool _checkBulbBrightness(
+      Map<String, dynamic> params, SolvedCircuit solved) {
     if (solved.bulbBrightness.isEmpty) return false;
     final minBrightness = (params['minBrightness'] as num?)?.toDouble() ?? 0.1;
     return solved.bulbBrightness.values.any((b) => b >= minBrightness);
   }
 
-  bool _checkComponentCount(CircuitState state) {
+  static bool _checkComponentCount(
+      Map<String, dynamic> params, CircuitState state) {
     final typeName = params['componentType'] as String;
     final expected = (params['expectedCount'] as int?) ?? 1;
     final actual = state.components

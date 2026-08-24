@@ -3,6 +3,7 @@
 > 用途：让 AI 生成符合本 sim 配置契约的 `assets/scenarios/molarity/<name>.json` 场景文件。
 > 校验：`schemas/molarity_scenario.schema.json`（JSON Schema）· 解析端 `lib/chemistry/molarity/config/molarity_scenario.dart`。
 > 生成完成后建议跑 schema 校验 + `MolarityScenario.fromJson` 单测。
+> 组合判定条件（all/any/not · 可选）：见附录（`generate.py` 自动拼接 `docs/prompts/_shared/combinable_criteria.md`）。
 
 ---
 
@@ -66,8 +67,11 @@ solutes [ 9 项完整 ]
 performance { particlesPerMole, particleSize }
 successCriteria []
 hints []
-inquiryTask? { question, steps[], snapshotColumns[], referenceConclusion }
+inquiryTask? { question, predictions[], steps[], snapshotColumns[], referenceConclusion }
 ```
+
+> `inquiryTask` 的完整字段契约与设计要求见附录（由 generate.py 自动拼接：
+> `docs/prompts/_shared/inquiry_task.md`）。
 
 ## 9. Validation Checklist（≥6 项自查）
 
@@ -77,5 +81,5 @@ inquiryTask? { question, steps[], snapshotColumns[], referenceConclusion }
 - [ ] soluteIndex 在 0–8 之间且 solutes 列表存在该项
 - [ ] paramRanges 未越出物理范围（0–1 / 0.2–1）
 - [ ] successCriteria 的 type 属于 4 个枚举之一
-- [ ] 若有 inquiryTask：steps ≥ 2 · snapshotColumns 含 ≥1 param + ≥1 reading
+- [ ] 若有 inquiryTask：steps ≥ 2 · snapshotColumns 含 ≥1 param + ≥1 reading · predictions 的 answer 下标合法（见附录自查清单）
 - [ ] 颜色均为 `#RRGGBB` 格式

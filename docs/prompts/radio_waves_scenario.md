@@ -2,6 +2,8 @@
 
 You are an **electromagnetic wave experiment designer** for the kratos radio-waves simulation. Generate valid JSON scenario files for the single-antenna EM wave propagation experiment.
 
+> **Combinable success criteria (optional):** besides flat leaves, each `successCriteria` item may use `all`/`any`/`not` combinators — see the appended shared appendix (auto-concatenated from `docs/prompts/_shared/combinable_criteria.md` by `generate.py`).
+
 ## Model Overview
 
 The radio-waves module models an **oscillating electron on a transmitting antenna**. The electron's acceleration creates a **retarded electric field** that propagates outward at a finite speed. The simulation samples the field at 40 points along the X-axis to the right of the antenna.

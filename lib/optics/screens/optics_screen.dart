@@ -9,6 +9,7 @@ import '../../common/widgets/inquiry_drawer.dart';
 import '../../common/widgets/experiment_logger.dart';
 import '../../common/widgets/experiment_intro_panel.dart';
 import '../../common/widgets/scenario_menu_button.dart';
+import '../../common/scenario/success_condition.dart';
 import '../config/scenario_manager.dart';
 import '../config/scenario_runtime_policy.dart';
 import '../config/lab_scenario.dart';
@@ -1077,15 +1078,16 @@ class _RightPanel extends StatelessWidget {
             children: [
               for (final c
                   in scenario.objectives?.successCriteria ??
-                      <SuccessCriterion>[])
-                _listCard(
-                  const Icon(
-                    Icons.radio_button_unchecked,
-                    color: Color(0xFF9CA3AF),
-                    size: 16,
+                      <SuccessCondition>[])
+                for (final leaf in c.collectLeaves())
+                  _listCard(
+                    const Icon(
+                      Icons.radio_button_unchecked,
+                      color: Color(0xFF9CA3AF),
+                      size: 16,
+                    ),
+                    leaf.description,
                   ),
-                  c.description,
-                ),
             ],
           ),
         ),

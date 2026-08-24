@@ -70,8 +70,10 @@ void main() {
 
     for (final s in mgr.scenarios) {
       for (final sc in s.successCriteria) {
-        expect(sc.id, isNotEmpty);
-        expect(sc.type, anyOf('colorMatch', 'filterPassed', 'intensityReached'));
+        for (final leaf in sc.collectLeaves()) {
+          expect(leaf.id, isNotEmpty);
+          expect(leaf.type, anyOf('colorMatch', 'filterPassed', 'intensityReached'));
+        }
       }
       for (final h in s.hints) {
         expect(h.trigger, isNotEmpty);

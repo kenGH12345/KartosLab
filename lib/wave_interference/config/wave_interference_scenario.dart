@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/scenario/success_condition.dart';
 import '../../common/widgets/inquiry_models.dart';
 
 /// Wave-interference screen type.
@@ -28,19 +29,6 @@ class WIParamRange {
   );
 }
 
-/// Success criterion for a wave-interference scenario.
-class WICriterionConfig {
-  final String id, type, description;
-  final Map<String, dynamic> params;
-  const WICriterionConfig({required this.id, required this.type, required this.description, this.params = const {}});
-  factory WICriterionConfig.fromJson(Map<String, dynamic> json) => WICriterionConfig(
-    id: json['id'] as String,
-    type: json['type'] as String,
-    description: json['description'] as String,
-    params: (json['params'] as Map<String, dynamic>?) ?? {},
-  );
-}
-
 /// Hint message with trigger condition.
 class WIHintConfig {
   final String trigger, message;
@@ -61,7 +49,7 @@ class WaveInterferenceScenario {
   final int slitSize, slitSeparation;
   final WIParamRange frequencyRange, amplitudeRange;
   final WIParamRange? slitSizeRange, slitSeparationRange;
-  final List<WICriterionConfig> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<WIHintConfig> hints;
   final InquiryTask? inquiryTask;
 
@@ -103,7 +91,7 @@ class WaveInterferenceScenario {
       amplitudeRange: _parseRange(pr, 'amplitude', 0.2, 3.0, 0.1),
       slitSizeRange: _parseRangeOrNull(pr, 'slitSize'),
       slitSeparationRange: _parseRangeOrNull(pr, 'slitSeparation'),
-      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => WICriterionConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       hints: (json['hints'] as List<dynamic>?)?.map((e) => WIHintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       inquiryTask: json['inquiryTask'] != null
           ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)

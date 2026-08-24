@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/scenario/success_condition.dart';
 import '../../common/widgets/inquiry_models.dart';
 
 /// Sound screen type.
@@ -28,25 +29,6 @@ class ParamRange {
   );
 }
 
-/// Success criterion for a sound scenario.
-class SoundCriterionConfig {
-  final String id, type, description;
-  final Map<String, dynamic> params;
-  const SoundCriterionConfig({
-    required this.id,
-    required this.type,
-    required this.description,
-    this.params = const {},
-  });
-  factory SoundCriterionConfig.fromJson(Map<String, dynamic> json) =>
-      SoundCriterionConfig(
-        id: json['id'] as String,
-        type: json['type'] as String,
-        description: json['description'] as String,
-        params: (json['params'] as Map<String, dynamic>?) ?? {},
-      );
-}
-
 /// Hint message with trigger condition.
 class SoundHintConfig {
   final String trigger, message;
@@ -69,7 +51,7 @@ class SoundScenario {
   final double amplitude;
   final ParamRange frequencyRange;
   final ParamRange amplitudeRange;
-  final List<SoundCriterionConfig> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<SoundHintConfig> hints;
   final InquiryTask? inquiryTask;
 
@@ -105,7 +87,7 @@ class SoundScenario {
       frequencyRange: _parseFRange(pr),
       amplitudeRange: _parseARange(pr),
       successCriteria: (json['successCriteria'] as List<dynamic>?)
-              ?.map((e) => SoundCriterionConfig.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       hints: (json['hints'] as List<dynamic>?)

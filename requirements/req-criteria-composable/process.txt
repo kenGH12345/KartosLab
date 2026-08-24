@@ -1,0 +1,15 @@
+[2026-08-21 10:00] 需求建档：LLM 生成能力第 3 层升级（玩法级）。范围=successCriteria 可组合条件（核心）+ GameRules 计分参数配置化（顺带）；教学剧本（多场景流程）明确排除、另行立项。前置对话已完成需求澄清（现状盘点/能力边界分层/方案取舍）。
+[2026-08-21 10:05] 侦查完成：8 sim criterion 类形态一致（id/type/description/params）；A 类 4 sim（molarity/color_vision/circuit/optics）判定已接线 every((c)=>c.check(...))；B 类 4 sim（sound/radio_waves/wave_interference/forces）纯数据类无判定消费；GameRules.scoreFormula 已解析未使用（calculateScore 硬编码 100-0.5*秒-10*违规）。
+[2026-08-21 10:10] phase 1→3 直接进入实施：本需求为通用能力升级（非新 sim 复刻），80-checklist 的 G1/G2/G3 适用——条件树上抽 lib/common/scenario/ 即 G3 第 3 用户强制上抽模式（第 1-8 用户=各 sim criterion）。
+[2026-08-21 11:20] 核心落地：lib/common/scenario/success_condition.dart（sealed 树 · Leaf/All/Any/Not · 深度上限 4 · fail loud FormatException → 场景级降级）。
+[2026-08-21 11:30] 8 sim 全员接入：A 类 4 个（molarity/color_vision/circuit/optics）判定链改 allSatisfied + evaluateLeaf 注入；B 类 4 个（sound/radio_waves/wave_interference/forces）删平铺 CriterionConfig 类、字段改 List<SuccessCondition>（判定本就未接线 · 零回归）。顺带修复：GameRules 计分参数配置化（baseScore/timePenaltyPerSecond/violationPenalty 可配 · 默认=原硬编码值 · scoreFormula 存量字段未动）。
+[2026-08-21 11:45] schema × 8 更新：definitions.criterion 改 oneOf 分发（criterionLeaf 保各自枚举 + criterionAll/Any/Not 递归 $ref）；python json.load 校验 8 份全过。
+[2026-08-21 12:00] prompt 链路：新建共享附录 docs/prompts/_shared/combinable_criteria.md（单一源）+ generate.py 追加拼接（py_compile 通过）+ 8 份 prompt 各加引用行（不复制正文）。
+[2026-08-21 12:15] AC-3 端到端：新增 assets/scenarios/molarity/precision-dilution.json（all + not 组合 · 平铺无法表达的否定语义）+ manifest 注册 + molarity 测试 5 新用例（含 rootBundle 全链路加载）。
+[2026-08-21 12:30] 一致性守卫升级：ai_scenario_gen_consistency_test 的 walk 从「oneOf 所有分支都要过」改为标准语义（任一分支接受即通过 · 不接受时合并分支问题）——组合条件对象在 criterionLeaf 分支必误报 all/not 未定义的缺陷修复。
+[2026-08-21 12:40] 验证全绿：全量 flutter test 339/339 通过（新增 27 用例：条件树 22 + molarity 端到端 5）；flutter analyze 新引入 0 issue（存量 38 info 不变 · 较改造前还少 9：unused import + test getter 修复连带）。schema 守卫 9/9。
+[2026-08-21 12:45] 知识沉淀：shared-abstraction-plan.md 登记候选 9（SuccessCondition · 8 使用者证据 + 接入模式 4 步 + 设计边界）。
+[2026-08-21 12:50] 待办移交：① svn commit 待用户审批 ② 教学剧本（多场景流程）单独立项 ③ B 类 4 sim 判定接线（存量债务 · 非本需求范围）④ GameRules.calculateScore 无调用者（存量 · 配置化已就绪待 UI 接线）。
+[2026-08-21 14:00] 追问根因（用户问"为什么会出现新 sim AI 不可接入"）：三因叠加——复刻需求配置化验收只看三件套 / AI 工具链闸门只验"生成+可解析" / 一致性守卫无 schema→运行时方向。侦查补充发现 molarity/optics 为"半接线"（判定器实现但 view 无 .checkObjectives( 消费 · 仅 rgb_bulbs_screen 与 circuit_screen 2 处真实消费），view 层真实消费矩阵比原 B/A 分类更细。
+[2026-08-21 14:10] 层 1 落地：test/tooling/scenario_runtime_wiring_test.dart（5 测试全过）——分类完备（schemas 发现 sim 必须在白名单∪豁免表 · 新 sim 无默认豁免）/ schema oneOf 结构锁定 / 求值器路径存在性 / 白名单（circuit）四环齐断言 / 豁免台账快照（7 条 · 半接线与未接线状态反向断言防过期）。
+[2026-08-21 14:15] 层 2 落地（用户 y="落地1+2" · 走 35 协议）：80-kratos-sim-checklist.mdc §二原则 4 加第 6 问（判定生效四环齐 · 含历史教训引用）+ 变更历史段追加记录。.claude/ 无镜像单端维护。

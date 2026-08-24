@@ -4,130 +4,358 @@
   "title": "Molarity Scenario",
   "description": "摩尔浓度 sim 的场景配置（对齐 lib/chemistry/molarity/config/molarity_scenario.dart）。",
   "type": "object",
-  "required": ["scenarioId", "name", "initialParams"],
+  "required": [
+    "scenarioId",
+    "name",
+    "initialParams"
+  ],
   "properties": {
-    "scenarioId": { "type": "string" },
-    "name": { "type": "string" },
-    "description": { "type": "string" },
-    "version": { "type": "string" },
+    "scenarioId": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
     "initialParams": {
       "type": "object",
-      "required": ["soluteIndex", "soluteAmount", "volume"],
+      "required": [
+        "soluteIndex",
+        "soluteAmount",
+        "volume"
+      ],
       "properties": {
-        "soluteIndex": { "type": "integer", "minimum": 0, "maximum": 8 },
-        "soluteAmount": { "type": "number", "minimum": 0, "maximum": 1 },
-        "volume": { "type": "number", "minimum": 0.2, "maximum": 1 },
-        "valuesVisible": { "type": "boolean" }
-      }
+        "soluteIndex": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "soluteAmount": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "volume": {
+          "type": "number",
+          "minimum": 0.2,
+          "maximum": 1
+        },
+        "valuesVisible": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
     },
     "paramRanges": {
       "type": "object",
       "properties": {
-        "soluteAmount": { "$ref": "#/definitions/paramRange" },
-        "volume": { "$ref": "#/definitions/paramRange" }
-      }
+        "soluteAmount": {
+          "$ref": "#/definitions/paramRange"
+        },
+        "volume": {
+          "$ref": "#/definitions/paramRange"
+        }
+      },
+      "additionalProperties": false
     },
-    "concentrationMax": { "type": "number", "minimum": 0 },
+    "concentrationMax": {
+      "type": "number",
+      "minimum": 0
+    },
     "solutes": {
       "type": "array",
       "minItems": 1,
       "maxItems": 9,
-      "items": { "$ref": "#/definitions/solute" }
+      "items": {
+        "$ref": "#/definitions/solute"
+      }
     },
     "performance": {
       "type": "object",
       "properties": {
-        "particlesPerMole": { "type": "integer", "minimum": 1, "maximum": 200 },
-        "particleSize": { "type": "number", "minimum": 1 }
-      }
+        "particlesPerMole": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "particleSize": {
+          "type": "number",
+          "minimum": 1
+        }
+      },
+      "additionalProperties": false
     },
     "successCriteria": {
       "type": "array",
-      "items": { "$ref": "#/definitions/criterion" }
+      "items": {
+        "$ref": "#/definitions/criterion"
+      }
     },
     "hints": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["trigger", "message"],
+        "required": [
+          "trigger",
+          "message"
+        ],
         "properties": {
-          "trigger": { "type": "string" },
-          "message": { "type": "string" }
-        }
+          "trigger": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       }
     },
     "inquiryTask": {
       "type": "object",
       "properties": {
-        "question": { "type": "string" },
+        "question": {
+          "type": "string"
+        },
         "steps": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "instruction"],
+            "required": [
+              "id",
+              "instruction"
+            ],
             "properties": {
-              "id": { "type": "string" },
-              "instruction": { "type": "string" },
-              "hint": { "type": "string" }
-            }
+              "id": {
+                "type": "string"
+              },
+              "instruction": {
+                "type": "string"
+              },
+              "hint": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
           }
         },
         "snapshotColumns": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["key", "label", "source"],
+            "required": [
+              "key",
+              "label",
+              "source"
+            ],
             "properties": {
-              "key": { "type": "string" },
-              "label": { "type": "string" },
-              "source": { "enum": ["param", "reading"] }
-            }
+              "key": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "param",
+                  "reading"
+                ]
+              }
+            },
+            "additionalProperties": false
           }
         },
-        "referenceConclusion": { "type": "string" }
-      }
+        "referenceConclusion": {
+          "type": "string"
+        },
+        "predictions": {
+          "type": "array",
+          "description": "先猜后验预测题。对应探究五阶段的「猜测」阶段——缺省或空数组时该阶段自动跳过，学生直接进入「任务」阶段。",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "question",
+              "options",
+              "answer"
+            ],
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "question": {
+                "type": "string"
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 2,
+                "description": "选项文本列表，通常 2-4 项"
+              },
+              "answer": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "正确选项在 options 中的下标（0 基）"
+              },
+              "explanation": {
+                "type": "string",
+                "description": "验证后展示的原理解析（建议填写，学生答错时是关键反馈）"
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
     }
   },
   "definitions": {
     "paramRange": {
       "type": "object",
-      "required": ["min", "max"],
+      "required": [
+        "min",
+        "max"
+      ],
       "properties": {
-        "min": { "type": "number" },
-        "max": { "type": "number" },
-        "step": { "type": "number" },
-        "unit": { "type": "string" }
-      }
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
     },
     "solute": {
       "type": "object",
-      "required": ["name", "formula", "saturatedConcentration", "solutionColorMin", "solutionColorMax", "particleColor"],
+      "required": [
+        "name",
+        "formula",
+        "saturatedConcentration",
+        "solutionColorMin",
+        "solutionColorMax",
+        "particleColor"
+      ],
       "properties": {
-        "name": { "type": "string" },
-        "formula": { "type": "string" },
-        "saturatedConcentration": { "type": "number", "minimum": 0 },
-        "solutionColorMin": { "$ref": "#/definitions/hexColor" },
-        "solutionColorMax": { "$ref": "#/definitions/hexColor" },
-        "particleColor": { "$ref": "#/definitions/hexColor" },
-        "particleSize": { "type": "number" },
-        "particlesPerMole": { "type": "integer" }
-      }
+        "name": {
+          "type": "string"
+        },
+        "formula": {
+          "type": "string"
+        },
+        "saturatedConcentration": {
+          "type": "number",
+          "minimum": 0
+        },
+        "solutionColorMin": {
+          "$ref": "#/definitions/hexColor"
+        },
+        "solutionColorMax": {
+          "$ref": "#/definitions/hexColor"
+        },
+        "particleColor": {
+          "$ref": "#/definitions/hexColor"
+        },
+        "particleSize": {
+          "type": "number"
+        },
+        "particlesPerMole": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
     },
     "criterion": {
+      "description": "叶子或组合条件。组合算子 all/any/not 可嵌套（解析端深度上限 4 层）。",
+      "oneOf": [
+        { "$ref": "#/definitions/criterionLeaf" },
+        { "$ref": "#/definitions/criterionAll" },
+        { "$ref": "#/definitions/criterionAny" },
+        { "$ref": "#/definitions/criterionNot" }
+      ]
+    },
+    "criterionLeaf": {
       "type": "object",
-      "required": ["id", "type", "description"],
+      "required": [
+        "id",
+        "type",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "solutionSaturated",
+            "concentrationReached",
+            "precipitateVisible",
+            "soluteChanged"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionAll": {
+      "type": "object",
+      "required": ["all"],
       "properties": {
         "id": { "type": "string" },
-        "type": {
-          "enum": ["solutionSaturated", "concentrationReached", "precipitateVisible", "soluteChanged"]
-        },
         "description": { "type": "string" },
-        "params": { "type": "object" }
-      }
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/criterion" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionAny": {
+      "type": "object",
+      "required": ["any"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/criterion" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "criterionNot": {
+      "type": "object",
+      "required": ["not"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "not": { "$ref": "#/definitions/criterion" }
+      },
+      "additionalProperties": false
     },
     "hexColor": {
       "type": "string",
       "pattern": "^#[0-9A-Fa-f]{6}$"
     }
-  }
+  },
+  "additionalProperties": false
 }

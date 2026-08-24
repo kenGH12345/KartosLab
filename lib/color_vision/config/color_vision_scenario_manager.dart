@@ -1,6 +1,7 @@
 ﻿import 'dart:ui';
 
 import '../../common/scenario/scenario_manager_base.dart';
+import '../../common/scenario/success_condition.dart';
 import '../model/color_vision_state.dart';
 import '../solver/photon_beam.dart';
 import 'color_vision_scenario.dart';
@@ -51,7 +52,10 @@ class ColorVisionScenarioManager
   bool checkObjectives(ColorVisionState state) {
     final s = _currentScenario;
     if (s == null || s.successCriteria.isEmpty) return false;
-    return s.successCriteria.every((c) => c.check(state));
+    return SuccessCondition.allSatisfied(
+      s.successCriteria,
+      (type, params) => CVCriterionConfig.evaluateLeaf(type, params, state),
+    );
   }
 
   ColorVisionState _build(ColorVisionScenario s) {

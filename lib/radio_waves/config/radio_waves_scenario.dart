@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/scenario/success_condition.dart';
 import '../../common/widgets/inquiry_models.dart';
 
 /// Radio-waves screen type.
@@ -28,19 +29,6 @@ class RWParamRange {
   );
 }
 
-/// Success criterion for a radio-waves scenario.
-class RWCriterionConfig {
-  final String id, type, description;
-  final Map<String, dynamic> params;
-  const RWCriterionConfig({required this.id, required this.type, required this.description, this.params = const {}});
-  factory RWCriterionConfig.fromJson(Map<String, dynamic> json) => RWCriterionConfig(
-    id: json['id'] as String,
-    type: json['type'] as String,
-    description: json['description'] as String,
-    params: (json['params'] as Map<String, dynamic>?) ?? {},
-  );
-}
-
 /// Hint message with trigger condition.
 class RWHintConfig {
   final String trigger, message;
@@ -63,7 +51,7 @@ class RadioWavesScenario {
   final bool dynamicFieldEnabled;
   final RWParamRange frequencyRange;
   final RWParamRange amplitudeRange;
-  final List<RWCriterionConfig> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<RWHintConfig> hints;
   final InquiryTask? inquiryTask;
 
@@ -101,7 +89,7 @@ class RadioWavesScenario {
       dynamicFieldEnabled: (ip?['dynamicFieldEnabled'] as bool?) ?? true,
       frequencyRange: _parseFRange(pr),
       amplitudeRange: _parseARange(pr),
-      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => RWCriterionConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       hints: (json['hints'] as List<dynamic>?)?.map((e) => RWHintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       inquiryTask: json['inquiryTask'] != null
           ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)

@@ -3,9 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:kratos/chemistry/molarity/config/molarity_criterion.dart';
 import 'package:kratos/chemistry/molarity/config/molarity_scenario.dart';
+import 'package:kratos/chemistry/molarity/config/molarity_scenario_manager.dart';
 import 'package:kratos/chemistry/molarity/model/molarity_state.dart';
 import 'package:kratos/chemistry/molarity/model/solution.dart';
 import 'package:kratos/chemistry/molarity/model/solvent.dart';
+import 'package:kratos/common/scenario/success_condition.dart';
 
 void main() {
   final sampleJson = <String, dynamic>{
@@ -152,6 +154,113 @@ void main() {
         'id': 'sc', 'type': 'unknown', 'description': '',
       });
       expect(c.check(stateWith(0.5, 0.5)), isFalse);
+    });
+  });
+
+  group('组合条件场景（req-criteria-composable · AC-3 端到端）', () {
+    // K₂Cr₂O₇（sat=0.50）组合目标：concentrationReached(0.45) 且 not(solutionSaturated)
+    final comboJson = <String, dynamic>{
+      'scenarioId': 'combo-test',
+      'name': '组合测试',
+      'initialParams': {'soluteIndex': 3, 'soluteAmount': 0.3, 'volume': 0.3},
+      'solutes': [
+        {
+          'name': '重铬酸钾',
+          'formula': 'K₂Cr₂O₇',
+          'saturatedConcentration': 0.50,
+          'solutionColorMin': '#FFE8D2',
+          'solutionColorMax': '#FF7F00',
+          'particleColor': '#FF7F00',
+        },
+      ],
+      'successCriteria': [
+        {
+          'id': 'g-1',
+          'description': '浓度 0.45 M 且不饱和',
+          'all': [
+            {
+              'id': 'sc-1',
+              'type': 'concentrationReached',
+              'description': '浓度达到 0.45 M',
+              'params': {'targetConcentration': 0.45, 'tolerance': 0.01},
+            },
+            {
+              'id': 'sc-2',
+              'description': '不得饱和',
+              'not': {
+                'id': 'sc-2n',
+                'type': 'solutionSaturated',
+                'description': '饱和',
+                'params': <String, dynamic>{},
+              },
+            },
+          ],
+        },
+      ],
+    };
+
+    MolarityState stateWith(double n, double v) {
+      final solute = MolarityScenario.fromJson(comboJson).solutes.first;
+      return MolarityState(
+        scenarioId: 'combo-test',
+        solutes: [solute],
+        solution:
+            Solution(solvent: const Solvent(), solute: solute, soluteAmount: n, volume: v),
+        initialSoluteIndex: 0,
+        initialSoluteAmount: 0.3,
+        initialVolume: 0.3,
+        initialValuesVisible: true,
+      );
+    }
+
+    test('解析为 AllCondition + 嵌套 NotCondition', () {
+      final s = MolarityScenario.fromJson(comboJson);
+      expect(s.successCriteria, hasLength(1));
+      final g = s.successCriteria[0];
+      expect(g, isA<AllCondition>());
+      expect(g.collectLeaves(), hasLength(2));
+      expect(g.collectLeaves()[0].type, 'concentrationReached');
+      expect(g.collectLeaves()[1].type, 'solutionSaturated');
+    });
+
+    test('判定链：0.45 M 不饱和 → 达成', () {
+      final s = MolarityScenario.fromJson(comboJson);
+      // 0.225 mol / 0.5 L = 0.45 M ≤ 0.50 → 不饱和
+      final met = SuccessCondition.allSatisfied(
+        s.successCriteria,
+        (type, params) => MolarityCriterion.evaluateLeaf(type, params, stateWith(0.225, 0.5)),
+      );
+      expect(met, isTrue);
+    });
+
+    test('判定链：过饱和（not 分支失败）→ 不达成', () {
+      final s = MolarityScenario.fromJson(comboJson);
+      // 0.3 mol / 0.3 L = 1.0 M > 0.50 → 饱和（沉淀）
+      final met = SuccessCondition.allSatisfied(
+        s.successCriteria,
+        (type, params) => MolarityCriterion.evaluateLeaf(type, params, stateWith(0.3, 0.3)),
+      );
+      expect(met, isFalse);
+    });
+
+    test('判定链：浓度不足（叶子失败）→ 不达成', () {
+      final s = MolarityScenario.fromJson(comboJson);
+      // 0.09 mol / 0.3 L = 0.30 M 不饱和但未达 0.45
+      final met = SuccessCondition.allSatisfied(
+        s.successCriteria,
+        (type, params) => MolarityCriterion.evaluateLeaf(type, params, stateWith(0.09, 0.3)),
+      );
+      expect(met, isFalse);
+    });
+
+    testWidgets('precision-dilution 场景经 rootBundle 全链路加载', (tester) async {
+      final mgr = MolarityScenarioManager();
+      await mgr.loadScenarios();
+      final s = mgr.findById('precision-dilution');
+      expect(s, isNotNull, reason: 'manifest 应注册 precision-dilution');
+      expect(s!.successCriteria, hasLength(1));
+      expect(s.successCriteria[0], isA<AllCondition>());
+      expect(s.successCriteria[0].collectLeaves(), hasLength(2));
     });
   });
 }

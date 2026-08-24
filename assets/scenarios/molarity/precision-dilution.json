@@ -1,0 +1,47 @@
+{
+  "scenarioId": "precision-dilution",
+  "name": "精确配制挑战",
+  "description": "K₂Cr₂O₇ 饱和浓度只有 0.50 M。从过饱和状态出发，把浓度精确调回 0.45 M 且不出现沉淀——本场景演示组合判定条件（all + not），平铺格式无法表达「不得饱和」这类否定语义。",
+  "version": "1.0",
+  "initialParams": {
+    "soluteIndex": 3,
+    "soluteAmount": 0.3,
+    "volume": 0.3,
+    "valuesVisible": true
+  },
+  "paramRanges": {
+    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.01, "unit": "mol" },
+    "volume": { "min": 0.2, "max": 1.0, "step": 0.01, "unit": "L" }
+  },
+  "concentrationMax": 5.0,
+  "solutes": [
+    { "name": "饮料粉", "formula": "Drink mix", "saturatedConcentration": 5.95, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "硝酸钴（II）", "formula": "Co(NO₃)₂", "saturatedConcentration": 5.65, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "氯化钴", "formula": "CoCl₂", "saturatedConcentration": 4.35, "solutionColorMin": "#FFF2F2", "solutionColorMax": "#FF6A6A", "particleColor": "#FF6A6A" },
+    { "name": "重铬酸钾", "formula": "K₂Cr₂O₇", "saturatedConcentration": 0.50, "solutionColorMin": "#FFE8D2", "solutionColorMax": "#FF7F00", "particleColor": "#FF7F00" },
+    { "name": "氯化金（III）", "formula": "AuCl₃", "saturatedConcentration": 2.25, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFD700", "particleColor": "#FFD700" },
+    { "name": "铬酸钾", "formula": "K₂CrO₄", "saturatedConcentration": 3.35, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFFF00", "particleColor": "#FFFF00" },
+    { "name": "氯化镍（II）", "formula": "NiCl₂", "saturatedConcentration": 5.2, "solutionColorMin": "#EAF4EA", "solutionColorMax": "#008000", "particleColor": "#008000" },
+    { "name": "硫酸铜", "formula": "CuSO₄", "saturatedConcentration": 1.40, "solutionColorMin": "#DEEEFF", "solutionColorMax": "#1E90FF", "particleColor": "#1E90FF" },
+    { "name": "高锰酸钾", "formula": "KMnO₄", "saturatedConcentration": 0.50, "solutionColorMin": "#FF00FF", "solutionColorMax": "#8B008B", "particleColor": "#000000" }
+  ],
+  "performance": { "particlesPerMole": 200, "particleSize": 5 },
+  "successCriteria": [
+    {
+      "id": "g-1",
+      "description": "浓度精确回到 0.45 M 且无沉淀（组合判定：all + not）",
+      "all": [
+        { "id": "sc-1", "type": "concentrationReached", "description": "浓度达到 0.45 M", "params": { "targetConcentration": 0.45, "tolerance": 0.01 } },
+        {
+          "id": "sc-2",
+          "description": "溶液不得饱和（无沉淀）",
+          "not": { "id": "sc-2n", "type": "solutionSaturated", "description": "溶液饱和", "params": {} }
+        }
+      ]
+    }
+  ],
+  "hints": [
+    { "trigger": "precipitateAmount > 0", "message": "还有沉淀——继续减少溶质量或加水，让所有溶质溶解。" },
+    { "trigger": "concentration < 0.44", "message": "浓度偏低了——0.45 M 意味着每升溶液 0.45 mol 溶质，再精确一点。" }
+  ]
+}

@@ -1,5 +1,6 @@
 ﻿import 'package:flutter/material.dart';
 
+import '../../common/scenario/success_condition.dart';
 import '../../common/widgets/inquiry_models.dart';
 import '../model/color_vision_state.dart';
 import '../solver/color_model.dart';
@@ -36,9 +37,14 @@ class CVCriterionConfig {
     description: json['description'] as String, params: (json['params'] as Map<String, dynamic>?) ?? {});
 
   /// 判定当前 [state] 是否达成该成功标准。
+  bool check(ColorVisionState state) => evaluateLeaf(type, params, state);
+
+  /// 叶子求值器（供 `SuccessCondition.evaluate` 回调注入）。
   ///
   /// 当前仅实现 `colorMatch`（按 targetColor 命名色匹配 · tolerance 默认 30）。
-  bool check(ColorVisionState state) {
+  /// 未知 type 一律 false（不 crash）。
+  static bool evaluateLeaf(
+      String type, Map<String, dynamic> params, ColorVisionState state) {
     switch (type) {
       case 'colorMatch':
         final target = params['targetColor'] as String?;
@@ -158,7 +164,7 @@ class ColorVisionScenario {
   final double customFilterR, customFilterG, customFilterB;
   final bool showPhotonView, showBeamView;
   final double personPosition;
-  final List<CVCriterionConfig> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<CVHintConfig> hints;
   final InquiryTask? inquiryTask;
   final CVChallengeConfig? challenge;
@@ -206,7 +212,7 @@ class ColorVisionScenario {
       showPhotonView: (ip?['showPhotonView'] as bool?) ?? true,
       showBeamView: (ip?['showBeamView'] as bool?) ?? false,
       personPosition: (ip?['personPosition'] as num?)?.toDouble() ?? 300,
-      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => CVCriterionConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       hints: (json['hints'] as List<dynamic>?)?.map((e) => CVHintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       inquiryTask: json['inquiryTask'] != null
           ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)

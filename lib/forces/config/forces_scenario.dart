@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../common/scenario/success_condition.dart';
 import '../../common/widgets/inquiry_models.dart';
 
 enum ForcesMode { netForce, motion, friction, acceleration }
@@ -37,15 +38,6 @@ class ObjectConfig {
     mass: (json['mass'] as num).toDouble(), icon: json['icon'] as String);
 }
 
-class ForcesCriterionConfig {
-  final String id, type, description;
-  final Map<String, dynamic> params;
-  const ForcesCriterionConfig({required this.id, required this.type, required this.description, this.params = const {}});
-  factory ForcesCriterionConfig.fromJson(Map<String, dynamic> json) => ForcesCriterionConfig(
-    id: json['id'] as String, type: json['type'] as String,
-    description: json['description'] as String, params: (json['params'] as Map<String, dynamic>?) ?? {});
-}
-
 class ForcesConstraintConfig {
   final String id, type, description;
   final Map<String, dynamic> params;
@@ -71,7 +63,7 @@ class ForcesScenario {
   final List<ObjectConfig> objects;
   final bool showAccelerometer;
   final List<ForcesConstraintConfig> constraints;
-  final List<ForcesCriterionConfig> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<ForcesHintConfig> hints;
   final InquiryTask? inquiryTask;
 
@@ -108,7 +100,7 @@ class ForcesScenario {
       objects: (json['objects'] as List<dynamic>?)?.map((e) => ObjectConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       showAccelerometer: (ip?['showAccelerometer'] as bool?) ?? false,
       constraints: (json['constraints'] as List<dynamic>?)?.map((e) => ForcesConstraintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
-      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => ForcesCriterionConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
+      successCriteria: (json['successCriteria'] as List<dynamic>?)?.map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       hints: (json['hints'] as List<dynamic>?)?.map((e) => ForcesHintConfig.fromJson(e as Map<String, dynamic>)).toList() ?? const [],
       inquiryTask: json['inquiryTask'] != null
           ? InquiryTask.fromJson(json['inquiryTask'] as Map<String, dynamic>)

@@ -9,12 +9,24 @@ class GameRules {
     this.timeLimit,
     this.scoreFormula,
     required this.penalties,
+    this.baseScore = 100,
+    this.timePenaltyPerSecond = 0.5,
+    this.violationPenalty = 10,
   });
 
   final bool enabled;
   final int? timeLimit;
   final String? scoreFormula;
   final List<Penalty> penalties;
+
+  /// 基础分（默认 100 · 原 calculateScore 硬编码值）。
+  final int baseScore;
+
+  /// 每秒耗时扣分（默认 0.5 · 原硬编码值）。
+  final double timePenaltyPerSecond;
+
+  /// 每个违规扣分（默认 10 · 原硬编码值）。
+  final int violationPenalty;
 
   // 计算得分
   int calculateScore(
@@ -25,11 +37,10 @@ class GameRules {
   ) {
     if (!enabled) return 0;
 
-    // 固定公式：基础分 100，每秒扣 0.5 分，每个违规扣 10 分
-    final baseScore = 100;
-    final timePenalty = (timeSpent * 0.5).toInt();
-    final violationPenalty = violationCount * 10;
-    return (baseScore - timePenalty - violationPenalty).clamp(0, 100);
+    final timePenalty = (timeSpent * timePenaltyPerSecond).toInt();
+    final violationPenaltyTotal = violationCount * violationPenalty;
+    return (baseScore - timePenalty - violationPenaltyTotal)
+        .clamp(0, baseScore);
   }
 
   // 从 JSON 加载
@@ -42,6 +53,10 @@ class GameRules {
               ?.map((e) => Penalty.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      baseScore: (json['baseScore'] as num?)?.toInt() ?? 100,
+      timePenaltyPerSecond:
+          (json['timePenaltyPerSecond'] as num?)?.toDouble() ?? 0.5,
+      violationPenalty: (json['violationPenalty'] as num?)?.toInt() ?? 10,
     );
   }
 
@@ -52,6 +67,9 @@ class GameRules {
       if (timeLimit != null) 'timeLimit': timeLimit,
       if (scoreFormula != null) 'scoreFormula': scoreFormula,
       'penalties': penalties.map((e) => e.toJson()).toList(),
+      'baseScore': baseScore,
+      'timePenaltyPerSecond': timePenaltyPerSecond,
+      'violationPenalty': violationPenalty,
     };
   }
 }

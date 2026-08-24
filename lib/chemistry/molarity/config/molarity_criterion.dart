@@ -2,7 +2,11 @@ import 'package:flutter/foundation.dart';
 
 import '../model/molarity_state.dart';
 
-/// 成功标准判定配置（对应 scenario JSON `successCriteria` 段）。
+/// 成功标准判定（叶子求值器 · 对应 scenario JSON `successCriteria` 段）。
+///
+/// 组合算子（`all`/`any`/`not` · 可嵌套）见
+/// `lib/common/scenario/success_condition.dart`——本类只负责叶子 `type`
+/// 的判定语义，作为叶子求值回调注入条件树。
 @immutable
 class MolarityCriterion {
   const MolarityCriterion({
@@ -26,7 +30,16 @@ class MolarityCriterion {
       );
 
   /// 判定当前 [state] 是否达成该标准。
-  bool check(MolarityState state) {
+  bool check(MolarityState state) => evaluateLeaf(type, params, state);
+
+  /// 叶子求值器（供 `SuccessCondition.evaluate` 回调注入）。
+  ///
+  /// 未知 type 一律 false（不 crash · 防御 AI 生成臆造枚举值）。
+  static bool evaluateLeaf(
+    String type,
+    Map<String, dynamic> params,
+    MolarityState state,
+  ) {
     final s = state.solution;
     switch (type) {
       case 'solutionSaturated':

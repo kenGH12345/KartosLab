@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../../common/scenario/success_condition.dart';
 import '../models/optical_element.dart';
 import '../models/optics_world.dart';
 import '../solvers/optics_solver.dart';
@@ -31,13 +32,17 @@ class LearningObjective {
 
   final ObjectiveType type;
   final String description;
-  final List<SuccessCriterion> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<Hint> hints;
   final ValidationConfig validation;
 
   // 检查是否达成教学目标
   bool checkAchieved(OpticsWorld world, SolvedOptics solved) {
-    return successCriteria.every((c) => c.check(world, solved));
+    return SuccessCondition.allSatisfied(
+      successCriteria,
+      (type, params) =>
+          SuccessCriterion.evaluateLeaf(type, params, world, solved),
+    );
   }
 
   // 获取适用的提示
@@ -52,7 +57,7 @@ class LearningObjective {
       type: _parseType(json['type'] as String),
       description: json['description'] as String,
       successCriteria: (json['successCriteria'] as List<dynamic>)
-          .map((e) => SuccessCriterion.fromJson(e as Map<String, dynamic>))
+          .map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>))
           .toList(),
       hints: (json['hints'] as List<dynamic>?)
               ?.map((e) => Hint.fromJson(e as Map<String, dynamic>))
@@ -100,10 +105,16 @@ class SuccessCriterion {
   final Map<String, dynamic> params;
 
   // 检查是否满足成功标准
-  bool check(OpticsWorld world, SolvedOptics solved) {
-    switch (type) {
+  bool check(OpticsWorld world, SolvedOptics solved) =>
+      evaluateLeaf(type.name, params, world, solved);
+
+  /// 叶子求值器（type 字符串 → 枚举 → 判定 · 供条件树回调注入）。
+  /// 未知 type 解析为 imageProperties（与既有 _parseType 行为一致）。
+  static bool evaluateLeaf(String type, Map<String, dynamic> params,
+      OpticsWorld world, SolvedOptics solved) {
+    switch (_parseType(type)) {
       case CriterionType.imageProperties:
-        return _checkImageProperties(solved);
+        return _checkImageProperties(params, solved);
       case CriterionType.elementPosition:
         return _checkElementPosition(world);
       case CriterionType.rayPath:
@@ -112,7 +123,8 @@ class SuccessCriterion {
   }
 
   // 检查图像属性
-  bool _checkImageProperties(SolvedOptics solved) {
+  static bool _checkImageProperties(
+      Map<String, dynamic> params, SolvedOptics solved) {
     final imageInfo = solved.imageInfo;
     if (imageInfo == null) return false;
 
@@ -133,7 +145,7 @@ class SuccessCriterion {
   }
 
   // 检查元件位置
-  bool _checkElementPosition(OpticsWorld world) {
+  static bool _checkElementPosition(OpticsWorld world) {
     // 检查是否至少有一个非光源元件在光轴上
     return world.elements.any((e) =>
       e.type != OpticalElementType.lightSource &&
@@ -141,7 +153,7 @@ class SuccessCriterion {
   }
 
   // 检查光线路径
-  bool _checkRayPath(SolvedOptics solved) {
+  static bool _checkRayPath(SolvedOptics solved) {
     // 至少有 1 条光线且有 2+ 个路径点（表示光线经过了元件交互）
     return solved.rays.any((r) => r.points.length >= 2);
   }

@@ -54,6 +54,7 @@ alwaysApply: true
 - [ ] `docs/prompts/<sim>_scenario.md` 是否已创建？（AI 可生成化 prompt）
 - [ ] UI 右侧参数面板是否通过 `PropertyControlPanel.fromScenarioParams` 生成？
 - [ ] 加载失败的场景是否降级为 default 场景（不 crash）？
+- [ ] successCriteria 的每个 type 枚举是否有运行时判定实现（`evaluateLeaf` case 分支）且 view 层有 `.checkObjectives(` 消费点？（**四环齐：schema+prompt+JSON+判定生效** · 参照 `shared-abstraction-plan.md` 候选 9 接入模式 · CI 守卫 `test/tooling/scenario_runtime_wiring_test.dart` 强制 · 历史教训：B 类 4 sim 曾长期"AI 可生成+schema 可校验+解析可成功"但判定永不生效的静默断链）
 
 ---
 
@@ -255,6 +256,13 @@ UI 类改动 commit 前**建议**（非强制）提供 **3 种视口截图**：
 ---
 
 ## 变更历史
+
+> 2026-08-21 by req-criteria-composable（用户确认"落地1+2"）：
+> §二原则 4 新增第 6 问——判定生效四环齐自检。
+> - 新增条款：successCriteria 每个 type 枚举须有 `evaluateLeaf` 运行时实现 + view 层 `.checkObjectives(` 消费点（四环齐 = schema+prompt+JSON+判定生效）
+> - 配套 CI 守卫：`test/tooling/scenario_runtime_wiring_test.dart`（白名单/豁免台账双向校验 · 新 sim 不给默认豁免）
+> - 触发原因：B 类 4 sim（sound/radio_waves/wave_interference/forces）长期"AI 可生成+schema 可校验+解析可成功"但判定永不生效的静默断链（`requirements/req-criteria-composable/process.txt` 根因分析）；另发现 molarity/optics 判定器实现了但 view 无消费点（半接线）
+> - 防御定位：本条是 checklist 层（设计期防御），与 CI 守卫（提交期防御）互为犄角
 
 > 2026-08-07 by 主会话（用户拍板"公共通用方案 · 所有 sim 都要支持 · 强制要遵守" + "全部立即迁移"）：
 > 新增 §七 L0-4 九宫格布局强制（NineGridLayout）· 阻塞级。

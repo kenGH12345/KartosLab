@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/scenario/success_condition.dart';
 import '../../../common/widgets/inquiry_models.dart';
 import '../model/color_range.dart';
 import '../model/solute.dart';
-import 'molarity_criterion.dart';
 
 /// 参数范围（min/max/step/unit）· 对应 JSON `paramRanges` 段。
 @immutable
@@ -73,7 +73,7 @@ class MolarityScenario {
   final double concentrationMax;
   final List<Solute> solutes;
   final PerformanceConfig performance;
-  final List<MolarityCriterion> successCriteria;
+  final List<SuccessCondition> successCriteria;
   final List<HintConfig> hints;
   final InquiryTask? inquiryTask;
 
@@ -102,7 +102,7 @@ class MolarityScenario {
           .toList(growable: false),
       performance: PerformanceConfig.fromJson(json['performance'] as Map<String, dynamic>?),
       successCriteria: (json['successCriteria'] as List<dynamic>? ?? const [])
-          .map((e) => MolarityCriterion.fromJson(e as Map<String, dynamic>))
+          .map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>))
           .toList(growable: false),
       hints: (json['hints'] as List<dynamic>? ?? const [])
           .map((e) => HintConfig.fromJson(e as Map<String, dynamic>))

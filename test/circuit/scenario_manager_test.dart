@@ -6,6 +6,7 @@ import 'package:kratos/circuit/config/circuit_scenario.dart';
 import 'package:kratos/circuit/config/circuit_learning_objective.dart';
 import 'package:kratos/circuit/config/scenario_manager.dart';
 import 'package:kratos/circuit/models/circuit_state.dart';
+import 'package:kratos/common/scenario/success_condition.dart';
 
 void main() {
   // ---------- 1 · default scenario (empty topology) ----------
@@ -283,8 +284,10 @@ void main() {
     final obj = scenario.objectives!;
     expect(obj.type.name, equals('guided'));
     expect(obj.successCriteria.length, equals(2));
-    expect(obj.successCriteria[0].type.name, equals('circuitClosed'));
-    expect(obj.successCriteria[1].type.name, equals('bulbBrightness'));
+    expect((obj.successCriteria[0] as LeafCondition).type,
+        equals('circuitClosed'));
+    expect((obj.successCriteria[1] as LeafCondition).type,
+        equals('bulbBrightness'));
     expect(obj.hints.length, equals(1));
     expect(obj.validation.autoCheck, isTrue);
   });
@@ -413,7 +416,10 @@ void main() {
 
   testWidgets('fuse-blown scenario loads via rootBundle and manager', (tester) async {
     final manager = CircuitScenarioManager();
-    await manager.loadScenarios();
+    // 必须 runAsync：testWidgets 里直接 await rootBundle.loadString 会把 Future
+    // 存进 CachingAssetBundle 缓存并绑定到本用例的 FakeAsync zone，用例结束后
+    // 该缓存项永久 pending，导致后续任何读同一 asset 的用例挂到超时。
+    await tester.runAsync(() => manager.loadScenarios());
     // 加载前验证场景已在 manifest 中
     expect(
       () => manager.loadScenario('fuse-blown'),

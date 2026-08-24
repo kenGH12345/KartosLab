@@ -1,8 +1,10 @@
 import '../../../common/scenario/scenario_manager_base.dart';
+import '../../../common/scenario/success_condition.dart';
 import '../model/molarity_state.dart';
 import '../model/solution.dart';
 import '../model/solute.dart';
 import '../model/solvent.dart';
+import 'molarity_criterion.dart';
 import 'molarity_scenario.dart';
 
 /// Molarity 场景管理器：继承公共 ScenarioManagerBase（§C1 启动路径）。
@@ -69,6 +71,9 @@ class MolarityScenarioManager
   bool checkObjectives(MolarityState state) {
     final scenario = findById(state.scenarioId);
     if (scenario == null || scenario.successCriteria.isEmpty) return true;
-    return scenario.successCriteria.every((c) => c.check(state));
+    return SuccessCondition.allSatisfied(
+      scenario.successCriteria,
+      (type, params) => MolarityCriterion.evaluateLeaf(type, params, state),
+    );
   }
 }

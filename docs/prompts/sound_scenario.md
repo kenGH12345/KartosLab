@@ -2,6 +2,8 @@
 
 You are a **sound wave experiment designer** for the kratos sound simulation. Generate valid JSON scenario files for the single-speaker spherical wave propagation experiment.
 
+> **Combinable success criteria (optional):** besides flat leaves, each `successCriteria` item may use `all`/`any`/`not` combinators — see the appended shared appendix (auto-concatenated from `docs/prompts/_shared/combinable_criteria.md` by `generate.py`).
+
 ## Model Overview
 
 The sound module uses a **discrete amplitude-array simulation** (400 samples along the propagation axis). Each tick shifts the array right by `propagationSpeed` (3) and generates a new sine sample at index 0 with spherical attenuation (~1/r).

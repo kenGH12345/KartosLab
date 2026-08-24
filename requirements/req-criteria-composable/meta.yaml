@@ -1,0 +1,22 @@
+req_id: req-criteria-composable
+title: successCriteria 可组合条件升级 + 计分规则配置化（LLM 生成能力第 3 层）
+status: in_progress
+phase: '4.closing'
+created_at: '2026-08-21 10:00'
+updated_at: '2026-08-21 12:50'
+repo_path: 'C:\workspace\kratosLab'
+
+design_constraints:
+  - 向后兼容：42 个现有场景 JSON 的平铺 successCriteria 格式必须零改动可加载
+  - L0 通用化：条件树放 lib/common/scenario/，各 sim 只提供叶子求值器
+  - fail loud：非法条件格式抛 FormatException → ScenarioManagerBase 单场景降级跳过
+  - 禁止自由 DSL：仅 all/any/not 三个组合算子 + 有限嵌套深度
+
+acceptance_criteria:
+  - AC-1: 通用条件树（all/any/not + 叶子）解析与递归求值，单测覆盖含非法格式
+  - AC-2: 现有全部场景 JSON 加载行为不变（向后兼容）
+  - AC-3: molarity 端到端接入判定链 + 1 个组合条件场景样例验证
+  - AC-4: 其余 7 sim 解析层接入（A 类 3 个接线判定，B 类 4 个保持现状不判定）
+  - AC-5: 8 份 schema 支持 oneOf 组合定义 + 8 份 prompt 文档补组合算子说明
+  - AC-6: GameRules 计分参数配置化（timePenaltyPerSecond / violationPenalty 可配，默认=现硬编码值）
+  - AC-7: flutter analyze 0 issues + 全量测试通过
