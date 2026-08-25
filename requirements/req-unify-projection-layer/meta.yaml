@@ -1,0 +1,29 @@
+﻿# meta.yaml — 投影层统一技术债
+req_id: req-unify-projection-layer
+title: 投影层统一技术债——两套平行投影合并公共层 + 消除混用转换 workaround + 命中检测上抽
+sop: agile-vibe
+phase: 4.closing
+status: done
+created_at: "2026-08-24 19:09"
+updated_at: "2026-08-25 10:23"
+completed_at: "2026-08-25 10:23"
+final_summary_path: "spec/最终需求.md"
+repo_path: 'c:\workspace\kratosLab'
+# 性质: 技术债重构 · 非新 sim 复刻 · 无 java_source / EDD / scenario 交付
+# 范围(用户确认三块全做):
+#   ① 投影类两套平行实现合并到公共层
+#   ② 消除 circuit_screen 混用两套投影的转换 workaround
+#   ③ 命中检测上抽公共层
+# 现状证据(主会话 2026-08-24 勘察):
+#   - CanvasProjection: lib/common/widgets/drag_drop_workspace.dart:16-22 (L0 公共层 · origin 固定 (w/2,h*0.55) · 无 zoom)
+#   - SceneProjection: lib/circuit/widgets/circuit_canvas.dart:5-9 (circuit 模块内 · origin 调用方传 · 有 zoom)
+#   - SceneProjection 第三处重复定义: lib/circuit/screens/circuit_screen.dart:1156
+#   - 混用转换 workaround: lib/circuit/screens/circuit_screen.dart:172-186 (_onComponentDrop 两套投影 world→screen→world 来回转换 · 注释自证"既有 bug，测试暴露")
+#   - 知识库踩坑单一源: docs/knowledge/kratos/frontend/drag-drop-workspace.md:30-40 (⚠️ 不共享基类警告 + Change-1 拖放错位实证 · 源自 req-ui-interaction-polish Major-1)
+#   - 命中检测分散: lib/common/elements/position_element.dart:37 (公共层唯一点) / _hitTestWire 两份平行实现 (lib/circuit/widgets/circuit_canvas.dart:135 + lib/circuit/screens/circuit_screen.dart:1057)
+design_constraints:
+  - L0 组件复用（lib/common/ · 禁止平行实现）
+  - 严格遵循 shared-abstraction-plan.md 三层体系（新公共组件须登记候选表）
+  - 重构不改变现有 sim 的视觉/交互行为（circuit/optics 拖放、点选、缩放须回归通过）
+acceptance_criteria:
+  - 待 product-manager 澄清后填写

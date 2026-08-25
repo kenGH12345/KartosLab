@@ -6,7 +6,7 @@
 
 - 需要在画布上绘制某种**纯视觉元素**（网格 / 导线 / 光线 / 透镜轮廓 / 元件高亮等）。
 - 该绘制**不接收手势**——命中检测由 Screen 层负责（见 [frontend/ui-framework.md](../frontend/ui-framework.md) 第一节「绘制与命中分离」）。
-- 已理解坐标系统一约定：所有屏幕坐标必须经 `CanvasProjection.toScreen` / `SceneProjection.toScreen`（光学 `drag_drop_workspace.dart:18`、电路 `circuit_screen.dart:312`）。
+- 已理解坐标系统一约定：所有屏幕坐标必须经 `SceneProjection.toScreen`（统一公共类，`lib/common/geometry/projection.dart`；DropCanvas 经 `projectionFactory` 注入或默认工厂产出）。
 
 ## 通用模式
 

@@ -23,8 +23,8 @@
         ↑ GestureDetector（最底层，接收所有手势）
 ```
 
-- **坐标系统一**：所有绘制与定位都经 `CanvasProjection`（光学，`drag_drop_workspace.dart:18`）或 `SceneProjection`（电路，`circuit_screen.dart:312`）的 `toScreen/toWorld` 转换。Widget 用 `Positioned(left: sp.dx - w/2, top: sp.dy - h/2)` 按屏幕坐标定位；Painter 用 `proj.toScreen` 画路径。
-- **绘制与命中分离**：命中检测在 Screen 层（`hitTest` / `_hitTestWire`，世界坐标），不在 Painter 内。Painter 只负责画，不判断点中与否。
+- **坐标系统一**：所有绘制与定位都经 `SceneProjection`（公共类，`lib/common/geometry/projection.dart`；2026-08-24 起两套旧投影 CanvasProjection/SceneProjection 已合并统一）的 `toScreen/toWorld` 转换。Widget 用 `Positioned(left: sp.dx - w/2, top: sp.dy - h/2)` 按屏幕坐标定位；Painter 用 `proj.toScreen` 画路径。
+- **绘制与命中分离**：命中检测在 Screen 层（`hitTest` / `_hitTestWire`，世界坐标），不在 Painter 内。Painter 只负责画，不判断点中与否。线段距离几何用公共纯函数 `pointToSegmentDistance`（`lib/common/geometry/hit_test.dart`）。
 
 ## 二、核心原语与实例
 

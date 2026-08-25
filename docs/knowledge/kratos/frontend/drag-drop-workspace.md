@@ -11,7 +11,7 @@
 | 字段 | 类型 | 说明 |
 |---|---|---|
 | `items` | `List<DragItem<T>>` | 元件库卡片 |
-| `canvasBuilder` | `Widget Function(BuildContext, CanvasProjection)` | 画布构建器，注入当前投影 |
+| `canvasBuilder` | `Widget Function(BuildContext, SceneProjection, Size)` | 画布构建器，注入当前投影 + 画布尺寸 |
 | `onItemDropped` | `void Function(T, Offset)` | 放置回调，参数是**世界坐标** |
 | `layout` | `DragDropLayout.sideTray / bottomTray` | 侧边栏 / 底部托盘 |
 | `scale` | `double` | 世界→屏幕缩放（光学传 20，电路默认 1） |
@@ -20,24 +20,29 @@
 - 侧栏布局：`Row[ tray | canvas | rightPanel ]`
 - 底部布局：`Column[ canvas | bottomPanel | tray ]`
 
-## 坐标投影 `CanvasProjection` / `SceneProjection`
+## 坐标投影 `SceneProjection`（已统一 · 2026-08-24）
 
-| 类 | 来源 | 公式 |
+> **已统一**（req-unify-projection-layer）：原两套平行投影（`CanvasProjection` + `SceneProjection`×2 处重复定义）合并为公共层唯一类 **`SceneProjection`**（`lib/common/geometry/projection.dart`）。下表保留历史语义供追溯。
+
+| 历史类 | 原位置 | 语义（现由 SceneProjection 参数承载） |
 |---|---|---|
-| `CanvasProjection` | `drag_drop_workspace.dart:18` | `origin = (w/2, h*0.55)`；`toScreen = origin + w*scale`；`toWorld = (s-origin)/scale` |
-| `SceneProjection` | `circuit_screen.dart`（`CircuitScreen` 内） | `origin = (w/2, h/2)`；额外支持 `zoom` 字段 |
+| `CanvasProjection`（已删） | 原 drag_drop_workspace.dart:16-22 | `origin=(w/2, h*0.55)`；`toScreen = origin + w*scale`；无 zoom |
+| `SceneProjection`（重复定义已删） | 原 circuit_canvas.dart:5-11（死文件已删）+ 原 circuit_screen.dart:1156-1172 | origin 调用方传入 + zoom 可选 |
 
-> ⚠️ 两个投影类**不共享基类**：光学用 `CanvasProjection`（光轴在 55% 高度），电路用 `SceneProjection`（原点居中 + zoom）。新增画布时不要混用。
+统一后消费模式（详见 `shared-abstraction-plan.md` 候选 10）：
+- **circuit 范式（推荐）**：`DropCanvas(projectionFactory: (sz) => SceneProjection(origin: ..., zoom: ...))`——渲染/hitTest/拖放落点共用同一投影实例
+- **optics 范式（光轴类）**：不传工厂，默认工厂 origin=(w/2, h*0.55) + `scale` 参数
 
-### Change-1 (2026-08-11) · 混用两套投影的原点/缩放不一致实证（拖放错位）
+### Change-1 (2026-08-11) · 混用两套投影的原点/缩放不一致实证（拖放错位）→ 已根治
 
 > 来源: `req-ui-interaction-polish` · Major-1 · 踩坑单一源在 `../notes.md`（2026-08-11 坑 1）。
+> **根治**: `req-unify-projection-layer` MT-4（2026-08-24）——DropCanvas 增加 `projectionFactory`，circuit 渲染/hitTest/拖放共用同一投影实例，workaround 整体删除。
 
 - **现象**：电路屏拖放元件后错位、点选不中。
 - **根因**：`_DropCanvas` 放置路径用 `CanvasProjection`（origin=(W/2, H×0.55)），而电路渲染/hitTest 用 `SceneProjection`（origin=(W/2, H/2)）——**origin 不同 + 缩放硬编码 `zoom:1` 而渲染用 `_state.zoom`（0.6~2.0）**。
-- **解决**：`_onComponentDrop` 把 `CanvasProjection` 的 world 转回 screenLocal，再用**当前 `_state.zoom`** 构造 `SceneProjection` 转 world（`circuit_screen.dart:179-183`）。
-- **通用教训**：涉及投影/命中坐标换算时，**缩放系数必须从组件内部状态读取，不可用默认值硬编码**。
-- **同类风险**：其他接 `DropCanvas` 的 sim（optics 等）需核查是否也存在"放置 vs 渲染/hitTest"投影不一致。
+- **当时的解决**（已删除）：`_onComponentDrop` 把 `CanvasProjection` 的 world 转回 screenLocal，再用当前 `_state.zoom` 构造 `SceneProjection` 转 world。
+- **根治后**：`DropCanvas.projectionFactory` 注入，拖放落点与渲染天然同坐标系，无需任何转换。
+- **通用教训**（仍然有效）：涉及投影/命中坐标换算时，**缩放系数必须从组件内部状态读取，不可用默认值硬编码**；更根本的是**不要混用两套投影**。
 
 ## 拖放数据流（mermaid）
 
@@ -46,7 +51,7 @@ sequenceDiagram
     participant U as 用户
     participant Card as _Card (Draggable)
     participant DC as _DropCanvas (DragTarget)
-    participant P as CanvasProjection
+    participant P as SceneProjection
     participant S as Screen State
     U->>Card: 拖拽元件
     Card->>DC: onAcceptWithDetails(data, offset)
@@ -59,13 +64,15 @@ sequenceDiagram
 
 | 文件 | 内容 |
 |---|---|
-| `lib/widgets/drag_drop_workspace.dart` | `DragItem`、`DragDropLayout`、`CanvasProjection`、`DragDropWorkspace`、`_Card`、`_DropCanvas` |
-| `lib/screens/circuit_screen.dart:312` | `SceneProjection` 类（电路专用投影） |
-| `lib/screens/optics_screen.dart` | 光学 `_OpticsScene` 使用 `CanvasProjection` |
+| `lib/common/widgets/drag_drop_workspace.dart` | `DragItem`、`DragDropLayout`、`DragTray`、`DragItemCard`、`DropCanvas`（含 `projectionFactory`）、`DragDropWorkspace` |
+| `lib/common/geometry/projection.dart` | `SceneProjection` 统一投影类（唯一定义） |
+| `lib/common/geometry/hit_test.dart` | `pointToSegmentDistance` 线段命中几何纯函数 |
+| `lib/circuit/screens/circuit_screen.dart` | circuit 消费方（projectionFactory 注入 + `_hitTestWire` 编排） |
+| `lib/optics/screens/optics_screen.dart` | 光学 `_OpticsScene` 使用默认工厂投影（0.55 光轴） |
 
 ## 设计要点
 
-- `_DropCanvas` 用 `LayoutBuilder` 拿画布尺寸，构建 `CanvasProjection` 后传给 `canvasBuilder`。
+- `_DropCanvas` 用 `LayoutBuilder` 拿画布尺寸，经 `projectionFactory`（或默认工厂）构建 `SceneProjection` 后传给 `canvasBuilder`（第三参数为画布尺寸）。
 - 放置时 `box.globalToLocal(d.offset)` 转成画布局部坐标，再 `proj.toWorld` 转世界坐标 —— **回调里拿到的永远是 world 坐标**。
 - 元件图标用 `IgnorePointer` 包裹，避免拦截画布手势（点击/拖拽穿透到 `GestureDetector`）。
 
@@ -85,7 +92,7 @@ _Card (Draggable<T>)               _DropCanvas (DragTarget<T>)
 - **拖起**：`_Card` 是 `Draggable<T>`，`data` 携带 `T`（电路 `ComponentType` / 光学 `String`）；`feedback` 是拖拽时跟随手指的浮起卡片，`childWhenDragging` 是原位残影（40% 透明）。
 - **落下**：`_DropCanvas` 是 `DragTarget<T>`，`onAcceptWithDetails` 拿到 `d.data`(类型 T) 和 `d.offset`(全局坐标)；先 `box.globalToLocal` 转画布局部坐标，再 `proj.toWorld` 转**世界坐标**，最后回调 `onItemDropped(T, worldPos)`。
 - **放置高亮**：`DragTarget.builder` 当 `cand.isNotEmpty` 时在 `Stack` 顶层盖一层蓝色半透明蒙版 + "释放以放置元件" 文案。
-- **坐标链路**：`global → local（findRenderObject）→ world（CanvasProjection.toWorld）`，Screen 拿到的永远是 world 坐标，与缩放/原点无关。
+- **坐标链路**：`global → local（findRenderObject）→ world（SceneProjection.toWorld）`，Screen 拿到的永远是 world 坐标，与缩放/原点无关。
 
 > 事件不跨模块：拖放事件只在 `_DropCanvas` → `onItemDropped` → Screen 私有方法之间流动，**无任何全局事件总线**（项目无 Provider/Riverpod/Stream 共享）。
 
@@ -96,14 +103,14 @@ _Card (Draggable<T>)               _DropCanvas (DragTarget<T>)
 | 原语 | 用途 | 本项目实例 |
 |---|---|---|
 | `StatelessWidget` | 纯展示/无状态组件 | `DragDropWorkspace`/`_Card`/`_DropCanvas`/`_OpticsScene`/`ComponentIconWidget` 等——**全部无内部状态**，状态上提到 Screen |
-| `LayoutBuilder` | 拿父容器约束尺寸 | `_DropCanvas.build` 用 `c.maxWidth/maxHeight` 建 `CanvasProjection` |
+| `LayoutBuilder` | 拿父容器约束尺寸 | `_DropCanvas.build` 用 `c.maxWidth/maxHeight` 经工厂构建 `SceneProjection` |
 | `Stack` + `Positioned` | 绝对定位叠层（画布 + 元件 + 光线） | 电路 `_buildCanvas`（`circuit_screen.dart:281`）、光学 `_OpticsScene`——元件用 `Positioned` 按 `proj.toScreen` 定位 |
 | `CustomPainter` + `CustomPaint` | 命令式 Canvas 绘制（网格/导线/光线/透镜轮廓） | `CircuitPainter`/`_LensPainter`/`_RayPainter`——绘制与命中检测分离 |
 | `GestureDetector` | 手势（tap/scale/drag） | 电路/光学画布底层手势，事件穿透到它 |
 | `Draggable` / `DragTarget` | 拖放 | `drag_drop_workspace.dart` 的 `_Card`/`_DropCanvas` |
 | `SvgPicture.asset` | SVG 图标/图像 | 光学光源（`pencil.svg`）、像的渲染（按 `imageHeight` 动态缩放） |
 
-**核心范式**：`CustomPainter` 负责"画"（世界坐标 → 屏幕坐标由 `CanvasProjection` 转换），`Stack` 上的 `Widget` 负责"元件图标/面板"等交互 UI，`GestureDetector` 负责"交互"，三者通过 `CanvasProjection` 坐标系统一。命中检测在 Screen 层用 `hitTest`/`_hitTestWire`（世界坐标），不在 Painter 内。
+**核心范式**：`CustomPainter` 负责"画"（世界坐标 → 屏幕坐标由 `SceneProjection` 转换），`Stack` 上的 `Widget` 负责"元件图标/面板"等交互 UI，`GestureDetector` 负责"交互"，三者通过 `SceneProjection` 坐标系统一。命中检测在 Screen 层用 `hitTest`/`_hitTestWire`（世界坐标），不在 Painter 内。
 
 详见 `[frontend/ui-framework.md](ui-framework.md)`（UI 渲染框架专项）。
 

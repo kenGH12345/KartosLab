@@ -258,6 +258,32 @@ abstract class ScenarioManagerBase<TScenario> {
 
 **设计边界**：仅三个组合算子（且/或/非）+ 有限嵌套深度，**不做自由 DSL**——枚举保证判定器可实现，组合扩展表达力；教师想要的「时间限制类判定」（如 60 秒内完成）属于**新叶子 type**（需 sim 侧实现求值），不属于组合算子范畴。
 
+### 候选 10 · SceneProjection 统一画布投影（✅ 已落地 · 2026-08-24 · req-unify-projection-layer）
+
+**状态**：已落地 `lib/common/geometry/projection.dart`。由两套平行投影（不共享基类、混用致拖放错位）合并统一。
+
+**证据**（2 使用者 · 门禁 §七-1 满足）：
+- 用户 1：optics（DropCanvas 默认工厂 origin=(w/2,h*0.55) + scale=20 · `_OpticsScene`/`_RayPainter`/`_FocalPointsPainter` 类型来源，optics_screen.dart）
+- 用户 2：circuit（`DropCanvas.projectionFactory` origin=(w/2,h/2)+zoom · `_buildCanvas`/`CircuitPainter`/`_hitTestWire` 类型来源，circuit_screen.dart）
+
+**合并来源**（3 处平行定义清零）：
+- CanvasProjection（原 `lib/common/widgets/drag_drop_workspace.dart:16-22` · optics 系 · origin 固定 0.55H 无 zoom）
+- SceneProjection（原 `lib/circuit/widgets/circuit_canvas.dart:5-11` · 死代码随文件删除）
+- SceneProjection（原 `lib/circuit/screens/circuit_screen.dart:1156-1172` · 重复定义删除）
+
+**已抽象内容**：world↔screen 仿射投影（`screen = world × scale × zoom + origin`；origin 注入 + scale 默认 1.0 + zoom 默认 1.0 + `toScreen`/`toWorld`/`toScreenLength`/`effectiveScale`）。两旧实现数学 100% 同构，**不抽基类**（无第二形态支撑，抽象属过度设计）。
+
+**接入模式**（新 sim 必须遵循）：
+- 拖放画布用 `DropCanvas(projectionFactory: (sz) => SceneProjection(origin: ..., zoom: ...))` 注入——渲染/hitTest/拖放落点共用同一投影实例（circuit 范式，勿再走默认工厂后自行转换）
+- 光轴类 sim（world 原点在非中心高度）不传工厂，用默认工厂（0.55H 语义，optics 范式）+ `scale` 参数
+- **禁止再建平行投影类**（`grep -rn "class \w*Projection" lib/` 应唯一命中公共层）
+
+**伴生抽象**：`pointToSegmentDistance`（`lib/common/geometry/hit_test.dart` · 点到线段距离纯函数 · 1 使用者 circuit `_hitTestWire` · 零域依赖随投影统一伴生上抽 · 纯函数无 API 演进风险）
+
+**踩坑单一源**：`frontend/drag-drop-workspace.md` 原⚠️两套投影警告已随本需求失效（该文档已同步更新）。
+
+**验证**：`test/common/geometry/projection_test.dart` 11 用例（两旧语义等价性锚定 + zoom 三档往返恒等）+ `hit_test_test.dart` 9 用例（与旧内联公式逐位对拍）+ 全量回归 364 测试通过 + integration_test circuit 12 交互用例通过（拖放落点/点选/zoom）。
+
 ---
 
 ## 三、明确不抽象（L2 · 模块专属）

@@ -107,13 +107,14 @@
 - **根因**：批量加 `lib/circuit/config/` 5 个文件时按算数加，但同期可能有别处删除未同步。
 - **保底手段**：每次改文件数前跑 `Get-ChildItem lib -Recurse -Filter '*.dart' | Measure-Object`；不要凭"上次 + 增量"心算。
 
-### 2026-08-11 · CanvasProjection 与 SceneProjection 投影原点不一致 → 拖放错位（含缩放教训）
+### 2026-08-11 · CanvasProjection 与 SceneProjection 投影原点不一致 → 拖放错位（含缩放教训）· 2026-08-24 已根治
 
 - **现象**：电路屏拖放元件后位置错位、点选不中（`req-ui-interaction-polish`，Major-1）。
 - **根因**：`DropCanvas` 放置用 `CanvasProjection`（origin=(W/2, H×0.55)），而电路渲染/hitTest 用 `SceneProjection`（origin=(W/2, H/2)）——**两套投影原点不同**；且 `_onComponentDrop` 转换硬编码 `zoom:1`，渲染/命中却用 `_state.zoom`（0.6~2.0 可调）。
-- **解决**：`_onComponentDrop` 中把 `CanvasProjection` 的 world 转回 screenLocal，再用**当前 `_state.zoom`** 构造 `SceneProjection` 转 world（`circuit_screen.dart:179-183`）。
-- **教训（重要）**：涉及投影/命中坐标换算时，**缩放系数必须从组件内部状态读取，不可用默认值硬编码**。
-- **同类风险检查**：其他接 `DropCanvas` 的 sim（optics 等）需核查是否也存在"放置用 CanvasProjection、渲染/hitTest 用 SceneProjection"的原点不一致问题。
+- **当时的解决（治标 · 已删除）**：`_onComponentDrop` 中把 `CanvasProjection` 的 world 转回 screenLocal，再用当前 `_state.zoom` 构造 `SceneProjection` 转 world。
+- **根治（`req-unify-projection-layer` · 2026-08-24）**：两套投影合并为公共层唯一 `SceneProjection`（`lib/common/geometry/projection.dart`）；`DropCanvas` 增加 `projectionFactory`，circuit 注入后拖放落点与渲染/hitTest **共用同一投影实例**，转换 workaround 整体删除。接线契约由 `test/common/geometry/projection_wiring_test.dart` 锁定（防回退）。
+- **教训（重要）**：涉及投影/命中坐标换算时，**缩放系数必须从组件内部状态读取，不可用默认值硬编码**；更根本的是——**同一画面不要存在两套坐标投影**，平行实现迟早混用。
+- **同类风险检查**：新 sim 接 `DropCanvas` 一律用 `SceneProjection` + `projectionFactory`（详见 `shared-abstraction-plan.md` 候选 10），**禁止再建平行投影类**。
 
 ### 2026-08-11 · GestureDetector 含 onDoubleTap 时 onTapUp 延迟
 
