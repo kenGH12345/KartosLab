@@ -10,6 +10,8 @@ import '../services/sound_effects.dart';
 import '../widgets/component_icon.dart';
 import '../widgets/circuit_controls.dart';
 import '../../common/widgets/drag_drop_workspace.dart';
+import '../../common/geometry/projection.dart';
+import '../../common/geometry/hit_test.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/widgets/inquiry_models.dart';
@@ -50,7 +52,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
   Offset? _doubleTapWorld;
   bool _objectiveMetNotified = false;
   bool _inquiryOpen = true; // 预测阶段默认展开：进入即见预测题（置顶），可手动收起
-  Size? _canvasSize; // DropCanvas 画布尺寸（拖放投影转换用）
 
   String _vid() => 'v${_nextId++}';
   String _cid() => 'c${_nextId++}';
@@ -169,21 +170,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
   void _onComponentDrop(ComponentType type, Offset worldPos) {
     _isToolboxDropActive = true;
     try {
-      // DropCanvas 放置坐标基于 CanvasProjection（origin=(W/2, H*0.55)）→
-      // 转换到 SceneProjection（origin=(W/2, H/2)）坐标系，保证渲染与 hitTest 一致。
-      // （否则拖放后元件渲染位置偏移、点击无法选中——既有 bug，测试暴露）
-      final size = _canvasSize;
-      if (size != null) {
-        final canvasProj = CanvasProjection(canvasSize: size, scale: 1.0);
-        final screenLocal = canvasProj.toScreen(worldPos);
-        final sceneProj = SceneProjection(
-          scale: 1,
-          origin: Offset(size.width / 2, size.height / 2),
-          // 用当前 zoom（Major-1 评审修复）：渲染/hitTest 用 _state.zoom，缩放后拖放坐标一致
-          zoom: _state.zoom,
-        );
-        worldPos = sceneProj.toWorld(screenLocal);
-      }
+      // worldPos 来自 DropCanvas 注入的同一投影实例（projectionFactory），
+      // 与渲染/hitTest 坐标系天然一致，无需再转换（req-unify-projection-layer MT-4 根治）。
       _addComponent(type, worldPos);
     } finally {
       _isToolboxDropActive = false;
@@ -796,12 +784,13 @@ class _CircuitScreenState extends State<CircuitScreen> {
             NineGridLayout(
               // 中间格 = 纯电路画布 · 面积 ≥ 70% 屏 · DragTarget 接收元件
               center: DropCanvas<ComponentType>(
-              canvasBuilder: (_, wsProj) {
-                _canvasSize = wsProj.canvasSize;
-                return _buildCanvas(wsProj.canvasSize);
-              },
+              // 工厂注入：渲染/hitTest/拖放落点共用同一投影实例（origin 居中 + 当前 zoom）
+              projectionFactory: (sz) => SceneProjection(
+                origin: Offset(sz.width / 2, sz.height / 2),
+                zoom: _state.zoom,
+              ),
+              canvasBuilder: (_, proj, sz) => _buildCanvas(sz, proj),
               onItemDropped: _onComponentDrop,
-              scale: 1.0,
             ),
               // 底部中格 = 元件托盘（永久 UI · 贴屏底；临时调节条在画布内跟随选中元件）
               bottomCenter: DragTray<ComponentType>(
@@ -903,13 +892,8 @@ class _CircuitScreenState extends State<CircuitScreen> {
     );
   }
 
-  Widget _buildCanvas(Size sz) {
+  Widget _buildCanvas(Size sz, SceneProjection proj) {
     final pw = _solved;
-    final proj = SceneProjection(
-      scale: 1,
-      origin: Offset(sz.width / 2, sz.height / 2),
-      zoom: _state.zoom,
-    );
     final isWire = _state.selected != null
         ? false
         : _state.selectedId != null &&
@@ -1068,12 +1052,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
       ];
       var md = double.infinity;
       for (var j = 0; j < pts.length - 1; j++) {
-        final ab = pts[j + 1] - pts[j], ap = sp - pts[j];
-        final ls = ab.distanceSquared,
-            t = ls == 0 ? 0 : (ap.dx * ab.dx + ap.dy * ab.dy) / ls;
         md = math.min(
           md,
-          (sp - (pts[j] + ab * (t.clamp(0.0, 1.0) as double))).distance,
+          pointToSegmentDistance(sp, pts[j], pts[j + 1]),
         );
       }
       if (md < 15) return i;
@@ -1151,24 +1132,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
       ],
     );
   }
-}
-
-class SceneProjection {
-  final double scale;
-  final Offset origin;
-  final double zoom;
-  const SceneProjection({
-    required this.scale,
-    required this.origin,
-    this.zoom = 1.0,
-  });
-  Offset toScreen(Offset w) =>
-      Offset(w.dx * scale * zoom + origin.dx, w.dy * scale * zoom + origin.dy);
-  Offset toWorld(Offset s) => Offset(
-    (s.dx - origin.dx) / (scale * zoom),
-    (s.dy - origin.dy) / (scale * zoom),
-  );
-  double toScreenLength(double w) => w * scale * zoom;
 }
 
 class CircuitPainter extends CustomPainter {

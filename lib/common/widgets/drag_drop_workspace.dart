@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
+import '../geometry/projection.dart';
+
 class DragItem<T extends Object> {
   final T data;
   final String label;
@@ -12,14 +14,6 @@ class DragItem<T extends Object> {
 }
 
 enum DragDropLayout { sideTray, bottomTray }
-
-class CanvasProjection {
-  final Size canvasSize; final double scale;
-  CanvasProjection({required this.canvasSize, this.scale = 1.0});
-  Offset get origin => Offset(canvasSize.width / 2, canvasSize.height * 0.55);
-  Offset toScreen(Offset w) => Offset(origin.dx + w.dx * scale, origin.dy + w.dy * scale);
-  Offset toWorld(Offset s) => Offset((s.dx - origin.dx) / scale, (s.dy - origin.dy) / scale);
-}
 
 /// 拖拽元件卡片（Draggable · 供托盘 / 任意容器复用）。
 class DragItemCard<T extends Object> extends StatelessWidget {
@@ -119,17 +113,29 @@ class DragTray<T extends Object> extends StatelessWidget {
 
 /// 可拖放画布（原 DragDropWorkspace._DropCanvas · DragTarget 接收托盘元件）。
 class DropCanvas<T extends Object> extends StatelessWidget {
-  const DropCanvas({super.key, required this.canvasBuilder, required this.onItemDropped, this.scale = 1.0});
+  const DropCanvas({super.key, required this.canvasBuilder, required this.onItemDropped, this.scale = 1.0, this.projectionFactory});
 
-  final Widget Function(BuildContext, CanvasProjection) canvasBuilder;
+  /// 画布内容构建器。第三参数 canvasSize 供 SizedBox/CustomPaint 定尺寸
+  /// （替代原 CanvasProjection.canvasSize 的消费场景）。
+  final Widget Function(BuildContext, SceneProjection, Size) canvasBuilder;
+
+  /// 落点回调（world 坐标 · 与 canvasBuilder 收到的投影同实例产出）。
   final void Function(T, Offset) onItemDropped;
+
+  /// 世界单位→屏幕像素换算（仅默认工厂使用；提供 projectionFactory 时被忽略）。
   final double scale;
+
+  /// 画布投影工厂。null = 默认工厂（origin=(w/2, h*0.55)，即旧 CanvasProjection 语义，
+  /// optics 光轴行为依赖此值）。sim 渲染/hitTest 与拖放落点共用同一投影实例时必传
+  /// （如 circuit: origin=(w/2,h/2)+zoom），可整体删除坐标转换 workaround。
+  final SceneProjection Function(Size canvasSize)? projectionFactory;
 
   @override
   Widget build(BuildContext context) => LayoutBuilder(builder: (ctx, c) {
     final sz = Size(c.maxWidth, c.maxHeight);
-    final proj = CanvasProjection(canvasSize: sz, scale: scale);
-    final content = canvasBuilder(context, proj);
+    final proj = projectionFactory?.call(sz) ??
+        SceneProjection(origin: Offset(sz.width / 2, sz.height * 0.55), scale: scale);
+    final content = canvasBuilder(context, proj, sz);
     return DragTarget<T>(onWillAcceptWithDetails: (_) => true,
         onAcceptWithDetails: (d) {
           final box = ctx.findRenderObject() as RenderBox;
@@ -161,7 +167,7 @@ class DragDropWorkspace<T extends Object> extends StatelessWidget {
   final DragDropLayout layout;
   final String trayTitle;
   final List<DragItem<T>> items;
-  final Widget Function(BuildContext, CanvasProjection) canvasBuilder;
+  final Widget Function(BuildContext, SceneProjection, Size) canvasBuilder;
   final void Function(T, Offset) onItemDropped;
   final double traySize;
   final double scale;

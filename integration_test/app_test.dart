@@ -154,7 +154,9 @@ void main() {
     });
 
     // 注：以下"放置→选中→工具条"测试暴露的深层 bug 链已在 req-ui-interaction-polish 修复部分：
-    //   ① 拖放投影不一致（CanvasProjection 0.55H vs SceneProjection 0.5H）→ 已修 _onComponentDrop（含 Major-1 zoom）
+    //   ① 拖放投影不一致（CanvasProjection 0.55H vs SceneProjection 0.5H）→ 已由 req-unify-projection-layer 根治：
+    //      投影类统一到 lib/common/geometry/projection.dart，DropCanvas.projectionFactory 注入使拖放/渲染/hitTest 同源，
+    //      原 _onComponentDrop 坐标转换 workaround 已整体删除
     //   ② GestureDetector 含 onDoubleTap → onTapUp 延迟（double-tap 超时窗口）→ 测试已加 350ms 等待
     //   ③ 选中元件后 CircuitControls 工具条溢出 → NineGridLayout 顶部行（~51px）放不下 compact Slider（~60px），
     //      是顶部窄条设计空间限制（非 footer 相关——footer 修复见 Major-2 影响 molarity）→ 选中类测试继续 skip

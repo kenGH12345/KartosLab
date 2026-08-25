@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../common/elements/position_element.dart';
+import '../../common/geometry/hit_test.dart';
 
 enum ComponentType { battery, resistor, lightBulb, switch_, wire, fuse, ground }
 enum WireDragSide { from, to }
@@ -106,7 +107,7 @@ class WireSegment {
     var insertIndex = 0;
 
     for (var i = 0; i < allPoints.length - 1; i++) {
-      final dist = _pointToSegmentDistance(point, allPoints[i], allPoints[i + 1]);
+      final dist = pointToSegmentDistance(point, allPoints[i], allPoints[i + 1]);
       if (dist < minDist) {
         minDist = dist;
         insertIndex = i;
@@ -149,21 +150,6 @@ class WireSegment {
     points.add(endVertex.pos);
 
     return points;
-  }
-
-  /// 计算点到线段的距离
-  double _pointToSegmentDistance(Offset p, Offset a, Offset b) {
-    final ab = b - a;
-    final ap = p - a;
-
-    final abLenSq = ab.distanceSquared;
-    if (abLenSq == 0) return ap.distance; // a 和 b 重合
-
-    final t = (ap.dx * ab.dx + ap.dy * ab.dy) / abLenSq;
-    final tClamped = t.clamp(0.0, 1.0);
-
-    final projection = a + ab * tClamped;
-    return (p - projection).distance;
   }
 
   /// 构建 Path（用于渲染和命中检测）
