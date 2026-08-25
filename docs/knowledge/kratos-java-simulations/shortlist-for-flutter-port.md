@@ -16,7 +16,7 @@
 | 已有能力 | Flutter 侧位置 | Java 蓝本对应 |
 |---|---|---|
 | `DragDropWorkspace<T>` 泛型拖拽画布 | `lib/common/widgets/drag_drop_workspace.dart` | `common/piccolo-kartos` 的 `PhetPCanvas` |
-| `CanvasProjection` / `SceneProjection` 世界↔屏幕坐标 | 同上 + `circuit_screen.dart:312` | `common/piccolo-kartos` 的 `ModelViewTransform2D` |
+| `SceneProjection` 世界↔屏幕坐标（2026-08-24 起统一公共类 · 原 CanvasProjection/SceneProjection 两套平行实现已合并） | `lib/common/geometry/projection.dart` | `common/piccolo-kartos` 的 `ModelViewTransform2D` |
 | `ScenarioManager` JSON 场景加载（§C1 硬约束） | `lib/optics/config/scenario_manager.dart` | ✨ **Flutter 独有** · Java 版没有 |
 | `CustomPainter` 规范（构造注入 + toScreen + shouldRepaint） | [conventions/add-custom-painter.md](../kratos/conventions/add-custom-painter.md) | `common/piccolo-kartos` 的 `PNode` 图形栈 |
 | 不可变 + copyWith + Sentinel | `lib/models/circuit_state.dart` | ✨ **Flutter 独有** · Java 版可变 Model |

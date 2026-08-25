@@ -41,7 +41,7 @@ void _myEdit() {
 ## 易错点
 
 - 电路 `_update` 会 `history.push(_state)`——**不要在 `_update` 之外单独改 `_history`**，否则 undo/redo 错乱。
-- 光学坐标来自 `CanvasProjection.toWorld`；手势回调里的 `localPosition` 必须先 `proj.toWorld` 再使用。
+- 光学坐标来自 `SceneProjection.toWorld`；手势回调里的 `localPosition` 必须先 `proj.toWorld` 再使用。
 - 渲染层（`_OpticsScene` / `CircuitPainter`）是 `StatelessWidget`/`CustomPainter`，**不要在里面改状态**——只画。
 
 ## 验证方法

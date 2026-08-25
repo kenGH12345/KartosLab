@@ -6,7 +6,7 @@
 
 ## 一、渲染分层模型
 
-每个画布屏（电路/光学）都是三层叠合，由 `CanvasProjection` 坐标系统一：
+每个画布屏（电路/光学）都是三层叠合，由 `SceneProjection` 坐标系统一：
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -31,7 +31,7 @@
 | 原语 | 角色 | 本项目实例（真实行号） |
 |---|---|---|
 | `StatelessWidget` | 纯展示组件，零内部状态 | `DragDropWorkspace`/`_Card`/`_DropCanvas`（`drag_drop_workspace.dart`）、`_OpticsScene`/`_LensIcon`/`_RayPainter`/`_RightPanel`（`optics_screen.dart`）、`ComponentIconWidget`（`component_icon.dart`）、`CircuitControls`（`circuit_controls.dart`）。**所有组件无内部状态，状态上提到 Screen 的 `State`** |
-| `LayoutBuilder` | 取父约束尺寸 | `_DropCanvas.build`：`c.maxWidth/maxHeight` 建 `CanvasProjection`（`drag_drop_workspace.dart:_DropCanvas`） |
+| `LayoutBuilder` | 取父约束尺寸 | `_DropCanvas.build`：`c.maxWidth/maxHeight` 经 `projectionFactory`（或默认工厂）构建 `SceneProjection`（`drag_drop_workspace.dart:_DropCanvas`） |
 | `Stack` + `Positioned` | 绝对叠层 | 电路 `_buildCanvas`（`circuit_screen.dart:281`）：`GestureDetector` 包 `CustomPaint`，外层 `...components.map(Positioned + IgnorePointer(ComponentIconWidget))`；光学 `_OpticsScene` 同构 |
 | `CustomPainter` + `CustomPaint` | 命令式 Canvas 绘制 | `CircuitPainter`（网格/导线/顶点，`circuit_screen.dart`）、`_LensPainter`（贝塞尔画透镜）、`_RayPainter`（实线/虚线光线，`optics_screen.dart`）。均实现 `shouldRepaint` 引用比较 |
 | `GestureDetector` | tap/scale/drag | 电路 `onTapUp/onScaleStart-Update-End`（`circuit_screen.dart:258-268`）；光学 `_OpticsScene.onTapUp/onScaleUpdate` |
@@ -47,6 +47,7 @@
 | `NineGridLayout` | `common/widgets/nine_grid_layout.dart` | 3×3 九宫格布局（中间格面积≥70%），新增 **footer 参数**：横跨整行的底部控件条，高 = `min(96, 屏高×0.16)`，且 `centerH` 显式扣除 `footerH`（footer 默认 null 不波及其他屏）。**footer 迁移模式（10 屏统一范式）**：footer + `SingleChildScrollView(horizontal)` + `Row` 横排，每控件用 `Wrap` 包 `SizedBox` **限宽**；**不用 FittedBox 包 Slider 类**（无界约束爆炸）。矮视口降级：边格 <48px 时压缩 center（320×480 下 center 面积可 <70%，正常视口不变） | 9宫格决策见 `../notes.md`（2026-08-07 / 2026-08-11 / 2026-08-12） |
 | `ExperimentIntroPanel` | `common/widgets/experiment_intro_panel.dart` | 通用实验引导组件：description 常驻一行 + 点击弹 Dialog 复用 `InquiryTaskPanel`；desc/task 均空不渲染；已接入 10 屏 | 已登记 `shared-abstraction-plan.md` L1 候选第 7 |
 | `KratosSlider` | `common/controls/kratos_slider.dart` | 滑块控件，新增 **compact 参数**：隐藏 label 行的紧凑滑块，用于顶部/底部窄条控件栏（如 circuit 选中工具条） | |
+| `InquiryDrawer` 探究工作流组件族 | `common/widgets/inquiry_drawer.dart` 等 10 组件（`InquiryFlowController` 状态机 / `InquiryStageCard` 三态卡 / `InquiryProgressBar` 导航 / `PredictionPanel` / `InquiryTaskPanel` / `ExperimentLogger` / `SnapshotChart` / `ConclusionPanel`） | **五阶段状态机（IXD Spec v1.0）**：猜测→任务→操作→记录→归纳，一次一阶段渐进解锁（`InquiryStageCard` Locked/Active/Completed 三态：锁定抖动 / 蓝框展开 / 绿色折叠可回顾）。核心规则：预测全部验证→任务解锁（单题推进·验证后 1.5s 自动下一题）→点「开始实验」确认→操作解锁（记录按钮在确认前禁用）→首次记录→记录+归纳解锁（删光记录归纳重锁但记录卡不回锁）→提交结论→闭环完成触发 Celebration。free 模式全解锁。`Offstage` 常驻保 State（卡片折叠用 `Visibility(maintainState)` 保子面板 State）· 右侧 280px 浮层**高度 ≤ 视口 80%**（全高会遮挡九宫格 topRight 入口按钮）· 无预测题时猜测节点隐藏（进度条 4 节点）· `task==null` 不渲染 · 8 屏已接入 | 规划与契约单一源：[../../kratos-java-simulations/shared-abstraction-plan.md](../../kratos-java-simulations/shared-abstraction-plan.md) 候选 8 + §8.1；**新屏接入 How-To**：[../conventions/add-inquiry-screen.md](../conventions/add-inquiry-screen.md) |
 
 > **踩坑引用**（单一源在 `../notes.md`）：布局按比例分配时新增底部/横向占用块必须从主体容器高度扣除（footer 案例）；顶部行布局空间不足（~51px 放不下 compact Slider ~60px）是独立评估项；footer 横排内**固定宽子控件（`SizedBox(width:)` / 固定宽渐变条）在 320px 下必溢出**（改 Expanded 自适应）；FittedBox `scaleDown` 只对单一可缩放根节点有效，AppBar 多按钮（>8）窄屏溢出需布局层方案。
 

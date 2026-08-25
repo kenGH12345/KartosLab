@@ -48,7 +48,7 @@ flowchart TD
         RP[CustomPainter 渲染\nCircuitPainter/_RayPainter]
     end
     subgraph L4[共享基础设施]
-        DD[DragDropWorkspace + CanvasProjection\nlib/widgets/drag_drop_workspace.dart]
+        DD[DragDropWorkspace + SceneProjection\nlib/common/widgets/drag_drop_workspace.dart]
         SV[SoundEffects\nlib/services/sound_effects.dart]
     end
     MA --> HS

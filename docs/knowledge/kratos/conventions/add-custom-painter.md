@@ -30,7 +30,7 @@ Painter 自身零状态，所有绘制输入从外部传入：
 // 放在 Screen 文件内（与 CircuitPainter / _LensPainter 同模式）
 class GridPainter extends CustomPainter {
   GridPainter({required this.projection, required this.color});
-  final SceneProjection projection;   // 或 CanvasProjection
+  final SceneProjection projection;
   final Color color;
 
   @override
