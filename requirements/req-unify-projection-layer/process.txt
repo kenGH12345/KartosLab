@@ -18,3 +18,15 @@
 [2026-08-24 21:50] 评审整改完成: M1 收敛 circuit_state.dart 第三份 _pointToSegmentDistance（改调公共函数+删私有副本+加 import）· M2 新增 test/common/geometry/projection_wiring_test.dart 5 用例锁定投影接线契约（默认工厂0.55光轴/工厂注入origin+zoom/工厂优先于scale/zoom变化重建/落点与渲染同源 · 防 projectionFactory 被回退而测试仍绿）· m3 app_test.dart:157 失实注释同步 · m4 notes.md:110-116 踩坑单一源标注已根治+根治方式 · m7 baseline-optics-check.log 改名 optics-timeout-current-code.log。验证: flutter test 全量 369 passed+1 skip（较整改前 +5 接线用例）· geometry 25/25 · dart analyze lib test 0 error（39 issues 全历史遗留）。ac-verification.md 已补整改记录表。
 [2026-08-25 09:15] code-reviewer 完成（passed_with_suggestions · 0 Blocker）· 整改 M1/M2/m3/m4/m7 已落地验证（369 passed）· 唯一遗留 M3（commit 拆分 + pathspec 精确加文件）交 closer 执行。用户确认继续 → 委派 closer 收尾。
 [2026-08-25 09:30] verdict=approve_go / 备注: 用户批准 3 commit 拆分方案（A 公共层+单测 / B 消费者迁移+死文件删除 / C 知识库+需求产物）与 message。closer 执行提交。
+[2026-08-25 10:25] closer 完成收尾
+  → 3 个 commit 已提交（M3 落实 · pathspec 精确加文件，未用 git add -A）：
+     · Commit A  71974ac  refactor(projection): 统一公共 SceneProjection + pointToSegmentDistance + 接线单测 [AC-1,AC-3,AC-4] [req-unify-projection-layer]  —— 5 文件（lib/common/geometry/{projection,hit_test}.dart + test/common/geometry/ 3 测试）
+     · Commit B  84164a4  refactor(circuit): projectionFactory 根治 workaround + 死文件删除 + hitTestWire 收敛 [AC-2,AC-5,AC-7] [req-unify-projection-layer]  —— 6 文件（drag_drop_workspace/optics_screen/circuit_screen/circuit_state + 删 circuit_canvas.dart + app_test 注释）
+     · Commit C  f7374c0  docs(req-unify-projection-layer): 知识库回写（候选10登记）+ 需求产物 [AC-1,AC-6] [req-unify-projection-layer]  —— 15 文件（3 知识库纯文件 + 2 混合文件 hunk 级 + requirements/ 全目录 + INDEX.md）
+  → spec/最终需求.md（final_summary_path）✓ · notes.md 已沉淀 8 条经验 ✓
+  → meta.yaml: status=done · phase=4.closing · completed_at=2026-08-25 10:23 ✓
+  → requirements/INDEX.md 已重建（18 需求 · 本需求 done/4.closing）✓
+  → 混合文件 ui-framework.md / notes.md 并行需求 hunk 未误加（工作区保留），经 git apply --cached 精确分离 ✓
+  代码评审: passed_with_suggestions（0 Blocker · Major 3 已整改 M1/M2/M3 · Minor 推迟项见 spec/最终需求.md §5）
+  测试: flutter test 369 passed + 1 skipped · integration_test 15/16（唯一失败=并行需求 optics 动画超时，非本需求）
+  涉及 revisions: 71974ac-84164a4-f7374c0
