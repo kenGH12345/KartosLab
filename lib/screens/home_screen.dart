@@ -6,6 +6,7 @@ import '../optics/screens/optics_screen.dart';
 import '../forces/screens/forces_home.dart';
 import '../chemistry/molarity/view/screens/molarity_screen.dart';
 import '../color_vision/screens/color_vision_home.dart';
+import '../common/widgets/lesson_entry_section.dart';
 import '../sound/screens/sound_screen.dart';
 import '../radio_waves/screens/radio_waves_screen.dart';
 import '../wave_interference/screens/wave_interference_screen.dart';
@@ -18,6 +19,7 @@ class _SimEntry {
     required this.icon,
     required this.color,
     required this.builder,
+    this.simKey,
   });
 
   final String title;
@@ -25,6 +27,10 @@ class _SimEntry {
   final IconData icon;
   final Color color;
   final WidgetBuilder builder;
+
+  /// sim 标识（T-P1-11 课时入口过滤用：'circuit' / 'color_vision' / ...）。
+  /// null = 无课时入口（向后兼容）。
+  final String? simKey;
 }
 
 /// 学科下的二级子领域分组（力学 / 电学 / 光学与波动 / 溶液与浓度）。
@@ -71,6 +77,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.sports_kabaddi_rounded,
               color: Color(0xFF166534),
               builder: _buildForces,
+              simKey: 'forces',
             ),
           ],
         ),
@@ -83,6 +90,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.electric_bolt_rounded,
               color: Color(0xFF0C4A6E),
               builder: _buildCircuit,
+              simKey: 'circuit',
             ),
           ],
         ),
@@ -95,6 +103,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.play_arrow_rounded,
               color: Color(0xFF1177AA),
               builder: _buildOptics,
+              simKey: 'optics',
             ),
             _SimEntry(
               title: '色觉',
@@ -102,6 +111,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.palette_rounded,
               color: Color(0xFFDB2777),
               builder: _buildColorVision,
+              simKey: 'color_vision',
             ),
             _SimEntry(
               title: '波的干涉',
@@ -109,6 +119,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.waves_rounded,
               color: Color(0xFF2563EB),
               builder: _buildWaveInterference,
+              simKey: 'wave_interference',
             ),
             _SimEntry(
               title: '声波',
@@ -116,6 +127,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.graphic_eq_rounded,
               color: Color(0xFF0D9488),
               builder: _buildSound,
+              simKey: 'sound',
             ),
             _SimEntry(
               title: '电磁波',
@@ -123,6 +135,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.sensors_rounded,
               color: Color(0xFF7C3AED),
               builder: _buildRadioWaves,
+              simKey: 'radio_waves',
             ),
           ],
         ),
@@ -142,6 +155,7 @@ class HomeScreen extends StatelessWidget {
               icon: Icons.science_rounded,
               color: Color(0xFF0891B2),
               builder: _buildMolarity,
+              simKey: 'molarity',
             ),
           ],
         ),
@@ -352,6 +366,9 @@ class _SubjectGroupBlock extends StatelessWidget {
             );
           },
         ),
+        // T-P1-11：该组各 sim 的课时入口（无课时 sim → SizedBox.shrink · AC-17）
+        for (final sim in group.sims)
+          if (sim.simKey != null) LessonEntrySection(sim: sim.simKey!),
       ],
     );
   }

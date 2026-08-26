@@ -98,6 +98,11 @@ void main() {
   });
 
   testWidgets('InquiryDrawer 集成：记录 2 次后出现关系图', (tester) async {
+    // 状态机下 Drawer 内容较高（5 阶段卡片），放大测试视口确保可点击
+    tester.view.physicalSize = const Size(800, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
     var value = 10.0;
     await tester.pumpWidget(wrap(InquiryDrawer(
       task: const InquiryTask(
@@ -112,14 +117,24 @@ void main() {
       open: true,
     )));
 
-    expect(find.textContaining('记录 ≥ 2 组数据后自动生成关系图'), findsOneWidget);
+    // 无预测题 → 猜测跳过 · 任务卡 Active：先确认任务解锁操作（TASK-001）
+    expect(find.text('我已了解任务，开始实验'), findsOneWidget);
+    await tester.tap(find.text('我已了解任务，开始实验'));
+    await tester.pump(const Duration(milliseconds: 600));
 
+    // 操作卡 Active：tap 记录按钮（pump 充分时长确保 ensureVisible 滚动与
+    // AnimatedSize 动画完全结束，避免 hit-test 命中动画中间态）
+    await tester.pump(const Duration(milliseconds: 600));
     await tester.tap(find.text('记录本次实验'));
-    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 600));
+    expect(find.textContaining('实验记录（1/20）'), findsOneWidget);
     value = 20.0;
-    await tester.tap(find.text('记录本次实验'));
-    await tester.pump();
+    // 记录卡已解锁：操作卡 + 记录卡各有记录按钮，点操作卡的（首个）
+    expect(find.text('记录本次实验'), findsNWidgets(2));
+    await tester.tap(find.text('记录本次实验').first);
+    await tester.pump(const Duration(milliseconds: 600));
 
+    expect(find.textContaining('实验记录（2/20）'), findsOneWidget);
     expect(find.textContaining('关系图（电阻(Ω) × 电流(A)）'), findsOneWidget);
     expect(chartPainter(), findsOneWidget);
   });

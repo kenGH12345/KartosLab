@@ -30,7 +30,29 @@ const bool useScenarioLoader = true;
 const String _defaultScenarioId = 'default';
 
 class CircuitScreen extends StatefulWidget {
-  const CircuitScreen({super.key});
+  const CircuitScreen({
+    super.key,
+    this.initialScenarioId = _defaultScenarioId,
+    this.onScenarioSuccess,
+    this.onPredictionResult,
+    this.showScenarioMenu = true,
+  });
+
+  /// 初始场景 id（T-P1-06 · 剧本模式 host 注入用）。默认 'default' =
+  /// 现行为不变；内部仍走 manager.loadScenario（AC-12 · C5）。
+  final String initialScenarioId;
+
+  /// 可选钩子（T-P1-06 · 剧本模式专用）：场景 successCriteria 全满足时触发一次。
+  /// 不传 = 现行为逐字节等价（AC-R1 接线侧）。
+  final VoidCallback? onScenarioSuccess;
+
+  /// 可选转发（T-P1-06）：InquiryDrawer 预测题结果 (verified, correct)。
+  final void Function(int verified, int correct)? onPredictionResult;
+
+  /// Major-3 · 剧本模式 false 时禁用 AppBar 场景切换下拉（防学生在节点内
+  /// 逃逸剧本编排）。默认 true = 现行为不变。
+  final bool showScenarioMenu;
+
   @override
   State<CircuitScreen> createState() => _CircuitScreenState();
 }
@@ -75,12 +97,12 @@ class _CircuitScreenState extends State<CircuitScreen> {
       await manager.loadScenarios();
       if (!mounted) return;
       _scenarioManager = manager;
-      final next = manager.loadScenario(_defaultScenarioId);
+      final next = manager.loadScenario(widget.initialScenarioId);
       setState(() {
         _state = next;
         _solved = CircuitSolver.solve(next);
         _nextId = _computeNextId(next);
-        _currentScenarioId = _defaultScenarioId;
+        _currentScenarioId = widget.initialScenarioId;
       });
     } catch (e) {
       debugPrint('Failed to load default circuit scenario: $e');
@@ -145,12 +167,27 @@ class _CircuitScreenState extends State<CircuitScreen> {
   }
 
   /// 探究目标达成检测（轻量 · 一次成功只提示一次）。
+  ///
+  /// T-P1-06（v1.1 任务卡口径）：判定门控从 `_inquiryTask == null` 扩为
+  /// `(widget.onScenarioSuccess == null && _inquiryTask == null)`——
+  /// 原 `_inquiryTask == null` 单门控致无 inquiryTask 场景（controlled-switch
+  /// 等试点三场景）checkObjectives 永不执行，剧本完成信号死路。达成时二选一
+  /// （评审 Minor-3）：剧本模式（钩子非空）→ 抑制自带 SnackBar 仅外发钩子；
+  /// 非剧本 → 既有 SnackBar 通知逻辑原样执行（无 inquiryTask 场景本就不弹）。
+  /// 不传钩子时现有行为逐字节等价（AC-R1）。
   void _maybeNotifyObjectiveMet() {
     final mgr = _scenarioManager;
-    if (mgr == null || _inquiryTask == null || _objectiveMetNotified) return;
+    if (mgr == null || _objectiveMetNotified) return;
+    if (widget.onScenarioSuccess == null && _inquiryTask == null) return;
     final met = mgr.checkObjectives(_state);
     if (!met) return;
     _objectiveMetNotified = true;
+    // T-P1-06：剧本完成信号——一次成功只外发一次（_objectiveMetNotified 门控）
+    widget.onScenarioSuccess?.call();
+    // 剧本模式：抑制自带 SnackBar（完成反馈由剧本层流转反馈承担）
+    if (widget.onScenarioSuccess != null) return;
+    // Snackbar 提示仅探案场景（无 inquiryTask 的场景不提示）
+    if (_inquiryTask == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -705,7 +742,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
               onPressed: _showKnowledgeDialog,
             ),
             // 320 窄视口隐藏场景下拉（140px 最占空间 · AppBar 21px 溢出修复）
+            // Major-3：剧本模式 showScenarioMenu=false 禁用（防节点内逃逸编排）
             if (_scenarioManager != null &&
+                widget.showScenarioMenu &&
                 MediaQuery.sizeOf(context).width >= 600)
               SizedBox(
                 width: 140,
@@ -819,6 +858,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
                   : const [],
               snapshotProvider: _circuitSnapshot,
               open: _inquiryOpen,
+              onPredictionResult: widget.onPredictionResult,
             ),
           ],
         ),

@@ -13,3 +13,4 @@
 [2026-08-21 14:00] 追问根因（用户问"为什么会出现新 sim AI 不可接入"）：三因叠加——复刻需求配置化验收只看三件套 / AI 工具链闸门只验"生成+可解析" / 一致性守卫无 schema→运行时方向。侦查补充发现 molarity/optics 为"半接线"（判定器实现但 view 无 .checkObjectives( 消费 · 仅 rgb_bulbs_screen 与 circuit_screen 2 处真实消费），view 层真实消费矩阵比原 B/A 分类更细。
 [2026-08-21 14:10] 层 1 落地：test/tooling/scenario_runtime_wiring_test.dart（5 测试全过）——分类完备（schemas 发现 sim 必须在白名单∪豁免表 · 新 sim 无默认豁免）/ schema oneOf 结构锁定 / 求值器路径存在性 / 白名单（circuit）四环齐断言 / 豁免台账快照（7 条 · 半接线与未接线状态反向断言防过期）。
 [2026-08-21 14:15] 层 2 落地（用户 y="落地1+2" · 走 35 协议）：80-kratos-sim-checklist.mdc §二原则 4 加第 6 问（判定生效四环齐 · 含历史教训引用）+ 变更历史段追加记录。.claude/ 无镜像单端维护。
+[2026-08-24 09:30] commit c0c861f（用户 y 确认 · 46 文件 +4321/-514 · 仅提交本需求范围）：核心条件树/8 sim 接入/schema×8/prompt×8+_shared/generate.py/GameRules/precision-dilution 场景/测试×8/80-checklist/需求档案/候选9登记。遗留 inquiry 批（widgets/screens/测试×7/docs 等）未提交留待其需求收尾；叠加文件混入的 ~60 行 predictions 契约已在 message 注明。_shared/inquiry_task.md 一并提交（generate.py 拼接依赖）。process.txt 本条留底随下次提交入库。

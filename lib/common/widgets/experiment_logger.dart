@@ -16,8 +16,15 @@ class ColumnDef {
 
 /// 实验记录器：学生手动快照当前实验状态，累积对比数据。
 ///
+/// 两种数据模式：
+/// - 非受控（默认，[rows] == null）：内部持有行数据，[snapshotProvider] 取快照
+/// - 受控（[rows] != null）：行数据由外部持有（InquiryDrawer 状态机统一管理），
+///   记录/删除/清空分别回调 [onRecord]/[onDeleteAt]/[onClear]
+///
 /// - 数据仅内存（session 级）· 不持久化
 /// - 容量上限 [maxRows]（默认 20），超出拒绝新增并提示
+/// - [enabled] == false 时记录按钮禁用（IXD Spec TASK-002：任务未确认时
+///   允许调参数但不允许正式记录）
 /// - [onExport] 预留导出回调，null 时不显示导出按钮（本轮不实现导出）
 /// - [onRowsChanged] 可选：每次记录/删除/清空后回调当前行列表，供外部消费
 ///   （如 SnapshotChart 图表联动）；null 时行为与旧版一致（向后兼容）
@@ -30,6 +37,11 @@ class ExperimentLogger extends StatefulWidget {
     this.compact = false,
     this.onExport,
     this.onRowsChanged,
+    this.rows,
+    this.onRecord,
+    this.onDeleteAt,
+    this.onClear,
+    this.enabled = true,
   });
 
   final List<ColumnDef> columns;
@@ -39,14 +51,37 @@ class ExperimentLogger extends StatefulWidget {
   final VoidCallback? onExport;
   final ValueChanged<List<Map<String, dynamic>>>? onRowsChanged;
 
+  /// 受控模式行数据；非 null 时内部不再持有状态。
+  final List<Map<String, dynamic>>? rows;
+
+  /// 受控模式记录回调。
+  final VoidCallback? onRecord;
+
+  /// 受控模式删除指定行回调。
+  final void Function(int index)? onDeleteAt;
+
+  /// 受控模式清空回调。
+  final VoidCallback? onClear;
+
+  /// 记录按钮是否可用（false = TASK-002 未确认任务禁用）。
+  final bool enabled;
+
   @override
   State<ExperimentLogger> createState() => _ExperimentLoggerState();
 }
 
 class _ExperimentLoggerState extends State<ExperimentLogger> {
-  final List<Map<String, dynamic>> _rows = [];
+  final List<Map<String, dynamic>> _localRows = [];
+
+  List<Map<String, dynamic>> get _rows => widget.rows ?? _localRows;
+
+  bool get _controlled => widget.rows != null;
 
   void _record() {
+    if (_controlled) {
+      widget.onRecord?.call();
+      return;
+    }
     if (_rows.length >= widget.maxRows) {
       _showFullNotice();
       return;
@@ -80,11 +115,19 @@ class _ExperimentLoggerState extends State<ExperimentLogger> {
   }
 
   void _removeAt(int index) {
+    if (_controlled) {
+      widget.onDeleteAt?.call(index);
+      return;
+    }
     setState(() => _rows.removeAt(index));
     widget.onRowsChanged?.call(_rows);
   }
 
   void _clearAll() {
+    if (_controlled) {
+      widget.onClear?.call();
+      return;
+    }
     setState(() => _rows.clear());
     widget.onRowsChanged?.call(_rows);
   }
@@ -151,16 +194,21 @@ class _ExperimentLoggerState extends State<ExperimentLogger> {
             const SizedBox(height: 4),
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: _record,
-                style: FilledButton.styleFrom(
-                  backgroundColor: const Color(0xFF2563EB),
-                  foregroundColor: Colors.white,
-                  padding: EdgeInsets.symmetric(vertical: compact ? 4 : 8),
-                  visualDensity: VisualDensity.compact,
+              child: Tooltip(
+                // TASK-002：未确认任务时禁用 + 提示
+                message: widget.enabled ? '' : '请先完成上一阶段后解锁记录',
+                child: FilledButton.icon(
+                  onPressed: widget.enabled ? _record : null,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFF2563EB),
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: compact ? 4 : 8),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  icon: const Icon(Icons.add_circle_outline, size: 16),
+                  label:
+                      Text('记录本次实验', style: TextStyle(fontSize: textSize)),
                 ),
-                icon: const Icon(Icons.add_circle_outline, size: 16),
-                label: Text('记录本次实验', style: TextStyle(fontSize: textSize)),
               ),
             ),
           ],

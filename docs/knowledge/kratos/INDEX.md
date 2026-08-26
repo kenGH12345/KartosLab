@@ -8,7 +8,7 @@
 ## 目录结构
 
 ```
-docs/knowledge/kkartoss/
+docs/knowledge/kratos/
 ├── INDEX.md
 ├── notes.md                 ← 决策 / 踩坑 / 参考链接（跨 session 沉淀）
 ├── architecture/            ← 全局架构（入口 / 设计风格 / 配置）
@@ -30,20 +30,21 @@ docs/knowledge/kkartoss/
     ├── add-draggable-component.md
     ├── add-circuit-component.md
     ├── add-interaction.md
-    └── add-custom-painter.md  ← 新增 Canvas 绘制组件（构造注入 / toScreen / shouldRepaint）
+    ├── add-custom-painter.md  ← 新增 Canvas 绘制组件（构造注入 / toScreen / shouldRepaint）
+    └── add-inquiry-screen.md  ← 向 sim 屏接入 InquiryDrawer 探究抽屉（四参数 / 回退安全 / 连带检查）
 ```
 
 ## 文档清单
 
 | 文档 | 说明 | 最近更新 |
 |---|---|---|
-| [notes.md](notes.md) | **决策 / 踩坑 / 参考链接**（跨 session 沉淀 · 未来 agent 首读 · 含 9宫格适配 / 操作面板统一底部横排迁移 / 投影缩放 / 固定宽控件溢出等） | 2026-08-12 |
+| [notes.md](notes.md) | **决策 / 踩坑 / 参考链接**（跨 session 沉淀 · 未来 agent 首读 · 含 9宫格适配 / 操作面板统一底部横排迁移 / 投影缩放 / 固定宽控件溢出 / 场景可达性陷阱 / PowerShell UTF-8 编码坑等） | 2026-08-19 |
 | [architecture/overview.md](architecture/overview.md) | 项目总览、三大模块、架构分层图 | 2026-07-17 |
 | [architecture/app-entry.md](architecture/app-entry.md) | 启动链路、MaterialApp 主题、导航模型 | 2026-07-17 |
 | [architecture/project-config.md](architecture/project-config.md) | 配置三类拆分（pubspec 依赖 / 主题 / scenarios JSON），附"无数据映射类"说明 | 2026-07-17 |
 | [architecture/design-patterns.md](architecture/design-patterns.md) | **顶层设计主线**：MVC 分层 / 组件化（元件继承体系）/ 通用化（泛型共享 + 通用工厂）/ 配置化（JSON 驱动） | 2026-07-17 |
 | [frontend/drag-drop-workspace.md](frontend/drag-drop-workspace.md) | 共享拖拽基础设施 + 两套坐标投影类 + 路由表 + 主题变量 + 状态管理 + 事件链路 | 2026-07-17 |
-| [frontend/ui-framework.md](frontend/ui-framework.md) | **UI 渲染框架**：分层模型 / 核心原语 / 共享通用组件 / CustomPainter 规范 / 主题（含 footer 迁移模式） | 2026-08-12 |
+| [frontend/ui-framework.md](frontend/ui-framework.md) | **UI 渲染框架**：分层模型 / 核心原语 / 共享通用组件（含 InquiryDrawer 探究工作流族）/ CustomPainter 规范 / 主题（含 footer 迁移模式） | 2026-08-19 |
 | [systems/module-index.md](systems/module-index.md) | 52 个 Dart 文件模块归属索引表 | 2026-07-17 |
 | [systems/circuit-module.md](systems/circuit-module.md) | 电路搭建：状态模型 + CircuitSolver 连通图求解 + **场景配置系统（§C1-§C3 全合规）** | 2026-07-21 |
 | [systems/optics-module.md](systems/optics-module.md) | 几何光学：OpticsWorld + OpticalSolver 二光线法 + **场景配置系统（§C1-§C3 全合规）** | 2026-07-21 |
@@ -53,6 +54,7 @@ docs/knowledge/kkartoss/
 | [conventions/add-circuit-component.md](conventions/add-circuit-component.md) | 新增电路元件类型（含 Sentinel 陷阱） | 2026-07-17 |
 | [conventions/add-interaction.md](conventions/add-interaction.md) | 新增交互（走闭环、不可变修改） | 2026-07-17 |
 | [conventions/add-custom-painter.md](conventions/add-custom-painter.md) | 新增 Canvas 绘制组件（构造注入 / `toScreen` 坐标 / `shouldRepaint` 逐项比较） | 2026-07-17 |
+| [conventions/add-inquiry-screen.md](conventions/add-inquiry-screen.md) | 向 sim 屏接入 InquiryDrawer 探究抽屉（三步接线 / 四参数 / snapshot key 一致性 / 回退安全 / 新增场景连带检查） | 2026-08-19 |
 
 ## 跨引用
 

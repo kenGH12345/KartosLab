@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://kratos/lesson.schema.json",
+  "title": "Lesson Plan（教学剧本）",
+  "description": "课时级多场景编排剧本。节点引用既有场景（{sim, scenarioId}），支持线性序列 / 条件分支 / 前置解锁三种编排原语。条件树契约与场景侧 _shared/combinable_criteria.md 同构（all/any/not + 叶子）。解析端还有 Dart 全量图校验（LessonPlan.fromJson）——本 schema 只保证结构合法性，不校验图引用。",
+  "type": "object",
+  "required": [
+    "lessonId",
+    "name",
+    "version",
+    "description",
+    "entry",
+    "nodes"
+  ],
+  "properties": {
+    "lessonId": {
+      "type": "string",
+      "description": "kebab-case 剧本 id（= manifest entry.id · D9）"
+    },
+    "name": {
+      "type": "string",
+      "description": "课时显示名（入口卡片用）"
+    },
+    "version": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "entry": {
+      "type": "string",
+      "description": "入口节点 id（须存在于 nodes · 图引用由 Dart 层校验）"
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/definitions/lessonNode"
+      }
+    }
+  },
+  "definitions": {
+    "lessonNode": {
+      "type": "object",
+      "required": [
+        "id",
+        "title"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "scenario": {
+          "description": "null = 终点节点（须同时 advance 为 null · D5 二元绑定由 Dart 层校验）",
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/definitions/scenarioRef" }
+          ]
+        },
+        "unlock": {
+          "description": "null = 无门禁（始终可进）",
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/definitions/lessonCondition" }
+          ]
+        },
+        "advance": {
+          "description": "null = 课时终点（须同时 scenario 为 null · D5）",
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/definitions/lessonAdvance" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "scenarioRef": {
+      "type": "object",
+      "required": [
+        "sim",
+        "scenarioId"
+      ],
+      "properties": {
+        "sim": {
+          "type": "string",
+          "enum": [
+            "circuit",
+            "color_vision"
+          ],
+          "description": "试点封闭集（D8）。引用存在性/可完成性由运行时 scenarioPlayable 校验。"
+        },
+        "scenarioId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "lessonAdvance": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "next",
+            "onCompleted",
+            "routes"
+          ]
+        },
+        "to": {
+          "type": "string",
+          "description": "onCompleted 必填（if/then 条件）；routes 中禁止"
+        },
+        "routes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/lessonRoute"
+          },
+          "description": "routes 必填（if/then 条件）；末项 when 必须为 null（兜底路由 · D7 由 Dart 层校验）"
+        }
+      },
+      "if": {
+        "properties": { "type": { "const": "onCompleted" } },
+        "required": ["type"]
+      },
+      "then": {
+        "required": ["to"]
+      },
+      "else": {
+        "if": {
+          "properties": { "type": { "const": "routes" } },
+          "required": ["type"]
+        },
+        "then": {
+          "required": ["routes"],
+          "not": { "required": ["to"] }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lessonRoute": {
+      "type": "object",
+      "required": [
+        "to"
+      ],
+      "properties": {
+        "to": {
+          "type": "string"
+        },
+        "when": {
+          "description": "null = 兜底路由（仅末项允许 · D7 由 Dart 层校验）",
+          "oneOf": [
+            { "type": "null" },
+            { "$ref": "#/definitions/lessonCondition" }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "lessonCondition": {
+      "description": "剧本条件树。组合算子可嵌套（解析端深度上限 4 · AC-32）。",
+      "oneOf": [
+        { "$ref": "#/definitions/lessonLeaf" },
+        { "$ref": "#/definitions/lessonAll" },
+        { "$ref": "#/definitions/lessonAny" },
+        { "$ref": "#/definitions/lessonNot" }
+      ]
+    },
+    "lessonLeaf": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "description"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "nodeCompleted",
+            "predictionScore",
+            "scenarioSuccess"
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object",
+          "description": "叶子参数（nodeCompleted.nodeId / predictionScore.nodeId+metric+operator+threshold / scenarioSuccess.nodeId 可选）"
+        }
+      },
+      "additionalProperties": false
+    },
+    "lessonAll": {
+      "type": "object",
+      "required": ["all"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "all": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/lessonCondition" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lessonAny": {
+      "type": "object",
+      "required": ["any"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "any": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/lessonCondition" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "lessonNot": {
+      "type": "object",
+      "required": ["not"],
+      "properties": {
+        "id": { "type": "string" },
+        "description": { "type": "string" },
+        "not": { "$ref": "#/definitions/lessonCondition" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

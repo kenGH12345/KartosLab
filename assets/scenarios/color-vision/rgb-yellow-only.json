@@ -11,8 +11,7 @@
     "personPosition": 300
   },
   "successCriteria": [
-    {"id": "sc-1", "type": "colorMatch", "description": "See yellow in overlap zone", "params": {"targetColor": "yellow"}},
-    {"id": "sc-2", "type": "colorMatch", "description": "Add blue to make white", "params": {"targetColor": "white"}}
+    {"id": "sc-1", "type": "colorMatch", "description": "Add blue to make white (R+G+B)", "params": {"targetColor": "white"}}
   ],
   "hints": [
     {"trigger": "always", "message": "Red + Green = Yellow. Try adding blue to see what happens!"},

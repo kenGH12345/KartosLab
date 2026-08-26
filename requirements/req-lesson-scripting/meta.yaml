@@ -1,0 +1,44 @@
+﻿# 需求元数据。本字段被主会话（PM 角色）/ managing-requirement / 各 SOP 读取。
+# 不要手工修改 phase / status——通过 /pm-continue 或 /pm-phase 切换。
+
+req_id: req-lesson-scripting
+title: 教学剧本：多场景流程编排评估（场景解锁/分支/课时序列）
+status: in_progress
+phase: '2.design'
+created_at: '2026-08-24 15:26'
+updated_at: '2026-08-24 16:10'
+sop: deep-vibe
+
+# 需求性质：评估型立项（2026-08-24 用户拍板）
+# - 产出目标：scenario 表达力缺口分析 + 多场景编排 runtime 方案设计 + 工作量评估
+# - 是否实现：评估完成后由用户再拍板（不在本需求内直接实现 runtime）
+requirement_type: evaluation
+
+# 原始素材（用户提供，2026-08-24）
+# 教学剧本（多场景流程）。当前一个 scenario 是孤立的，不能表达"先完成 A 解锁 B"、
+# "根据预测题得分分支到不同场景"、"一节课的实验序列"。若目标是老师编排完整课时，
+# 这是最大的表达力缺口。但工作量大（需要新的 runtime），建议作为独立方向评估。
+
+# 关联
+repo_path: 'c:\workspace\kratosLab'
+related_requirements:
+  - req-criteria-composable   # successCriteria 可组合条件——判定/计分体系是剧本分支条件的依赖基础
+  - req-predictive-inquiry    # 预测题功能（circuit/molarity 试点）——"按预测题得分分支"依赖此能力
+  - req-inquiry-learning      # 做中学工作流——教学剧本是做中学的课时级延伸
+  - req-ai-scenario-toolchain-lite  # AI 场景生成工具链——剧本 JSON 需延续 AI 可生成化路线
+
+design_constraints:
+  - 本需求不实现 runtime 代码，产出仅为评估报告
+  - 剧本 JSON 设计必须延续 AI 可生成化路线（§C3）
+  - 必须兼容现有 42 个场景 JSON（不破坏独立运行能力）
+  - 暂不考虑可视化编排 UI（手写 + AI 辅助生成）
+  - 新增编排结构必须走 ScenarioManager 加载体系（§C1）
+acceptance_criteria:
+  - 评估报告含 ≥2 候选方案结构化对比（≥5 对比维度）
+  - 推荐方案附 PoC JSON 结构示例（覆盖线性序列/条件分支/前置解锁）
+  - 推荐方案附核心运行逻辑伪代码
+  - 报告含方案级工作量估算（人天+关键假设+置信度）
+  - 所有方案说明 AI 可生成化满足情况 + 向后兼容策略
+  - 用户已在 process.txt 留下 go/no-go/defer verdict
+
+phase_overrides: []

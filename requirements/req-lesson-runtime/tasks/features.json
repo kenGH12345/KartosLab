@@ -1,0 +1,551 @@
+{
+  "req_id": "req-lesson-runtime",
+  "version": "1.1",
+  "created_by": "tech-leader",
+  "created_at": "2026-08-24",
+  "updated_at": "2026-08-24",
+  "complexity": "medium",
+  "collaboration_mode": "TechLeader only",
+  "design_doc": "design/技术方案.md",
+  "notes": "单 Flutter 端 · 无跨端协议 · 全部纯增量/可选参数向后兼容。任务粒度遵循单一改动原则；P3-06 守卫测试建议提前至 P1 末执行（依赖仅 T-P1-12）。v1.1 按方案评审（has_blockers）修复：Blocker-1 原 T-P2-05 前移 P1 更名 T-P1-14（rgb 钩子，cv 剧本 P1 可完成）；Blocker-2 新增 T-P1-15 混合 sim 剧本（AC-58）+ T-P1-08 增 dispatch/scenarioPlayable；Major-3 剧本模式禁场景切换（T-P1-06 showScenarioMenu + T-P1-08 rgb scenarioList 空列表）；Major-4 scenarioExists→scenarioPlayable 可完成性双检（T-P1-01/02/08/T-P3-05/06）；R2 fuse-blown 按预案①定稿（T-P1-12 实测仅确认）。",
+  "tasks": [
+    {
+      "id": "T-P1-01",
+      "phase": "P1",
+      "title": "lesson_plan.dart 数据模型 + fail loud 全量图校验",
+      "ac": ["AC-1", "AC-2", "AC-3", "AC-4", "AC-5"],
+      "owner": "Full-stack",
+      "files": ["lib/common/scenario/lesson_plan.dart"],
+      "changes": [
+        "新建 LessonScenarioRef / LessonRoute / LessonAdvance / LessonNode / LessonPlan（签名见 design/技术方案.md §2.1）",
+        "LessonPlan.fromJson(json, {required scenarioPlayable}) 实现 9 条校验规则（方案 §2.1 校验规则表）：必填字段/节点 id 唯一/entry 存在/终点二元绑定（scenario==null ⇔ advance==null 且终点 unlock 必须 null）/场景引用存在且可完成（规则 5 · D10 scenarioPlayable 双检）/advance 三型校验（next 非末位·onCompleted to 存在·routes 非空+全 to 存在+兜底仅末项）/条件树走 SuccessCondition.fromJson（含深度≤4）/条件叶子 nodeId 引用存在性（collectLeaves 后逐叶校验 nodeCompleted·predictionScore·scenarioSuccess 的 params.nodeId）/BFS 可达性",
+        "全部违规抛 FormatException，错误消息以 lessonId 开头 + 具体原因；异常包装约定（评审 Minor-4）：fromJson 内部 try-catch 把一切解析异常（含 SuccessCondition.fromJson 叶子缺 id/description 抛的 TypeError，success_condition.dart:139-141）统一包装为 FormatException（lessonId 前缀）",
+        "不可变对象树（@immutable + const 构造）；深度上限引用 SuccessCondition.maxParseDepth 常量（不复制字面量）"
+      ],
+      "depends_on": [],
+      "estimate_min": 45,
+      "verify": "flutter analyze lib/common/scenario/ 0 error；T-P1-02 单测全绿",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-02",
+      "phase": "P1",
+      "title": "lesson_plan_test.dart 单测（正例 + 逐规则反例）",
+      "ac": ["AC-1", "AC-2", "AC-3", "AC-4", "AC-5"],
+      "owner": "Full-stack",
+      "files": ["test/common/lesson_plan_test.dart"],
+      "changes": [
+        "正例：方案 §6.2 条件剧本 JSON 全文（含 routes/unlock/all/any 三模式）→ 全字段可访问（AC-1）",
+        "反例矩阵（各抛 FormatException 且消息含 lessonId）：entry 悬空（AC-2）/引用不存在场景（AC-3·scenarioPlayable 回调返回 false）/引用不可完成场景（D10·scenarioPlayable 对无 objectives 场景返回 false·新增用例）/routes.to 悬空（AC-4）/从 entry 不可达的孤立节点（AC-5）/重复节点 id/终点二元绑定违规（scenario=null 但 advance 非null；advance=null 但 scenario 非null）/routes 缺兜底（所有项均有 when）/routes 中间项 when=null/type 非法值/next 在数组末位/条件树深度 5 层/叶子 nodeId 悬空",
+        "schema 契约一致性：叶子缺 id 或 description → FormatException（LeafCondition.fromJson 非空断言抛 TypeError，success_condition.dart:139-141——fromJson 包装后对外呈现 FormatException，评审 Minor-4 断言类型而非仅'异常'）"
+      ],
+      "depends_on": ["T-P1-01"],
+      "estimate_min": 40,
+      "verify": "flutter test test/common/lesson_plan_test.dart 全绿（≥14 用例）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-03",
+      "phase": "P1",
+      "title": "lesson_manifest.dart 加载器 + 课时级降级 + 单测",
+      "ac": ["AC-6", "AC-14", "AC-15"],
+      "owner": "Full-stack",
+      "files": ["lib/common/scenario/lesson_manifest.dart", "test/common/lesson_manifest_test.dart"],
+      "changes": [
+        "LessonManifestEntry 值对象 + LessonManifestLoader（manifestPath = 'assets/lessons/manifest.json'）",
+        "loadEntries()：读 manifest 注册表（入口卡片展示用·不解析剧本本体）",
+        "loadAll({required scenarioPlayable})：逐条读 file → LessonPlan.fromJson → 单条失败（文件缺失/JSON 损坏/FormatException）debugPrint + 跳过（AC-6/AC-15 降级）；manifest 缺失/损坏 → 空列表（AC-14）；catch 宽类型 Exception 非仅 FormatException（评审 Minor-4·防 TypeError 穿透课时级降级）",
+        "单测：正常解析 / 单课时文件缺失跳过 / 单课时 FormatException 跳过且其余正常 / manifest 缺失返回空（用临时 assets 目录或注入路径参数使测试不依赖 rootBundle——loader 构造接受可覆盖的 pathPrefix）"
+      ],
+      "depends_on": ["T-P1-01"],
+      "estimate_min": 35,
+      "verify": "flutter test test/common/lesson_manifest_test.dart 全绿（≥4 用例·降级路径全覆盖）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-04",
+      "phase": "P1",
+      "title": "LessonRuntime 状态机骨架（load/onScenarioSuccess/advanceFrom next+onCompleted/终点）",
+      "ac": ["AC-7", "AC-8", "AC-9", "AC-10", "AC-11", "AC-12", "AC-13"],
+      "owner": "Full-stack",
+      "files": ["lib/common/scenario/lesson_runtime.dart"],
+      "changes": [
+        "LessonRuntime extends ChangeNotifier + PredictionResult + LessonHooks（签名见方案 §2.3）",
+        "load(plan)：重置运行态（completed/predictions/scenarioSuccess 清空）→ current = plan.entry；entry 即终点 → 直接完成态（AC-11 边界）",
+        "onScenarioSuccess()：幂等（completed.contains(current) 时忽略）→ completed.add + _scenarioSuccess.add + _advanceFrom(current) + notifyListeners",
+        "_advanceFrom：next → plan.nextInOrder；onCompleted → advance.to；advance==null 不会发生（终点节点无场景无完成事件·终点二元绑定保证）；目标节点切换 current + notifyListeners；目标 isEnd → isLessonCompleted=true",
+        "状态暴露：current/currentNode/completed（只读视图）/progress（completed∩requiredNodes / totalRequiredNodes）/isUnlocked（P1 先返回 unlock==null||true 占位·P2 补条件求值）",
+        "C5 声明：本文件零场景加载逻辑（loadScenario 由 sim screen 内部调用·方案 §1.2 D3）",
+        "注意：场景加载相关代码（loadScenario 调用）不得出现在剧本层任何文件（AC-12 守卫断言用）"
+      ],
+      "depends_on": ["T-P1-01"],
+      "estimate_min": 40,
+      "verify": "flutter analyze 0 error；T-P1-05 单测全绿",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-05",
+      "phase": "P1",
+      "title": "lesson_runtime_test.dart 单测（P1 部分：线性流转）",
+      "ac": ["AC-7", "AC-8", "AC-9", "AC-10", "AC-11", "AC-13"],
+      "owner": "Full-stack",
+      "files": ["test/common/lesson_runtime_test.dart"],
+      "changes": [
+        "纯 Dart 测试（无 widget）：构造 LessonPlan + runtime.load → 断言 current==entry（AC-7）",
+        "3 节点线性：模拟三次 onScenarioSuccess → 逐节点流转 → 终点完成（AC-8）",
+        "next 语义：数组顺延（AC-9）；onCompleted 语义：显式跳转（AC-10）",
+        "entry 即终点的单终点剧本 → load 即完成且非 crash（AC-11）",
+        "progress 全程断言（0 → 1/3 → 2/3 → 1，AC-13）；重复 onScenarioSuccess 幂等（不重复流转）"
+      ],
+      "depends_on": ["T-P1-04"],
+      "estimate_min": 30,
+      "verify": "flutter test test/common/lesson_runtime_test.dart 全绿（≥6 用例）；AC-7 验证口径（评审 Minor-6）：纯 Dart 单测只断言 current==entry，「对应场景已加载」半句由 T-P1-13 手动冒烟①覆盖",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-06",
+      "phase": "P1",
+      "title": "circuit_screen 可选参数接线（initialScenarioId + onScenarioSuccess + onPredictionResult）",
+      "ac": ["AC-12", "AC-R1", "AC-R3"],
+      "owner": "Full-stack",
+      "files": ["lib/circuit/screens/circuit_screen.dart"],
+      "changes": [
+        "CircuitScreen 构造加 4 可选参数：initialScenarioId（默认 _defaultScenarioId='default'）/onScenarioSuccess（VoidCallback?）/onPredictionResult（void Function(int,int)?）/showScenarioMenu（bool·默认 true·v1.1 Major-3）——不传 = 现行为（AC-R1）",
+        "_loadDefaultScenario 改用 widget.initialScenarioId 加载（内部仍走 manager.loadScenario·AC-12）",
+        "_maybeNotifyObjectiveMet（circuit_screen.dart:147-153）门控从 `_inquiryTask == null` 扩为 `(widget.onScenarioSuccess == null && _inquiryTask == null)`；达成时二选一（v1.1 评审 Minor-3）：onScenarioSuccess != null（剧本模式）→ 抑制自带完成 SnackBar 仅外发钩子；== null → 既有 SnackBar 通知逻辑原样执行",
+        "AppBar 场景下拉（circuit_screen.dart:720-734）显示条件追加 `widget.showScenarioMenu &&`——剧本模式 host 传 false 隐藏下拉（D11·防节点内逃逸编排·<10 行）",
+        "InquiryDrawer 调用点（circuit_screen.dart:826-833）追加 onPredictionResult: widget.onPredictionResult 透传（依赖 T-P1-07 参数已存在）",
+        "diff 自检：不传四参数时行为逐字节等价（门控条件等价退化 + ?. 短路 + showScenarioMenu 默认 true）"
+      ],
+      "depends_on": ["T-P1-07"],
+      "estimate_min": 35,
+      "verify": "flutter analyze lib/circuit/ 0 新增 issue；flutter test test/circuit/ 全部通过（27/27·回归·AC-R1）；手动 flutter run -d windows 进 circuit 屏默认场景行为不变（AppBar 下拉仍在）；showScenarioMenu:false 时下拉消失。注：Snackbar 提示路径（有 inquiryTask 场景）自动化降级为手动冒烟 T-P1-13 补验——simple-series 初始布局不闭合（hint 实证），自动化达成判定需补导线超性价比",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-07",
+      "phase": "P1",
+      "title": "InquiryDrawer onPredictionResult 可选转发参数 + 单测",
+      "ac": ["AC-40", "AC-41", "AC-R3"],
+      "owner": "Full-stack",
+      "files": ["lib/common/widgets/inquiry_drawer.dart", "test/common/inquiry_drawer_forward_test.dart"],
+      "changes": [
+        "InquiryDrawer 构造加 this.onPredictionResult（void Function(int verified, int correct)?·默认 null）——签名对齐 prediction_panel.dart:31 onResultChanged 模式",
+        "_stageContent prediction 分支（inquiry_drawer.dart:340-343）：现有 onResultChanged 闭包内追加一行 widget.onPredictionResult?.call(verified, correct)（现有 _correctPredictions/_flow.setVerifiedCount 消费不动）",
+        "单测：传入回调 → 模拟答完全部预测题 → 回调收到最终 (verified, correct) 真实值（AC-40）；不传 → 回调侧零调用 + 现有行为断言（Completed 摘要「答对 X/N」正常·阶段流转正常）（AC-41/AC-R3）"
+      ],
+      "depends_on": [],
+      "estimate_min": 25,
+      "verify": "flutter test test/common/inquiry_drawer_forward_test.dart 全绿（正例+负例）；test/common/ 既有 inquiry 系测试全绿（回归）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-08",
+      "phase": "P1",
+      "title": "lesson_sim_host.dart（dispatch 分派 + circuit/colorVision 宿主 + scenarioPlayable 闭包）",
+      "ac": ["AC-18", "AC-12", "AC-58"],
+      "owner": "Full-stack",
+      "files": ["lib/common/scenario/lesson_sim_host.dart", "test/common/lesson_sim_host_test.dart"],
+      "changes": [
+        "LessonSimHostBuilder typedef + LessonSimHosts 静态注册中心（签名见方案 §2.4）",
+        "dispatch()（v1.1 Blocker-2·D9·~10 行）：按 node.scenario.sim 分派到 circuit()/colorVision()；未注册 sim 防御 SizedBox.shrink + debugPrint（正常不发生·解析期 scenarioPlayable 已拦截）——LessonScreen simHostBuilder 实参固定为它，混合 sim 剧本逐节点进正确宿主",
+        "circuit()：惰性缓存 CircuitScenarioManager（loadScenarios 一次）→ CircuitScreen(initialScenarioId: node.scenario.scenarioId, showScenarioMenu: false, onScenarioSuccess: hooks.onScenarioSuccess, onPredictionResult: hooks.onPredictionResult)——showScenarioMenu:false 隐藏 AppBar 场景下拉（D11·Major-3）",
+        "colorVision()：惰性缓存 ColorVisionScenarioManager → findById(scenarioId)（null 防御：返回 SizedBox + debugPrint——正常不发生·解析期已校验）→ MagicLabScreen(scenario: s, scenarioList: const [], manager: mgr, onScenarioSuccess:…, onPredictionResult:…)——scenarioList 空列表使自带场景菜单自隐（D11·rgb 零新参数）；singleBulb 屏场景不注册（scenarioPlayable 返回 false·D10 统一拦截）",
+        "scenarioPlayable()（v1.1 Major-4·D10·原 scenarioExists 升级）：sim ∈ {circuit, color_vision} 且对应 manager findById != null 且 objectives/successCriteria 非空 且全部叶子 type ∈ 该 sim 已实现集（circuit={circuitClosed,componentPowered,bulbBrightness,componentCount}·cv={colorMatch}——方案 §2.4）；未注册 sim/不存在/不可完成一律 false → 引用校验统一走 AC-3 解析期 fail loud",
+        "单测 lesson_sim_host_test.dart：dispatch 分派断言（circuit 节点→CircuitScreen / cv rgb 节点→MagicLabScreen / 未注册 sim→SizedBox 防御）；scenarioPlayable 正反例（存在且可完成 true / 不存在 false / 无 objectives 场景 false / 未实现叶子场景 false）"
+      ],
+      "depends_on": ["T-P1-04", "T-P1-06", "T-P1-14"],
+      "estimate_min": 40,
+      "verify": "flutter analyze 0 error；flutter test test/common/lesson_sim_host_test.dart 全绿；grep 确认 host 层无 loadScenario 直调（加载在 sim screen 内·AC-12）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-09",
+      "phase": "P1",
+      "title": "lesson_progress_bar.dart 进度指示组件 + 单测",
+      "ac": ["AC-19", "AC-20"],
+      "owner": "Full-stack",
+      "files": ["lib/common/widgets/lesson_progress_bar.dart", "test/common/lesson_progress_bar_test.dart"],
+      "changes": [
+        "LessonProgressBar（StatelessWidget·签名见方案 §2.6）：第一行 当前节点标题（titleMedium·maxLines 1·ellipsis）+ 右侧 N/M 计数（labelMedium）；第二行 节点 chips 横向 SingleChildScrollView（已完成 ✓绿 / 当前 ▶蓝边 / 锁定 🔒灰·P1 锁定态仅视觉）",
+        "L0-1/L0-2/L0-3 合规：Row/Wrap 弹性布局·无 Positioned·无固定宽主图（方案 §5）",
+        "单测：三态 chips 渲染断言；runtime 状态推进（tester 阶段通知）后标题/计数/chips 状态更新（AC-20 实时）"
+      ],
+      "depends_on": ["T-P1-04"],
+      "estimate_min": 35,
+      "verify": "flutter test test/common/lesson_progress_bar_test.dart 全绿；320px 视口 pumpWidget 无 overflow 异常（tester.view.physicalSize 设置窄视口）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-10",
+      "phase": "P1",
+      "title": "lesson_screen.dart 宿主屏（runtime 装配 + 流转反馈 + 完成视图）",
+      "ac": ["AC-21", "AC-22", "AC-8", "AC-11", "AC-18"],
+      "owner": "Full-stack",
+      "files": ["lib/screens/lesson_screen.dart", "test/screens/lesson_screen_test.dart"],
+      "changes": [
+        "LessonScreen StatefulWidget（plan + simHostBuilder 参数）：initState 创建 runtime.load(plan) + LessonHooks 装配 + listener（节点完成 SnackBar 反馈）；dispose 释放",
+        "build：Scaffold + AppBar（title 含剧本名+当前节点标题·AC-19）+ bottom LessonProgressBar + body ListenableBuilder（isLessonCompleted → _LessonCompleteView / 否则 AnimatedSwitcher 350ms fade + ValueKey('lesson-node-${node.id}') 包 simHostBuilder(context, node, hooks)）",
+        "_LessonCompleteView：🎉 + 课时名 + 节点回顾列表（title + ✓）+「返回首页」Navigator.pop（AC-22）",
+        "流转反馈双通道：AnimatedSwitcher 过渡 + SnackBar '✅ 已完成「A」→ 进入「B」'（AC-21）",
+        "widget 测试（stub hostBuilder 计数 widget）：模拟 onScenarioSuccess → SnackBar 出现 + 节点 widget 切换；流转至终点 → 完成视图可见（AC-22）+ 返回按钮可 pop"
+      ],
+      "depends_on": ["T-P1-04", "T-P1-08", "T-P1-09"],
+      "estimate_min": 45,
+      "verify": "flutter test test/screens/lesson_screen_test.dart 全绿（≥4 用例）；flutter analyze 0 error",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-11",
+      "phase": "P1",
+      "title": "lesson_entry_section.dart 首页课时入口 + home_screen 挂接 + pubspec assets",
+      "ac": ["AC-16", "AC-17", "AC-18", "AC-14"],
+      "owner": "Full-stack",
+      "files": [
+        "lib/common/widgets/lesson_entry_section.dart",
+        "lib/screens/home_screen.dart",
+        "pubspec.yaml",
+        "test/screens/lesson_entry_test.dart"
+      ],
+      "changes": [
+        "LessonEntrySection（StatefulWidget·sim 参数）：initState 异步 loadEntries() 过滤 sim → 有课时渲染 LessonEntryCard 列表（卡片复用 _SimCard 视觉语言：白底 12 圆角+Icons.menu_book_rounded+sim 主色描边+高 88）/ 无课时或 manifest 缺失或异常 → SizedBox.shrink()（AC-17）",
+        "LessonEntryCard 点击 _launch()：① LessonSimHosts 惰性加载全部已注册 sim manager（circuit+color_vision·混合剧本需要·D9）→ ② loader.loadAll(scenarioPlayable) → ③ 找 id 匹配 plan（找不到 SnackBar '课时暂不可用'·AC-6 降级末端）→ ④ push LessonScreen(simHostBuilder: LessonSimHosts.dispatch())（AC-18·D9）",
+        "home_screen：_SimEntry 加 simKey 字段（8 entry 补 key）+ _SubjectGroupBlock 在 sim 卡片 Wrap 后追加该组各 sim 的 LessonEntrySection（AC-16）",
+        "pubspec.yaml flutter.assets 追加 '- assets/lessons/'（AC-14 前置）",
+        "widget 测试：有注册课时 sim（mock assets 或注入 entries）→ 卡片渲染（AC-16）；无课时 sim → 渲染空且 home 布局不变（AC-17/AC-R2）"
+      ],
+      "depends_on": ["T-P1-03", "T-P1-08", "T-P1-10"],
+      "estimate_min": 45,
+      "verify": "flutter test test/screens/lesson_entry_test.dart 全绿；flutter run 首页：circuit/color_vision 组出现课时卡片、其余 6 sim 组视觉零变化（AC-R2 手动确认）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-12",
+      "phase": "P1",
+      "title": "2 条线性试点剧本 JSON + lessons manifest（含 fuse-blown 初始态实测）",
+      "ac": ["AC-23", "AC-24", "AC-25"],
+      "owner": "Full-stack",
+      "files": [
+        "assets/lessons/circuit-switch-basics.json",
+        "assets/lessons/cv-additive-linear.json",
+        "assets/lessons/manifest.json"
+      ],
+      "changes": [
+        "fuse-blown 已按方案 §9 R2 预案①定稿（v1.1·评审实证坐实秒完成：无熔断逻辑 circuit_solver.dart:242-243 + isClosed 默认 true）：n3 节点 title/description 观察引导（方案 §6.1 已含定稿文本）——无需再实测选预案；flutter run 实测仅作确认记录写入 process.txt",
+        "circuit-switch-basics.json：controlled-switch → open-circuit-debug → fuse-blown（观察型）→ n-end（方案 §6.1 全文）",
+        "cv-additive-linear.json：rgb-yellow-only → rgb-cyan-challenge → rgb-challenge-basic → n-end（方案 §6.3 全文）",
+        "manifest.json：version + 2 条 lessons entry（方案 §6.6 前 2 条）",
+        "自检：两剧本均 ≥3 场景节点 + onCompleted 线性（AC-24）；场景 id 与 sim manifest 逐一比对（AC-25）"
+      ],
+      "depends_on": ["T-P1-01"],
+      "estimate_min": 30,
+      "verify": "T-P3-06 守卫测试通过（若已提前实现）或 flutter run 手动冒烟：首页点击课时 → 3 节点逐个完成 → 完成视图（AC-26 预演）；fuse-blown 实测确认记录（初始完成时序与预案①预期一致）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-13",
+      "phase": "P1",
+      "title": "P1 端到端冒烟 + 全量回归",
+      "ac": ["AC-26", "AC-R1", "AC-R2"],
+      "owner": "Full-stack",
+      "files": [],
+      "changes": [
+        "手动冒烟清单（flutter run -d windows）：① 首页 circuit 组见「开关与电路诊断」卡片 → 点击进入 → 场景为 controlled-switch（AC-18·兼验 AC-7「场景已加载」半句口径·评审 Minor-6）② 合闸 → SnackBar 反馈 + 自动进入下一节点（AC-8/21）③ 三节点完成 → 完成视图 + 返回首页（AC-22/26）④ color_vision 线性剧本同流程（T-P1-14 rgb 钩子实证·Blocker-1 闭环）⑤ 退出课时重进 = 全新进度（内存态·A-R3）⑥ 跨 sim 混合剧本「电与光的探索」：circuit n1 完成 → 自动切 cv n2（dispatch 实证）→ 完成 → 切回 circuit n3 → 完成视图（AC-58）⑦ 剧本模式无场景切换入口：circuit AppBar 无场景下拉 / rgb 无场景菜单（D11·Major-3）",
+        "回归门禁：flutter analyze 全仓 0 新增 issue（AC-R1）；flutter test 全量通过（38 既有文件 + 本需求新增·AC-R1）；无课时 6 sim 首页与运行行为抽查不变（AC-R2）"
+      ],
+      "depends_on": ["T-P1-11", "T-P1-12", "T-P1-15"],
+      "estimate_min": 40,
+      "verify": "process.txt 追加 P1 冒烟记录（含 7 项清单逐项 ✓）+ 全量测试计数；全量 test 0 fail",
+      "status": "pending"
+    },
+    {
+      "id": "T-P1-14",
+      "phase": "P1",
+      "title": "rgb_bulbs_screen（MagicLabScreen）钩子接线（onScenarioSuccess 持续检测 + onPredictionResult）【v1.1 自 P2 前移·原 T-P2-05·Blocker-1】",
+      "ac": ["AC-8", "AC-26", "AC-42", "AC-R3"],
+      "owner": "Full-stack",
+      "files": ["lib/color_vision/screens/rgb_bulbs_screen.dart"],
+      "changes": [
+        "MagicLabScreen 构造加 onScenarioSuccess + onPredictionResult 两可选参数（已有 scenario/scenarioList/manager 不动·不传=现行为）",
+        "新增 _maybeNotifyObjectiveMet()：首条件 widget.onScenarioSuccess != null（无钩子零开销零新路径·AC-R3）&& !_objectivesMetNotified && mgr.checkObjectives(_state) → 置位 + widget.onScenarioSuccess?.call()（与挑战触发的 _notifyChallengeObjective 并存共用 _objectivesMetNotified 防重复）",
+        "强度更新三处追加 _maybeNotifyObjectiveMet()：_onDragUpdate（rgb_bulbs_screen.dart:264-274）/ _miniSliderVertical Slider onChanged（:824）/ _startChallenge 归零后",
+        "InquiryDrawer 调用点（:365-372）追加 onPredictionResult: widget.onPredictionResult 透传",
+        "前移理由（Blocker-1）：P1 验收范围含 AC-23~26（F7 cv 线性剧本）——无 rgb 完成钩子 cv 剧本节点永不完成、T-P1-08 host 传参无法编译；depends 仅 T-P1-07，与 P1 其他可选参数改动同源"
+      ],
+      "depends_on": ["T-P1-07"],
+      "estimate_min": 30,
+      "verify": "flutter analyze lib/color_vision/ 0 新增 issue；flutter test test/color_vision/ + test/rgb_bulbs_layout_test.dart 全绿（回归）；手动冒烟：非剧本模式进魔法实验室行为不变（不传钩子）",
+      "status": "done"
+    },
+    {
+      "id": "T-P1-15",
+      "phase": "P1",
+      "title": "跨 sim 混合试点剧本 cross-sim-explore.json + manifest 注册（v1.1 新增·Blocker-2 修法 B·AC-58）",
+      "ac": ["AC-58"],
+      "owner": "Full-stack",
+      "files": [
+        "assets/lessons/cross-sim-explore.json",
+        "assets/lessons/manifest.json"
+      ],
+      "changes": [
+        "cross-sim-explore.json（方案 §6.5 全文）：circuit/controlled-switch → color_vision/rgb-yellow-only → circuit/open-circuit-debug → n-end——节点序列双向穿越，实证 dispatch 分派（D9）+ 异 sim 宿主切换 + 两 sim 完成钩子协同",
+        "manifest.json 追加 entry：{ id: 'cross-sim-explore', file: 'cross-sim-explore.json', name: '电与光的探索', sim: 'circuit' }——sim = entry 节点 n1 的 scenario.sim（D9 入口归属语义·挂 circuit 组）",
+        "自检：三场景均过 scenarioPlayable 口径（controlled-switch 合闸可满足 / rgb-yellow-only colorMatch 需操作 / open-circuit-debug 补线）；剧本 ≥3 场景节点 + onCompleted 线性"
+      ],
+      "depends_on": ["T-P1-12"],
+      "estimate_min": 20,
+      "verify": "T-P3-06 守卫测试（含混合剧本断言）通过；端到端运行验证并入 T-P1-13 冒烟⑥（circuit→cv→circuit 双向流转至完成视图）",
+      "status": "done"
+    },
+    {
+      "id": "T-P2-01",
+      "phase": "P2",
+      "title": "剧本条件叶子求值器（nodeCompleted/predictionScore/scenarioSuccess + fail-safe）",
+      "ac": ["AC-27", "AC-28", "AC-29", "AC-30", "AC-31", "AC-32", "AC-33"],
+      "owner": "Full-stack",
+      "files": ["lib/common/scenario/lesson_runtime.dart"],
+      "changes": [
+        "_evaluateCondition(cond) → cond.evaluate(_lessonLeaf)（复用 evaluate(leafEvaluator) 注入·success_condition.dart:105-106）（AC-27）",
+        "_lessonLeaf 三叶子实现（方案 §4 语义表）：nodeCompleted→completed.contains（AC-28）；predictionScore→metric count/ratio × operator gte/lte/gt/lt/eq × threshold 比较（AC-29）；scenarioSuccess→_scenarioSuccess.contains(nodeId 或 current)（AC-30）",
+        "fail-safe：未知叶子 type / 无预测记录 / verified==0 / 未知 metric/operator / threshold 非数值 → 一律 false 不抛（AC-31/33）",
+        "isUnlocked 补全条件求值（替换 P1 占位·AC-34~36 的运行时侧）"
+      ],
+      "depends_on": ["T-P1-05"],
+      "estimate_min": 35,
+      "verify": "T-P2-02 单测全绿",
+      "status": "pending"
+    },
+    {
+      "id": "T-P2-02",
+      "phase": "P2",
+      "title": "lesson_runtime_test 扩展（叶子矩阵 + unlock + routes 全覆盖）",
+      "ac": ["AC-27", "AC-28", "AC-29", "AC-30", "AC-31", "AC-32", "AC-33", "AC-34", "AC-35", "AC-36", "AC-37", "AC-38"],
+      "owner": "Full-stack",
+      "files": ["test/common/lesson_runtime_test.dart"],
+      "changes": [
+        "叶子矩阵：nodeCompleted true/false；predictionScore ratio 0.8+gte 正反（AC-29）；count 模式；verified=0→false（AC-33）；未作答无记录→false；未知 metric/operator→false；未知叶子 type→false 不抛（AC-31）",
+        "组合树：all/any/not 嵌套求值（AC-27 结构复用验证）",
+        "isUnlocked：unlock null 恒 true（AC-36）/条件未满足 false（AC-34）/前置完成后 true（AC-35）",
+        "routes：按序求值首中短路（AC-37）/全 false 走兜底（AC-38）/routes 求值时序（completed.add 在前→当前节点 nodeCompleted 恒 true 契约用例）"
+      ],
+      "depends_on": ["T-P2-01"],
+      "estimate_min": 40,
+      "verify": "flutter test test/common/lesson_runtime_test.dart 全绿（P1+P2 合计 ≥20 用例）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P2-03",
+      "phase": "P2",
+      "title": "unlock 门禁交互（jumpTo + 进度 chips 锁定拦截）",
+      "ac": ["AC-34", "AC-35", "AC-36"],
+      "owner": "Full-stack",
+      "files": ["lib/common/scenario/lesson_runtime.dart", "lib/common/widgets/lesson_progress_bar.dart", "lib/screens/lesson_screen.dart"],
+      "changes": [
+        "LessonRuntime.jumpTo(nodeId)：isUnlocked false → no-op 返回 false；true → current 切换 + notifyListeners（completed 保留·节点重运行）",
+        "LessonProgressBar onNodeTap 接线：chips 可点（P1 展示态升级）——锁定节点点击 → 父层 SnackBar '节点未解锁'（点击不响应语义·AC-34）；已解锁点击 → runtime.jumpTo",
+        "lesson_screen_test 补用例：锁定 chip 点击无跳转 + 提示；已解锁 chip 点击 current 切换"
+      ],
+      "depends_on": ["T-P2-01"],
+      "estimate_min": 30,
+      "verify": "flutter test test/common/lesson_progress_bar_test.dart + test/screens/lesson_screen_test.dart 全绿（新增锁定拦截用例）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P2-04",
+      "phase": "P2",
+      "title": "routes 条件路由实现（advanceFrom routes 分支）",
+      "ac": ["AC-37", "AC-38", "AC-39"],
+      "owner": "Full-stack",
+      "files": ["lib/common/scenario/lesson_runtime.dart"],
+      "changes": [
+        "_advanceFrom routes 分支：按数组序求值 r.when（null 项跳过求值）·首个 true 的 to 生效并 return；循环结束 → 末项兜底 to（方案 §2.3 伪码）",
+        "AC-39 的无兜底拒绝已在 T-P1-01 解析期实现——本任务补关联单测断言（在 T-P2-02 中）"
+      ],
+      "depends_on": ["T-P2-01"],
+      "estimate_min": 20,
+      "verify": "flutter test test/common/lesson_runtime_test.dart routes 用例全绿（AC-37/38/39 三条各有专属用例）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P2-06",
+      "phase": "P2",
+      "title": "InquiryDrawer→LessonRuntime 预测转发链路集成测试",
+      "ac": ["AC-42"],
+      "owner": "Full-stack",
+      "files": ["test/screens/lesson_screen_test.dart"],
+      "changes": [
+        "集成用例：lesson_screen_test 的 stub host 改为内嵌真实 InquiryDrawer（或含预测题的轻量 stub 链）→ 模拟答题验证 → 断言 runtime._predictions[current] 记录 (verified, correct) → 再触发 onScenarioSuccess 且 routes 条件 predictionScore → 分流方向正确（AC-42 端到端语义）",
+        "注：rgb/circuit 两侧透传参数已分别由 T-P1-14/T-P1-06（v1.1 前移 P1）交付，本任务仅做集成断言"
+      ],
+      "depends_on": ["T-P2-04", "T-P1-14"],
+      "estimate_min": 30,
+      "verify": "flutter test test/screens/lesson_screen_test.dart 转发链路用例全绿",
+      "status": "pending"
+    },
+    {
+      "id": "T-P2-07",
+      "phase": "P2",
+      "title": "2 条条件试点剧本 JSON（routes 分流 + unlock 门禁）",
+      "ac": ["AC-43", "AC-44"],
+      "owner": "Full-stack",
+      "files": [
+        "assets/lessons/circuit-ohm-diagnosis.json",
+        "assets/lessons/cv-challenge-path.json",
+        "assets/lessons/manifest.json"
+      ],
+      "changes": [
+        "circuit-ohm-diagnosis.json：simple-series → routes(predictionScore n1 ratio≥0.5 → open-circuit-debug | 兜底 controlled-switch) → 汇合 fuse-blown（unlock any 组合）→ n-end（方案 §6.2 全文·含 routes+unlock+两叶子）",
+        "cv-challenge-path.json：rgb-yellow-only → rgb-cyan-challenge（unlock all 组合）→ rgb-challenge-basic（unlock any 组合）→ n-end（方案 §6.4 全文）",
+        "manifest.json 追加 2 条 entry（方案 §6.6 中 circuit-ohm-diagnosis 与 cv-challenge-path 两条·此时 manifest 共 5 条）"
+      ],
+      "depends_on": ["T-P1-12"],
+      "estimate_min": 25,
+      "verify": "T-P3-06 守卫测试（或手动）确认两剧本解析通过 + 引用存在；flutter run 冒烟：cv 剧本 n2 未完成前 n3 锁定（AC-34 视觉）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P2-08",
+      "phase": "P2",
+      "title": "P2 端到端（条件分叉两路径）+ 全量回归",
+      "ac": ["AC-45", "AC-R1", "AC-R3"],
+      "owner": "Full-stack",
+      "files": [],
+      "changes": [
+        "手动冒烟（flutter run）：circuit-ohm-diagnosis 剧本双路径——① 答对 ≥1/2 预测题 + 完成探究 → 进挑战线 open-circuit-debug ② 直接操作跳过预测 → fail-safe 走复习线 controlled-switch；两路径均汇合 fuse-blown → 完成（AC-45）",
+        "回归门禁：flutter analyze 0 新增 + flutter test 全量（AC-R1）+ InquiryDrawer 不传参路径抽查（AC-R3）"
+      ],
+      "depends_on": ["T-P2-03", "T-P2-06", "T-P2-07"],
+      "estimate_min": 35,
+      "verify": "process.txt 追加 P2 冒烟记录（双路径分叉各一截图或文字记录）+ 全量测试计数",
+      "status": "pending"
+    },
+    {
+      "id": "T-P3-01",
+      "phase": "P3",
+      "title": "schemas/lesson.schema.json",
+      "ac": ["AC-46"],
+      "owner": "Full-stack",
+      "files": ["schemas/lesson.schema.json"],
+      "changes": [
+        "按方案 §7.1 结构树实现（Draft 2020-12·参照 color_vision_scenario.schema.json 风格）：顶层 required 6 字段 + nodes 数组",
+        "definitions：lessonNode（scenario/unlock/advance 均 oneOf [null, $ref]）/scenarioRef（sim enum 试点封闭 ['circuit','color_vision']·D8）/advance（type enum 三值 + if/then 条件必填 to·routes）/route（to 必填 + when oneOf）/lessonCondition（oneOf 四分支·组合三件与 _shared/combinable_criteria.md 契约同构）/conditionLeaf（required id·type·description + type enum 三叶）",
+        "全节点 additionalProperties: false"
+      ],
+      "depends_on": ["T-P2-07"],
+      "estimate_min": 35,
+      "verify": "T-P3-02 schema 合法性用例通过（Draft202012Validator 编译通过·AC-46）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P3-02",
+      "phase": "P3",
+      "title": "lesson_schema_test.dart（schema 正反例校验）",
+      "ac": ["AC-46", "AC-47", "AC-48"],
+      "owner": "Full-stack",
+      "files": ["test/tooling/lesson_schema_test.dart"],
+      "changes": [
+        "schema 文件存在 + jsonschema.Draft202012Validator 可构造（AC-46）",
+        "正例：assets/lessons/ 全部 4 试点剧本逐一通过校验（AC-47）",
+        "反例拒绝：缺 entry / advance.type 非法值 / 叶子 type 非法值 / scenario.sim='molarity'（非试点）/ routes 空 / 叶子缺 id 或 description（AC-48 + D1 契约）",
+        "测试内 jsonschema 依赖处理：沿用 ai_scenario_gen_consistency_test.dart 的 python 调用或纯 Dart 断言模式（实现期按现有 tooling 测试惯例选型——若 Dart 侧无 jsonschema 库则通过 Process 调 python 校验，与 generate.py 同源）"
+      ],
+      "depends_on": ["T-P3-01"],
+      "estimate_min": 35,
+      "verify": "flutter test test/tooling/lesson_schema_test.dart 全绿（1+4+6 用例）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P3-03",
+      "phase": "P3",
+      "title": "docs/prompts/lesson.md prompt 文档",
+      "ac": ["AC-49", "AC-50", "AC-51"],
+      "owner": "Full-stack",
+      "files": ["docs/prompts/lesson.md"],
+      "changes": [
+        "按方案 §7.2 八章节骨架：角色目标/结构规范字段表/三编排原语/条件叶子枚举（含 params 契约表 + routes 求值时序注意 + 深度≤4）/图规则 fail loud 清单/场景清单占位符 {{SCENARIO_IDS}}/few-shot 两例（§6.1 线性 + §6.2 条件全文）/输出要求",
+        "AC-51：条件树格式不在本文复制——注明由 generate.py 自动拼接 _shared/combinable_criteria.md（附录引用声明）",
+        "AC-50：{{SCENARIO_IDS}} 占位符格式与 generate.py 替换逻辑严格对齐（T-P3-04 联调）"
+      ],
+      "depends_on": ["T-P2-07"],
+      "estimate_min": 40,
+      "verify": "文档含 {{SCENARIO_IDS}} 标记（grep）+ 结构覆盖三原语/叶子枚举/few-shot（AC-49~51 逐项 grep 自检）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P3-04",
+      "phase": "P3",
+      "title": "generate.py --lesson 模式",
+      "ac": ["AC-52", "AC-53", "AC-54"],
+      "owner": "Full-stack",
+      "files": ["scripts/ai_scenario_gen/generate.py", "scripts/ai_scenario_gen/lesson_validate_test.dart"],
+      "changes": [
+        "argparse：--lesson 与 --sim 改互斥必选组（--sim 当前 required=True·generate.py:205·本任务调整声明；同传报错·单独 --lesson 进剧本分支；既有调用均传 --sim 行为不变·评审 Nit-2）；--topic/--level/--write/--from-stdin/--print-prompt 复用",
+        "run_lesson_mode（方案 §7.3 伪码）：拼 lesson.md + _shared/combinable_criteria.md（复用 generate.py:226-238 拼接机制）→ 替换 {{SCENARIO_IDS}} → LLM/stdin → extract_json（复用）",
+        "validate_lesson_schema：jsonschema 校验 lesson.schema.json（失败 exit·AC-53）",
+        "本地引用校验：nodes[].scenario ∈ 收集的 scenario_ids（不命中 exit·AC-55 前半）",
+        "Dart 语义校验：lesson_validate_test.dart（--dart-define LESSON_PATH=<tmp> → LessonPlan.fromJson 全量图校验含 scenarioPlayable D10·模式复制 generate.py 内既有 Dart 校验调用段 generate.py:160-182——评审 Nit-1 更正：validate_test.dart 仅 63 行）+ --skip-dart 跳过",
+        "--write：写 assets/lessons/<lessonId>.json + update_lessons_manifest（读改写·id 存在更新否则追加·模式复制 update_manifest:185-200）（AC-54）；sim 字段按 D9 派生：entry 节点 scenario.sim（entry 为终点取首个非终点节点·无则 exit 报错）",
+        "既有 --sim 主路径行为零变化（diff 自检·仅 argparse 声明改互斥必选组）"
+      ],
+      "depends_on": ["T-P3-01", "T-P3-03"],
+      "estimate_min": 50,
+      "verify": "python generate.py --lesson --topic '串联电路入门' --print-prompt 可执行且 prompt 含注入后的场景清单（AC-52）；--from-stdin 喂 §6.1 线性剧本 JSON + --write → 文件落盘 + manifest 追加正确（AC-53/54）；喂引用不存在场景的 JSON → 被 schema/引用校验拒绝 exit 非零（AC-55）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P3-05",
+      "phase": "P3",
+      "title": "场景 id 清单注入链路验证（8 manifest 提取 + 占位符替换）",
+      "ac": ["AC-50", "AC-55"],
+      "owner": "Full-stack",
+      "files": ["scripts/ai_scenario_gen/generate.py"],
+      "changes": [
+        "collect_scenario_ids()：遍历 8 份 sim manifest（SCENARIO_DIR_MAP 路径映射 generate.py:55-64·含 optics 平铺根目录与连字符目录坑）提取 {sim, id, name}",
+        "format_scenario_catalog()：分组 markdown 列表（sim 标题 + 场景 id/name/描述行）+ 剧本可用性标注（试点 sim 注明'当前剧本运行时仅支持 circuit/color_vision'·R3/R5 防线）",
+        "可完成性预过滤（v1.1 Major-4·D10 同口径）：浅读每个候选场景 JSON——objectives/successCriteria 缺失或为空、或叶子 type ∉ 该 sim 已实现集（cv={colorMatch}·circuit={circuitClosed,componentPowered,bulbBrightness,componentCount}·硬编码口径表与 Dart 侧一致）→ 从清单剔除并计数写 stderr——AI 不会产出引用不可完成场景的剧本（rgb-inquiry-additive/rgb-dark-room/circuit default/singleBulb 场景被排除）",
+        "验证 {{SCENARIO_IDS}} 替换后无残留占位符"
+      ],
+      "depends_on": ["T-P3-04"],
+      "estimate_min": 20,
+      "verify": "--print-prompt 输出含 8 sim 场景条目（总数 = 46 − 可完成性预过滤剔除数，剔除计数与 stderr 记录一致；rgb-inquiry-additive/rgb-dark-room/circuit default 不在清单中）且无 {{SCENARIO_IDS}} 残留",
+      "status": "pending"
+    },
+    {
+      "id": "T-P3-06",
+      "phase": "P3",
+      "title": "lesson_reference_guard_test.dart 引用守卫（建议提前至 P1 末执行）",
+      "ac": ["AC-56", "AC-57", "AC-58"],
+      "owner": "Full-stack",
+      "files": ["test/tooling/lesson_reference_guard_test.dart"],
+      "changes": [
+        "守卫主断言（模式复制 scenario_runtime_wiring_test.dart 白名单/台账）：遍历 assets/lessons/manifest.json 全部注册剧本 → 读 JSON → 每个节点 scenario.scenarioId ∈ 对应 sim manifest（assets/scenarios/<dir>/manifest.json·路径用 SCENARIO_DIR_MAP 同款映射表）场景 id 集（AC-56）",
+        "红灯机制自证：测试内构造引用不存在场景 id 的内存剧本 → 断言守卫检测函数返回失败（证明'场景删除→测试红灯'能力·AC-57）",
+        "可完成性断言（v1.1 Major-4·D10 CI 冗余层）：每个引用场景 objectives/successCriteria 非空 且全部叶子 type ∈ 该 sim 已实现集（cv={colorMatch}·circuit={circuitClosed,componentPowered,bulbBrightness,componentCount}）——与 scenarioPlayable 同口径",
+        "manifest 等值断言（D9 + 评审 Nit-3）：entry.id == 剧本 lessonId 且 entry.sim == 入口归属 sim 派生值（entry 节点 scenario.sim·entry 为终点取首个非终点节点）——防 generate.py 写入与手写分叉",
+        "附加断言：≥2 剧本覆盖 circuit+color_vision（AC-23）/每剧本 ≥3 场景节点（AC-24）/存在 routes 剧本与 unlock 剧本（AC-43/44）/≥1 条混合 sim 剧本（节点 sim 集合大小 ≥2·AC-58）/条件叶子 nodeId 引用存在（D6 CI 层防线）",
+        "剧本数量为 0 时守卫失败（防 manifest 清空后测试空转绿灯）"
+      ],
+      "depends_on": ["T-P1-12"],
+      "estimate_min": 35,
+      "verify": "flutter test test/tooling/lesson_reference_guard_test.dart 全绿；临时删 manifest 中某场景 id（本地实验·勿提交）→ 守卫红灯（AC-57 实证后还原）",
+      "status": "pending"
+    },
+    {
+      "id": "T-P3-07",
+      "phase": "P3",
+      "title": "P3 收尾：工具链一致性回归 + 全量验证",
+      "ac": ["AC-R1", "AC-52", "AC-53", "AC-54", "AC-55"],
+      "owner": "Full-stack",
+      "files": [],
+      "changes": [
+        "工具链冒烟：--print-prompt（prompt 完整性）/ --from-stdin 正例 --write（落盘+manifest）/ 反例拒绝（schema 违规 / 引用幻觉 / Dart 图校验失败三反例）",
+        "生成产物回归：--write 生成的剧本能被 app 加载运行（flutter run 冒烟 1 次）且守卫测试/schema 测试全绿",
+        "全量门禁：flutter analyze 0 新增 + flutter test 全量（含 38 既有 + 本需求全部新测试）通过（AC-R1）"
+      ],
+      "depends_on": ["T-P3-05", "T-P3-06"],
+      "estimate_min": 35,
+      "verify": "process.txt 追加 P3 收尾记录（三反例拒绝 + 生成剧本端到端 ✓ + 全量测试计数）",
+      "status": "pending"
+    }
+  ]
+}

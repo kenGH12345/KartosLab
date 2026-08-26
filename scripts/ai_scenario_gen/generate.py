@@ -200,9 +200,301 @@ def update_manifest(sim: str, scenario_id: str, file_name: str) -> None:
         json.dump(manifest, f, ensure_ascii=False, indent=2)
 
 
+# ---------------------------------------------------------------------------
+# Lesson-plan (教学剧本) mode
+# ---------------------------------------------------------------------------
+# 与 Dart 侧 lesson_sim_host.dart 的 D10 已实现叶子集同口径（硬编码表——两侧
+# 各自维护，改一侧必须同步另一侧，参考 ai_scenario_gen_consistency_test.dart）。
+LESSON_LEAF_TYPES = {
+    "circuit": {"circuitClosed", "componentPowered", "bulbBrightness", "componentCount"},
+    "color_vision": {"colorMatch"},
+}
+
+# 剧本运行时宿主（D8 试点封闭集）。清单中其他 sim 场景标注"不可引用"。
+LESSON_HOST_SIMS = ("circuit", "color_vision")
+
+
+def _iter_leaves(cond):
+    """递归收集条件树中的所有叶子（组合 all/any/not 展开）。"""
+    if not isinstance(cond, dict):
+        return
+    if cond.get("type"):
+        yield cond
+        return
+    for key in ("all", "any"):
+        for sub in cond.get(key, []) or []:
+            yield from _iter_leaves(sub)
+    if isinstance(cond.get("not"), dict):
+        yield from _iter_leaves(cond["not"])
+
+
+def _is_completable(sim: str, data) -> bool:
+    """D10 同口径可完成性：objectives/successCriteria 非空 且叶子 type ∈ 已实现集。
+
+    与 LessonSimHosts.scenarioPlayable() 一致（含 cv 仅 rgb 屏、colorMatch≤1 静态
+    互斥规则）。剔除不可完成场景——AI 不会产出引用它们的剧本。
+    """
+    if sim not in LESSON_LEAF_TYPES or data is None or not isinstance(data, dict):
+        return False
+    if sim == "color_vision":
+        if data.get("screen") != "rgb":
+            return False
+        criteria = data.get("successCriteria")
+    else:
+        obj = data.get("objectives")
+        if not isinstance(obj, dict):
+            return False
+        criteria = obj.get("successCriteria")
+    if not isinstance(criteria, list) or not criteria:
+        return False
+    implemented = LESSON_LEAF_TYPES[sim]
+    for cond in criteria:
+        leaves = list(_iter_leaves(cond))
+        if not leaves:
+            return False
+        for leaf in leaves:
+            if leaf.get("type") not in implemented:
+                return False
+    if sim == "color_vision":
+        # colorMatch 单场景只允许 1 个 colorMatch 叶子（D10 强化 · 互斥防护）
+        color_matches = sum(1 for c in criteria for l in _iter_leaves(c)
+                            if l.get("type") == "colorMatch")
+        if color_matches > 1:
+            return False
+    return True
+
+
+def collect_scenario_ids():
+    """遍历 8 份 sim manifest 提取可引用场景 {sim, id, name} + 剔除计数。
+
+    目录路径走 SCENARIO_DIR_MAP（连字符目录坑/optics 平铺根目录已在 map 内）。
+    """
+    catalog = {}
+    rejected = 0
+    for sim in SIM_MAP:
+        sim_dir = scenario_dir(sim)
+        manifest_path = os.path.join(sim_dir, "manifest.json")
+        if not os.path.exists(manifest_path):
+            continue
+        try:
+            with open(manifest_path, "r", encoding="utf-8-sig") as f:
+                manifest = json.load(f)
+        except Exception:  # noqa: BLE001
+            continue
+        for entry in manifest.get("scenarios", []):
+            sid = entry.get("id")
+            fname = entry.get("file")
+            if not sid or not fname:
+                continue
+            data = None
+            try:
+                with open(os.path.join(sim_dir, fname), "r", encoding="utf-8-sig") as f:
+                    data = json.load(f)
+            except Exception:  # noqa: BLE001
+                pass
+            if not _is_completable(sim, data):
+                rejected += 1
+                continue
+            catalog.setdefault(sim, []).append(
+                {"id": sid, "name": entry.get("name", sid)}
+            )
+    return catalog, rejected
+
+
+def format_scenario_catalog(catalog: dict, rejected: int) -> str:
+    """分组 markdown 清单（替换 {{SCENARIO_IDS}} 占位符）。"""
+    lines = ["（以下为本课时可引用场景，按 sim 分组——只引用清单内的 scenarioId）"]
+    for sim in SIM_MAP:
+        if sim not in catalog:
+            continue
+        note = "" if sim in LESSON_HOST_SIMS else "（⚠ 非剧本运行时宿主 · 不可引用）"
+        lines.append(f"### {sim}{note}")
+        for s in catalog[sim]:
+            lines.append(f"- `{s['id']}` — {s['name']}")
+    if rejected:
+        lines.append(
+            f"\n> 另有 {rejected} 个场景因判定不可完成或不可用被排除（未列出）。"
+        )
+    return "\n".join(lines)
+
+
+def build_lesson_user_prompt(topic: str, level: str) -> str:
+    return (
+        "\n\nGenerate ONE lesson-plan JSON for the kratos lesson runtime. "
+        "Teaching goal/topic from the teacher: {topic}\n"
+        "Difficulty level: {level}\n"
+        "Follow the schema and the few-shot examples in the system prompt exactly. "
+        "Output ONLY the JSON object, no prose, no markdown fences."
+    ).format(topic=topic, level=level)
+
+
+def run_dart_validate_lesson(data: dict, topic_id: str) -> tuple[bool, str]:
+    """lesson_validate_test.dart Dart gate（LessonPlan.fromJson + D10）。"""
+    import re
+    import shutil
+    import subprocess
+    import tempfile
+
+    safe = re.sub(r"[^a-zA-Z0-9_-]", "", topic_id)[:20] or "lesson"
+    tmp = os.path.join(tempfile.gettempdir(), f"{safe}-lesson-check.json")
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+    flutter_bin = shutil.which("flutter") or shutil.which("flutter.bat")
+    if not flutter_bin:
+        return False, "ERROR: 'flutter' not found on PATH; cannot run Dart semantic gate."
+    here = os.path.dirname(os.path.abspath(__file__))
+    proc = subprocess.run(
+        [
+            flutter_bin, "test", os.path.join(here, "lesson_validate_test.dart"),
+            f"--dart-define=LESSON_PATH={tmp}",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    return proc.returncode == 0, proc.stdout + proc.stderr
+
+
+def update_lessons_manifest(lesson_id: str, file_name: str, data: dict) -> None:
+    """写 assets/lessons/manifest.json（id 存在更新否则追加 · D9 sim 派生）。
+
+    sim = entry 节点 scenario.sim；entry 为终点取首个非终点节点；无则报错。
+    """
+    lessons_dir = os.path.join(ROOT, "assets", "lessons")
+    os.makedirs(lessons_dir, exist_ok=True)
+    manifest_path = os.path.join(lessons_dir, "manifest.json")
+    if os.path.exists(manifest_path):
+        manifest = json.loads(_load_text(manifest_path))
+    else:
+        manifest = {"version": "1.0", "lessons": []}
+
+    nodes = data.get("nodes", [])
+    entry_id = data.get("entry")
+    entry = next((n for n in nodes if n.get("id") == entry_id), None)
+    sim = None
+    if isinstance(entry, dict) and isinstance(entry.get("scenario"), dict):
+        sim = entry["scenario"].get("sim")
+    if not sim:
+        for n in nodes:
+            sc = n.get("scenario")
+            if isinstance(sc, dict) and sc.get("sim"):
+                sim = sc.get("sim")
+                break
+    if not sim:
+        sys.exit("ERROR: 无法派生 lessons manifest 的 sim 字段（D9 入口归属）——"
+                 "剧本 entry 节点须引用场景。")
+
+    lessons = manifest.get("lessons", [])
+    new_entry = {
+        "id": lesson_id,
+        "file": file_name,
+        "name": data.get("name", lesson_id),
+        "sim": sim,
+    }
+    for i, l in enumerate(lessons):
+        if l.get("id") == lesson_id:
+            lessons[i] = new_entry
+            break
+    else:
+        lessons.append(new_entry)
+    manifest["lessons"] = lessons
+    with open(manifest_path, "w", encoding="utf-8") as f:
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
+
+
+def run_lesson_mode(args) -> None:
+    """--lesson 主流程（方案 §7.3）：拼 prompt → 生成 → schema → 引用 → Dart → write。"""
+    system_prompt = _load_text(os.path.join(PROMPTS_DIR, "lesson.md"))
+
+    # 条件树共享附录（单一源：_shared/combinable_criteria.md · AC-51）
+    shared_criteria = os.path.join(PROMPTS_DIR, "_shared", "combinable_criteria.md")
+    if os.path.exists(shared_criteria):
+        system_prompt += "\n\n---\n\n" + _load_text(shared_criteria)
+    else:
+        print(f"WARNING: 共享附录缺失 {shared_criteria} —— 生成结果可能不含组合算子说明")
+
+    # 场景清单注入（T-P3-05 · AC-50）
+    catalog, rejected = collect_scenario_ids()
+    system_prompt = system_prompt.replace(
+        "{{SCENARIO_IDS}}", format_scenario_catalog(catalog, rejected)
+    )
+
+    user_prompt = build_lesson_user_prompt(args.topic, args.level)
+
+    if not args.api_key and not args.from_stdin and not args.print_prompt:
+        sys.exit("ERROR: set DEEPSEEK_API_KEY (or --api-key), or use --from-stdin / --print-prompt.")
+
+    if args.print_prompt:
+        print("==== SYSTEM ====\n" + system_prompt + "\n==== USER ====\n" + user_prompt)
+        return
+
+    if args.from_stdin:
+        raw = sys.stdin.read()
+    else:
+        raw = call_llm(system_prompt, user_prompt, args)
+
+    try:
+        data = extract_json(raw)
+    except json.JSONDecodeError as e:
+        sys.exit(f"ERROR: LLM output is not valid JSON: {e}\n--- raw ---\n{raw}")
+
+    # 结构校验（与测试共享单一入口）
+    from validate_lesson_schema import validate_lesson
+
+    schema_errors = validate_lesson(data)
+    if schema_errors:
+        print("LESSON SCHEMA VALIDATION FAILED:")
+        for e in schema_errors:
+            print("  - " + e)
+        sys.exit("ERROR: lesson rejected by schema validation.")
+
+    # 本地引用校验（AC-55 前半）：所有节点 scenario ∈ 可用清单
+    refs = [
+        n["scenario"]["scenarioId"]
+        for n in data.get("nodes", [])
+        if isinstance(n.get("scenario"), dict)
+    ]
+    available = {s["id"] for sim in catalog.values() for s in sim}
+    bad = sorted({r for r in refs if r not in available})
+    if bad:
+        sys.exit(f"ERROR: lesson references unavailable scenarios: {bad}")
+
+    # Dart 语义校验（图校验 + D10）
+    if not args.skip_dart:
+        ok, out = run_dart_validate_lesson(data, args.topic)
+        print(out.strip())
+        if not ok:
+            sys.exit("ERROR: lesson rejected by Dart semantic validation.")
+
+    lesson_id = data.get("lessonId")
+    if not lesson_id:
+        sys.exit("ERROR: generated JSON missing 'lessonId'.")
+
+    if args.write:
+        lessons_dir = os.path.join(ROOT, "assets", "lessons")
+        os.makedirs(lessons_dir, exist_ok=True)
+        file_name = f"{lesson_id}.json"
+        with open(os.path.join(lessons_dir, file_name), "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        update_lessons_manifest(lesson_id, file_name, data)
+        print(f"WROTE: assets/lessons/{file_name} (+ lessons manifest updated)")
+    else:
+        print("DRY RUN (no --write): generated lesson below")
+        print(json.dumps(data, ensure_ascii=False, indent=2))
+
+
 def main() -> None:
-    p = argparse.ArgumentParser(description="Generate kratos scenario JSON via LLM.")
-    p.add_argument("--sim", required=True, choices=list(SIM_MAP.keys()))
+    # Windows 控制台默认 GBK 无法编码 prompt/lesson 中的 emoji（✅/⚠…）
+    # → 强制 UTF-8 输出（Python 3.7+；非 Windows 环境 reconfigure 为 no-op）。
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+        sys.stderr.reconfigure(encoding="utf-8")
+    except Exception:  # noqa: BLE001
+        pass
+
+    p = argparse.ArgumentParser(description="Generate kratos scenario/lesson JSON via LLM.")
+    group = p.add_mutually_exclusive_group(required=True)
+    group.add_argument("--sim", choices=list(SIM_MAP.keys()), help="场景模式（生成单场景 JSON）")
+    group.add_argument("--lesson", action="store_true", help="课时模式（生成 lesson-plan 剧本 JSON）")
     p.add_argument("--topic", required=True, help="teaching goal / scenario description")
     p.add_argument("--level", default="beginner")
     p.add_argument("--model", default=os.environ.get("DEEPSEEK_MODEL", "deepseek-chat"))
@@ -215,6 +507,11 @@ def main() -> None:
     p.add_argument("--from-stdin", action="store_true", help="read JSON from stdin instead of calling LLM")
     p.add_argument("--skip-dart", action="store_true", help="skip Dart semantic validation")
     args = p.parse_args()
+
+    # --lesson 早分支（既有 --sim 主路径行为零变化）
+    if args.lesson:
+        run_lesson_mode(args)
+        return
 
     if not args.api_key and not args.from_stdin and not args.print_prompt:
         sys.exit("ERROR: set DEEPSEEK_API_KEY (or --api-key), or use --from-stdin / --print-prompt.")

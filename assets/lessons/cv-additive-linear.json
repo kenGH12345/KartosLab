@@ -1,0 +1,19 @@
+{
+  "lessonId": "cv-additive-linear",
+  "name": "RGB 加色法",
+  "version": "1.0",
+  "description": "红+绿=黄 → 关红出青/关绿出品红 → 颜色匹配综合挑战（3 节点线性）",
+  "entry": "n1",
+  "nodes": [
+    { "id": "n1", "title": "调出黄色与白色",
+      "scenario": { "sim": "color_vision", "scenarioId": "rgb-yellow-only" },
+      "unlock": null, "advance": { "type": "onCompleted", "to": "n2" } },
+    { "id": "n2", "title": "青色挑战",
+      "scenario": { "sim": "color_vision", "scenarioId": "rgb-cyan-challenge" },
+      "unlock": null, "advance": { "type": "onCompleted", "to": "n3" } },
+    { "id": "n3", "title": "颜色匹配挑战",
+      "scenario": { "sim": "color_vision", "scenarioId": "rgb-challenge-basic" },
+      "unlock": null, "advance": { "type": "onCompleted", "to": "n-end" } },
+    { "id": "n-end", "title": "课时完成", "scenario": null, "unlock": null, "advance": null }
+  ]
+}

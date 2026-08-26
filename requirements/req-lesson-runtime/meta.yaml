@@ -1,0 +1,58 @@
+﻿# 需求元数据。本字段被主会话（PM 角色）/ managing-requirement / 各 SOP 读取。
+# 不要手工修改 phase / status——通过 /pm-continue 或 /pm-phase 切换。
+
+req_id: req-lesson-runtime
+title: 教学剧本 lesson-plan 编排层实现（P1 线性 + P2 条件分支 + P3 AI 生成链路）
+status: in_progress
+phase: '3.coding'
+created_at: '2026-08-24 17:31'
+updated_at: '2026-08-25 09:30'
+sop: deep-vibe
+
+# 来源：req-lesson-scripting 评估报告 verdict=go（2026-08-24 17:31）
+# 推荐方案 B（lesson-plan 编排层）：引用式纯增量，零触碰 46 场景 + 8 manifest
+# 范围：P1 线性编排 + P2 条件编排 + P3 AI 生成链路（核心 12 人天估算见评估报告 §6）
+# 排除：P4 B类接线 / P5 进度持久化（独立决策，不在本需求）
+
+repo_path: 'c:\workspace\kratosLab'
+related_requirements:
+  - req-lesson-scripting      # 评估需求（源）——spec/评估报告.md 是本需求的直接输入
+  - req-criteria-composable   # 条件树 API（硬前置：流程收尾中，技术已 339 测试锁定）
+  - req-predictive-inquiry    # 预测题得分通路（软前置：P2 依赖其 onResultChanged 转发接线）
+
+design_constraints:
+  - 方案 B 形态：assets/lessons/*.json 独立顶层资产，引用式纯增量
+  - C3 向后兼容：46 存量场景 + 8 manifest 零改动，剧本/独立模式共存
+  - C5 走 ScenarioManager 加载体系：loadScenario(id) 零改动复用
+  - C2 AI 可生成化三件套：schemas/lesson.schema.json + docs/prompts/lesson.md + generate.py --lesson
+  - C4 禁作者侧编排 UI；运行时仅学生侧三件（入口卡片/进度指示/流转反馈）
+  - 试点 sim 限定 circuit + color_vision（完成信号 view 消费仅此 2 屏）
+  - 条件树复用 SuccessCondition all/any/not 契约 + 剧本级叶子封闭枚举（nodeCompleted/predictionScore/scenarioSuccess）
+  - fail loud + 课时级降级（引用失效 → FormatException → 跳过该课时）
+
+acceptance_criteria:
+  # P1 线性编排地基（AC-1 ~ AC-26）
+  - AC-1~6: LessonPlan 数据模型 fail loud 解析（格式错误/悬空引用/不可达图 → FormatException → 课时降级跳过）
+  - AC-7~13: LessonRuntime 四步契约（load/enterNode/advanceFrom/onScenarioSuccess）+ 线性流转 + C5 ScenarioManager 复用
+  - AC-14~15: Lessons manifest 加载与降级
+  - AC-16~18: 课时入口卡片（有课时 sim 显示入口 / 无课时 sim 不变）
+  - AC-19~22: 进度指示 + 流转反馈 UI（学生侧三件）
+  - AC-23~26: 试点线性剧本 ≥2 条（circuit + color_vision，≥3 节点，端到端可运行）
+  - AC-58: 跨 sim 混合试点剧本 ≥1 条（同课时节点跨 circuit + color_vision，dispatch 分派端到端可运行）  # v1.1 新增（方案评审 Blocker-2 修法 B·用户拍板）
+  # P2 条件编排（AC-27 ~ AC-45）
+  - AC-27~33: 剧本级条件树（all/any/not + 3 叶子枚举 + 深度上限 4 + fail-safe）
+  - AC-34~36: unlock 门禁（条件不满足=锁定 / null=始终可进）
+  - AC-37~39: routes 条件路由（按序求值 + 兜底路由 + 无兜底→FormatException）
+  - AC-40~42: InquiryDrawer 可选转发接线（向后兼容可选参数 + LessonRuntime 消费）
+  - AC-43~45: 试点条件剧本 ≥2 条（含分支 + 解锁，端到端可运行）
+  # P3 AI 生成链路（AC-46 ~ AC-57）
+  - AC-46~48: lesson.schema.json 校验（正例通过 + 反例拒绝）
+  - AC-49~51: lesson.md prompt（编排原语 + 叶子枚举 + few-shot + _shared 附录 + id 清单注入）
+  - AC-52~55: generate.py --lesson 模式（执行 + schema 校验 + manifest 更新 + 引用存在）
+  - AC-56~57: 引用守卫测试（场景删除 → 测试红灯）
+  # 回归（AC-R1 ~ AC-R3）
+  - AC-R1: 46 场景加载行为回归不变（flutter analyze 无新错误 + 现有测试全通过）
+  - AC-R2: 无课时 sim 首页行为回归不变
+  - AC-R3: InquiryDrawer 不传新参数时行为回归不变
+
+phase_overrides: []

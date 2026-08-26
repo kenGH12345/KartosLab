@@ -1,0 +1,38 @@
+{
+  "lessonId": "circuit-ohm-diagnosis",
+  "name": "欧姆定律与电路诊断",
+  "version": "1.0",
+  "description": "欧姆定律探究 → 按预测表现分流挑战/复习 → 汇合观察保险丝保护（条件分支）",
+  "entry": "n1",
+  "nodes": [
+    { "id": "n1", "title": "欧姆定律探究（含预测）",
+      "scenario": { "sim": "circuit", "scenarioId": "simple-series" },
+      "unlock": null,
+      "advance": { "type": "routes", "routes": [
+        { "to": "n2-hunt",
+          "when": { "id": "g-1", "description": "预测正确率≥50%",
+            "type": "predictionScore",
+            "params": { "nodeId": "n1", "metric": "ratio", "operator": "gte", "threshold": 0.5 } } },
+        { "to": "n2-review", "when": null }
+      ] } },
+    { "id": "n2-hunt", "title": "电路诊断挑战（表现优秀）",
+      "scenario": { "sim": "circuit", "scenarioId": "open-circuit-debug" },
+      "unlock": { "id": "u-1", "description": "完成欧姆定律探究",
+        "type": "nodeCompleted", "params": { "nodeId": "n1" } },
+      "advance": { "type": "onCompleted", "to": "n3" } },
+    { "id": "n2-review", "title": "开关控制复习（待巩固）",
+      "scenario": { "sim": "circuit", "scenarioId": "controlled-switch" },
+      "unlock": { "id": "u-2", "description": "完成欧姆定律探究",
+        "type": "nodeCompleted", "params": { "nodeId": "n1" } },
+      "advance": { "type": "onCompleted", "to": "n3" } },
+    { "id": "n3", "title": "观察保险丝的保护作用",
+      "scenario": { "sim": "circuit", "scenarioId": "fuse-blown" },
+      "unlock": { "id": "u-3", "description": "完成任一分流节点",
+        "any": [
+          { "id": "u-3a", "type": "nodeCompleted", "description": "完成挑战线", "params": { "nodeId": "n2-hunt" } },
+          { "id": "u-3b", "type": "nodeCompleted", "description": "完成复习线", "params": { "nodeId": "n2-review" } }
+        ] },
+      "advance": { "type": "onCompleted", "to": "n-end" } },
+    { "id": "n-end", "title": "课时完成", "scenario": null, "unlock": null, "advance": null }
+  ]
+}

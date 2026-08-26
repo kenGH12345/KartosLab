@@ -23,6 +23,8 @@ class MagicLabScreen extends StatefulWidget {
     this.scenario,
     this.scenarioList = const [],
     this.manager,
+    this.onScenarioSuccess,
+    this.onPredictionResult,
   });
   final ColorVisionScenario? scenario;
 
@@ -31,6 +33,13 @@ class MagicLabScreen extends StatefulWidget {
 
   /// 场景管理器（挑战完成触发 checkObjectives 用 · 可为空）。
   final ColorVisionScenarioManager? manager;
+
+  /// 可选钩子（T-P1-14 · 剧本模式专用）：场景 successCriteria 全满足时触发一次。
+  /// 不传 = 现行为逐字节等价（AC-R1 接线侧）。
+  final VoidCallback? onScenarioSuccess;
+
+  /// 可选转发（T-P1-14）：InquiryDrawer 预测题结果 (verified, correct)。
+  final void Function(int verified, int correct)? onPredictionResult;
   @override
   State<MagicLabScreen> createState() => _MagicLabScreenState();
 }
@@ -236,16 +245,29 @@ class _MagicLabScreenState extends State<MagicLabScreen>
     return acc;
   }
 
-  /// 挑战完成 → 复用 manager 的 checkObjectives 判定 successCriteria 是否全部达成。
+  /// 统一判定入口（Blocker-1 修复 · 2026-08-25）：checkObjectives → 门控 →
+  /// 剧本完成信号外发。挑战/探索两路径共用，一次成功只外发一次。
   ///
-  /// 返回是否全部达成（用于庆祝弹窗 subtitle · AC-4.4）。一次达成只通知一次。
-  bool _notifyChallengeObjective() {
+  /// 返回是否本次达成（挑战庆祝弹窗 subtitle 用）。
+  bool _checkAndNotify() {
     final mgr = widget.manager;
     if (mgr == null || _objectivesMetNotified) return false;
     final met = mgr.checkObjectives(_state);
     if (!met) return false;
     _objectivesMetNotified = true;
+    // T-P1-14：剧本完成信号——一次成功只外发一次（_objectivesMetNotified 门控）
+    widget.onScenarioSuccess?.call();
     return true;
+  }
+
+  /// 挑战完成 → 判定（返回是否全部达成 · AC-4.4 弹窗 subtitle 用）。
+  bool _notifyChallengeObjective() => _checkAndNotify();
+
+  /// 探索模式判定门控（Blocker-1 修复）：强度变化后判定 successCriteria，
+  /// 满足即外发剧本完成信号——纯探索场景（rgb-yellow-only 等）由此可完成，
+  /// 否则剧本卡死在探索节点（代码评审 Blocker-1 · 2026-08-25）。
+  void _maybeNotifyObjectiveMet() {
+    _checkAndNotify();
   }
 
   int _hitBottle(double dx, double dy) {
@@ -263,7 +285,9 @@ class _MagicLabScreenState extends State<MagicLabScreen>
 
   void _onDragUpdate(DragUpdateDetails d) {
     final idx = _hitBottle(d.localPosition.dx, d.localPosition.dy);
-    if (idx < 0) return;
+    if (idx < 0) {
+      return;
+    }
     final fy = (d.localPosition.dy - _bottlesY).clamp(0, _bottleH);
     setState(
       () => _state.updateIntensity(
@@ -271,6 +295,7 @@ class _MagicLabScreenState extends State<MagicLabScreen>
         ((1 - fy / _bottleH) * 100).clamp(0.0, 100.0),
       ),
     );
+    _maybeNotifyObjectiveMet(); // Blocker-1：探索模式拖瓶后判定
   }
 
   void _onWheelTap(TapDownDetails d) {
@@ -369,6 +394,7 @@ class _MagicLabScreenState extends State<MagicLabScreen>
               : const [],
           snapshotProvider: _colorVisionSnapshot,
           open: _inquiryOpen,
+          onPredictionResult: widget.onPredictionResult,
         ),
       ],
     );
@@ -821,7 +847,10 @@ class _MagicLabScreenState extends State<MagicLabScreen>
             max: 100,
             activeColor: color,
             inactiveColor: color.withAlpha(40),
-            onChanged: (val) => setState(() => _state.updateIntensity(ch, val)),
+            onChanged: (val) {
+              setState(() => _state.updateIntensity(ch, val));
+              _maybeNotifyObjectiveMet(); // Blocker-1：探索/挑战滑块后判定
+            },
           ),
         ),
         SizedBox(

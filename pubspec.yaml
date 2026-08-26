@@ -70,6 +70,7 @@ flutter:
     - assets/scenarios/color-vision/
     - assets/scenarios/sound/
     - assets/scenarios/radio-waves/
+    - assets/lessons/
     - assets/scenarios/wave-interference/
     - assets/scenarios/molarity/
 

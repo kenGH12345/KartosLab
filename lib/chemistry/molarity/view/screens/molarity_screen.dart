@@ -229,9 +229,14 @@ class _MolarityScreenState extends State<MolarityScreen> {
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: beakerW * 0.9,
-                          height: beakerH * 0.4,
+                        // 沉淀粒子：贴烧杯底部堆积（PhET 蓝本行为）。
+                        // 必须 Positioned 定位——Stack alignment:center 会把
+                        // 非定位子居中（修复前粒子悬浮烧杯中部，深色溶液中不可见）。
+                        Positioned(
+                          left: beakerW * 0.07,
+                          bottom: 0,
+                          width: beakerW * 0.86,
+                          height: beakerH * 0.45,
                           child: CustomPaint(
                             painter: PrecipitatePainter(
                               particleCount: solution.numberOfParticles,

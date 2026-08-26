@@ -1,0 +1,22 @@
+{
+  "lessonId": "circuit-switch-basics",
+  "name": "开关与电路诊断",
+  "version": "1.0",
+  "description": "认识开关控制 → 修复断路 → 观察保险丝保护现象（3 节点线性）",
+  "entry": "n1",
+  "nodes": [
+    { "id": "n1", "title": "开关控制电路",
+      "scenario": { "sim": "circuit", "scenarioId": "controlled-switch" },
+      "unlock": null,
+      "advance": { "type": "onCompleted", "to": "n2" } },
+    { "id": "n2", "title": "电路诊断挑战",
+      "scenario": { "sim": "circuit", "scenarioId": "open-circuit-debug" },
+      "unlock": null,
+      "advance": { "type": "onCompleted", "to": "n3" } },
+    { "id": "n3", "title": "观察保险丝的保护作用",
+      "scenario": { "sim": "circuit", "scenarioId": "fuse-blown" },
+      "unlock": null,
+      "advance": { "type": "onCompleted", "to": "n-end" } },
+    { "id": "n-end", "title": "课时完成", "scenario": null, "unlock": null, "advance": null }
+  ]
+}

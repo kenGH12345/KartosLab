@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:kratos/chemistry/molarity/config/molarity_scenario_manager.dart';
+import 'package:kratos/chemistry/molarity/view/painters/beaker_painter.dart';
+import 'package:kratos/chemistry/molarity/view/painters/precipitate_painter.dart';
 import 'package:kratos/chemistry/molarity/view/screens/molarity_screen.dart';
 
 /// 主屏测试：预加载 manager（同步构建 · 无异步加载窗口）· 固定帧 pump ·
@@ -75,19 +77,21 @@ void main() {
     final manager = await preloaded(tester);
     await pumpScreen(tester, manager);
 
-    // 预测题默认展开：任务卡 + 记录按钮可见
-    expect(find.textContaining('浓度 C = 溶质量 n ÷ 体积 V'), findsWidgets);
-    expect(find.text('记录本次实验'), findsOneWidget);
+    // 状态机（IXD Spec v1.0）：默认进入猜测阶段 Active，后续阶段 Locked——
+    // 任务内容与记录按钮在解锁前不可见（一次一阶段 · 渐进披露）
+    expect(find.text('先猜一猜'), findsOneWidget); // 猜测卡 Header
+    expect(find.textContaining('第 1/'), findsOneWidget); // 单题推进模式
+    expect(find.text('记录本次实验'), findsNothing); // 操作/记录卡未解锁
 
     // 收起（midLeft 探究入口 tooltip 唯一 · 避免与任务卡 leading 图标歧义）
     await tester.tap(find.byTooltip('探究任务'));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('记录本次实验'), findsNothing);
+    expect(find.text('先猜一猜'), findsNothing);
 
-    // 再展开恢复
+    // 再展开恢复（Offstage 保 State · 预测阶段保持）
     await tester.tap(find.byTooltip('探究任务'));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('记录本次实验'), findsOneWidget);
+    expect(find.text('先猜一猜'), findsOneWidget);
 
     await teardown(tester);
   });
@@ -113,6 +117,37 @@ void main() {
 
     final after = concentrationText();
     expect(after, isNot(before)); // 命中烧杯口 → soluteAmount+0.1 → 浓度升高
+
+    await teardown(tester);
+  });
+
+  testWidgets('过饱和 → 沉淀粒子堆积在烧杯底部（回归：居中悬浮不可见）', (tester) async {
+    final manager = await preloaded(tester);
+    await pumpScreen(tester, manager);
+
+    // 换低饱和浓度溶质（K₂Cr₂O₇ 饱和 0.50）并拉满溶质量 → C=2.0 > 0.5 过饱和
+    await tester.tap(find.text('饮料粉'));
+    await tester.pump(const Duration(milliseconds: 200));
+    await tester.tap(find.text('重铬酸钾').last);
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.drag(find.byType(Slider).first, const Offset(400, 0));
+    await tester.pump(const Duration(milliseconds: 300));
+
+    // 饱和指示出现（过饱和状态确认）
+    expect(find.text('Saturated!'), findsOneWidget);
+
+    // 沉淀粒子容器必须贴烧杯底部（bottomCenter），而非 Stack 居中悬浮
+    final beaker = tester.renderObject<RenderBox>(find.byWidgetPredicate(
+        (w) => w is CustomPaint && w.painter is BeakerPainter));
+    final precip = tester.renderObject<RenderBox>(find.byWidgetPredicate(
+        (w) => w is CustomPaint && w.painter is PrecipitatePainter));
+
+    final beakerBottom =
+        beaker.localToGlobal(Offset.zero).dy + beaker.size.height;
+    final precipBottom =
+        precip.localToGlobal(Offset.zero).dy + precip.size.height;
+    expect(precipBottom, closeTo(beakerBottom, beaker.size.height * 0.06),
+        reason: '沉淀容器应贴烧杯底部（修复前居中对齐导致粒子悬浮在烧杯中部）');
 
     await teardown(tester);
   });

@@ -18,6 +18,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kratos/chemistry/molarity/config/molarity_scenario.dart';
 import 'package:kratos/color_vision/config/color_vision_scenario.dart';
 import 'package:kratos/circuit/config/circuit_scenario.dart';
 import 'package:kratos/forces/config/forces_scenario.dart';
@@ -45,6 +46,8 @@ void main() {
         CircuitScenario.fromJson(json);
       case 'forces':
         ForcesScenario.fromJson(json);
+      case 'molarity':
+        MolarityScenario.fromJson(json);
       case 'optics':
         LabScenario.fromJson(json);
       case 'radio_waves':

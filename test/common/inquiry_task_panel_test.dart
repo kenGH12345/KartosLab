@@ -60,5 +60,35 @@ void main() {
       expect(find.byType(TextField), findsNothing);
       expect(find.byType(FilledButton), findsNothing);
     });
+
+    testWidgets('onConfirm 非 null 且未确认 → 显示「开始实验」按钮并回调（TASK-001）', (tester) async {
+      var confirmed = false;
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: InquiryTaskPanel(
+            task: const InquiryTask(question: '探究问题'),
+            confirmed: false,
+            onConfirm: () => confirmed = true,
+          ),
+        ),
+      ));
+      expect(find.text('我已了解任务，开始实验'), findsOneWidget);
+      await tester.tap(find.text('我已了解任务，开始实验'));
+      await tester.pump();
+      expect(confirmed, isTrue);
+    });
+
+    testWidgets('confirmed == true → 确认按钮隐藏（TASK-004 折叠摘要由上层卡片负责）', (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+          body: InquiryTaskPanel(
+            task: const InquiryTask(question: '探究问题'),
+            confirmed: true,
+            onConfirm: () {},
+          ),
+        ),
+      ));
+      expect(find.text('我已了解任务，开始实验'), findsNothing);
+    });
   });
 }

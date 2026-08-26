@@ -1,0 +1,26 @@
+{
+  "lessonId": "cv-challenge-path",
+  "name": "色彩挑战之路",
+  "version": "1.0",
+  "description": "加色法基础 → 逐级解锁挑战（unlock 门禁 + all/any 组合树）",
+  "entry": "n1",
+  "nodes": [
+    { "id": "n1", "title": "加色法基础：黄与白",
+      "scenario": { "sim": "color_vision", "scenarioId": "rgb-yellow-only" },
+      "unlock": null, "advance": { "type": "onCompleted", "to": "n2" } },
+    { "id": "n2", "title": "青色挑战",
+      "scenario": { "sim": "color_vision", "scenarioId": "rgb-cyan-challenge" },
+      "unlock": { "id": "u-1", "description": "完成基础节点",
+        "all": [ { "id": "u-1a", "type": "nodeCompleted", "description": "完成加色法基础", "params": { "nodeId": "n1" } } ] },
+      "advance": { "type": "onCompleted", "to": "n3" } },
+    { "id": "n3", "title": "终极颜色匹配",
+      "scenario": { "sim": "color_vision", "scenarioId": "rgb-challenge-basic" },
+      "unlock": { "id": "u-2", "description": "完成前两关任意一关即可",
+        "any": [
+          { "id": "u-2a", "type": "nodeCompleted", "description": "完成基础", "params": { "nodeId": "n1" } },
+          { "id": "u-2b", "type": "nodeCompleted", "description": "完成青色挑战", "params": { "nodeId": "n2" } }
+        ] },
+      "advance": { "type": "onCompleted", "to": "n-end" } },
+    { "id": "n-end", "title": "课时完成", "scenario": null, "unlock": null, "advance": null }
+  ]
+}

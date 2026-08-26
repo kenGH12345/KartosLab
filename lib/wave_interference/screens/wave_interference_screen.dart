@@ -39,7 +39,9 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
   final int _oscRadius = 2;
   WaveType _waveType = WaveType.water;
   BarrierMode _barrierMode = BarrierMode.doubleSlit;
-  final int _barrierX = 35;
+  // C7：源/挡板位置可拖（网格坐标 · clamp 到画布内）
+  int _sourceX = 8;
+  int _barrierX = 35;
   int _slitSize = 10;
   int _slitSeparation = 24;
   bool _inquiryOpen = false;
@@ -100,9 +102,9 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
   }
 
   void _step(double dt) {
-    // Drive oscillator source
+    // Drive oscillator source（源位置可拖 · clamp 画布内）
     double val = _amplitude * cos(2 * pi * _frequency * _engine.time);
-    _engine.setSource(8, gridH ~/ 2, _oscRadius, val);
+    _engine.setSource(_sourceX, gridH ~/ 2, _oscRadius, val);
     _engine.propagate(0.1);
   }
 
@@ -156,14 +158,47 @@ class _WaveInterferenceScreenState extends State<WaveInterferenceScreen>
         children: [
           NineGridLayout(
             // 中间格 = 实验画面 · 面积 ≥ 70% 屏 · 随格子尺寸自适应
-            center: CustomPaint(
-              size: Size.infinite,
-              painter: WaveHeatmapPainter(
-                _engine,
-                gridW: gridW,
-                gridH: gridH,
-                waveType: _waveType,
-              ),
+            // C7 手势：拖波源（红色亮点）或拖挡板条（barrierMode≠none 时）
+            center: LayoutBuilder(
+              builder: (context, c) {
+                final cellW = c.maxWidth / gridW;
+                final cellH = c.maxHeight / gridH;
+                // 命中检测：距目标网格位置（屏幕像素）< 阈值
+                bool near(int gridX, int gridY, Offset p, double th) =>
+                    (Offset(gridX * cellW + cellW / 2, gridY * cellH + cellH / 2) -
+                            p)
+                        .distance <
+                    th;
+                return GestureDetector(
+                  onPanUpdate: (d) {
+                    final gx =
+                        (d.localPosition.dx / cellW).round().clamp(2, gridW - 2);
+                    final nearSource =
+                        near(_sourceX, gridH ~/ 2, d.localPosition, cellW * 1.2);
+                    final nearBarrier =
+                        _barrierMode != BarrierMode.none &&
+                            near(_barrierX, gridH ~/ 2, d.localPosition,
+                                cellW * 1.2);
+                    if (nearSource) {
+                      setState(() => _sourceX = gx);
+                    } else if (nearBarrier) {
+                      setState(() {
+                        _barrierX = gx;
+                        _rebuildBarriers();
+                      });
+                    }
+                  },
+                  child: CustomPaint(
+                    size: Size.infinite,
+                    painter: WaveHeatmapPainter(
+                      _engine,
+                      gridW: gridW,
+                      gridH: gridH,
+                      waveType: _waveType,
+                    ),
+                  ),
+                );
+              },
             ),
             // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
             // 底部横条：操作面板横排（molarity footer 方案推广 · 窄视口横向滚动+缩放）

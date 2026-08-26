@@ -11,8 +11,7 @@
     "personPosition": 300
   },
   "successCriteria": [
-    {"id": "sc-1", "type": "colorMatch", "description": "Turn off red to make cyan", "params": {"targetColor": "cyan"}},
-    {"id": "sc-2", "type": "colorMatch", "description": "Turn off green to make magenta", "params": {"targetColor": "magenta"}}
+    {"id": "sc-1", "type": "colorMatch", "description": "Turn off red to make cyan", "params": {"targetColor": "cyan"}}
   ],
   "hints": [
     {"trigger": "redIntensity > 10", "message": "Cyan = Green + Blue. Turn down the red slider!"},

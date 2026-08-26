@@ -1,8 +1,9 @@
 # Kratos 仿真实验室 · 项目完整需求与技术总览
 
-> 整理日期: 2026-08-14
-> 数据来源: `requirements/<req-id>/`（meta.yaml / spec / 最终需求）· `docs/knowledge/` 知识库 · `lib/` 源码
+> 整理日期: 2026-08-18（含做中学阶段转换交互 § 十）
+> 数据来源: `requirements/<req-id>/`（meta.yaml / spec / 最终需求）· `docs/knowledge/` 知识库 · `docs/reviews/` 交互问题汇总 · `lib/` 源码
 > 本文件是**跨需求、跨模块的项目级需求与技术索引**，非单一需求产物。单一需求的完整细节见对应 `requirements/<req-id>/`。
+> 做中学阶段转换交互的完整设计见 § 十；6 项历史修复（A 类）见 `docs/reviews/interaction-issues-2026-08.md`。
 
 ---
 
@@ -231,4 +232,92 @@
 
 ---
 
-*整理自 `requirements/` 13 项需求 + `docs/knowledge/` 知识库 · 单一需求明细请查对应 `requirements/<req-id>/spec/`*
+## 十、做中学阶段转换交互（Inquiry Workflow Stages）
+
+> ICAP 框架（Chi & Wylie 2014）探究闭环：`猜测 → 任务 → 操作 → 记录 → 归纳`。
+> 7 sim 全量接入（circuit/optics/forces/color_vision/sound/radio_waves/wave_interference/molarity）。
+> 组件源码：`lib/common/widgets/{inquiry_drawer, prediction_panel, inquiry_task_panel, experiment_logger, conclusion_panel, experiment_intro_panel, inquiry_models}.dart`
+
+### 10.1 阶段模型与组件映射
+
+| 阶段 | 教学意图 | 载体组件 | 抽屉位置 |
+|---|---|---|---|
+| ① 猜测 | 操作前预测答案，建立认知冲突（"先猜后验"） | `PredictionPanel` | 顶部（有 predictions 时） |
+| ② 任务 | 明确探究问题与分步指引 | `InquiryTaskPanel` | 第 2 位 |
+| ③ 操作 | 在 sim 画布上动手实验 | 各 sim 画布（不在抽屉内） | — |
+| ④ 记录 | 快照当前参数/读数，累积对比 | `ExperimentLogger` + `SnapshotChart` | 第 3/4 位 |
+| ⑤ 归纳 | 先自主写结论，再对照参考结论 | `ConclusionPanel` | 第 5 位 |
+
+**入口**：`ExperimentIntroPanel`（边格常驻一行 + 点击弹 Dialog）→ 弹窗含任务概览 +「去猜一猜」跳转按钮 → 打开 `InquiryDrawer`。
+
+### 10.2 抽屉默认开合策略（§ A4 统一）
+
+**统一规则**：`_inquiryOpen = scenario.inquiryTask != null`（有探究任务即默认展开，进入即见任务/预测题；无任务时抽屉自动不渲染）。
+
+| sim 类别 | 行为 |
+|---|---|
+| circuit / molarity（有预测题） | 进入即展开 · 预测题置顶 |
+| 其余 6 sim（有 inquiryTask 无预测题） | 进入即展开 · 任务卡可见 |
+| 无 inquiryTask 的 scenario | 抽屉与入口按钮自动隐藏，无副作用 |
+
+场景切换时按新场景的 `inquiryTask` 同步重置。
+
+### 10.3 阶段进度条（§ A3 · 数据驱动）
+
+抽屉顶部 `_ProgressBar` 3 节点（无预测题时降为 2 节点），**按数据自动点亮、无需手动点击**：
+
+| 节点 | 点亮条件 | 数据回调 |
+|---|---|---|
+| 猜测 | 已验证题数 == 预测题总数 | `PredictionPanel.onVerifiedChanged(int)` |
+| 记录 | 记录行数 ≥ 1 | `ExperimentLogger.onRowsChanged(rows)` |
+| 归纳 | 结论已提交 | `ConclusionPanel.onSubmittedChanged(bool)` |
+
+**视觉**：已完节点 = 蓝色实心圆 + check；进行中 = 空心蓝圈；未到 = 灰圈。
+
+### 10.4 关键阶段转换交互
+
+| 转换 | 机制 | 已修复 |
+|---|---|---|
+| 猜测 → 验证 | `PredictionPanel` 选项式 `onSelect`/`onVerify`；**改答案即重置验证状态**（`onSelect` 同步从 `_verified` 移除该题，强制重新验证） | A2 |
+| 猜测 → 抽屉（弹窗入口） | `ExperimentIntroPanel` 弹窗内 PredictionPanel **改跳转入口**：有预测题时显示"去猜一猜"按钮，点击关闭弹窗并调 `onOpenInquiry` 打开抽屉。预测题统一在抽屉内做（单一入口，状态不共享） | A1 |
+| 记录 → 图表联动 | `SnapshotChart` 实时消费 `_rows`（Offstage 保持 State） | — |
+| 归纳 → 防抄 | `ConclusionPanel` 两阶段状态机：未提交时参考结论**不可见**（"结论先消失"），空文本有 SnackBar 防呆；提交后参考结论**不可收回** | — |
+| 归纳 → 编辑防抄 | 点「修改结论」进入编辑态时**参考结论临时隐藏**，杜绝"边抄边改"；取消/更新按钮 | A5 |
+| 抽屉 → 操作 | sim 画布在抽屉外独立（drawer 不遮挡实验操作） | — |
+| 抽屉状态保持 | `Offstage(offstage: !open)` 常驻 widget 树，关闭再开不丢记录/结论 State | — |
+
+### 10.5 完整用户路径
+
+```
+进入 sim（有 inquiryTask）
+  → 抽屉默认展开 · 进度条：○猜测 ○记录 ○归纳
+  → ① 预测题：选答案 → 验证 → 进度条"猜测"✓
+  → ② 任务卡：读问题 + 分步
+  → ③ 画布操作（SimulationClock play/pause/step）
+  → ④ 点「记录本次实验」≥1 次 → 进度条"记录"✓ → 关系图出现
+  → ⑤ 写结论 → 提交 → 进度条"归纳"✓ → 对照参考结论
+  → 全部点亮 = 探究闭环完成
+```
+
+### 10.6 已完成修复（A 类 6 项 · 全部 done）
+
+| # | 问题 | 修复 | Commit |
+|---|---|---|---|
+| A1 | 预测题状态不共享（弹窗 vs 抽屉双实例） | 弹窗移除内嵌预测题，改「去猜一猜」跳转，单一入口 | `d1d4c4c` |
+| A2 | 验证后改答案判定结果不更新 | `onSelect` 重置 `_verified`，强制重新验证 | `9a43c8e` |
+| A3 | 阶段切换无进度指示 | 抽屉顶部 3 节点进度条（数据驱动自动点亮） | `644923c` |
+| A4 | `_inquiryOpen` 默认值割裂 | 8 sim 统一"有 inquiryTask 即默认展开" | `2788522` |
+| A5 | 结论"修改"绕过防抄 | 编辑态隐藏参考结论 | `2788522` |
+| A6 | 任务卡弹窗/抽屉冗余 | A1 方案 B 顺带解决（弹窗只留任务概览） | `d1d4c4c` |
+
+**测试基线**：common 47 测试（含 prediction_panel 6 / conclusion_panel 6 / snapshot_chart 9 / intro_panel 2）全过；molarity 5；wave/radio 布局 7。详见 `docs/reviews/interaction-issues-2026-08.md`。
+
+### 10.7 后续可优化（非阻塞）
+
+- **导出**：`ExperimentLogger.onExport` 已留接口未实现（可导出 CSV）
+- **进度持久化**：当前进度仅内存（session 级），关闭 App 丢失
+- **预测题推广**：预测题目前仅 circuit/molarity 试点，其余 6 sim 无 predictions（进度条自动降为 2 节点）
+
+---
+
+*整理自 `requirements/` 13 项需求 + `docs/knowledge/` 知识库 + `docs/reviews/interaction-issues-2026-08.md` · 单一需求明细请查对应 `requirements/<req-id>/spec/`*

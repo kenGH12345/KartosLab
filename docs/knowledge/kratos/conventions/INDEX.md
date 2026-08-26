@@ -7,6 +7,7 @@
 | [add-circuit-component.md](add-circuit-component.md) | 新增电路元件类型（含 Sentinel 陷阱） | 2026-07-17 |
 | [add-interaction.md](add-interaction.md) | 新增交互（走闭环、不可变修改） | 2026-07-17 |
 | [add-custom-painter.md](add-custom-painter.md) | 新增 Canvas 绘制组件（构造注入 / toScreen / shouldRepaint） | 2026-07-17 |
+| [add-inquiry-screen.md](add-inquiry-screen.md) | 向 sim 屏接入 InquiryDrawer 探究抽屉（四参数 / snapshot key 一致性 / 回退安全 / 新增场景连带检查） | 2026-08-19 |
 
 ## 跨引用
 - 回写机制: `managing-knowledge` Skill（`convention` 类型候选默认落本目录）

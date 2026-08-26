@@ -27,6 +27,8 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
   String _currentScenarioId = 'default';
   bool _scenariosLoaded = false;
   bool _inquiryOpen = false;
+  // C7：天线拖拽状态（命中天线后拖动 · 松手复位）
+  bool _draggingAntenna = false;
 
   @override
   void initState() {
@@ -91,9 +93,31 @@ class _RadioWavesScreenState extends State<RadioWavesScreen>
         children: [
           NineGridLayout(
             // 中间格 = 实验画面 · 面积 ≥ 70% 屏 · 随格子尺寸自适应
-            center: CustomPaint(
-              size: Size.infinite,
-              painter: FieldPainter(_state),
+            // C7 手势：命中天线杆（±40px）后拖动，天线位置跟随（clamp 画布内）
+            center: LayoutBuilder(
+              builder: (context, c) => GestureDetector(
+                onPanStart: (d) {
+                  final hit = (d.localPosition -
+                              Offset(_state.antennaX, _state.antennaY))
+                          .distance <
+                      40;
+                  setState(() => _draggingAntenna = hit);
+                },
+                onPanUpdate: (d) {
+                  if (!_draggingAntenna) return;
+                  setState(() {
+                    _state.antennaX =
+                        d.localPosition.dx.clamp(20.0, c.maxWidth - 20);
+                    _state.antennaY =
+                        d.localPosition.dy.clamp(20.0, c.maxHeight - 20);
+                  });
+                },
+                onPanEnd: (_) => setState(() => _draggingAntenna = false),
+                child: CustomPaint(
+                  size: Size.infinite,
+                  painter: FieldPainter(_state),
+                ),
+              ),
             ),
             // 右侧边格 = 竖排紧凑控制面板 · 窄条可滚动
             // 底部横条：操作面板横排（molarity footer 方案推广 · 窄视口横向滚动+缩放）

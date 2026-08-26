@@ -140,12 +140,16 @@ void main() {
       await _teardown(tester);
     });
 
-    testWidgets('无预测题 → 进度条 2 节点（记录/归纳），无「猜测」（AC-5）', (tester) async {
+    testWidgets('无预测题 → 进度条 4 节点（任/操/记/归），无「猜」（AC-5）', (tester) async {
       await _pumpScreen(tester, scenario: _inquiryScenario());
 
-      expect(find.text('记录'), findsOneWidget);
-      expect(find.text('归纳'), findsOneWidget);
-      expect(find.text('猜测'), findsNothing, reason: '无 predictions 时不应出现猜测节点');
+      // 进度条节点短标签（IXD Spec v1.0 §5.1：猜/任/操/记/归）
+      expect(find.text('任'), findsOneWidget);
+      expect(find.text('操'), findsOneWidget);
+      expect(find.text('记'), findsOneWidget);
+      expect(find.text('归'), findsOneWidget);
+      expect(find.text('猜'), findsNothing, reason: '无 predictions 时不应出现猜测节点');
+      expect(find.text('0/4 已完成'), findsOneWidget, reason: '4 节点进度计数');
       await _teardown(tester);
     });
   });
@@ -154,7 +158,12 @@ void main() {
     testWidgets('白光+红滤光片记录一次 → 行数据正确（光源/波长占位/滤光片/看到颜色）', (tester) async {
       await _pumpScreen(tester, scenario: _inquiryScenario());
 
+      // 状态机（IXD Spec v1.0）：任务确认后才解锁操作与记录（TASK-001）
+      await tester.tap(find.text('我已了解任务，开始实验'));
+      await tester.pump(const Duration(milliseconds: 400));
       await tester.ensureVisible(find.text('记录本次实验'));
+      // ensureVisible 启动的滚动动画完成后才能 tap（否则 tap 被滚动手势劫持）
+      await tester.pump(const Duration(milliseconds: 200));
       await tester.tap(find.text('记录本次实验'));
       await tester.pump(const Duration(milliseconds: 100));
 
@@ -177,7 +186,12 @@ void main() {
     testWidgets('记录后关闭再打开抽屉 → 记录 State 保持（AC-6 · Offstage 保 State）', (tester) async {
       await _pumpScreen(tester, scenario: _inquiryScenario());
 
+      // 任务确认解锁操作（TASK-001）后再记录
+      await tester.tap(find.text('我已了解任务，开始实验'));
+      await tester.pump(const Duration(milliseconds: 400));
       await tester.ensureVisible(find.text('记录本次实验'));
+      // 等滚动动画结束再 tap（防手势劫持）
+      await tester.pump(const Duration(milliseconds: 200));
       await tester.tap(find.text('记录本次实验'));
       await tester.pump(const Duration(milliseconds: 100));
 

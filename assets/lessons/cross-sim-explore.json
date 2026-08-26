@@ -1,0 +1,22 @@
+{
+  "lessonId": "cross-sim-explore",
+  "name": "电与光的探索",
+  "version": "1.0",
+  "description": "跨学科混合课时：开关控制电路 → RGB 加色法 → 电路诊断（circuit→color_vision→circuit 双向穿越 · dispatch 分派实证）",
+  "entry": "n1",
+  "nodes": [
+    { "id": "n1", "title": "开关控制电路",
+      "scenario": { "sim": "circuit", "scenarioId": "controlled-switch" },
+      "unlock": null,
+      "advance": { "type": "onCompleted", "to": "n2" } },
+    { "id": "n2", "title": "调出黄色与白色",
+      "scenario": { "sim": "color_vision", "scenarioId": "rgb-yellow-only" },
+      "unlock": null,
+      "advance": { "type": "onCompleted", "to": "n3" } },
+    { "id": "n3", "title": "电路诊断挑战",
+      "scenario": { "sim": "circuit", "scenarioId": "open-circuit-debug" },
+      "unlock": null,
+      "advance": { "type": "onCompleted", "to": "n-end" } },
+    { "id": "n-end", "title": "课时完成", "scenario": null, "unlock": null, "advance": null }
+  ]
+}
