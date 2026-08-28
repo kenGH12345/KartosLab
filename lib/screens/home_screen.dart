@@ -7,6 +7,7 @@ import '../forces/screens/forces_home.dart';
 import '../chemistry/molarity/view/screens/molarity_screen.dart';
 import '../color_vision/screens/color_vision_home.dart';
 import '../common/widgets/lesson_entry_section.dart';
+import '../lesson_editor/lesson_editor_entry.dart';
 import '../sound/screens/sound_screen.dart';
 import '../radio_waves/screens/radio_waves_screen.dart';
 import '../wave_interference/screens/wave_interference_screen.dart';
@@ -193,6 +194,8 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     _buildHeader(context),
+                    const SizedBox(height: 20),
+                    const LessonEditorEntry(),
                     const SizedBox(height: 24),
                     for (var i = 0; i < _disciplines.length; i++) ...[
                       _DisciplineBlock(discipline: _disciplines[i]),

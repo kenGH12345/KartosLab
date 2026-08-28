@@ -65,6 +65,8 @@
 
 > 完整可复用模板（构造注入 / `toScreen` 坐标 / `shouldRepaint` 逐项比较 / 挂载方式 / 验证清单）已沉淀为 How-To：**[conventions/add-custom-painter.md](../conventions/add-custom-painter.md)**。新增 Painter 时直接按该约定执行。
 
+> **表单输入框补充约定（状态上提的例外场景）**：本项目组件普遍"零内部状态、状态上提到 Screen"，但**随 `setState` 频繁重建的 `TextField` 必须用受控 StatefulWidget（自持 controller）**，否则 build 里重建 `TextEditingController` 会丢焦点/光标跳位（本项目已两次踩坑：`_RouteRow` / `NodePropertyPanel`）。完整模式 + 验证清单见 How-To：**[conventions/add-controlled-textfield.md](../conventions/add-controlled-textfield.md)**。
+
 ## 五、主题与全局样式
 
 主题集中在 `KratosApp.build` 的 `MaterialApp(theme:)`（`lib/main.dart:31-49`）：`useMaterial3:true`、`seedColor:0xFF1177AA`、背景 `0xFFF6FAFC`、中文回退字体链。各模块 Screen 的 `FilledButton`/`AppBar` 用**硬编码** `backgroundColor`（光学 `0xFF1177AA`、电路 `0xFF0B2B3D`、力与运动 `0xFF166534`），与 seedColor 同源但不走主题 token。

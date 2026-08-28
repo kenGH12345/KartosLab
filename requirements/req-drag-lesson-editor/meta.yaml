@@ -1,0 +1,33 @@
+﻿# 需求元数据。本字段被主会话（PM 角色）/ managing-requirement / 各 SOP 读取。
+# 不要手工修改 phase / status——通过 /pm-continue 或 /pm-phase 切换。
+
+req_id: req-drag-lesson-editor
+title: 拖拽式编排 sim 剧本（作者侧可视化编排）
+status: done
+phase: '4.closing'
+created_at: '2026-08-26 15:31'
+updated_at: '2026-08-28 00:21'
+completed_at: '2026-08-28 00:21'
+final_summary_path: 'spec/最终需求.md'
+sop: agile-vibe
+
+# 方向确认（2026-08-26 用户 AskUserQuestion 答复）：
+# 拖拽编辑不同的 sim 衔接，编辑剧本流程 —— 作者侧可视化编排 UI
+# 补 req-lesson-runtime C4 排除的"作者侧编排 UI"缺口
+
+repo_path: 'c:\workspace\kratosLab'
+related_requirements:
+  - req-lesson-runtime    # 运行时（P1 线性 + P2 条件分支）——本编辑器产出的 lesson JSON 由其消费
+  - req-lesson-scripting  # 评估需求（源）——多场景流程编排评估报告
+  - req-criteria-composable  # 条件树 API（剧本分支条件依赖基础）
+
+design_constraints:
+  - 编辑产物必须走 assets/lessons/*.json + schemas/lesson.schema.json（AI 可生成化联动）
+  - 向后兼容 req-lesson-runtime 已实现的运行时（C3/C5 约束不破坏）
+  - 复用 L0 组件（PropertyControlPanel / DragDropWorkspace 等 · 禁平行实现）
+  - 具体约束待 product-manager 澄清后补充
+
+acceptance_criteria:
+  - 待 product-manager 需求澄清产出
+
+phase_overrides: []

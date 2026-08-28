@@ -1,0 +1,28 @@
+{
+  "version": "1",
+  "allowedCombos": [
+    ["circuit", "color_vision"]
+  ],
+  "warnCombos": [
+    {
+      "from": "forces",
+      "to": "circuit",
+      "reason": "力学与电路教学衔接需人工确认"
+    },
+    {
+      "from": "circuit",
+      "to": "forces",
+      "reason": "电路与力学教学衔接需人工确认"
+    },
+    {
+      "from": "forces",
+      "to": "color_vision",
+      "reason": "力学与光学教学衔接需人工确认"
+    },
+    {
+      "from": "color_vision",
+      "to": "forces",
+      "reason": "光学与力学教学衔接需人工确认"
+    }
+  ]
+}

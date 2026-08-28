@@ -7,7 +7,7 @@
 | 文档 | 说明 | 最近更新 |
 |---|---|---|
 | [ui-framework.md](ui-framework.md) | UI 渲染框架：分层模型 / 核心原语 / 共享通用组件（lib/common：NineGridLayout 含 footer 迁移模式 / ExperimentIntroPanel / KratosSlider） / 主题（CustomPainter 规范已抽取为约定） | 2026-08-12 |
-| [drag-drop-workspace.md](drag-drop-workspace.md) | 共享拖拽基础设施 + 两套坐标投影类 + 路由表 + 主题变量 + 状态管理 + 事件链路（含投影混用踩坑 Change-1） | 2026-08-11 |
+| [drag-drop-workspace.md](drag-drop-workspace.md) | 共享拖拽基础设施 + 两套坐标投影类 + 路由表 + 主题变量 + 状态管理 + 事件链路（含投影混用踩坑 Change-1 · 封装连线层承载节点图编排范式 Change-2） | 2026-08-28 |
 
 ## 跨引用
 - 上级索引: [../INDEX.md](../INDEX.md)

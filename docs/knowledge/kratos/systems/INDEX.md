@@ -6,7 +6,7 @@
 ## 文档清单
 | 文档 | 说明 | 最近更新 |
 |---|---|---|
-| [module-index.md](module-index.md) | 52 个 Dart 文件的模块归属索引表 + 四原则×三模块对照总表 | 2026-07-17 |
+| [module-index.md](module-index.md) | 69 个 Dart 文件的模块归属索引表（含 lesson_editor 剧本编辑器模块 15 文件）+ 四原则×三模块对照总表 | 2026-08-28 |
 | [circuit-module.md](circuit-module.md) | 电路搭建：状态模型 + CircuitSolver 连通图求解 + 事件映射 + 功能组件 | 2026-07-17 |
 | [optics-module.md](optics-module.md) | 几何光学：OpticsWorld + OpticalSolver 二光线法 + 场景配置（四原则完整样板） | 2026-07-17 |
 | [forces-module.md](forces-module.md) | 力与运动：ForcesSimulation 1D 力学引擎 + 4 模式 | 2026-07-17 |

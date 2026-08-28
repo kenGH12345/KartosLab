@@ -44,6 +44,18 @@
 - **根治后**：`DropCanvas.projectionFactory` 注入，拖放落点与渲染天然同坐标系，无需任何转换。
 - **通用教训**（仍然有效）：涉及投影/命中坐标换算时，**缩放系数必须从组件内部状态读取，不可用默认值硬编码**；更根本的是**不要混用两套投影**。
 
+### Change-2 (2026-08-28) · 复用 L0 画布承载异构编排范式（节点图/流程图）
+
+> 来源: `req-drag-lesson-editor` · 决策 D7（`requirements/req-drag-lesson-editor/spec/最终需求.md`）· 经验单一源在 `requirements/req-drag-lesson-editor/notes.md` §8 经验 1。
+> 模块登记见 [../systems/module-index.md](../systems/module-index.md)「剧本编辑器模块」。
+
+- **背景**：`DragDropWorkspace<T>` / `DropCanvas` 原为"元件库 → 拖入画布"场景设计（电路/光学），画布上只有独立元件、无节点间关系。剧本编辑器需要"节点图/流程图"编排（节点间有连线、连线交互、路由可视化）。
+- **可复用范式（推荐）**：**不改 `DragDropWorkspace`/`DropCanvas` 本体**，而是在其上封装新的连线层承载新交互语义——既复用拖拽/画布/坐标基建，又不污染既有画布语义（避免为一个新场景给通用组件加分支）。
+  - `LessonCanvasView`（`lib/lesson_editor/canvas/lesson_canvas_view.dart`）：包 `DropCanvas`，用 `origin=zero` 的 1:1 坐标（编辑器画布是设计态，无世界缩放），在画布上叠加网格背景 + 连线层。
+  - `LessonEdgePainter`（`lib/lesson_editor/canvas/lesson_edge_painter.dart`）：`CustomPainter` 绘制节点间连线（三型：next / onCompleted / routes + 兜底虚线 + 冲突边黄虚线），遵循 [../conventions/add-custom-painter.md](../conventions/add-custom-painter.md) 约定。
+  - 连线交互：节点卡片右下角连线手柄（`onPanStart/Update/End`），松开时 `_hitTestNode` 命中目标回写 advance。坐标经 `globalToLocal` 转换防九宫格外层偏移。
+- **通用教训**：需要"复用既有组件承载新交互范式"时，优先"在其上封装新层"而非"给通用组件加参数/分支"——通用组件保持单一语义，新场景的特化封装在调用侧。这与本项目「通用化」原则（`DragDropWorkspace<T>` 泛型共享）互补：泛型解决"同构不同数据类型"，封装层解决"异构交互范式"。
+
 ## 拖放数据流（mermaid）
 
 ```mermaid

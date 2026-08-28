@@ -17,10 +17,10 @@ docs/knowledge/kratos/
 │   ├── project-config.md
 │   └── design-patterns.md  ← MVC / 组件化 / 通用化 / 配置化 主线
 ├── frontend/                ← UI 框架与共享组件
-│   ├── drag-drop-workspace.md
-│   └── ui-framework.md      ← UI 渲染框架（原语组合 / CustomPainter 规范 / 主题）
+│   ├── drag-drop-workspace.md ← 含"封装连线层承载节点图编排"范式 Change-2
+│   └── ui-framework.md      ← UI 渲染框架（原语组合 / CustomPainter 规范 / 受控 TextField / 主题）
 ├── systems/                 ← 模块深度文档 + 索引表
-│   ├── module-index.md
+│   ├── module-index.md      ← 含 lesson_editor 剧本编辑器模块（15 文件）
 │   ├── circuit-module.md
 │   ├── optics-module.md
 │   └── forces-module.md
@@ -31,7 +31,8 @@ docs/knowledge/kratos/
     ├── add-circuit-component.md
     ├── add-interaction.md
     ├── add-custom-painter.md  ← 新增 Canvas 绘制组件（构造注入 / toScreen / shouldRepaint）
-    └── add-inquiry-screen.md  ← 向 sim 屏接入 InquiryDrawer 探究抽屉（四参数 / 回退安全 / 连带检查）
+    ├── add-inquiry-screen.md  ← 向 sim 屏接入 InquiryDrawer 探究抽屉（四参数 / 回退安全 / 连带检查）
+    └── add-controlled-textfield.md ← 随 setState 频繁重建的受控 TextField（防丢焦点 / 交互类 AC 验证清单）
 ```
 
 ## 文档清单
@@ -43,9 +44,9 @@ docs/knowledge/kratos/
 | [architecture/app-entry.md](architecture/app-entry.md) | 启动链路、MaterialApp 主题、导航模型 | 2026-07-17 |
 | [architecture/project-config.md](architecture/project-config.md) | 配置三类拆分（pubspec 依赖 / 主题 / scenarios JSON），附"无数据映射类"说明 | 2026-07-17 |
 | [architecture/design-patterns.md](architecture/design-patterns.md) | **顶层设计主线**：MVC 分层 / 组件化（元件继承体系）/ 通用化（泛型共享 + 通用工厂）/ 配置化（JSON 驱动） | 2026-07-17 |
-| [frontend/drag-drop-workspace.md](frontend/drag-drop-workspace.md) | 共享拖拽基础设施 + 两套坐标投影类 + 路由表 + 主题变量 + 状态管理 + 事件链路 | 2026-07-17 |
-| [frontend/ui-framework.md](frontend/ui-framework.md) | **UI 渲染框架**：分层模型 / 核心原语 / 共享通用组件（含 InquiryDrawer 探究工作流族）/ CustomPainter 规范 / 主题（含 footer 迁移模式） | 2026-08-19 |
-| [systems/module-index.md](systems/module-index.md) | 52 个 Dart 文件模块归属索引表 | 2026-07-17 |
+| [frontend/drag-drop-workspace.md](frontend/drag-drop-workspace.md) | 共享拖拽基础设施 + 两套坐标投影类 + 路由表 + 主题变量 + 状态管理 + 事件链路（含封装连线层承载节点图编排范式 Change-2） | 2026-08-28 |
+| [frontend/ui-framework.md](frontend/ui-framework.md) | **UI 渲染框架**：分层模型 / 核心原语 / 共享通用组件（含 InquiryDrawer 探究工作流族）/ CustomPainter 规范 / 受控 TextField 补充约定 / 主题（含 footer 迁移模式） | 2026-08-28 |
+| [systems/module-index.md](systems/module-index.md) | 69 个 Dart 文件模块归属索引表（含 lesson_editor 剧本编辑器模块 15 文件） | 2026-08-28 |
 | [systems/circuit-module.md](systems/circuit-module.md) | 电路搭建：状态模型 + CircuitSolver 连通图求解 + **场景配置系统（§C1-§C3 全合规）** | 2026-07-21 |
 | [systems/optics-module.md](systems/optics-module.md) | 几何光学：OpticsWorld + OpticalSolver 二光线法 + **场景配置系统（§C1-§C3 全合规）** | 2026-07-21 |
 | [systems/forces-module.md](systems/forces-module.md) | 力与运动：ForcesSimulation 1D 力学引擎 + 4 模式 + **场景配置系统（§C1-§C3 全合规）** | 2026-07-21 |
@@ -55,11 +56,12 @@ docs/knowledge/kratos/
 | [conventions/add-interaction.md](conventions/add-interaction.md) | 新增交互（走闭环、不可变修改） | 2026-07-17 |
 | [conventions/add-custom-painter.md](conventions/add-custom-painter.md) | 新增 Canvas 绘制组件（构造注入 / `toScreen` 坐标 / `shouldRepaint` 逐项比较） | 2026-07-17 |
 | [conventions/add-inquiry-screen.md](conventions/add-inquiry-screen.md) | 向 sim 屏接入 InquiryDrawer 探究抽屉（三步接线 / 四参数 / snapshot key 一致性 / 回退安全 / 新增场景连带检查） | 2026-08-19 |
+| [conventions/add-controlled-textfield.md](conventions/add-controlled-textfield.md) | 随 setState 频繁重建的受控 TextField（initState 建一次 / didUpdateWidget 仅外部 value 变化才同步 / dispose · 交互类 AC 验证清单） | 2026-08-28 |
 
 ## 跨引用
 
-- 业务代码: `C:\workspace\kratos\lib`（52 个 .dart，约 8377 行，抽样估算）
-- 外部资产: `C:\workspace\kratos\assets`（SVG 图标 + `assets/scenarios/*.json` / `assets/scenarios/circuit/*.json` / `assets/scenarios/forces/*.json` 场景配置） + `docs/prompts/circuit_scenario.md` + `docs/prompts/forces_scenario.md` + `docs/prompts/optics_scenario.md` + `schemas/circuit_scenario.schema.json` + `schemas/forces_scenario.schema.json` + `schemas/optics_scenario.schema.json`（三模块 AI 生成工具链全覆盖）
+- 业务代码: `C:\workspace\kratos\lib`（69 个 .dart · 原 52 抽样估算 + lesson_editor 15 + 既有增补，见 [systems/module-index.md](systems/module-index.md)）
+- 外部资产: `C:\workspace\kratos\assets`（SVG 图标 + `assets/scenarios/*.json` / `assets/scenarios/circuit/*.json` / `assets/scenarios/forces/*.json` 场景配置 + `assets/editor/sim_conflict_rules.json` 剧本冲突规则表 + `assets/lessons/` 剧本 JSON + manifest） + `docs/prompts/circuit_scenario.md` + `docs/prompts/forces_scenario.md` + `docs/prompts/optics_scenario.md` + `schemas/circuit_scenario.schema.json` + `schemas/forces_scenario.schema.json` + `schemas/optics_scenario.schema.json` + `schemas/lesson.schema.json`（剧本运行时数据契约 · 编辑器忠实还原目标）
 - 关联命令: `/kb-gen`（本知识库由该命令生成，详见 `.codebuddy/commands/kb-gen.md`）
 - 增量维护: 日常小改动用 `managing-knowledge` Skill 回写对应文档（该 Skill 已落地于 `.codebuddy/skills/core/managing-knowledge/`，`convention` 类型候选默认落 `conventions/<topic>.md`）
 - 一级子目录索引: [architecture/INDEX.md](architecture/INDEX.md) · [frontend/INDEX.md](frontend/INDEX.md) · [systems/INDEX.md](systems/INDEX.md) · [flows/INDEX.md](flows/INDEX.md) · [conventions/INDEX.md](conventions/INDEX.md)

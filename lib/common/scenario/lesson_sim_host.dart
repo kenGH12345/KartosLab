@@ -174,4 +174,33 @@ class LessonSimHosts {
     }
     return true;
   }
+
+  /// 场景目录（T10 · 编辑器场景选择器数据源 · 只读访问器）。
+  ///
+  /// 返回 已注册 sim → 该 sim「存在 + 可完成」的 scenarioId 列表（复用
+  /// [scenarioPlayable] 过滤）。新增 sim 接线后自动出现在目录中（T2 拍板：
+  /// 注册表驱动 + 动态刷新，进入编辑器/手动刷新按钮时重新调用本方法）。
+  ///
+  /// 设计意图（方案 §T2）：编辑器只"读到什么显示什么"，不硬编码 enum；
+  /// 未注册 sim 不出现在目录（scenarioPlayable 返回 false 的 sim 被排除）。
+  static Future<Map<String, List<String>>> loadSceneCatalog() async {
+    await ensureManagersLoaded();
+    final playable = scenarioPlayable();
+    final result = <String, List<String>>{};
+    final circuit = _circuitMgr;
+    if (circuit != null) {
+      result['circuit'] = [
+        for (final s in circuit.scenarios)
+          if (playable('circuit', circuit.scenarioId(s))) circuit.scenarioId(s),
+      ];
+    }
+    final cv = _cvMgr;
+    if (cv != null) {
+      result['color_vision'] = [
+        for (final s in cv.scenarios)
+          if (playable('color_vision', cv.scenarioId(s))) cv.scenarioId(s),
+      ];
+    }
+    return result;
+  }
 }

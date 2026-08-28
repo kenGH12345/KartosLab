@@ -1,0 +1,88 @@
+﻿[2026-08-26 15:31] intake · 主会话: 需求受理。/pm-new 创建骨架（req-drag-lesson-editor）。
+[2026-08-26 15:31] intake · 主会话: 用户方向确认——拖拽式编排 sim 剧本 = 作者侧可视化编排（拖拽编辑不同 sim 衔接 + 剧本流程），补 req-lesson-runtime C4 排除缺口。
+[2026-08-26 15:31] phase 1→2: 委派 product-manager 进行需求澄清
+[2026-08-26] product-manager: 第 1 轮 Socratic 追问（What 层 4 题 + How 层 1 题）——用户答复完整
+[2026-08-26] product-manager: 信息收敛，无需第 2 轮追问。产出 spec/需求简述.md v1.0（13 功能点 / 17 AC）+ 来源归档更新 + notes.md
+[2026-08-26] product-manager: 需求定义完成（状态=completed）。标注 4 项技术待确认（T1~T4）交 tech-leader
+[2026-08-26 16:08] phase 2.requirement → 3.iteration: 需求简述 v1.0 已产出（13 功能点 / 17 AC）。agile-vibe 直接进迭代。
+[2026-08-26 16:30] iteration r1 · 主会话: 产出 spec/交互与操作指南.md v0.1（3 用户场景 + 九宫格布局 + 画布/属性/条件树交互 + 3 操作流程 + 校验规则映射 + 组件复用清单 + T1~T4 假设）。待用户评审。
+[2026-08-26 16:45] iteration r1 · 用户拍板: T2=方案 A（注册表驱动·不重构自动发现）+ 编辑器场景选择器必须动态刷新（新增 sim 接线后无需重启即可选到）。已更新交互指南 §4.1.1/§9/§9.1、需求简述 C6、notes.md 决策表。
+[2026-08-26 17:00] iteration r1 · 用户拍板: 新增 F14 上下游 sim 冲突检测（Q1=C,D 教学语义+数据传递 / Q2=B 警告可保存 / Q3=B 配置化规则表 / Q4=A 不破坏 AC-58 混合剧本）。已更新需求简述 F14+AC-18~21+C7~9、交互指南 §4.5/§9 T5、notes.md 决策表+设计要点。
+[2026-08-26 17:10] iteration r1 · 主会话: 委派 tech-leader 出技术方案（输入：需求简述 v1.0 + 交互与操作指南 v0.1.1 + T1~T5 技术待确认）。
+[2026-08-26 17:25] tech-leader: 技术方案完成。复杂度=complex / 协作=SubAgents（纯前端单端）。产出 design/技术方案.md（T1~T5 全结论 + 21 AC 锚点）+ tasks/任务清单.md（22 条任务含依赖拓扑）。关键决策：T1 新增 LessonCanvasView+LessonEdgePainter 连线层（不碰 DragDropWorkspace 本体）、T2 只读访问器 loadSceneCatalog()+双刷新、T3 外置 .layout.json、T4 TextField MVP、T5 配置化规则表降级。风险 R1~R7。
+[2026-08-26 17:30] iteration r1 · 用户答疑: 连续 3 问（跨 sim 意义/表达机制/通关游戏类比）——已澄清：跨 sim 剧本=教学叙事链（非数据链）、三原语映射先后/铺垫/迁移、类比通关地图。
+[2026-08-26 17:32] iteration r1 · 主会话: 开始编码（选 A 直接进编码）。Mini-Plan：T1 作者入口 + T2 九宫格骨架（30 分钟可视反馈）。涉及：新 lib/lesson_editor/lesson_editor_entry.dart + screens/lesson_editor_screen.dart + 改 lib/screens/home_screen.dart。
+[2026-08-26 17:40] iteration r1 · 主会话: T1+T2 完成（入口按钮 + 九宫格骨架）。flutter analyze 0 · 461 测试全过 · Windows 构建启动成功。用户确认继续。
+[2026-08-26 17:42] iteration r1 · 主会话: 继续 T3（节点库托盘 DragTray）+ T4（画布 DropCanvas 拖入节点 + 可拖动）。先建 EditableLessonModel 数据模型支撑。
+[2026-08-26 17:55] iteration r1 · 主会话: T3+T4 完成。新增：models/editable_lesson_model.dart（可编辑态模型 + toLessonPlanJson/fromLessonPlanJson）、panels/node_tray.dart（DragTray 复用）、canvas/lesson_node_card.dart（可拖/可选卡片）、canvas/lesson_canvas_view.dart（DropCanvas origin=zero 1:1 坐标 + 网格背景）、screen 接入拖入/拖动/选中。flutter analyze 0 · 461 测试过 · Windows 启动成功。
+[2026-08-26 18:05] iteration r1 · 主会话: 用户确认 T3/T4 拖动正常（截图确认）。Semantics 红字 = debug 模式 a11y 标记，非 bug。
+[2026-08-27 09:30] iteration r2 · 主会话: 开始 T5（节点连线 · T1 核心技术风险）。计划：LessonEdge 模型 + edges 从 advance 推导（onCompleted/next 先行）+ LessonEdgePainter 连线渲染 + 卡片右下角连线手柄拖拽 + 松开命中目标生成 advance。
+[2026-08-27 09:50] iteration r2 · 主会话: T5 完成。新增：models 加 LessonEdge + EditableNode.copyWith + updateNode + edges getter（从 advance 推导单一数据源）；canvas/lesson_edge_painter.dart（TempLessonEdge + 箭头线渲染 · 记录兼容改用类非 record）；lesson_node_card 加连线手柄（onPanStart/Update/End）；canvas_view 加连线层 + globalToLocal 坐标转换（防九宫格偏移）；screen 实现 _onEdgeDragStart/Update/End + _hitTestNode 命中回写 advance=onCompleted。flutter analyze 0 · 461 测试过 · Windows 启动成功。
+[2026-08-27 10:05] iteration r2 · 主会话: README 重写完成并已 push 到 GitHub（commit 15fd1ee · origin/master 同步）。
+[2026-08-27 10:10] iteration r2 · 主会话: 开始 T6（三型连线可视化）。计划：LessonEdge 扩展 conditionLabel/isFallback + edges getter 携带 routes 条件信息 + LessonEdgePainter 三型渲染（next 实线 / onCompleted 实线+"完成后"标签 / routes 分叉+条件名+兜底虚线）。
+[2026-08-27 10:30] iteration r2 · 主会话: T6 完成。models 加 LessonEdge.label/isFallback + edges getter 携带 routes 条件与兜底标记 + conditionLabel helper（sealed 类按子类提取 description）；LessonEdgePainter 三型渲染（next 蓝实线 / onCompleted 蓝实线+"完成后" / routes 橙实线+条件名+同源分叉偏移 / 兜底灰虚线+"否则"）+ 新增 9 个单元测试。flutter analyze 0 · 470 测试过 · Windows 启动成功。
+[2026-08-27 10:50] iteration r2 · 主会话: T9 完成。新增 panels/advance_editor.dart（AdvanceEditor：RadioGroup 三型切换 + onCompleted 目标下拉(排除自身) + routes 路由列表增删/条件名/末项兜底(AC-7) + _RouteRow StatefulWidget 持 controller 防丢焦点）；screen 把占位面板升级为 NodePropertyPanel 并接 _onAdvanceChanged 回写 model。flutter analyze 0 · 470 测试过 · Windows 启动成功。
+[2026-08-27 11:00] iteration r2 · 用户报 bugfix: 拖入新场景节点被误判为终点（isEnd=scenario==null）。修复：_onNodeDrop 对场景节点占位 scenario={sim:'',scenarioId:''}+ 默认 advance=next；占位引用由 LessonValidator（F5/T11）后续拦截。Windows 重启验证通过。
+[2026-08-27 11:15] iteration r2 · 主会话: T10 完成。lesson_sim_host.dart 加只读访问器 loadSceneCatalog()（复用 scenarioPlayable 过滤 · 注册表驱动 · 新增 sim 接线后自动出现）；新增 panels/scene_selector.dart（SceneSelector：sim 下拉 + scenarioId 二级联动 + 手动刷新按钮 + 加载失败降级）；screen 接 _onScenarioChanged 回写 scenario。flutter analyze 0 · 470 测试过 · Windows 启动成功。
+[2026-08-27 11:25] iteration r2 · 用户报 bugfix: SceneSelector 选中节点时红屏。DropdownButton 要求 value ∈ items；占位 scenario 的 sim=''/scenarioId='' 不在 catalog 内 → 断言失败。修复：items 前插空串占位项（label='未选择'）；value 改为空串兜底；切 sim 选空 → onChanged(null) 清除引用。Windows 重启验证通过。
+[2026-08-27 11:30] iteration r2 · 用户报 bugfix: SceneSelector 触发 RenderFlex overflow 30px（KratosComboBox width=160 在窄 midRight 列溢出）+ DropdownButton items 断言。修复：两个 ComboBox 改为 width=double.infinity 自适应父容器。Windows 重启验证通过。
+[2026-08-27 11:40] iteration r2 · 主会话: 开始 T12（条件树编辑器 · F7 · AC-8）。计划：ConditionTreeEditor 递归渲染 all/any/not + 3 叶子（nodeCompleted/predictionScore/scenarioSuccess）+ 参数表单 + 深度 ≤4；AdvanceEditor routes.when 接入 + unlock 编辑接入 NodePropertyPanel；一并把 AdvanceEditor 的 ComboBox 改 width=double.infinity 防溢出。
+[2026-08-27 12:00] iteration r2 · 主会话: T12 完成。新增 panels/condition_tree_editor.dart（ConditionTreeEditor：空态四按钮 + 递归 _ConditionNode 渲染 叶子(类型下拉+nodeId/指标/比较符/阈值参数表单)/all/any/not + 深度≤4 + _TypeBadge）；AdvanceEditor routes 条件名 TextField 升级为 ConditionTreeEditor（_RouteRow 改 StatelessWidget，when 直接结构化）；screen 加 unlock 编辑区 + _onUnlockChanged；onCompleted ComboBox 也改 double.infinity 防溢出。flutter analyze 0 · 470 测试过 · Windows 启动成功。
+[2026-08-27 12:10] iteration r2 · 主会话: 开始 T13（校验与提示 · F8 · AC-9/AC-12）。计划：lesson_validator.dart 复用 LessonPlan.fromJson 9 图校验 + 占位 sim/未接线检查 → 错误清单；AppBar 校验按钮弹结果；保存按钮接校验门禁。
+[2026-08-27 12:30] iteration r2 · 主会话: T13 完成。新增 validation/lesson_validator.dart（轻量检查 entry/占位场景/标题 + 复用 LessonPlan.fromJson 9 图校验 · scenarioPlayable 可注入依赖倒置）；screen 加剧本设置区（lessonId/name/entry 下拉）+ _onMetaChanged + 校验 Dialog + 保存门禁（校验不过阻止·落盘 T16）；修 copyWith entry sentinel（原 ?? 无法清空）。新增 6 个单测 · flutter analyze 0 · 476 测试过 · Windows 启动成功。
+[2026-08-27 12:40] iteration r2 · 主会话: 开始 T16（导出/保存 · F10 · AC-12/AC-13）。计划：lesson_saver.dart 写 lesson JSON + .layout.json + 更新 manifest；保存门禁已就绪；需确认 assets/ 只读约束下的落盘路径。
+[2026-08-27 13:00] iteration r2 · 主会话: T16 完成。新增 validation/lesson_saver.dart（三件写入：<id>.json + <id>.layout.json + manifest 增/覆盖 · entry sim 归属）;screen 保存按钮接 LessonSaver（校验门禁 → 落盘 → 成功/失败提示）。新增 5 个单测 · flutter analyze 0 · 481 测试过。
+[2026-08-27 13:10] iteration r2 · 主会话: 开始 T17（导入/回读 · F9 · AC-10/AC-11）。计划：lesson_importer.dart 读 JSON → LessonPlan.fromJson 校验 → EditableLessonModel.fromLessonPlanJson + .layout.json 布局还原（缺失走自动布局）；footer「导入」→ 列 manifest 剧本 → 选中加载到画布。
+[2026-08-27 13:30] iteration r2 · 主会话: T17 完成。新增 validation/lesson_importer.dart（listAvailable 读 manifest（自解析不依赖 loader 固定路径常量）+ importByEntry 校验+布局还原+降级）；footer 接 _onNewPressed/_onImportPressed（新建重置/导入弹 manifest 列表→加载）；修 listAvailable 测试依赖项目根 manifest 的问题。新增 4 个单测 · flutter analyze 0 · 485 测试过。
+[2026-08-27 13:40] iteration r2 · 主会话: 开始 T18（高级 JSON 模式 · F12 · AC-14/AC-15）。计划：footer「高级 JSON」切换全屏 JSON 编辑（等宽 TextField + 格式化/应用并切回/校验按钮）；单一数据源 EditableLessonModel——切高级模式序列化文本，应用回切 jsonDecode→fromLessonPlanJson 重建（失败停留提示）。
+[2026-08-27 13:55] iteration r2 · 主会话: T18 完成。screen 加 _jsonMode 切换 + _JsonEditorView（深色等宽 TextField + 格式化/应用并切回/取消）；_applyJson 解析→LessonPlan.fromJson 运行时校验→重建模型（失败停留提示 AC-15）；body 条件渲染（jsonMode ? JSON 编辑器 : 九宫格）。flutter analyze 0 · 485 测试过。
+[2026-08-27 14:10] iteration r2 · 主会话: 开始 T19/T20/T21（冲突检测 · F14 · 用户 2026-08-26 拍板：维度=教学语义+数据传递 / 拦截=警告可保存 / 规则=配置化 / 不破坏 AC-58 混合剧本）。计划：T19 sim_conflict_rules.json + ConflictRuleSet（加载降级）→ T20 ConflictChecker 两类算法 → T21 画布标注 + 保存警告清单确认框。
+[2026-08-27 14:40] iteration r2 · 主会话: T19/T20/T21 完成。conflict/conflict_rules.dart（ConflictRuleSet 加载+降级+白名单无序匹配）+ conflict_checker.dart（两类冲突：教学语义有向边 / 数据传递条件树叶子跨 sim 引用）+ 规则表 sim_conflict_rules.json（allowed=[circuit,color_vision] 保 AC-21）+ LessonEdgePainter 冲突边黄虚线 + screen 保存警告确认框。13 个单测 · flutter analyze 0 · 498 测试过。
+[2026-08-27 14:50] iteration r2 · 主会话: 开始 T22（端到端收口 · AC-13）。计划：lesson_editor_e2e_test.dart 验证 新建/编辑 → 校验 → 保存 → 导入 → LessonRuntime.load() 可运行 全链路闭环。
+[2026-08-27 15:10] iteration r2 · 主会话: T22 完成。新增 test/lesson_editor/lesson_editor_e2e_test.dart（3 个端到端测试：全链路闭环（构造→校验→保存→导入→运行时 load→三型流转）；门禁拦截；路由兜底）。修复：routes 缺兜底路由（D7 末项 when==null）· AC-21 断言修正（白名单只保证教学语义，跨 sim 数据传递警告是设计预期）。flutter analyze 0 · 501 测试全过。任务清单 22 条全部完成。
+[2026-08-27 15:30] iteration r2 → closing: 用户要求进行代码评审。委派 code-reviewer（说明本项目实际用 git 非 svn）。
+[2026-08-27 15:38] code-reviewer 完成评审，评审结论=不通过（has_blockers）。产出 design/代码评审.md：验收项覆盖 17/21（AC-4❌/AC-16❌ 漏项，AC-10⚠️/AC-19⚠️ 部分达成）。Blocker 3 项（B1 节点 title 不可编辑 / B2 剧本 version+description 不可编辑 / B3 无 test-report/ac-verification.md 等自测证据链且无 test_exempt 豁免）。Major 3 项（M1 导入布局降级未实现自动布局致节点重叠 / M2 dataFlow 类冲突无画布可视化 / M3 routes 末项删除后 when 未清空导致校验失败且 UI 无法自愈）。Minor 4 项 + Nit 2 项。
+[2026-08-27 15:38] 主会话: 按 agile-vibe 阶段 4 回退条件"评审有 Blocker → 退回阶段 3"，phase 保持 3.iteration，待用户确认修复顺序后继续迭代。
+[2026-08-27 15:42] verdict=tweak by user / 备注: 选方案1，同意按评审意见修复，顺序 B1→B2→M3→B3→M1→M2。主会话开始迭代 r3。
+[2026-08-27 16:00] iteration r3 · 主会话: B1 完成——节点属性面板"标题"只读 Text 改为可编辑 TextField（key title-<id>），新增 _onTitleChanged → model.updateNode(copyWith(title:...))；NodePropertyPanel 新增必填字段 onTitleChanged。新增 test/lesson_editor/node_property_panel_test.dart AC-4 用例。
+[2026-08-27 16:10] iteration r3 · 主会话: B2 完成——剧本设置区新增 version/description 可编辑 TextField（key meta-version/meta-description），_onMetaChanged 签名扩展 version+description 字段；lessonId/name 输入框补 key。同文件新增 AC-16 用例。
+[2026-08-27 16:20] iteration r3 · 主会话: M3 完成——advance_editor.dart 新增 _withFallbackInvariant()：routes 删除末项后强制新末项 when=null（D7 不变量自愈，避免删完后触发 LessonValidator 规则6 报错却无法在 UI 内修复）；_RouteRow 删除按钮补 key route-remove-<i>（原按 Icons.close 数量索引定位，被 ConditionTreeEditor 内部关闭图标干扰导致误删相邻行）。新增 test/lesson_editor/advance_editor_test.dart 验证。
+[2026-08-27 16:30] iteration r3 · 主会话: B1/B2/M3 回归验证——flutter analyze 0 error（47 项预存在 info/warning 与本次改动无关）+ flutter test 504 个测试全过（含新增 3 个）。B3 部分处理：以上述新增 widget 测试作为 B1/B2/M3 的自测证据补充；尚未产出独立 test-report/ac-verification.md，留待 M1/M2 完成后统一补齐。
+[2026-08-27 16:40] iteration r3 · 主会话: 开始 M1（导入自动布局降级）。计划：新增 lib/lesson_editor/canvas/lesson_auto_layout.dart（entry 起 BFS 分层 · 每层横向等距）；lesson_importer.dart 接入——已保存布局覆盖全部节点则原样使用（尊重手工排布），否则用自动布局填充缺失节点坐标（已有坐标优先于自动布局结果）。
+[2026-08-27 16:55] iteration r3 · 主会话: M1 完成。新增 lib/lesson_editor/canvas/lesson_auto_layout.dart（LessonAutoLayout.layout：BFS 分层 next/onCompleted/routes 后继，防御式兜底孤立节点追加末层）；lesson_importer.dart importByEntry 接入 hasFullLayout 判断+合并逻辑；更新 lesson_importer_test.dart（原"空 map 不 crash"用例改为验证自动布局分层坐标，新增"部分缺失保留已有坐标"用例）；新增 test/lesson_editor/lesson_auto_layout_test.dart 4 个单测（线性链递增/分叉同层横向错位/单节点）。flutter analyze 0 · flutter test 508 个测试全过（含新增本轮共 12 个）。
+[2026-08-27 17:10] iteration r3 · 主会话: M2 完成。dataFlow 类冲突画布可视化——LessonNodeCard 新增 isConflict 参数（左上角 ⚠ 角标 key node-conflict-badge）；LessonCanvasView 新增 conflictNodeIds 参数并透传；screen 从 _conflictWarnings 中 type==dataFlow 的 from/to 节点 id 汇总为 conflictNodeIds；ConditionTreeEditor 全链（_ConditionNode/_LeafEditor/_ComboEditor/_NotEditor）新增 nodeSims+ownerSim 参数，叶子 nodeId 跨 sim 引用时渲染行内 ⚠ 提示（key condition-cross-sim-warning）；screen 计算 _nodeSims 传给 unlock 与 advance 两处编辑器。新增 test/lesson_editor/lesson_node_card_test.dart + advance_editor_test.dart/node_property_panel_test.dart 各补 M2 用例。flutter analyze 0 · flutter test 513 通过/1 skip 全过（含新增本轮共 17 个）。B1/B2/M3/M1/M2 全部完成。
+[2026-08-27 17:15] iteration r3 · 主会话: B3 完成（自测证据链补齐）。新建 test-report/ac-verification.md（逐 21 AC 表 + 诚实标注：13 项 ✅ 自动化断言 / 7 项 ⚠ 部分验证-交互类 / 1 项 ⏸ 视觉类人工抽验 / 0 失败）+ test-report/unit-test.log（flutter test test/lesson_editor = All tests passed +52）。至此评审顺序 B1→B2→M3→B3→M1→M2 六项全部完成，Blocker/Major 清零；Minor m1-m4/Nit 未在本轮用户指定范围内。
+[2026-08-27 17:20] phase 3.iteration: 六项修复完成，notes.md §7 登记修复记录 + Minor 推迟理由。按 agile-vibe SOP（Blocker 修复须重新评审）重新委派 code-reviewer 复审——对照 design/代码评审.md 确认 B1/B2/B3/M1/M2/M3 已修复 + 无新增回归。
+[2026-08-27 17:30] code-reviewer 复审完成：passed（通过带建议）。0 Blocker / 0 Major，AC 覆盖 21/21（首轮 4 项缺口 AC-4/10/16/19 全补齐）。六项修复均有真实自动化断言背书（unit-test.log 实跑通过），透传链完整、无越界改动、无回归（513 passed / analyze 0 error）。唯一残留观察：m4（属性面板 controller 每次 build 重建）为既有技术债延续，非本轮新引入，不阻断收尾。复审记录已追加 design/代码评审.md"复审记录（r3 · 2026-08-27）"段。建议委派 closer 进入收尾。
+[2026-08-27 17:45] iteration r3 · 主会话: 用户复审后选择"顺带修 m4 再收尾"。m4（属性面板 controller 每次 build 重建潜在丢焦点）已修复——新建受控 _ControlledTextField（StatefulWidget · lesson_editor_screen.dart），initState 建一次 controller、didUpdateWidget 仅外部 value 变化才同步并收敛光标到末尾、dispose 释放；NodePropertyPanel 5 处 TextField（meta-lessonId/name/version/description + title）全部改用，key 保留外层（enterText 兼容）。新增回归测试 node_property_panel_test.dart"m4 · 外部 rebuild 保持光标位置"。flutter analyze 0（No issues found!）· flutter test 全量 514 passed / 1 skip（新增 1 个 m4 测试）。同步更新 notes.md §7（m4 转已修复）+ test-report/ac-verification.md（计数 +53 / 514）+ unit-test.log 重生成。至此 Blocker/Major 清零 + Minor m4 已修，仅余 m1/m2/m3/Nit 登记技术债。
+[2026-08-27 17:50] phase 3.iteration → 4.closing: 复审通过（passed）+ 用户追加 m4 已修完，评审全部收口。meta.phase 置 4.closing，委派 closer 收尾（产出最终需求文档、整理 notes、追加变更日志、置 done）。约束 closer：不得自动 svn commit，收尾产物做好后 commit 由主会话走用户审批流程（SVN 红线）。
+[2026-08-28 00:21] closer 完成收尾（closer 内部完成时间）
+  前置核对：代码评审 passed（复审 0 Blocker/0 Major，记录见 design/代码评审.md「复审记录 r3」）· AC 覆盖 21/21（0 unknown/missing）· 测试 514 passed/1 skipped · flutter analyze 0 error · 用户已确认完成并追加修 m4
+  → spec/最终需求.md（新建 · 含决策 D1~D11 + 21 AC 覆盖矩阵 + 遗留技术债表 m1/m2/m3/Nit + 变更时间线骨架）
+  → notes.md（追加 §8 收尾结晶 · 5 条可复用经验 + 3 条后续提示 · 不改写已有内容）
+  → process.txt（本条完成日志）
+  → meta.yaml（status=done · phase=4.closing · final_summary_path 双向校验通过）
+  → requirements/INDEX.md（本需求状态 done · 待 rebuild-index 或手动同步）
+  代码评审: passed（Major 0 · 遗留 Minor m1/m2/m3 + Nit×2 登记技术债，非阻塞；原 m4 已修）
+  测试: 全量 514 passed / 1 skipped（本轮新增 18 测试）
+  关联代码: 工作区未提交状态（基线 HEAD 15fd1ee）· commit 待主会话向用户走审批流程（SVN 红线，closer 不自动 commit）
+  本需求真实改动范围：lib/lesson_editor/（15 新文件）+ test/lesson_editor/（测试）+ assets/editor/sim_conflict_rules.json + lib/common/scenario/lesson_sim_host.dart + lib/screens/home_screen.dart + requirements/req-drag-lesson-editor/（收尾产物）
+  注：工作区另有大量根目录散落临时文件（_tmp_*.txt / ap*.txt 等历史调试产物）与 req-lesson-runtime 的改动，均不属本需求范围，commit 时请主会话按需过滤
+[2026-08-28 09:40] closing 后续 · 主会话: 用户选择"先沉淀知识，再考虑提交"。委派 knowledge-maintainer 把 notes.md §8 收尾结晶（5 条可复用经验）+ 本需求项目级发现回写 context/project/ 并维护 INDEX。约束：单一源原则（同一事实只在一处，其他位置引用）；不改被评审源码/测试；不 svn commit。status 保持 done（知识沉淀不改 phase）。
+[2026-08-28 10:15] knowledge-maintainer 完成知识沉淀（内部完成时间）· status/phase 不变（保持 done / 4.closing）。本项目知识库落点为 docs/knowledge/kratos/（非 context/project/），已按"知识库优先"顺序核对既有文档后增补优于新建。
+  ▸ 增补既有文档 3：
+    - systems/module-index.md：新增「剧本编辑器模块 lib/lesson_editor/」段（登记 15 新文件 + 改动 lesson_sim_host.dart/home_screen.dart + D5/D7/D8 关键决策，引用 spec 与 drag-drop-workspace.md Change-2）；核心文件口径 54→69（头注 + 统计段同步）
+    - frontend/drag-drop-workspace.md：新增 Change-2「复用 L0 画布承载异构编排范式」（LessonCanvasView+LessonEdgePainter 不改本体 · 经验单一源引 notes.md §8 经验 1）
+    - frontend/ui-framework.md §四：追加「表单输入框补充约定」一句引用（受控 TextField，指向新 convention，不重复正文）
+  ▸ 新建文档 1：
+    - conventions/add-controlled-textfield.md：受控 TextField How-To（initState 建一次 / didUpdateWidget 仅外部 value 变化才同步 / dispose）+ 交互类 AC 验证清单（源 notes.md §8 经验 4/5，两次踩坑 _RouteRow/NodePropertyPanel）
+  ▸ INDEX 同步 4：kratos/INDEX.md（目录树 + 文档清单 3 条 + 新增 convention 条 + 业务代码 52→69 + 外部资产补 lesson.schema.json/assets/editor/assets/lessons）· systems/INDEX.md · frontend/INDEX.md · conventions/INDEX.md
+  ▸ 判定"不上抬"（留 notes.md 即可，需求级局部细节）：
+    - m1/m2/m3/Nit 技术债（本需求登记项，非跨需求可复用知识）
+    - 各 bugfix 的具体现场（DropdownButton value∈items 断言 / ComboBox width=infinity 防溢出 / 占位 scenario 处理）——属既有 UI 踩坑范畴，kratos/notes.md 已有同类沉淀（固定宽控件溢出 / 场景可达性），不重复
+    - 经验 2（UI 隐藏字段数据不变量自愈 _withFallbackInvariant）/ 经验 3（降级路径=核心场景不可空转）：已在 module-index.md「剧本编辑器模块」D7 关键决策与 advance_editor/lesson_auto_layout 职责行内引用；判为与本模块强绑定，单一源保留在 spec/最终需求.md + notes.md §8，知识库仅引用不复制
+  ▸ 已存在未重复：无既有等价条目被重复写（lesson 相关此前 0 沉淀，均为首次登记）
+  ▸ 发现的既有知识库缺口（建议，未自行处理）：
+    - lesson runtime（req-lesson-runtime，58 AC 已 done）在 docs/knowledge/kratos/ 中 0 沉淀——本次登记编辑器时发现运行时侧亦无模块文档，建议后续需求补 systems/ 下 lesson-runtime 模块文档，本次仅在 INDEX 外部资产补 lesson.schema.json 引用
+  约束遵守：未改 lib/ test/ 源码；未 svn/git commit；每条回写均引用回 requirements/req-drag-lesson-editor/... 或源码路径。
+[2026-08-28 10:30] closing 后续 · 主会话: 用户选择"精确提交本需求（走审批）"，并指定安全方式：先打 tag → 相关文件 add → 其余未 add 文件全部 stash → commit。已建轻量安全 tag pre-lesson-editor-commit（指向提交前 HEAD 15fd1ee，用户后续自行 git tag -d 删除）。采用 commit 先于 stash 顺序（git commit 仅提交已暂存内容，临时文件/req-lesson-runtime 绝不混入；避免 --keep-index stash 把已暂存内容塞进 stash 导致日后 pop 冲突）。A 类范围：lib/lesson_editor/（16 源码含 assets 引用）+ assets/editor/sim_conflict_rules.json + test/lesson_editor/（10 测试）+ lib/common/scenario/lesson_sim_host.dart + lib/screens/home_screen.dart + requirements/req-drag-lesson-editor/ + docs/knowledge/kratos/（知识沉淀 8 文件）。约束：不删任何文件、不改 .gitignore。status 保持 done。
