@@ -1,0 +1,44 @@
+{
+  "scenarioId": "slingshot",
+  "name": "Slingshot",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 200,
+      "position": {
+        "x": 0.01,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": -0.2112
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 10,
+      "position": {
+        "x": 1.31,
+        "y": 0.55
+      },
+      "velocity": {
+        "x": -11.6172,
+        "y": 24.2906
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": -0.06,
+        "y": -1.28
+      },
+      "velocity": {
+        "x": 17.5315,
+        "y": 0
+      }
+    }
+  ]
+}

@@ -122,6 +122,65 @@
 4. **遵守四原则合规**：MVC / 组件化 / 通用化 / 配置化（详见 [kratos 侧四原则表](../kratos/systems/module-index.md#设计原则对照总表速查)）
 5. **验证**：至少 3 个 sample JSON scenario 能通过 schema 校验并在 UI 中跑通
 
+---
+
+## 四、My Solar System ↔ PhET HTML5/TypeScript（2026-09 · done）
+
+### 主蓝本
+
+- **源码位置（本机）**：`phet sourses/my-solar-system-main/my-solar-system-main` · v1.4.0-dev.4
+- **依赖**：`solar-system-common`（本机 **缺失** → `[BLOCKED]`，见 req `meta.yaml`）
+- **Flutter 对应**：`lib/astronomy/my_solar_system/`
+- **测试**：`test/astronomy/my_solar_system/` · 135 passed（2026-09-02 Close）
+
+### 与 Kepler 的关系
+
+| 维度 | Kepler | My Solar System |
+|---|---|---|
+| 求解器 | `EllipticalOrbitEngine`（解析椭圆） | `NumericalEngine`（PEFRL N-body） |
+| 可复用 | G、MVT 模式、VectorNode scale 二次证据 | **不可**引入 EllipticalOrbitEngine |
+| 共用缺口 | `solar-system-common` 缺失 | 同 |
+
+### Flutter 侧 L0 复用（已验证）
+
+- `SimulationClock`、`ArrowPainter`、`ScenarioManagerBase`、`KratosComboBox`、`NineGridLayout`
+- 未复用 `TimeControlBar`（MSS 需 Restart≠Reset + 三速 + Clear）
+
+### 迁移经验文档
+
+→ [`edd/my-solar-system-migration.md`](edd/my-solar-system-migration.md)  
+→ [`requirements/req-my-solar-system/CLOSE_REPORT.md`](../../../requirements/req-my-solar-system/CLOSE_REPORT.md)
+
+---
+
+## 五、Masses and Springs: Basics ↔ PhET HTML5（2026-09-08 · done）
+
+> Change（来源: `req-masses-and-springs-basics` · notes / COMPLETION_REPORT / `design/代码评审.md`）
+
+### 主蓝本
+
+- **源码形态**：PhET **HTML5**（非本目录 Java catalog 条目）；对齐 `DraggableRulerNode`、Lab Period Trace / 矢量视觉
+- **Flutter 对应**：`lib/masses_and_springs_basics/`（三屏 Bounce / Stretch / Lab）
+- **入口**：`lib/screens/home_screen.dart` 注册 MasbHome（未改 `lib/common/`）
+- **测试**：`test/masses_and_springs_basics/` · 34 passed；Windows Final RUNTIME_QA PASS（2026-09-08 Close）
+
+### 架构要点
+
+| 维度 | 事实 |
+|---|---|
+| 分层 | `Model → (RenderData/state) → Painter` + 共享 `MasbController` ticker |
+| Stretch | `DraggableRulerOverlay`（1 m 模型长度、cm 刻度、视图空间拖拽） |
+| Lab | `PeriodTrace` 接真实质量运动 **peak/cross** 状态机（**禁止**预生成正弦） |
+| L0 缺口 | 未接 `NineGridLayout` / `KratosSlider`（功能冻结下 notes 推迟 · checklist 债） |
+
+### L1 候选（第 1/3 · 不上抽）
+
+→ 登记见 [`shared-abstraction-plan.md`](shared-abstraction-plan.md) 文末 Change（`DraggableRulerOverlay` / `PeriodTrace`）
+
+### 迁移经验（短）
+
+→ [`notes.md`](notes.md) § Change req-masses-and-springs-basics（PeriodTrace peak/cross）
+
 ## 参考文档
 
 - 复刻优先级排序（含打分表）→ [shortlist-for-flutter-port.md](shortlist-for-flutter-port.md)（Loop 3 产出）

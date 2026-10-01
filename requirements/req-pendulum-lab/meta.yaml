@@ -1,0 +1,15 @@
+req_id: req-pendulum-lab
+title: Pendulum Lab Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-14 15:41"
+updated_at: "2026-09-14 16:10"
+phase: 2.build
+status: in_progress
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements: []
+source:
+  local: "phet sourses/pendulum-lab-main/pendulum-lab-main"
+  version: "1.1.0-dev.5"
+  primary: local-phet-source
+phase_overrides: []

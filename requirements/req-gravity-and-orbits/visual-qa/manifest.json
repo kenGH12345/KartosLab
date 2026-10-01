@@ -1,0 +1,20 @@
+{
+  "sim": "gravity-and-orbits",
+  "sourceVersion": "1.7.0-dev.7",
+  "viewport": { "width": 1024, "height": 768, "dpr": 1 },
+  "states": [
+    { "id": "01_model_starPlanet_initial", "screen": "Model", "scene": "starPlanet", "actions": [] },
+    { "id": "02_model_running", "screen": "Model", "scene": "starPlanet", "actions": ["play", "wait:3s"] },
+    { "id": "03_model_paused", "screen": "Model", "scene": "starPlanet", "actions": ["play", "wait:2s", "pause"] },
+    { "id": "04_starPlanetMoon", "screen": "Model", "scene": "starPlanetMoon", "actions": [] },
+    { "id": "05_planetMoon", "screen": "Model", "scene": "planetMoon", "actions": [] },
+    { "id": "06_planetSatellite", "screen": "Model", "scene": "planetSatellite", "actions": [] },
+    { "id": "07_force_vectors", "screen": "Model", "actions": ["showGravityForce"] },
+    { "id": "08_velocity_vectors", "screen": "Model", "actions": ["showVelocity"] },
+    { "id": "09_path", "screen": "Model", "actions": ["showPath", "play", "wait:2s"] },
+    { "id": "10_mass_modified", "screen": "Model", "actions": ["setStarMass:1.5"] },
+    { "id": "11_gravity_off", "screen": "Model", "actions": ["gravityOff"] },
+    { "id": "12_toscale_tape", "screen": "ToScale", "actions": ["showMeasuringTape"] },
+    { "id": "13_reset", "screen": "Model", "actions": ["resetAll"] }
+  ]
+}

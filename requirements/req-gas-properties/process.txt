@@ -1,0 +1,78 @@
+# req-gas-properties process log
+
+2026-09-06 17:53  PHASE 1 FORENSICS START
+  - 用户指令：仅 Source Forensics，禁止改 Flutter 业务代码，禁止进入 Phase 2
+  - 源码根：phet sourses/gas-properties-main/gas-properties-main
+  - 文档基准：doc/model.md
+
+2026-09-06 18:10  PHASE 1 FORENSICS COMPLETE (await user confirm)
+  - 产出：PHASE_1_FORENSICS.md / ASSET_MAP.md / VALIDATION.md / meta.yaml
+  - 结论摘要：4 Screen；IdealGasLaw 共享 vs Diffusion 独立；碰撞/压力噪声/Hold Constant 已取证
+  - 下一阶段：用户确认后进入 Phase 2 Model
+
+2026-09-06 18:07  PHASE 2 MODEL START
+  - 用户指令：仅 Model/Solver/Tests；禁止 UI；落点 lib/gas_properties + test/gas_properties
+
+2026-09-06 18:30  PHASE 2 MODEL COMPLETE (await user confirm for Phase 3)
+  - 产出：lib/gas_properties/** · test/gas_properties/** · PHASE_2_MODEL.md
+  - 测试：23 passed；analyze：0 issues
+  - 未改 gases_intro / diffusion / 其他 sim
+  - 下一阶段：用户确认后进入 Phase 3 Implementation
+
+2026-09-06 18:16  PHASE 3 IMPLEMENTATION START
+  - Controller + MVT + RenderState + Painters + 四屏 Shell + Home 注册
+
+2026-09-06 18:45  PHASE 3 IMPLEMENTATION COMPLETE (await confirm for Phase 4)
+  - Ideal / Explore / Energy / Diffusion View + Home 注册
+  - Model 回归 23 + Ideal shell smoke = 24 passed
+  - analyze lib/gas_properties = 0 issues
+  - 文档：PHASE_3_IMPLEMENTATION.md；meta.yaml → phase 3.implementation
+  - Known gaps：泵/加热器简化几何；截图对照留给 Phase 4
+  - 下一阶段：用户确认后进入 Phase 4 Validation（禁止自行开始）
+
+2026-09-06 19:05  PHASE 4 VALIDATION COMPLETE — Final Status: NEEDS FIX
+  - analyze 0；test/gas_properties 41 PASS；apk debug PASS
+  - Fixes: Lid drag + blowLidOff threshold；Tools Stopwatch；Tools Pressure Noise
+  - Physics V4 tests PASS（含 Explore wall work）
+  - Perf model: 1000p×50steps ~44ms
+  - Blockers: screenshots 未入库；真机 FPS 未测；泵/加热器几何 MINOR
+  - 文档：PHASE_4_VALIDATION.md
+  - 停止；不进入 Phase 5
+
+2026-09-06 21:50  PHASE 4.1 CLOSEOUT — Final Status: READY_FOR_PHASE_5
+  - K7 CLOSED：8 对 PhET/Flutter 截图入库 screenshots/
+  - K8 CLOSED：Pixel Tablet emulator profile N=100/500/1000
+    FrameTiming FPS 56.2 / 46.4 / 46.4；EGL@1000 ≈10ms
+  - Stopwatch：独立 Start/Pause/Reset（scenery-phet isRunning）
+  - Perf：面板节流 + RenderState 缓存 + Paint 复用
+  - analyze 0；test/gas_properties 53 PASS；apk debug PASS
+  - Visual：无 P0/P1；P2/P3 MINOR 归档
+  - 停止；等待用户确认后进入 Phase 5
+
+2026-09-06 22:40  FINAL CLOSEOUT — Status: FINAL / RELEASE READY
+  - 无架构重构；MINOR 保留为 Known Differences
+  - analyze lib/gas_properties = 0；gas_properties tests = 53 PASS；apk debug PASS
+  - full flutter test: +1533 ~1 -2；失败项与 gas_properties 无关
+    (keplers_home_nav_test, forces_scenario timeout)
+  - 文档：FINAL_RELEASE.md；barrel 增加 PhET source traceability
+  - 封板；不开启 Phase 5+
+
+  - Home：热学与气体 → Gas Properties（Ideal/Explore/Energy/Diffusion Tabs）
+  - analyze 0；Phase 2 tests 23 PASS；home smoke test
+  - 已知差异见 PHASE_3_IMPLEMENTATION.md §7
+  - 下一阶段：Phase 4 Validation（截图对照 + 交互压测）
+
+2026-09-06 23:10:53 VISUAL RECONSTRUCTION Ideal Screen �� View/Layout/Transform/Painter only; Model/Solver unchanged; P0=0 P1=0; analyze 0; tests 53; apk PASS; VISUAL_READY
+
+2026-09-06 23:23:32 INTERACTION RECOVERY �� discrete HitRegions + DragState; pump stroke-only; heater snap-0; unit selectors; FineCoarse hold-repeat; interaction tests PASS; analyze 0; tests 73; apk PASS; INTERACTION_READY
+
+2026-09-06 23:42:56 Diffusion tab �� lib/diffusion (unchanged) via GasPropertiesDiffusionTab; TabBarView NeverScrollableScrollPhysics for Ideal/Explore/Energy drag; tests 74 PASS
+
+2026-09-07 00:05  PROJECT DONE / REPORT
+  - User declared project complete; FINAL_RELEASE �� DONE / PROJECT_COMPLETE
+  - Screens: Ideal / Explore / Energy / Diffusion / Home PASS
+  - Model/Solver LOCKED; Visual VISUAL_READY; Interaction INTERACTION_READY
+  - Diffusion product = lib/diffusion (unmodified) via GasPropertiesDiffusionTab
+  - Late polish: bottom-right cluster, lid right-handle, heater flames/ice
+  - analyze 0; tests 73 PASS; 2 diffusion goldens known drift (pre-embed baselines)
+  - Sealed. No Phase 5+.

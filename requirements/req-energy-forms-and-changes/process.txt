@@ -1,0 +1,66 @@
+[2026-09-10 20:03] Phase 0 START — Project Discovery
+- 工作区: d:\OneDrive\Desktop\KartosLab\KartosLab
+- 目标 sim: Energy Forms and Changes
+- 本地 PhET: phet sourses/energy-forms-and-changes-main/energy-forms-and-changes-main
+
+[2026-09-10 20:15] Phase 0 DONE
+- Flutter: 无既有 energy_forms 实现；Home 拟接入「热学与气体」
+- PhET: v1.5.0-dev.5；2 screens (Intro/Systems)；105 embedded PNG modules
+- Baseline: flutter analyze lib → 0 error；全仓 499 issues (C类不修)
+- Sample tests: blackbody_spectrum + curve_fitting → 98 passed
+- 规则冲突: checklist scenario JSON vs 固定双屏 → 不写 scenario，记入 DISCOVERY
+- 产出: PROJECT_DISCOVERY.md / meta.yaml
+
+[2026-09-10 20:16] Phase 1 START — Source Analysis
+- 深读 Intro + Systems model/view；建立 State/Interaction/Animation/Asset 表
+
+[2026-09-10 20:25] Phase 1 DONE → SOURCE_ANALYSIS.md
+[2026-09-10 20:28] Phase 2 DONE → visual-qa/BASELINE.md（官方营销截图；缺实时运行截图）
+[2026-09-10 20:30] Phase 3 DONE → ARCHITECTURE_PLAN.md（无人工架构阻塞）
+[2026-09-10 20:45] Phase 4 PARTIAL
+- 105 PNG 提取；constants/EnergyType/HeatTransfer/Burner/Block/Air
+- IntroModel + SystemsModel pipeline；16 tests PASS；analyze 0 error
+[2026-09-10 20:50] Phase 5 IN PROGRESS + Home 最小接入
+- Tab 双屏骨架；原版 asset 上屏；Home 热学与气体卡片
+- 产出 PHASE_4_REPORT.md / PHASE_5_REPORT.md
+
+[2026-09-10 21:00] Phase 5–8 CONTINUE
+- Intro: Beaker/Thermometer/EC wander/完整换热顺序/snap-fall+burner surface
+- Systems: 元件 PNG 场景、path movers、carousel 0.75s CUBIC_IN_OUT
+- Interaction: drag/sticky thermo/source sliders
+- Tests: 22 passed；analyze 0 error
+- BLOCKED D: scenery-phet HeaterCooler/FaucetNode/flame
+- 产出 PHASE_5/6/7/8 报告 + visual-qa/PHASE_9 + COMPLETION_REPORT（进行中）
+
+[2026-09-10 22:00] STRATEGY PIVOT �� Visual / Scene Reconstruction
+- STOP incremental View patching; rebuild from PhET Scene Graph
+- Created RECONSTRUCTION_REPORT.md; COMPLETION_REPORT marked NOT sealed
+- Intro: rewrite intro_screen_body layer order; BlockNode 3-face + perspective Path
+- Systems: BikerNode (IMAGE_SCALE 0.49), GeneratorNode, BeakerHeaterNode, SolarPanelNode, Fan/Bulb nodes, z-order
+- Tests: 22 passed; analyze 0 error
+- BLOCKED unchanged: scenery-phet HeaterCooler/Faucet/flame
+- Acceptance checklist: FAIL (do not claim complete)
+
+[2026-09-10 22:20] P0 Geometry + Runtime Evidence
+- Copied scenery-phet flame.png / iceCubeStack.png / faucet* �� assets (116 PNG)
+- HeaterCoolerNode: stove Path + real flame/ice; Link Heaters uses flame
+- EfacLayoutConstants: Biker/Generator/Belt/BeakerHeater/Intro gasPipe
+- Generator/Biker/BeakerHeater/Belt rebuilt on local origin + model wheel centers
+- Flutter runtime shots: intro_initial/heater_active, systems_initial/bike_active
+- Original runtime + Overlay: PENDING (blocks acceptance)
+- RECONSTRUCTION_REPORT ��0 difference table updated
+- Tests: 22 + 4 screenshot passed; analyze 0 error; NOT complete
+
+[2026-09-10 22:35] Runtime Visual QA
+- Identified Flutter 4 shots (intro initial/heater; systems initial/bike)
+- BLOCKED: no Original runtime screenshots (documented)
+- Fixed: Biker layout size, Generator intrinsic size, Belt tangents, thermo idle, ImageCache warm
+- systems_initial now shows full bike+generator (was empty due to cold ImageCache + Transform.scale layout)
+- RECONSTRUCTION_REPORT ��0 updated; NOT complete
+
+[2026-09-11 18:25] Phase 3 CLOSE (conditional) �� session report
+- Intro: HeaterCooler VSlider + flame/ice above opening; block immerse (topSurface=floor)
+- Systems: biker crank panel + BeakerHeater thermal; solar geometry; faucet/sun/teaKettle sources
+- Tests: 69 PASS; analyze 0 error
+- Report: visual-qa/SESSION_REPORT_2026-09-11.md
+- meta: status=conditional_close phase=3.close sealed=false (BLOCKED D + systems Original)

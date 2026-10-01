@@ -1,0 +1,36 @@
+﻿req_id: req-plinko-probability
+title: Plinko Probability Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-16 19:38"
+updated_at: "2026-09-17 00:25"
+phase: 3.close
+status: done
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements: []
+source:
+  local: "phet sourses/plinko-probability-main/plinko-probability-main"
+  version: "1.2.0-dev.6"
+  primary: local-phet-source
+  web_verify: "https://phet.colorado.edu/sims/html/plinko-probability/latest/plinko-probability_all.html"
+phase_overrides:
+  - timestamp: "2026-09-16 19:38"
+    from: 1.intake
+    to: 2.building
+    reason: "M0 source recon complete; enter Build"
+  - timestamp: "2026-09-17 00:20"
+    from: 2.building
+    to: 3.close
+    reason: "Browser QA PASS; Final Status READY; Home integrated"
+artifacts:
+  - PHASE_0_SOURCE_RECON.md
+  - PHASE_1_FEATURE_SPEC.md
+  - PHASE_2_COMPONENT_MAP.md
+  - PHASE_3_MODEL_REPORT.md
+  - ASSET_MAP.md
+  - VISUAL_LAYOUT_BASELINE.md
+  - STATISTICAL_VALIDATION.md
+  - PHASE_5_VISUAL_QA.md
+  - LAB_RIGHT_PANEL_BASELINE.md
+  - BROWSER_QA.md
+  - FINAL_REPORT.md

@@ -1,0 +1,41 @@
+[2026-09-18 16:49] PHASE 0 START — Source Audit (Bending Light)
+[2026-09-18 16:49] Source root confirmed: phet sourses/bending-light-main/bending-light-main
+[2026-09-18 16:50] package.json version=1.3.0-dev.0; dependencies.json bending-light sha=a85e9507…; snap comment 1.2.0-dev.2
+[2026-09-18 16:52] Screens confirmed (3): Intro → Prisms → More Tools (bending-light-main.ts)
+[2026-09-18 16:54] Physics: Intro scalar Snell + Fresnel; Prisms vector Snell + recursive; Sellmeier/air dispersion
+[2026-09-18 16:55] Assets: 3 runtime PNG (knob/laser/laserKnob) + 4 mipmap screen icons; laser body = scenery-phet LaserPointerNode
+[2026-09-18 16:55] No upstream unit tests in repo; Flutter tests must be created from extracted formulas
+[2026-09-18 16:55] PHASE 0 COMPLETE — artifacts written; do NOT start Phase 1 until approved
+[2026-09-18 17:05] PHASE 1 START �� Model + Physics
+[2026-09-18 17:15] Implemented Fresnel, IntroSnell, VectorSnell, Dispersion, WaveMath, prism geometry + recursive tracing
+[2026-09-18 17:18] IntroModel / PrismsModel / MoreToolsModel + sensors + interaction commands
+[2026-09-18 17:20] flutter test test/bending_light/ => 50 passed; dart analyze => No issues found
+[2026-09-18 17:20] PHASE 1 COMPLETE �� UI=0; do NOT start Phase 2 until approved
+[2026-09-18 17:21] PHASE 2 START �� Core Play Area
+[2026-09-18 17:40] BlMvt + LaserPointer + painters + Intro/Prisms/MoreTools screens + Hub/demo_main
+[2026-09-18 17:44] flutter test => 61 passed; dart analyze clean; screenshots written
+[2026-09-18 17:44] Android emulator unavailable; widget + demo_main for runtime
+[2026-09-18 17:45] PHASE 2 COMPLETE �� P0=0 P1=0; Home not integrated; not READY
+[2026-09-18 18:20] PHASE 3 START � Core Interaction and Controls
+[2026-09-18 18:40] Controls bound to Model: medium, laser drag, prism, probe, wavelength, time, reset r=19
+[2026-09-18 18:40] flutter test test/bending_light/ => 91 passed; dart analyze clean
+[2026-09-18 18:40] Android unavailable (Windows/Chrome/Edge only). Home not touched. Not READY
+[2026-09-18 18:40] PHASE 3 COMPLETE � P0=0 P1=0
+[2026-09-18 18:30] PHASE 4 START � More Tools / sensors / wave / measurement
+[2026-09-18 18:45] Toolbox drag-out, cubic wire, wave chart, protractor ring, circle sensor hits, bumpLeft
+[2026-09-18 18:45] flutter test test/bending_light/ => 119 passed; dart analyze clean
+[2026-09-18 18:45] Android runtime NOT VERIFIED. Home not touched. Not READY
+[2026-09-18 18:45] PHASE 4 COMPLETE � P0=0 P1=0
+[2026-09-18 19:07] PHASE 5 START � Prisms white light and remaining P2
+[2026-09-18 19:20] VisibleColor + D65 strokes; protractor.png; velocity arrow; probe glyph; chart phase
+[2026-09-18 19:20] flutter test test/bending_light/ => 136 passed; dart analyze clean
+[2026-09-18 19:20] Android runtime NOT VERIFIED. Home not touched. NOT READY
+[2026-09-18 19:20] PHASE 5 COMPLETE - behavior gate passed; not final acceptance
+[2026-09-18 19:55] FINAL QA START
+[2026-09-18 20:05] knob.png and laser.png radio wired
+[2026-09-18 20:05] flutter test test/bending_light/ => 142 passed; dart analyze clean
+[2026-09-18 20:05] Official runtime frames not compared. Android NOT VERIFIED. Home unchanged
+[2026-09-18 20:05] FINAL QA status NOT READY
+
+[2026-09-18 20:05] FINAL QA status NOT READY. tests 142. analyze clean. Android NOT VERIFIED. Home unchanged.
+[2026-09-19 23:50] Viewport fill + Prisms dock drag + painted hit area closed. tests 161. analyze clean. Android NOT VERIFIED. Report: PRISMS_DOCK_VIEWPORT_REPORT.md

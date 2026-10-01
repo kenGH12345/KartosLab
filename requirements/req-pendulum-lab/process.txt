@@ -1,0 +1,11 @@
+[2026-09-14 15:41] init: 创建 req-pendulum-lab，PRIMARY SOURCE = 本地 pendulum-lab-main 1.1.0-dev.5
+[2026-09-14 15:50] 80-kratos-sim-checklist: 开工自检通过（G1=复用 SimulationClock + KratosTabbedScreen · G2=尺/量角器/周期迹/能量图/播放条 sim 本地 · G3=未触发第3用户 · EDD=v2.0 · layout=FittedBox 1024x618 居中、绕开 NineGrid 与 MASB/EFAC/CLB 一致）
+[2026-09-14 15:55] phase: 1.intake → 2.build（先写后做）
+[2026-09-14 16:00] Phase 0 recon 完成：三屏 Intro/Energy/Lab；物理 RK4；摩擦线性+二次以 Pendulum.js 为准
+[2026-09-14 16:20] Phase 1�C4: Model/View/Interaction ��أ�flutter test 24 PASS��analyze CLEAN
+[2026-09-14 16:25] Final Gate: NOT READY��Visual QA δ��� �� P1>0��
+[2026-09-14 18:35] M4 根因定位：ORIGINAL 等 canvas 但发布版为 SVG 渲染(canvas=0)；selectedScreenProperty 不存在(应 currentScreenProperty)；periodTrace.isVisibleProperty 应为 isPeriodTraceVisibleProperty；FLUTTER 30s/个 by-design 超时被误杀只产 05；直调 flutter 缺 ProgramFiles(x86) 秒退
+[2026-09-14 18:40] smoke 双端 PASS：ORIGINAL/smoke_test.png(9s) + FLUTTER/smoke_test.png + DIFF/smoke_test_diff.png
+[2026-09-14 18:50] 全矩阵完成：ORIGINAL 18/18(23s) + FLUTTER 18/18(~4.5min, timeout 15s) + DIFF 18 + manifest.json
+[2026-09-14 18:55] 第一轮 diff：最差三态 04/09/17 = 秒表/能量框/周期计时器 chrome，与 P1 互证；Reset 对称 01=05/06=10/11=18
+[2026-09-14 18:57] 回归 PASS：analyze CLEAN(顺手删多余 import) + 门控 31 tests 全过；Visual=DIFF REVIEWED，Final 仍 NOT READY(P1 chrome 未修)

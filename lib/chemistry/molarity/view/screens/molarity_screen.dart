@@ -2,34 +2,43 @@ import 'package:flutter/material.dart';
 
 import '../../../../common/widgets/experiment_logger.dart';
 import '../../../../common/widgets/inquiry_drawer.dart';
-import '../../../../common/widgets/nine_grid_layout.dart';
-import '../../../../common/widgets/experiment_intro_panel.dart';
 import '../../../../common/widgets/scenario_menu_button.dart';
+import '../../audio/molarity_audio.dart';
 import '../../config/molarity_scenario.dart';
 import '../../config/molarity_scenario_manager.dart';
 import '../../controller/molarity_controller.dart';
-import '../painters/beaker_painter.dart';
-import '../painters/concentration_bar_painter.dart';
-import '../painters/precipitate_painter.dart';
-import '../painters/solution_painter.dart';
-import '../widgets/amount_slider.dart';
-import '../widgets/saturated_indicator.dart';
-import '../widgets/solute_combo_box.dart';
-import '../widgets/volume_slider.dart';
+import '../molarity_layout.dart';
+import '../widgets/molarity_play_area.dart';
 
-/// Molarity 主屏：NineGridLayout 组装（中间格 ≥70% 承载烧杯画面）。
+/// Molarity standalone screen — PhET `MolarityScreenView` geometry (1100×700).
+///
+/// Source interactions only: solute/volume VerticalSliders · Solute ComboBox ·
+/// Solution Values checkbox · Reset All.
+///
+/// **ABSENT (not in PhET Molarity):** Shaker, Dropper, Probe, Faucet, Drain,
+/// Evaporation, Remove Solute, solute-bottle / faucet drag affordances.
+///
+/// No physics `Timer` / `Ticker` / `step(dt)` — Property → View only.
 class MolarityScreen extends StatefulWidget {
   const MolarityScreen({
     super.key,
     this.scenario,
     this.scenarioList = const [],
     this.manager,
+    this.audio,
   });
 
-  /// 初始场景（App 路由注入 · null 时取场景池首个）。
   final MolarityScenario? scenario;
   final List<MolarityScenario> scenarioList;
   final MolarityScenarioManager? manager;
+
+  /// Injected for tests ([RecordingMolarityAudio]); production uses
+  /// [MolarityAudioPlayer] when null (unless [debugTestAudio] is set).
+  final MolarityAudio? audio;
+
+  /// Widget-test override so Home → Molarity does not construct platform
+  /// [AudioPlayer] (MissingPluginException). Cleared in tearDown by tests.
+  static MolarityAudio? debugTestAudio;
 
   @override
   State<MolarityScreen> createState() => _MolarityScreenState();
@@ -38,10 +47,7 @@ class MolarityScreen extends StatefulWidget {
 class _MolarityScreenState extends State<MolarityScreen> {
   late final MolarityController _controller;
   bool _loaded = false;
-  bool _inquiryOpen = true; // 预测阶段默认展开：进入即见预测题（置顶），可手动收起
-  // C6 画布拖拽：溶质瓶 / 水龙头拖拽偏移（null=未拖动 · 非空时图标跟随手指）
-  Offset? _dragBottleOffset;
-  Offset? _dragFaucetOffset;
+  bool _inquiryOpen = false;
 
   MolarityScenario? get _scenario {
     final id = _controller.currentState?.scenarioId;
@@ -54,6 +60,10 @@ class _MolarityScreenState extends State<MolarityScreen> {
     super.initState();
     _controller = MolarityController(
       manager: widget.manager ?? MolarityScenarioManager(),
+      audio:
+          widget.audio ??
+          MolarityScreen.debugTestAudio ??
+          MolarityAudioPlayer(),
     );
     _init();
   }
@@ -61,349 +71,131 @@ class _MolarityScreenState extends State<MolarityScreen> {
   Future<void> _init() async {
     await _controller.init(scenarioId: widget.scenario?.scenarioId);
     if (!mounted) return;
-    setState(() => _loaded = true);
+    final s = _scenario;
+    setState(() {
+      _loaded = true;
+      // Inquiry is KartosLab chrome — default closed so PhET play area is primary.
+      _inquiryOpen = false;
+      if (s?.inquiryTask?.predictions.isNotEmpty ?? false) {
+        // Keep closed on cold start for visual fidelity; user opens via chip.
+        _inquiryOpen = false;
+      }
+    });
   }
 
   void _applyScenario(MolarityScenario s) {
     setState(() {
       _controller.loadScenario(s.scenarioId);
-      // 有预测题则默认展开（预测阶段），无预测题收起
-      _inquiryOpen = s.inquiryTask?.predictions.isNotEmpty ?? false;
+      _inquiryOpen = false;
     });
   }
 
-  void _onShowValuesChanged(bool v) {
-    setState(() => _controller.toggleValues(v));
-  }
-
-  /// C6 画布拖拽源（溶质瓶 / 水龙头）：
-  /// 初始位于 [base]，拖动时图标跟随手指（[onDrag] 收增量 delta · 父组件 State 累加），
-  /// 松手时由父组件用 base + 累计位移判定是否命中烧杯口（[onDrop] 无参 · 命中逻辑在调用方）。
-  Widget _buildPourSource({
-    required IconData icon,
-    required Color color,
-    required String tooltip,
-    required Offset base,
-    required Offset? dragOffset,
-    required ValueChanged<Offset> onDrag,
-    required VoidCallback onDrop,
-  }) {
-    final effective = dragOffset ?? Offset.zero;
-    return Positioned(
-      left: base.dx + effective.dx,
-      top: base.dy + effective.dy,
-      child: GestureDetector(
-        onPanUpdate: (d) => onDrag(d.delta),
-        onPanEnd: (_) => onDrop(),
-        child: Tooltip(
-          message: tooltip,
-          child: Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              border: Border.all(color: color, width: 2),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x22000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Icon(icon, size: 20, color: color),
-          ),
-        ),
-      ),
-    );
+  @override
+  void dispose() {
+    // Fire-and-forget: platform AudioPlayer.dispose must not block widget teardown.
+    final pending = _controller.disposeAudio();
+    pending.ignore();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     if (!_loaded) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const ColoredBox(
+        color: MolarityLayout.background,
+        child: Center(child: CircularProgressIndicator()),
+      );
     }
+
     final state = _controller.state;
     final solution = state.solution;
     final scenario = _scenario;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('摩尔浓度'),
-        backgroundColor: const Color(0xFFE8F6FB),
-        foregroundColor: const Color(0xFF062A3A),
-      ),
-      body: Stack(
-        children: [
-          ListenableBuilder(
-            listenable: solution,
-            builder: (context, _) {
-              return NineGridLayout(
-                // 左上格：重置
-                topLeft: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Center(
-                    child: IconButton(
-                      tooltip: '重置',
-                      onPressed: () => setState(_controller.reset),
-                      icon: const Icon(Icons.restart_alt),
-                    ),
-                  ),
-                ),
-                // 顶部中格：场景标题 + 场景切换（FittedBox 防窄视口溢出）
-                topCenter: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          scenario?.name ?? '',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w800,
-                            color: Color(0xFF1E293B),
-                          ),
-                        ),
-                        if (_controller.manager.scenarios.length > 1) ...[
-                          const SizedBox(width: 8),
-                          _buildScenarioMenu(),
-                        ],
-                      ],
-                    ),
-                  ),
-                ),
-                // 顶部右格：实验说明 + 操作指引（通用引导组件）
-                topRight: ExperimentIntroPanel(
-                  description: scenario?.description ?? '',
-                  task: scenario?.inquiryTask,
-                  color: const Color(0xFF0891B2),
-                  onOpenInquiry: () => setState(() => _inquiryOpen = true),
-                ),
-                // 左格：探究入口（窄格放窄控件）
-                midLeft: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Center(
-                    child: IconButton(
-                      tooltip: '探究任务',
-                      onPressed: () =>
-                          setState(() => _inquiryOpen = !_inquiryOpen),
-                      icon: const Icon(Icons.science_outlined),
-                    ),
-                  ),
-                ),
-                // 中间格：烧杯画面（面积 ≥70%）
-                center: LayoutBuilder(
-                  builder: (context, c) {
-                    final beakerW = c.maxWidth * 0.72;
-                    final beakerH = c.maxHeight * 0.86;
-                    final maxVolume = scenario?.volumeRange.max ?? 1.0;
-                    final fill = solution.volume / maxVolume;
-                    // 烧杯口判定区（全局坐标 · 供 onPanEnd 命中检测）：
-                    // 画布内烧杯矩形上 1/4（拖溶质瓶/水龙头到此处松手 → +0.1）
-                    final pourRect = Rect.fromLTWH(
-                      (c.maxWidth - beakerW) / 2,
-                      (c.maxHeight - beakerH) / 2,
-                      beakerW,
-                      beakerH * 0.25,
-                    );
-                    return Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox(
-                          width: beakerW,
-                          height: beakerH,
-                          child: CustomPaint(
-                            painter: BeakerPainter(volumeFraction: fill),
-                          ),
-                        ),
-                        SizedBox(
-                          width: beakerW * 0.88,
-                          height: beakerH * 0.9,
-                          child: CustomPaint(
-                            painter: SolutionPainter(
-                              color: solution.solutionColor,
-                              fillFraction: fill,
-                            ),
-                          ),
-                        ),
-                        // 沉淀粒子：贴烧杯底部堆积（PhET 蓝本行为）。
-                        // 必须 Positioned 定位——Stack alignment:center 会把
-                        // 非定位子居中（修复前粒子悬浮烧杯中部，深色溶液中不可见）。
-                        Positioned(
-                          left: beakerW * 0.07,
-                          bottom: 0,
-                          width: beakerW * 0.86,
-                          height: beakerH * 0.45,
-                          child: CustomPaint(
-                            painter: PrecipitatePainter(
-                              particleCount: solution.numberOfParticles,
-                              color: solution.solute.particleColor,
-                              particleSize: solution.solute.particleSize,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: beakerH * 0.06,
-                          child: SaturatedIndicator(
-                            visible: solution.isSaturated,
-                          ),
-                        ),
-                        // 可拖拽：溶质瓶（烧杯左下 · 拖到烧杯口 +0.1 mol）
-                        _buildPourSource(
-                          icon: Icons.science_outlined,
-                          color: solution.solute.particleColor,
-                          tooltip: '拖动到烧杯口倒入溶质（+0.1 mol）',
-                          base: Offset(c.maxWidth * 0.1, beakerH * 0.55),
-                          dragOffset: _dragBottleOffset,
-                          onDrag: (delta) => setState(() =>
-                              _dragBottleOffset =
-                                  (_dragBottleOffset ?? Offset.zero) + delta),
-                          onDrop: () {
-                            final end =
-                                Offset(c.maxWidth * 0.1, beakerH * 0.55) +
-                                    (_dragBottleOffset ?? Offset.zero);
-                            _dragBottleOffset = null;
-                            if (pourRect.contains(end)) {
-                              _controller
-                                  .setSoluteAmount(solution.soluteAmount + 0.1);
-                            }
-                          },
-                        ),
-                        // 可拖拽：水龙头（烧杯右下 · 拖到烧杯口 +0.1 L）
-                        _buildPourSource(
-                          icon: Icons.water_drop_outlined,
-                          color: const Color(0xFF0891B2),
-                          tooltip: '拖动到烧杯口加水（+0.1 L）',
-                          base: Offset(c.maxWidth * 0.8, beakerH * 0.55),
-                          dragOffset: _dragFaucetOffset,
-                          onDrag: (delta) => setState(() =>
-                              _dragFaucetOffset =
-                                  (_dragFaucetOffset ?? Offset.zero) + delta),
-                          onDrop: () {
-                            final end =
-                                Offset(c.maxWidth * 0.8, beakerH * 0.55) +
-                                    (_dragFaucetOffset ?? Offset.zero);
-                            _dragFaucetOffset = null;
-                            if (pourRect.contains(end)) {
-                              _controller.setVolume(solution.volume + 0.1);
-                            }
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                // 底部横条：操作面板横排（浓度条 + 溶质 + 溶质量/体积滑块 · 对齐 PhET 底部控件条 · 窄视口横向滚动兜底）
-                footer: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  // FittedBox scaleDown：矮视口 footer 高度不足时整体纵向缩放（R1 降级 · 不溢出）
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      children: [
-                        // 浓度条（横置）
-                        Semantics(
-                          label:
-                              '溶液浓度 ${solution.concentration.toStringAsFixed(2)} 摩尔每升'
-                              '${solution.isSaturated ? '，溶液已饱和' : ''}',
-                          child: SizedBox(
-                            width: 150,
-                            height: 64,
-                            child: CustomPaint(
-                              painter: ConcentrationBarPainter(
-                                concentration: solution.concentration,
-                                maxConcentration:
-                                    scenario?.concentrationMax ?? 5.0,
-                                color: solution.solutionColor,
-                                showValue: state.valuesVisible,
-                                isSaturated: solution.isSaturated,
-                                orientation:
-                                    ConcentrationBarOrientation.horizontal,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        // 溶质下拉
-                        SizedBox(
-                          width: 150,
-                          child: SoluteComboBox(
+    // SizedBox.expand: Home Scaffold body gives loose constraints; a Stack with
+    // only Positioned children otherwise collapses to 0×0 (FittedBox scale →
+    // NaN hit-tests). Phase 2 tests masked this by wrapping in tight SizedBox.
+    return Material(
+      color: MolarityLayout.background,
+      child: SizedBox.expand(
+        child: Stack(
+          children: [
+            // Canonical 1100×700 play area, letterboxed / fitted.
+            Positioned.fill(
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Center(
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: ListenableBuilder(
+                        listenable: solution,
+                        builder: (context, _) {
+                          return MolarityPlayArea(
                             state: state,
-                            width: double.infinity,
-                            onSelected: (s) => _controller.selectSolute(
-                              state.solutes.indexOf(s),
+                            onSoluteAmount: (v) =>
+                                setState(() => _controller.setSoluteAmount(v)),
+                            onVolume: (v) =>
+                                setState(() => _controller.setVolume(v)),
+                            onSoluteIndex: (i) =>
+                                setState(() => _controller.selectSolute(i)),
+                            onValuesVisible: (v) =>
+                                setState(() => _controller.toggleValues(v)),
+                            onReset: () => setState(_controller.resetAllPhET),
+                            onDragStart: _controller.beginUserDrag,
+                            onDragEnd: _controller.endUserDrag,
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            // KartosLab chrome (non-PhET): scenario switch + inquiry — corner chips.
+            Positioned(
+              top: 8,
+              left: 8,
+              child: Row(
+                children: [
+                  if (_controller.manager.scenarios.length > 1)
+                    ScenarioMenuButton(
+                      entries: _controller.manager.scenarios
+                          .map(
+                            (s) => ScenarioMenuEntry(
+                              id: s.scenarioId,
+                              name: s.name,
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        // 溶质量滑块
-                        SizedBox(
-                          width: 200,
-                          child: AmountSlider(
-                            value: solution.soluteAmount,
-                            range:
-                                scenario?.soluteAmountRange ??
-                                const ParamRange(
-                                  min: 0,
-                                  max: 1,
-                                  step: 0.01,
-                                  unit: 'mol',
-                                ),
-                            onChanged: _controller.setSoluteAmount,
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        // 体积滑块
-                        SizedBox(
-                          width: 200,
-                          child: VolumeSlider(
-                            value: solution.volume,
-                            range:
-                                scenario?.volumeRange ??
-                                const ParamRange(
-                                  min: 0.2,
-                                  max: 1,
-                                  step: 0.01,
-                                  unit: 'L',
-                                ),
-                            onChanged: _controller.setVolume,
-                          ),
-                        ),
-                      ],
+                          )
+                          .toList(growable: false),
+                      currentId: _controller.currentState?.scenarioId,
+                      onSelected: (id) {
+                        for (final s in _controller.manager.scenarios) {
+                          if (s.scenarioId == id) {
+                            _applyScenario(s);
+                            break;
+                          }
+                        }
+                      },
+                      accentColor: const Color(0xFF555555),
+                      tooltip: '切换场景',
                     ),
+                  IconButton(
+                    tooltip: '探究任务',
+                    onPressed: () =>
+                        setState(() => _inquiryOpen = !_inquiryOpen),
+                    icon: const Icon(Icons.science_outlined, size: 22),
+                    color: const Color(0xFF555555),
                   ),
-                ),
-                // 左下格：显示数值开关
-                bottomLeft: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Center(
-                    child: IconButton(
-                      tooltip: state.valuesVisible ? '隐藏数值' : '显示数值',
-                      onPressed: () =>
-                          _onShowValuesChanged(!state.valuesVisible),
-                      icon: const Icon(Icons.numbers),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-          // 探究抽屉（常驻 · Offstage 保持状态）
-          InquiryDrawer(
-            task: scenario?.inquiryTask,
-            columns: _inquiryColumns(scenario),
-            snapshotProvider: _snapshot,
-            open: _inquiryOpen,
-          ),
-        ],
+                ],
+              ),
+            ),
+            InquiryDrawer(
+              task: scenario?.inquiryTask,
+              columns: _inquiryColumns(scenario),
+              snapshotProvider: _snapshot,
+              open: _inquiryOpen,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -429,25 +221,5 @@ class _MolarityScreenState extends State<MolarityScreen> {
           ),
         )
         .toList(growable: false);
-  }
-
-  Widget _buildScenarioMenu() {
-    // 统一用 L0 ScenarioMenuButton（与其他 sim 场景切换一致 · 单选择态 radio 高亮）
-    return ScenarioMenuButton(
-      entries: _controller.manager.scenarios
-          .map((s) => ScenarioMenuEntry(id: s.scenarioId, name: s.name))
-          .toList(growable: false),
-      currentId: _controller.currentState?.scenarioId,
-      onSelected: (id) {
-        for (final s in _controller.manager.scenarios) {
-          if (s.scenarioId == id) {
-            _applyScenario(s);
-            break;
-          }
-        }
-      },
-      accentColor: const Color(0xFF0891B2),
-      tooltip: '切换场景',
-    );
   }
 }

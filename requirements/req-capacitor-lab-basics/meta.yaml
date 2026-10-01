@@ -1,0 +1,74 @@
+﻿req_id: req-capacitor-lab-basics
+title: 杩佺Щ PhET Capacitor Lab Basics 鍒?KARTOSLAB Flutter Native
+status: done
+phase: '10.final'
+created_at: '2026-09-12 16:44'
+updated_at: '2026-09-14 11:45'
+home:
+  discipline: 鐗╃悊
+  subdomain: 鐢佃矾 / 鐢靛
+  card_title: Capacitor Lab: Basics
+repo_path: '.'
+
+source:
+  type: html5-javascript-typescript
+  repo: https://github.com/phetsims/capacitor-lab-basics
+  local_path: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\capacitor-lab-basics-main\capacitor-lab-basics-main'
+  url: https://phet.colorado.edu/sims/html/capacitor-lab-basics/latest/capacitor-lab-basics_en.html
+
+phase_1:
+  status: done
+phase_2:
+  status: done
+  report: requirements/req-capacitor-lab-basics/PHASE_2_REPORT.md
+phase_3:
+  status: done
+  report: requirements/req-capacitor-lab-basics/PHASE_3_REPORT.md
+  static_qa: requirements/req-capacitor-lab-basics/visual-qa/STATIC_RENDER.md
+  tests: '42+ PASS'
+  analyze: clean
+phase_4:
+  status: done
+  kickoff: requirements/req-capacitor-lab-basics/PHASE_4_KICKOFF.md
+  report: requirements/req-capacitor-lab-basics/PHASE_4_REPORT.md
+  interaction_report: requirements/req-capacitor-lab-basics/INTERACTION_REPORT.md
+  coordinate_map: requirements/req-capacitor-lab-basics/INTERACTION_COORDINATE_MAP.md
+  tests: '50 PASS suite (incl. interaction)'
+  analyze: clean
+phase_5:
+  status: done
+  kickoff: requirements/req-capacitor-lab-basics/PHASE_5_KICKOFF.md
+  report: requirements/req-capacitor-lab-basics/PHASE_5_REPORT.md
+  focus: voltmeter measurement + plate charge / E-field visualization
+  tests: '57 PASS suite'
+  analyze: clean
+phase_6:
+  status: done
+  kickoff: requirements/req-capacitor-lab-basics/PHASE_6_KICKOFF.md
+  report: requirements/req-capacitor-lab-basics/PHASE_6_REPORT.md
+  tests: '64 PASS suite'
+  analyze: clean
+phase_7:
+  status: done
+  kickoff: requirements/req-capacitor-lab-basics/PHASE_7_KICKOFF.md
+  report: requirements/req-capacitor-lab-basics/PHASE_7_REPORT.md
+  tests: '67 PASS suite'
+  analyze: clean
+phase_8:
+  status: done
+  kickoff: requirements/req-capacitor-lab-basics/PHASE_8_KICKOFF.md
+  report: requirements/req-capacitor-lab-basics/PHASE_8_REPORT.md
+  focus: Home 鍙屽睆娉ㄥ唽 + 鐢熷懡鍛ㄦ湡
+  tests: '71+ PASS (home_lifecycle)'
+  analyze: clean
+phase_9:
+  status: done
+  report: requirements/req-capacitor-lab-basics/PHASE_9_REPORT.md
+  focus: Visual Fix 鈥?PlateArea LinearFunction + Battery createGradient + Asset 瀹¤
+  substituted_assets: 0
+phase_10:
+  status: done
+  report: requirements/req-capacitor-lab-basics/PHASE_10_REPORT.md
+  completion: requirements/req-capacitor-lab-basics/COMPLETION_REPORT.md
+  apk: build/app/outputs/flutter-apk/app-debug.apk
+

@@ -1,0 +1,136 @@
+# req-membrane-transport process log
+
+[2026-09-29 13:56] PHASE 0 START ‚Äî Source Archaeology
+  - User kickoff: migrate PhET Membrane Transport ‚Üí KartosLab Flutter
+  - Absolute rule: no UI until Source + Layout archaeology complete
+  - Local source confirmed:
+    D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\membrane-transport-main\membrane-transport-main
+
+[2026-09-29 14:10] PHASE 0 PROGRESS ‚Äî Core facts extracted
+  - package.json version: 1.1.0-dev.0
+  - dependencies.json membrane-transport sha: a06047f9b76e381390548f9f7318a1fcd3294e32
+  - 4 screens, each with independent MembraneTransportModel(featureSet)
+  - FeatureSet flag system (not subclassing)
+  - Observation window: 534√ó400 view; model width 200
+  - Particles: SVG assets + Canvas drawImage; membrane phospholipids: procedural Canvas
+  - Random: dotRandom throughout; gradient bias BIAS_THRESHOLD=0.1, GRADIENT_BIAS_STRENGTH=0.9
+  - Assets: 35 SVG + 27 MP3
+  - User reference screenshots saved under visual-qa/
+
+[2026-09-29 14:10] Artifacts written:
+  SOURCE_MAP.md / FUNCTION_MAP.md / NUMERICAL_MODEL.md / RESET_SEMANTICS.md
+  VISUAL_ASSET_AUDIT.md / RISK_REGISTER.md / COMPONENT_MAP.md
+  LAYOUT_SPEC.md stub (Phase 1)
+
+[2026-09-29 14:20] PHASE 0 DONE ‚Äî Source Archaeology PASS
+  - PHASE_0_REPORT.md written
+  - Status: NOT READY (expected)
+  - Next: PHASE 1 Layout Archaeology + protein state-machine deep dive
+  - UI coding still forbidden until LAYOUT_SPEC PASS
+
+[2026-09-29 15:55] PHASE 1 DONE ‚Äî Layout Archaeology PASS + Protein FSM
+  - LAYOUT_SPEC.md complete (768√ó504, formulas, z-order, screen variants)
+  - NUMERICAL_MODEL.md ¬ß6 protein state machines filled
+  - PHASE_1_REPORT.md written
+  - Next: PHASE 2 Core Model (seeded RNG, no UI)
+  - UI still deferred until model tests green + Simple Diffusion composer
+
+[2026-09-29 16:15] PHASE 2 DONE ‚Äî Core Model PASS (17 tests)
+  - lib/membrane_transport/ model + proteins + SeededMtRandom
+  - Capture radius corrected to 40
+  - PHASE_2_REPORT.md written
+  - Next: PHASE 3 Simple Diffusion screen + LayoutComposer + original SVG assets
+  - Still NOT READY; no Home; Android NOT VERIFIED
+
+[2026-09-29 16:20] PHASE 3 DONE ‚Äî Simple Diffusion READY CANDIDATE
+  - Original SVGs under assets/simulations/membrane_transport/images/
+  - LayoutComposer design 768√ó504; Observation canvas (phospholipids + particles)
+  - Controls: Solutes, Outside/Inside ¬±10/¬±50, Play/Pause, Speed, Eraser, Graph, KratosResetAllButton
+  - MembraneTransportHome entry (not wired to KartosLab Home yet)
+  - Tests: 18 PASS
+  - Overall Status: NOT READY; Next PHASE 4 remaining screens
+
+
+[2026-09-29 16:45] PHASE 4 DONE °™ Remaining Screens READY CANDIDATE
+  - Shared MembraneTransportScreenBody(featureSet)
+  - Facilitated: Leakage + Voltage(+potential/charges) + Ligand(+Add Ligands)
+  - Active: Active Transporters + ATP (outside hidden)
+  - Playground: all protein sections
+  - Protein SVGs copied; Observation draws proteins + charges
+  - Tap toolbox place / tap protein remove (drag deferred)
+  - Home tabs: 4 screens with original nav icons
+  - Tests: 23 PASS
+  - Overall Status: NOT READY; Next PHASE 5 visual-qa / PHASE 8 Home
+
+[2026-09-29 17:10] PHASE 5 DONE °™ Visual Golden + Layout Convergence READY CANDIDATE
+  - Reconfirmed design 768°¡504; Observation 534°¡400; shared Spec across 4 FeatureSets
+  - MembraneTransportLayoutComposer + LayoutSlots (no magic Positioned)
+  - ThumbnailNode + rays; ligand button color source-aligned
+  - Goldens: 10 MT5-* + determinism °¡3 under test/membrane_transport/goldens/
+  - Tests: 41 PASS (was 23)
+  - P0=0 P1=0 P2=4 (svg style, Material eraser/play, font, drag deferred)
+  - Home NOT STARTED; Android NOT VERIFIED
+  - Next: PHASE 6 Behavioral Acceptance
+
+[2026-09-29 17:40] PHASE 6 DONE °™ Behavioral Acceptance READY CANDIDATE
+  - DRAG_DROP_BEHAVIOR.md from TransportProteinDragNode / SlotDragIndicator / ToolNode
+  - ProteinDragSession + ghost overlay + slot indicators (65°¡105)
+  - Toolbox pan drag + membrane pan (clear on pickup) + snap/swap/replace/invalid
+  - Reset cancels drag; tap toolbox = leftmost empty else middle
+  - Tests: 62 PASS (Golden regression intact); P0=0 P1=0
+  - P2 remaining: svg style, Material eraser/play, font (drag FIXED)
+  - Home NOT STARTED; Android NOT VERIFIED
+  - Next: PHASE 7 Technical / Android
+
+[2026-09-29 18:10] PHASE 7 DONE °™ Technical / Android VERIFIED °§ READY CANDIDATE
+  - Tests 62 PASS; Analyze CLEAN (2 pre-existing only)
+  - Debug + Release APK PASS; release APK packs 35 membrane SVGs
+  - Pixel Tablet emulator-5554: Launch + 4 tabs + touch + drag smoke + reset + re-entry
+  - Back from debug entry °˙ Launcher (expected until Home)
+  - P0=0 P1=0 P2=4 (svg style/black fills, Material icons, font, fitScale letterbox)
+  - Home NOT STARTED; final_status NOT READY
+  - Next: PHASE 8 Home Integration
+
+[2026-09-29 17:14] PHASE 8 DONE ‚Äî Home Integration READY CANDIDATE
+  - Audit: HomeScreen _Discipline/_SubjectGroup/_SimEntry (no new Navigator/Card system)
+  - Category: Áâ©ÁêÜ ‚Üí ÁÉ≠Â≠¶‰∏éÊ∞î‰Ωì (after Diffusion; no ÁîüÁâ© discipline in Home)
+  - Card: Membrane Transport + original simple_diffusion_home_icon.svg
+  - Route: MaterialPageRoute ‚Üí MembraneTransportHome (4 tabs); debug entry not on Home
+  - tabBarIsScrollable on MT (KratosTabbedScreen optional flag)
+  - Tests: 73 PASS (was 62; +11 home); Home Golden 2/2; MT5 Golden 10/10
+  - Android: Home‚ÜíMT‚Üítabs‚ÜíBack‚ÜíHome; re-entry√ó5; screenshots android-qa/home/mt8_C*
+  - P0=0 P1=0 P2=4 (svg style/black fills, Material icons, font, letterbox)
+  - Home: INTEGRATED; final_status NOT READY
+  - Next: PHASE 9 Final QA / Final Regression
+
+[2026-09-29 17:35] PHASE 9 DONE ‚Äî FINAL STATUS: READY
+  - Source FeatureSet audit: aligned; no Phase 7/8 model drift
+  - Tests 73 PASS; Analyze CLEAN (2 pre-existing only); Golden 10/10 + Home 2/2; determinism PASS
+  - Release APK PASS (89.9MB; 35 SVGs; home icon; concurrent-run registrant race fixed)
+  - Android final: Home‚ÜíMT‚Üí4 tabs‚Üídrag/reset smoke‚Üíre-entry√ó10‚Üípeer Diffusion; release open PASS
+  - Memory: PSS 323‚Üí403 MB after debug stress (bounded; dispose covered); no ANR
+  - P0=0 P1=0 P2=4 retained (svg/black, Material icons, font, letterbox)
+  - Home INTEGRATED; Android VERIFIED; STOP ‚Äî no further proactive MT changes
+
+[2026-09-29 18:55] VISUAL HOTFIX ‚Äî SVG <style/> black silhouettes + control layering
+  - Root cause: all 35 PhET SVGs used CSS <style>; flutter_svg ignored fills ‚Üí black blobs
+  - tooling/inline_mt_svg_styles.py: inline class styles to presentation attrs (keep gradients)
+  - Composer: time/checks/reset above concentrations; solutes above cell
+  - Concentrations start collapsed; time/checks opaque chip background
+  - Tests 73 PASS; goldens refreshed
+  - P2 SVG black silhouette: FIXED for MT assets
+
+[2026-09-29 19:25] FIX tab FeatureSet: KratosTabSwitcher no longer reorders Stack slots
+  - Symptom: Facilitated tab selected but protein toolbox missing (Simple model reused)
+  - Stable child order + ValueKey per screen; Offstage inactive tabs
+  - Tests: 74 PASS (tab switch FeatureSet UI)
+
+[2026-09-29 20:51] POST-READY VISUAL POLISH DONE °™ FINAL STATUS: READY
+  - Design canvas corrected 768x504 -> 1024x618 (joist DEFAULT); fitScale may >1
+  - SVG style inline (black silhouettes FIXED); tab FeatureSet State reuse FIXED
+  - Concentrations: PhET bar charts + expand down + gap below pause
+  - Eraser: scenery-phet glyph (CustomPaint); Observation clipArea particles
+  - Tests 74 PASS; Goldens 10/10 + Home 2/2 refreshed
+  - P0=0 P1=0 P2=2 (Material play/pause; non-PhetFont)
+  - Report: POST_READY_VISUAL_POLISH_REPORT.md
+  - STOP °™ no further proactive MT changes

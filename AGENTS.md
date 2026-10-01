@@ -39,6 +39,8 @@
 | `60-citation-and-honesty.mdc` | 引用先行、诚实边界 | always |
 | `70-progressive-output.mdc` | 渐进式输出（摘要先行 + 选项呈现） | always |
 | `80-kratos-sim-checklist.mdc` | **Kratos Sim 开工自检表**（四原则 + L0-L2 复用 + §七 布局硬性要求） | phase 1→2 · 阻塞级 |
+| `85-phet-original-assets.mdc` | **原版 PhET Assets 优先**（禁替代素材 · ASSET_MAP · Substituted=0） | always · 视觉阻塞级 |
+| `86-phet-reset-all-button.mdc` | **Reset All 统一 L0**（`KratosResetAllButton` · 禁 Material refresh） | always · 视觉阻塞级 |
 
 ---
 

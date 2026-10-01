@@ -1,0 +1,34 @@
+{
+  "sim": "charges-and-fields",
+  "behavior_reference": "local source 1.1.0-dev.12",
+  "visual_reference": "published latest",
+  "viewport": { "width": 1024, "height": 768, "dpr": 1 },
+  "states": [
+    { "id": "01_initial", "screen": "main", "actions": ["load"] },
+    { "id": "02_positive_charge", "screen": "main", "actions": ["drag +1 nC to center"] },
+    { "id": "03_negative_charge", "screen": "main", "actions": ["drag -1 nC to center"] },
+    { "id": "04_opposite_pair", "screen": "main", "actions": ["+ left, - right"] },
+    { "id": "05_direction_only", "screen": "main", "actions": ["directionOnly=true"] },
+    { "id": "06_voltage_field", "screen": "main", "actions": ["voltage visible"] },
+    { "id": "07_grid_values", "screen": "main", "actions": ["grid+values"] },
+    { "id": "08_efield_sensor", "screen": "main", "actions": ["drag E sensor"] },
+    { "id": "09_equipotential", "screen": "main", "actions": ["voltmeter + equipotential"] },
+    { "id": "10_reset", "screen": "main", "actions": ["reset"] }
+  ],
+  "attribution": {
+    "A": "KARTOSLAB / PhET global shell (navbar) — known, do not modify",
+    "B": "Simulation content — must clear P1"
+  },
+  "diff_summary": {
+    "01_initial": { "mean_abs_diff": 26.651, "pct_changed": 18.55 },
+    "02_positive_charge": { "mean_abs_diff": 35.889, "pct_changed": 30.11 },
+    "03_negative_charge": { "mean_abs_diff": 35.975, "pct_changed": 30.16 },
+    "04_opposite_pair": { "mean_abs_diff": 37.083, "pct_changed": 29.98 },
+    "05_direction_only": { "mean_abs_diff": 48.451, "pct_changed": 29.96 },
+    "06_voltage_field": { "mean_abs_diff": 37.37, "pct_changed": 54.78 },
+    "07_grid_values": { "mean_abs_diff": 43.271, "pct_changed": 67.69 },
+    "08_efield_sensor": { "mean_abs_diff": 43.892, "pct_changed": 67.94 },
+    "09_equipotential": { "mean_abs_diff": 45.374, "pct_changed": 68.4 },
+    "10_reset": { "mean_abs_diff": 26.651, "pct_changed": 18.55 }
+  }
+}

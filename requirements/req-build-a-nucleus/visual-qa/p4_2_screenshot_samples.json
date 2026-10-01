@@ -1,0 +1,208 @@
+{
+  "flutter_fe69": {
+    "size": [
+      2560,
+      1600
+    ],
+    "samples": {
+      "play_bg_left": {
+        "xy": [
+          160,
+          600
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "play_bg_center_away": {
+        "xy": [
+          400,
+          500
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "canvas_left_of_nucleus": {
+        "xy": [
+          560,
+          1086
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "electron_cloud": {
+        "xy": [
+          1000,
+          1086
+        ],
+        "rgb": [
+          250,
+          250,
+          255
+        ],
+        "hex": "#FAFAFF",
+        "var": 10.8,
+        "edge_suspect": false
+      },
+      "nucleus_center": {
+        "xy": [
+          854,
+          1086
+        ],
+        "rgb": [
+          202,
+          202,
+          202
+        ],
+        "hex": "#CACACA",
+        "var": 115.3,
+        "edge_suspect": false
+      },
+      "available_decays_panel": {
+        "xy": [
+          2456,
+          500
+        ],
+        "rgb": [
+          242,
+          242,
+          242
+        ],
+        "hex": "#F2F2F2",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "decay_alpha_disabled": {
+        "xy": [
+          2456,
+          594
+        ],
+        "rgb": [
+          245,
+          220,
+          180
+        ],
+        "hex": "#F5DCB4",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "half_life_pointer": {
+        "xy": [
+          1280,
+          416
+        ],
+        "rgb": [
+          255,
+          0,
+          255
+        ],
+        "hex": "#FF00FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "appbar": {
+        "xy": [
+          1280,
+          56
+        ],
+        "rgb": [
+          180,
+          83,
+          9
+        ],
+        "hex": "#B45309",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  },
+  "flutter_empty": {
+    "size": [
+      2560,
+      1600
+    ],
+    "samples": {
+      "play_bg": {
+        "xy": [
+          400,
+          600
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "canvas": {
+        "xy": [
+          854,
+          1086
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  },
+  "original_fe69": {
+    "size": [
+      1024,
+      672
+    ],
+    "samples": {
+      "page_bg": {
+        "xy": [
+          80,
+          280
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "available_decays_panel": {
+        "xy": [
+          880,
+          280
+        ],
+        "rgb": [
+          242,
+          242,
+          242
+        ],
+        "hex": "#F2F2F2",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  }
+}

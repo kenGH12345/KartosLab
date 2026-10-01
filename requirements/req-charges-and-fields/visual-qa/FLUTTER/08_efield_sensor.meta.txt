@@ -1,0 +1,6 @@
+state: 08_efield_sensor
+viewport: 1024x768
+DPR: 1
+actions: E sensor
+source: local-flutter-widget-test
+captured_at: 2026-09-27T17:26:29.136548Z

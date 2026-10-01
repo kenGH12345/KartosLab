@@ -1,0 +1,137 @@
+{
+  "captured_at": "2026-09-27T17:28:20.118910Z",
+  "behavior_baseline": "1.2.0-dev.6",
+  "results": [
+    {
+      "action": "Intro ×1 Play",
+      "expected": "enqueue 1 → spawn 1 ball after 150ms",
+      "actual": "balls=1 launched=1",
+      "match": "PASS",
+      "evidence": "02_intro_x1.png"
+    },
+    {
+      "action": "Intro ×10",
+      "expected": "ballsToCreateNumber += 10; spawn 10",
+      "actual": "launched=10",
+      "match": "PASS",
+      "evidence": "03_intro_x10.png"
+    },
+    {
+      "action": "Intro ×100",
+      "expected": "enqueue maxBallsIntro=100; staggered spawn @150ms",
+      "actual": "queue_init=100 launched=36 cap=true",
+      "match": "PASS",
+      "evidence": "04_intro_x100.png"
+    },
+    {
+      "action": "Intro counter ↔ cylinder",
+      "expected": "viewProperties only; histogram data unchanged",
+      "actual": "mode=cylinder landed=21 bins=[0, 0, 0, 3, 3, 2, 5, 5, 2, 1, 0, 0, 0]",
+      "match": "PASS",
+      "evidence": "05_intro_modes.png"
+    },
+    {
+      "action": "Intro Erase",
+      "expected": "balls + queue + launched + histogram cleared",
+      "actual": "balls=0 queue=0 N=0",
+      "match": "PASS",
+      "evidence": "07_intro_erase.png"
+    },
+    {
+      "action": "Intro Reset",
+      "expected": "defaults: oneBall, rows=12, p=0.5, cylinder, sound off",
+      "actual": "mode=BallMode.oneBall rows=12 p=0.5 hist=cylinder",
+      "match": "PASS",
+      "evidence": "08_intro_reset.png"
+    },
+    {
+      "action": "Lab rows slider",
+      "expected": "peg rows + binCount=rows+1 sync; erase on change",
+      "actual": "rows=20 bins=21 pegRows=20",
+      "match": "PASS",
+      "evidence": "lab_rows.png"
+    },
+    {
+      "action": "Lab p=0.2 Bernoulli",
+      "expected": "P(right)=p ≈ 0.2 over hops",
+      "actual": "empP=0.1963 right=942/4800",
+      "match": "PASS",
+      "evidence": "lab_p_low.png"
+    },
+    {
+      "action": "Lab p=0.5 Bernoulli",
+      "expected": "P(right)=0.5",
+      "actual": "empP=0.5021",
+      "match": "PASS"
+    },
+    {
+      "action": "Lab p=0.8 Bernoulli",
+      "expected": "P(right)=0.8",
+      "actual": "empP=0.8002",
+      "match": "PASS",
+      "evidence": "lab_p_high.png"
+    },
+    {
+      "action": "Lab One + Play",
+      "expected": "exactly 1 ball; isPlaying stays false",
+      "actual": "balls=1 playing=false",
+      "match": "PASS",
+      "evidence": "lab_one.png"
+    },
+    {
+      "action": "Lab Continuous",
+      "expected": "interval spawn @100ms; pause stops; mode switch clears playing",
+      "actual": "after1=1 after2=2 paused=2 finalPlaying=false",
+      "match": "PASS",
+      "evidence": "lab_continuous.png"
+    },
+    {
+      "action": "Lab Ball mode",
+      "expected": "ball visible / animated; pathHops precomputed",
+      "actual": "phase=BallPhase.initial pathHops=13",
+      "match": "PASS",
+      "evidence": "lab_ball.png"
+    },
+    {
+      "action": "Lab Path mode",
+      "expected": "lands via pathHops; no second random path",
+      "actual": "phase=BallPhase.collected hops=13 N=1",
+      "match": "PASS",
+      "evidence": "lab_path.png"
+    },
+    {
+      "action": "Lab None mode",
+      "expected": "stats update; visual balls/paths hidden by view",
+      "actual": "mode=HopperMode.none N=1",
+      "match": "PASS",
+      "evidence": "lab_none.png"
+    },
+    {
+      "action": "Lab Statistics live",
+      "expected": "μ/σ/x̄/s/N from real ball landings (N=200 ≈ μ=6)",
+      "actual": "N=200 x̄=6.000 s=1.722 μ=6.0 σ=1.732",
+      "match": "PASS",
+      "evidence": "lab_statistics.png"
+    },
+    {
+      "action": "Lab Ideal distribution",
+      "expected": "binomial(n,p) independent of sample count",
+      "actual": "sumIdeal=1.000000 unchanged_after_extra_ball=true sampleN→201",
+      "match": "PASS",
+      "evidence": "lab_ideal.png"
+    },
+    {
+      "action": "Lab Audio gating",
+      "expected": "peg sound only when hopperMode==ball (PegSoundGeneration)",
+      "actual": "pathGate=false ballGate=true",
+      "match": "PASS"
+    },
+    {
+      "action": "Lab Reset",
+      "expected": "full defaults restored (model + view + sound)",
+      "actual": "rows=12 p=0.5 ball=BallMode.oneBall hop=HopperMode.ball playing=false hist=counter",
+      "match": "PASS",
+      "evidence": "lab_reset.png"
+    }
+  ]
+}

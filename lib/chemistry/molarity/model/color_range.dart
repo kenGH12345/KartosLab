@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// 颜色渐变工具：在 [min]（低浓度）与 [max]（高浓度/饱和）之间线性插值。
+/// Color range — interpolate between [min] (low non-zero) and [max] (saturated).
 ///
-/// L1 候选组件（第 1 用户为本 sim）· 待第 3 用户（如 beer-law-lab）后上抽 common。
-/// 对齐蓝本 `edu.colorado.phet.common.phetcommon.util.ColorRange`。
+/// Source: PhET Scenery `Color.interpolateRGBA` used by `Solution.getColor()`.
+/// Molarity-local; do not reuse Beer's Law Lab color tables.
 @immutable
 class ColorRange {
   const ColorRange({required this.min, required this.max});

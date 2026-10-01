@@ -1,0 +1,27 @@
+req_id: req-port-under-pressure
+sim: under-pressure
+title: Under Pressure
+phase: 6
+status: ready
+updated_at: 2026-09-24T00:40:00+08:00
+source:
+  thin_shell: phet sourses/under-pressure-main/under-pressure-main
+  phet_lib: phet sourses/fluid-pressure-and-flow-main
+notes:
+  - Phase 6 Home Integration READY
+  - Home: 物理 → 密度与浮力 → Under Pressure
+  - Faucet aligned to scenery-phet + product UX (drag blue knob only)
+  - Tests 126 PASS; Goldens 12/12
+  - Knowledge: scenery-phet-faucet-node.md (L1 2/3)
+  - Runtime/Android NOT VERIFIED
+flutter_ui: home_integrated_ready
+home: integrated
+faucet: aligned_product_ux
+tests:
+  previous: 116
+  added: 10
+  final: 126
+goldens: 12
+global_regression:
+  under_pressure_home_failures: 0
+  other_failures: 56

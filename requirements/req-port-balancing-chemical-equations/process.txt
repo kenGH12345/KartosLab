@@ -1,0 +1,30 @@
+# process.txt — req-port-balancing-chemical-equations
+
+[2026-09-23 09:04] PHASE 0 START — Source Audit for Balancing Chemical Equations
+[2026-09-23 09:30] PHASE 0 PASS — Reports written: SOURCE_AUDIT_REPORT.md, ASSET_MAP.md, MODEL_ARCHITECTURE.md, GAME_LOGIC_AUDIT.md, ANIMATION_AUDIT.md
+[2026-09-23 09:30] STOP — Awaiting Phase 1 instruction. No Flutter UI implemented. Not READY.
+[2026-09-23 09:18] PHASE 1 START — Chemistry / Equation Model
+[2026-09-23 09:45] PHASE 1 PASS — Model + 61 equations + 26 tests; analyze clean. Report: PHASE_1_MODEL_REPORT.md
+[2026-09-23 09:45] STOP — Awaiting Phase 2 (Intro View). No production UI.
+[2026-09-23 09:50] PHASE 2 START — IntroScreen View + Interaction
+[2026-09-23 10:15] PHASE 2 PASS — IntroScreen complete; Phase1 model untouched; 39 tests PASS; analyze clean. Report: PHASE_2_INTRO_REPORT.md
+[2026-09-23 10:15] STOP — Awaiting next phase. EquationsScreen / GameScreen NOT implemented.
+[2026-09-23 09:47] PHASE 3 START — EquationsScreen View + Interaction
+[2026-09-23 10:05] PHASE 3 PASS — EquationsScreen complete; Phase1 semantics unchanged; 55 tests PASS; analyze clean. Report: PHASE_3_EQUATIONS_REPORT.md
+[2026-09-23 10:05] STOP — Awaiting Phase 4 (GameScreen). No Game / Home work.
+[2026-09-23 10:00] PHASE 4 START — GameScreen model + view + vegas semantics
+[2026-09-23 10:20] PHASE 4 PASS — GameScreen complete; 73 tests PASS; analyze clean; vegas timer/utils vendored. Report: PHASE_4_GAME_REPORT.md
+[2026-09-23 10:20] STOP — Awaiting Phase 5 (Visual / Home / Release). No Home work.
+[2026-09-23 10:15] PHASE 5 START — Visual Reconstruction + Cross-Screen QA (no Home)
+[2026-09-23 10:30] PHASE 5 PASS — Reward rain + ViewComboBox + H2O/NH3 geometry + visual/lifecycle tests; 82 PASS; analyze clean. Report: PHASE_5_VISUAL_QA_REPORT.md
+[2026-09-23 10:30] STOP — Awaiting confirmation before Home Integration / Release Gate.
+[2026-09-23 10:30] PHASE 6 START — Behavioral Acceptance + Full Regression (no Home)
+[2026-09-23 10:45] PHASE 6 PASS — +22 behavioral tests; 104 PASS; analyze clean. Report: PHASE_6_BEHAVIORAL_ACCEPTANCE_REPORT.md
+[2026-09-23 10:45] STOP — Awaiting next instruction. No Home / Phase 7.
+[2026-09-23 10:50] PHASE 7 START — Home Integration + Final Release Gate
+[2026-09-23 11:00] PHASE 7 PASS — Home under 化学/配平化学方程式; +13 home tests; GameTimer.dispose fix; 117 PASS; analyze clean.
+[2026-09-23 11:00] FINAL STATUS: READY — Report: PHASE_7_FINAL_RELEASE_REPORT.md — STOP
+[2026-09-23 11:10] POST-RELEASE FIX — Particles 分子色块：去掉 BceAtomLayout.diameter *100；117 PASS。Report: POST_RELEASE_MOLECULE_SIZE_FIX.md
+[2026-09-23 11:10] STOP — BCE migration + hotfix complete. FINAL STATUS: READY
+
+

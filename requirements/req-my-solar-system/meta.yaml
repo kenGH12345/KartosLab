@@ -1,0 +1,47 @@
+req_id: req-my-solar-system
+title: 迁移 PhET My Solar System 到 KARTOSLAB Flutter
+status: done
+phase: '3.close'
+created_at: '2026-09-01 21:39'
+updated_at: '2026-09-02 10:30'
+repo_path: '.'
+sop: agile-vibe
+related_requirements:
+  - req-keplers-laws
+
+source:
+  type: html5-typescript
+  repo: https://github.com/phetsims/my-solar-system
+  version: 1.4.0-dev.4
+  local_path: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\my-solar-system-main\my-solar-system-main'
+  source_of_truth: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\my-solar-system-main\my-solar-system-main'
+  url: https://phet.colorado.edu/en/simulations/my-solar-system
+  git: not-a-git-checkout
+  html_entry: my-solar-system_en.html
+  js_entry: js/my-solar-system-main.ts
+  phetLibs:
+    - solar-system-common
+  solar_system_common:
+    required: true
+    local_path: missing
+    sha_from_dependencies_json: 818394d772694e24219ffedfd081aca48615e16b
+    status: BLOCKED
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC：State / NumericalEngine(Solver) / Controller / RenderData / Painter / Widget / Screen
+  - NineGrid 只负责页面级布局；轨道画布保留局部 MVT
+  - 不机械套用 Kepler 的椭圆解析引擎
+  - 不修改 Kepler 或其他已完成 simulation
+  - 原版源码优先于网页文案与物理常识
+  - Preset 配置驱动，禁止 if (preset == n)
+  - 禁止 WebView / iframe / 截图伪装
+  - L0 复用 lib/common/；solar-system 第 2 用户先登记 L1，本需求不上抽 Kepler
+
+acceptance_criteria:
+  - AC-1: Intro / Lab 两屏可进入、返回、再进入
+  - AC-2: Lab 11 个可见 preset + Custom 可切换；OS1–4 数据保留、UI 默认隐藏
+  - AC-3: PEFRL N-body 与原版 NumericalEngine 公式/系数/子步一致
+  - AC-4: Play/Pause/Step/三速、Restart≠Reset、Return Bodies、Follow CoM、Mass/Pos/Vel、Zoom/Grid/Path/Gravity/Velocity/CoM/Tape
+  - AC-5: flutter analyze 对本 sim 0 issues；专项测试通过；375/1024/1920 无溢出

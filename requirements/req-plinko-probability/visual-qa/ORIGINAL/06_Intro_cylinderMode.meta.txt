@@ -1,0 +1,8 @@
+state: 06_Intro_cylinderMode
+viewport: 1280x800
+DPR: 1
+actions: ["switch_cylinder"]
+visual_reference: phet.colorado.edu latest published build
+behavior_reference: local 1.2.0-dev.6
+renderer: canvas+svg (ready via joist model)
+captured_at: 2026-09-16T12:03:43.329Z

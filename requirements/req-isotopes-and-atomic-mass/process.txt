@@ -1,0 +1,63 @@
+# req-isotopes-and-atomic-mass process log
+
+2026-09-18 10:56  Phase 0 started ? local PhET source reverse-engineering (no UI)
+2026-09-18 11:20  Phase 0 done ? SOURCE_ANALYSIS.md written
+  - 2 screens: Isotopes (Make) + Mixtures (Mix)
+  - Data authority: shred AtomData.ts / AtomInfoUtils (not in local zip)
+  - Viewport: layoutBounds 768×464 (not 1024×618)
+  - No "More" control: slider mode CAPACITY=100 is bulk-add path
+  - Nature's Mix: 1000 atoms + force min 1 per stable isotope; average uses standardMassTable
+  - Nucleus: ParticleAtom.reconfigureNucleus; unstable jump via nucleusOffset
+  - Mix large isotopes: ParticleView; small/nature: IsotopeCanvasNode
+  - Runtime assets: scale.png, isotopesIcon.png, mixturesIcon.png
+ 
+2026-09-18 11:35  Phase 1 done ?? Shared Element/Isotope data model 
+  - shred locked f1a7da74ae61ec0397dbeb0672fdb5ecfafa43a1 (deps.json SHA invalid placeholder) 
+  - generated atom_data_tables.dart (43 isotopes, Z=1..18) 
+  - ElementRepository / IsotopeRepository / AtomInfoUtils subset 
+ 
+2026-09-18 11:45  Phase 2 done ?? MakeIsotopesModel runtime (no UI) 
+  - selectElement 1..10 reinits most-common N + bucket 4; same Z no-op 
+  - add/remove neutron = bucket<>nucleus; min N=0; max = mostCommon+4 
+  - off-table isotope allowed (atomicMass -1); capture radius 100; unstable jump step 
+
+2026-09-18 12:30  Phase 3 done ? Make interaction / particle spatial model (no UI)
+  - NucleonParticle identity; bucket SphereBucket stack; nucleus reconfigureNucleus
+  - beginDrag/updateDrag/endDrag; capture dist(atom)<100; no auto-refill
+  - unstable jump translates nucleons; element switch rebuilds; same-Z no-op
+  - tests: Phase1 22 + Phase2 21 + Phase3 19 = 62 PASS; analyze 0; UI NOT STARTED
+
+2026-09-18 12:55  Phase 4 done ?? Make Isotopes View (Model frozen)
+  - 768x464 FittedBox; MVT inverted-Y (307,227); scale.png + ExpandedPT Z<=10
+  - Play area: cloud/nucleons/bucket; drag -> Phase3 contract; clock -> step
+  - Home: ??? -> ???? -> ?????????????
+  - tests 68 PASS (view 6); analyze 0; debug APK built; Mix deferred
+
+2026-09-18 13:15  Phase 5 done ?? MixturesModel (no Mix UI)
+  - Z<=18; stable isotopes mass-sorted; bucket stock 10; slider 0..100
+  - My Mix save/restore per Z+mode; Nature roundSymmetric(1000*abund5) min1
+  - displayedAverage = standardMass when Nature; chamber average for My Mix
+  - tests ~20 new; full suite 88 PASS; analyze 0; Make untouched
+ 
+2026-09-18 14:30  Phase 6 done ?? Mix spatial / interaction model (no Mix UI) 
+  - MixParticle id/container/position; bucket SphereBucket; chamber 450x280 
+  - begin/update/endDrag grabOffset=0; drop=rect contains center; invalid->bucket 
+  - mode save per Z+mode with positions; Nature ~1000 random; Clear/Reset cancel drag 
+  - tests 101 PASS (mix_interaction + Phase1-5); analyze 0; Mix UI NOT STARTED
+ 
+2026-09-18 15:10  Phase 7 done ? Mix Isotopes View / Controller / Canvas
+  - MixIsotopesScreen + MixturesController; MVT (246,153); chamber clip canvas
+  - buckets/large drag; slider ControlIsotope; Nature single CustomPainter
+  - Home tabs Isotopes+Mixtures; KratosResetAll; tests 108; analyze 0; debug APK
+  - Mix UI started; Phase 8 dual-screen final QA deferred
+
+2026-09-18 14:24  Layout alignment done ? Make + Mix view polish
+  - compact 44px screen tabs; Mix/Make right columns chained to PT width
+  - accordion collapse keeps sibling tops (PhET gap, no reflow)
+  - Make scale lifted (bottom offset 36); report LAYOUT_ALIGNMENT_REPORT.md
+  - Phase 8 still deferred
+
+2026-09-18 14:40  FINAL ACCEPTANCE ? human QA PASS + automated 108 PASS / analyze 0
+  - FINAL_ACCEPTANCE.md written; status=accepted
+  - Make + Mix integrated; P0=0; residual P1/P2 listed in Known Differences
+  - Phase 8 optional (device V2 screenshot archive only)

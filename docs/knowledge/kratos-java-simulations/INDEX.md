@@ -27,18 +27,20 @@
 | 文档 | 说明 | 状态 |
 |---|---|---|
 | [overview.md](overview.md) | 项目是什么 / SVN 源 / 技术栈 / 目录组织形态 / 关键事实证据 | ✅ Loop 1 |
-| [module-catalog.md](module-catalog.md) | 81 个有效 sim 分 9 学科清单（Java 文件数 + 依赖标签 + 技术门槛 + ⭐ 教学价值） | ✅ Loop 2 |
-| [existing-flutter-map.md](existing-flutter-map.md) | c3. Flutter 已复刻 3 模块 ↔ Java 源码定位 + 5 步复刻工作流 | ✅ Loop 2 |
+| [module-catalog.md](module-catalog.md) | 81 个有效 sim 分 9 学科清单（Java 文件数 + 依赖标签 + 技术门槛 + ⭐ 教学价值）· 文末注明 MASB Flutter Basics（HTML5，不在 Java 表） | ✅ Loop 2 + Close 追加 |
+| [existing-flutter-map.md](existing-flutter-map.md) | c3. Flutter 已复刻模块 ↔ Java/HTML5 蓝本定位 + 5 步复刻工作流（含 My Solar System §四 · **Masses and Springs Basics §五** · 2026-09） | ✅ Loop 2 + Close 追加 |
 | [shortlist-for-flutter-port.md](shortlist-for-flutter-port.md) | c1. Wave 0 通用基础组件 Top-8 + sim 复刻优先级 Top-15（Wave A/B/C 分组） | ✅ Loop 3 |
 | [w0-2-simulation-clock-draft.md](w0-2-simulation-clock-draft.md) | W0-2 SimulationClock 蓝本草案（Java IClock/ConstantDtClock + Dart API + Forces 迁移示意） | ✅ Wave 0 深挖 |
 | [w0-1-chart-draft.md](w0-1-chart-draft.md) | W0-1 Chart 图表控件蓝本草案（Java ControlGraph/GraphSuite + Dart API + CustomPainter 方案） | ✅ Wave 0 深挖 |
 | [w0-3-property-control-draft.md](w0-3-property-control-draft.md) | W0-3 PropertyControl 控件族蓝本草案（Java VSliderNode/HSliderNode/RadioButtonStrip + Dart API + §C2 合规集成） | ✅ Wave 0 深挖 |
 | [java-blueprint-scan-log.md](java-blueprint-scan-log.md) | Java 蓝本路径实测扫描记录（PHET_JAVA_ROOT 定位 + 依赖库盘点） | ✅ 调研 |
-| [shared-abstraction-plan.md](shared-abstraction-plan.md) | **Flutter kratos 通用抽象层规划**：L0 现状 / L1 待抽候选 / L2 明确不抽象 / 4 新模块复用清单 / 架构债务 / 门禁合规 | ✅ 通用层规划 |
+| [shared-abstraction-plan.md](shared-abstraction-plan.md) | **Flutter kratos 通用抽象层规划**：L0 现状 / L1 待抽候选 / L2 明确不抽象 / 4 新模块复用清单 / 架构债务 / 门禁合规 · **+ MASB L1（Ruler/PeriodTrace 第 1/3）** · **+ FaucetNode L1（2/3）** | ✅ 通用层规划 + Close 追加 |
+| [scenery-phet-faucet-node.md](scenery-phet-faucet-node.md) | scenery-phet 水阀 Flutter 复用指南（结构硬约束 · 交互模式 A/B · pH Scale / UP 参考路径） | ✅ 2026-09-24 |
 | [4-sim-lightweight-EDD-index.md](4-sim-lightweight-EDD-index.md) | 4 新 sim 轻量 EDD 索引（color-vision / sound / radio-waves / wave-interference） | ✅ EDD |
 | [edd-template.md](edd-template.md) | EDD（工程设计文档）编写模板 | ✅ 模板 |
 | [edd/color-vision-EDD.md](edd/color-vision-EDD.md) · [sound-EDD.md](edd/sound-EDD.md) · [radio-waves-EDD.md](edd/radio-waves-EDD.md) · [wave-interference-EDD.md](edd/wave-interference-EDD.md) | 分 sim EDD 明细（每 sim 工程设计文档） | ✅ EDD |
-| [notes.md](notes.md) | 关键决策 / 采样局限 / 6 项 TODO 入口 / 维护提示 | ✅ Loop 3 |
+| [edd/my-solar-system-migration.md](edd/my-solar-system-migration.md) | My Solar System Flutter 迁移经验（PEFRL / RenderData / common 缺失 / 测试模式）· req-my-solar-system Close | ✅ Close 2026-09 |
+| [notes.md](notes.md) | 关键决策 / 采样局限 / 6 项 TODO 入口 / 维护提示 · **+ PeriodTrace peak/cross 迁移经验**（req-masses-and-springs-basics） | ✅ Loop 3 + Close 追加 |
 
 ## 路径占位符约定
 

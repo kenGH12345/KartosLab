@@ -1,0 +1,44 @@
+{
+  "scenarioId": "binary_star_planet",
+  "name": "Binary Star, Planet",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 150,
+      "position": {
+        "x": -1.0,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": -12.6733
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 120,
+      "position": {
+        "x": 1.0,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 10.5611
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": -0.5,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 25.3467
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+# req-rutherford-scattering process log
+
+2026-09-17 09:49  Phase 0 started — local PhET source reverse-engineering
+2026-09-17 09:55  Phase 0 done — SOURCE_ANALYSIS.md written; key nuance: scene switch clears particles; neutrons visual-only; plum pudding undeflected
+2026-09-17 09:55  Phase 1 started — Model layer (Widget-free physics port)
+2026-09-17 10:05  Phase 1–2 done — Model + perpendicular fix; 15 unit tests PASS
+2026-09-17 10:10  Phase 3–5 done — dual screens, assets, legends, home integrated
+2026-09-17 10:15  Phase 7 done — analyze 0, APK PASS, emulator launched; FINAL_ACCEPTANCE READY
+2026-09-17 10:18  P1 Visual Convergence started — layout/sliders/scene radio/screenshots
+2026-09-17 10:35  P1 done — RsLayout PhET coords; Energy blue / Protons red thumbs; V1 QA matrix; P1=0; READY
+2026-09-17 10:46  Fix: Alpha gun red button clickable (IgnorePointer on zoom overlay + InkWell)
+2026-09-17 14:08  Close — FINAL_REPORT.md; tests 22 PASS; analyze 0; status done / READY

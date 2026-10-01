@@ -1,0 +1,116 @@
+{
+  "step": "FINAL-VISUAL · Decay 首屏对照（只量测，未改代码）",
+  "date": "2026-08-31",
+  "normalization": {
+    "method": "去掉各自 chrome 后，把 play area 仿射到 PhET LAYOUT_BOUNDS 1024×618",
+    "original_play": {"x": 0, "y": 0, "w": 1024, "h": 618},
+    "flutter_logical": {"w": 1280, "h": 800, "dpr": 2.0, "physical": "2560×1600"},
+    "flutter_chrome_h": 108,
+    "flutter_play": {"x": 0, "y": 108, "w": 1280, "h": 692},
+    "sx": 0.8,
+    "sy": 0.8930635838150289,
+    "overlay_mean_abs_rgb": {
+      "full_empty": 47.07,
+      "full_fe69": 51.22,
+      "play_fe69": 34.51
+    }
+  },
+  "rows": [
+    {
+      "element": "page",
+      "original": {"x": 0, "y": 0, "w": 1024, "h": 672},
+      "flutter_raw": {"x": 0, "y": 0, "w": 1280, "h": 800},
+      "dx": null, "dy": null, "dw": 256, "dh": 128,
+      "note": "视口不同：原版 PhET 1024×672；Flutter Pixel Tablet 逻辑 1280×800",
+      "tag": "有意差异：验证视口"
+    },
+    {
+      "element": "chrome / nav",
+      "original": {"x": 0, "y": 618, "w": 1024, "h": 54},
+      "flutter_raw": {"x": 0, "y": 0, "w": 1280, "h": 108},
+      "dx": 0, "dy": -618, "dw": null, "dh": 54,
+      "note": "原版 joist 黑底栏在底部；Flutter AppBar(56)+TabBar(48) 在顶部",
+      "tag": "有意差异：工程布局约束"
+    },
+    {
+      "element": "playArea",
+      "original": {"x": 0, "y": 0, "w": 1024, "h": 618},
+      "flutter_mapped": {"x": 0, "y": 0, "w": 1024, "h": 618},
+      "dx": 0, "dy": 0, "dw": 0, "dh": 0,
+      "note": "归一化后对齐的参考框，不是实际渲染已对齐",
+      "tag": "待确认"
+    },
+    {
+      "element": "nucleus center",
+      "original": {"x": 341.3, "y": 339.9, "w": 0, "h": 0, "source": "BANConstants SCREEN_VIEW_ATOM_CENTER = (W/3, H×0.55)"},
+      "flutter_mapped": {"x": 512.0, "y": 339.9, "w": 0, "h": 0, "source": "CanvasProjection.origin = (canvasW/2, canvasH×0.55)"},
+      "dx": 170.7, "dy": 0.0, "dw": 0, "dh": 0,
+      "note": "Y 在 play 归一化后重合。X 原版 1/3 屏，Flutter 画布水平居中（约 1/2 play）。叠图出现左右两个核。",
+      "tag": "待确认"
+    },
+    {
+      "element": "canvas / nucleus stage",
+      "original": {"x": 0, "y": 0, "w": 1024, "h": 618},
+      "flutter_mapped": {"x": 83.6, "y": 157.5, "w": 856.7, "h": 331.6},
+      "dx": 83.6, "dy": 157.5, "dw": -167.3, "dh": -286.4,
+      "note": "原版粒子层覆盖整个 LAYOUT_BOUNDS；Flutter 核只画在 NineGrid 中心格，且中心格上方被半衰期条占走",
+      "tag": "有意差异：工程布局约束"
+    },
+    {
+      "element": "half-life",
+      "original": {"x": 45, "y": 95, "w": 550, "h": 80, "source": "left=X_MARGIN+30, y=Y_MARGIN+80, 宽 550"},
+      "flutter_mapped": {"x": 83.6, "y": 46.8, "w": 856.7, "h": 110.7},
+      "dx": 38.6, "dy": -48.2, "dw": 306.7, "dh": 30.7,
+      "note": "Flutter 把数轴放进中心格顶部并拉满中心格宽；原版绝对定位、固定 550",
+      "tag": "有意差异：工程布局约束"
+    },
+    {
+      "element": "nucleon counters",
+      "original": {"x": 687, "y": 15, "w": 140, "h": 50, "source": "left=availableDecays.left, top=Y_MARGIN；宽约 140 [视觉近似]"},
+      "flutter_mapped": {"x": 16.0, "y": 8.2, "w": 58.8, "h": 15.2},
+      "dx": -671.0, "dy": -6.8, "dw": -81.2, "dh": -34.8,
+      "note": "原版在右上、与衰变面板左对齐；Flutter 在 NineGrid topLeft",
+      "tag": "有意差异：工程布局约束"
+    },
+    {
+      "element": "isotope symbol",
+      "original": {"x": 859, "y": 15, "w": 150, "h": 120, "source": "right=maxX-15, top=Y_MARGIN；Accordion [视觉近似宽]"},
+      "flutter_mapped": {"x": 970.8, "y": 13.5, "w": 22.8, "h": 29.7},
+      "dx": 111.8, "dy": -1.5, "dw": -127.2, "dh": -90.3,
+      "note": "原版可折叠符号盒；Flutter 挤在 topRight 边格 ≈28×33 逻辑 px",
+      "tag": "有意差异：工程布局约束"
+    },
+    {
+      "element": "Available Decays panel",
+      "original": {"x": 687, "y": 145, "w": 322, "h": 360, "source": "minWidth 322, right=symbol.right, top=symbol.bottom+10；高 [视觉近似]"},
+      "flutter_mapped": {"x": 963.0, "y": 157.4, "w": 38.4, "h": 228.6},
+      "dx": 276.0, "dy": 12.4, "dw": -283.6, "dh": -131.4,
+      "note": "原版五键全文案+示意图+图例；Flutter 五枚 48px IconButton，无示意图",
+      "tag": "有意差异：工程布局约束"
+    },
+    {
+      "element": "generator / tray",
+      "original": {"x": 161.3, "y": 513, "w": 360, "h": 90, "source": "centerX=atom.x, bottom=maxY-15"},
+      "flutter_mapped": {"x": 444.4, "y": 536.3, "w": 135.2, "h": 77.7},
+      "dx": 283.1, "dy": 23.3, "dw": -224.8, "dh": -12.3,
+      "note": "原版托盘水平对齐核（x=W/3）；Flutter footer 水平居中（x=W/2）",
+      "tag": "待确认"
+    },
+    {
+      "element": "reset",
+      "original": {"x": 969, "y": 563, "w": 40, "h": 40, "source": "right=maxX-15, bottom=maxY-15"},
+      "flutter_mapped": {"x": 940.4, "y": 489.2, "w": 83.6, "h": 42.9},
+      "dx": -28.6, "dy": -73.8, "dw": 43.6, "dh": 2.9,
+      "note": "象限同为右下，但 Flutter 是 Material IconButton，不是橙色 ResetAll 圆钮",
+      "tag": "视觉近似"
+    },
+    {
+      "element": "electron cloud checkbox",
+      "original": {"x": 687, "y": 575, "w": 180, "h": 28, "source": "left=decays.left, bottom=reset.bottom；宽 [视觉近似]"},
+      "flutter_mapped": {"x": 738.4, "y": 460.5, "w": 202.0, "h": 28.6},
+      "dx": 51.4, "dy": -114.5, "dw": 22.0, "dh": 0.6,
+      "note": "原版在 play 右下、与面板左对齐；Flutter 叠在画布右下",
+      "tag": "有意差异：工程布局约束"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+state: 09_ThreeAtoms_bond_angle
+viewport: 1280x800
+DPR: 1
+actions: ["bondAngleAB=pi"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:48.092Z

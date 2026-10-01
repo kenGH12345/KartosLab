@@ -1,0 +1,6 @@
+state: 16_Lab_running
+viewport: 1280x800
+DPR: 1
+actions: ["fire","wait_0.7s"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.41 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T15:04:41.549Z

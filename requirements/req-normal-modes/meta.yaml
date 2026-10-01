@@ -1,0 +1,35 @@
+req_id: req-normal-modes
+title: 迁移 PhET Normal Modes 到 KARTOSLAB Flutter
+status: done
+phase: '12.close'
+created_at: '2026-09-03 03:34'
+updated_at: '2026-09-03 05:23'
+acceptance: user-confirmed-success
+repo_path: '.'
+
+source:
+    type: html5-javascript
+    repo: https://github.com/phetsims/normal-modes
+    version: 1.1.0-dev.0
+    local_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\normal-modes-main\normal-modes-main'
+    url: https://phet.colorado.edu/sims/html/normal-modes/latest/normal-modes_all.html
+
+edd_template_version: v2.0
+
+design_constraints:
+    - MVC：State/Model / Solver / Controller / RenderData / Painter / Widget / Screen 职责分离
+    - 数学逻辑不得写入 CustomPainter
+    - NineGrid 只负责页面级外壳；模拟内部使用 PhET layoutBounds 局部坐标
+    - 不修改其他已完成 simulation
+    - 不修改 common API / 全局 Theme / Navigation 架构
+    - common 仅在语义真正通用时抽取（本 sim 为第 1 个 Normal Modes 用户）
+    - 原版源码优先于截图、直觉与教科书公式
+    - 默认动画为解析叠加 position(t)，拖拽时才 Verlet；禁止 AnimationController+Tween 替代
+    - 无 JSON scenario（原版无场景系统）→ 有意差异，不做假 schema
+
+acceptance_criteria:
+    - AC-1: 两屏 One Dimension / Two Dimensions 可从 Home 进入、返回、再进入并重新初始化
+    - AC-2: 默认质量数=3、振幅=0、播放中、竖直方向；Reset / Initial / Zero 对照源码
+    - AC-3: 频率、模态形状、叠加与 Verlet 与 OneDimensionModel / TwoDimensionsModel 公式一致
+    - AC-4: Spectrum / Normal Modes 图 / 2D 振幅网格 / 拖拽分解模态对照源码
+    - AC-5: flutter analyze 0 issues；专项测试 + 回归通过

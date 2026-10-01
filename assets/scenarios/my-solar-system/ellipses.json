@@ -1,0 +1,56 @@
+{
+  "scenarioId": "ellipses",
+  "name": "Ellipses",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 250,
+      "position": {
+        "x": -1.0,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": -0.15,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 31.8946
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": 1.5,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 12.6733
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": 3.2,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 7.8152
+      }
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+req_id: req-waves-intro
+title: 迁移 PhET Waves Intro 到 KARTOSLAB Flutter
+status: done
+phase: '3.close'
+created_at: '2026-09-05 22:53'
+updated_at: '2026-09-05 23:20'
+home:
+  discipline: 物理
+  subdomain: 光学与波动
+  card_title: Waves Intro
+  note: '仅 ADD 入口；不改 taxonomy'
+repo_path: '.'
+
+source:
+  type: html5-javascript
+  repo: https://github.com/phetsims/waves-intro
+  version: 1.2.0-dev.0
+  local_path: 'phet sourses/waves-intro-main/waves-intro-main'
+  physics_from: 'phet sourses/wave-interference-for-waves-intro'
+  physics_sha_lock: 31ebfd71800f065c2da3bc8d402cb65eafe65932
+  physics_sha_analyzed_clone: 5443da094116592a549b45eb362a90600a87e4f5
+  provenance: 'A core-wave; P0 evidence uses lock SHA — see DEPENDENCY_PROVENANCE.md'
+  deps_json_sha_note: 'mismatch vs clone; core FDTD aligned; do not auto-replace'
+  lattice_from: 'phet sourses/scenery-phet/js/Lattice.ts'
+  url: https://phet.colorado.edu/sims/html/waves-intro/latest/waves-intro_all.html
+
+design_constraints:
+  - 禁止发明波动方程；Lattice.step 忠实移植
+  - 禁止 lib/common 跨 sim 波动框架
+  - 不修改其他 sim / common API / Home taxonomy
+  - 物理常量对齐 WaveInterferenceConstants + WavesModel
+
+acceptance_criteria:
+  - AC-1: Home→Waves Intro→Water/Sound/Light 可切换
+  - AC-2: 点源连续/脉冲与 Lattice 步进正确
+  - AC-3: λ=v/f；reset 清零并恢复默认
+  - AC-4: flutter test test/waves_intro 通过；analyze 无 issues
+
+completion:
+  verdict: core-done-with-tool-gaps
+  report: requirements/req-waves-intro/COMPLETION_REPORT.md
+  tests: 15 passed
+  analyze: 0 issues
+  screens: 'Water / Sound / Light'
+  open_gaps: 'WaterDrop faucet, measuring tools, sound FX, side view, light screen'

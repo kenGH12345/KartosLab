@@ -1,0 +1,113 @@
+# req-quantum-measurement process log
+
+2026-09-30 09:29  INIT
+  User kickoff: migrate PhET Quantum Measurement (4 screens) to KartosLab.
+  Constraint: start PHASE 0 Source Archaeology; no UI yet.
+  Special: existing lib/quantum_coin_toss must be compatibility-audited and embedded
+  into Coins Screen (not Navigator.push).
+
+2026-09-30 09:45  PHASE 0 â†’ in_progress
+  Audited local source at phet sourses/quantum-measurement-main
+  Confirmed version 1.0.4 / sha 69440e4f / 4 screens CoinsÂ·PhotonsÂ·SpinÂ·BlochSphere
+  Inventoried images/ + asset refs + existing QCT package
+  Wrote: meta.yaml, SOURCE_MAP.md, VISUAL_ASSET_AUDIT.md,
+         QUANTUM_COIN_COMPONENT_MAP.md (draft), RISK_REGISTER.md, PHASE_0_REPORT.md
+
+2026-09-30 09:55  PHASE 0 â†’ done (archaeology inventory)
+  Status remains NOT READY (whole sim). Next: PHASE 1 Numerical/Model Mapping.
+  No UI code written.
+
+2026-09-30 10:30  PHASE 1 â†’ done
+  NUMERICAL_MODEL / FUNCTION_MAP / RESET_SEMANTICS / RNG_SPEC written.
+  Pure Dart models in lib/quantum_measurement/**.
+  Tests: 47 PASS under test/quantum_measurement/.
+  Existing lib/quantum_coin_toss untouched (compat PASS; RNG adapter deferred).
+  Phase status: READY CANDIDATE. Product: NOT READY.
+  Next: PHASE 2 Layout Archaeology.
+
+2026-09-30 10:55  PHASE 2 â†’ done
+  LAYOUT_GLOBAL + 4 Layout Specs + SOURCE_EVIDENCE + LAYOUT_RISK_REGISTER.
+  Dart: lib/quantum_measurement/layout/qm_*_layout_spec.dart
+  Geometry tests: layout_geometry_test.dart PASS
+  No UI / no Model changes. Status: READY CANDIDATE. Product: NOT READY.
+  Next: PHASE 3 Visual Component / Composer.
+
+
+
+2026-09-30 11:40  PHASE 3 -> done (READY CANDIDATE)
+  Coins Screen visual + Composer delivered under lib/quantum_measurement/coins/.
+  Classical/Quantum mutually exclusive scenes; QCT CoinNode/QuantumCoinNode embedded (no Home push).
+  Original classicalCoinHeads/Tails SVG wired; 10/100 individual; 10000 = 100x100 CustomPainter.
+  Tests: 11 PASS coins_phase3_test.dart. Reports: PHASE_3_REPORT + QUANTUM_COIN_EMBEDDING_PHASE3.
+  Photons/Spin/Bloch/Home/Android/Golden: NOT STARTED. Product: NOT READY.
+
+2026-09-30 12:30  PHASE 4 -> done (READY CANDIDATE)
+  Photons Screen: PhotonViewTransform (640, Y-inv), PhotonsComposer, spatial sim
+  (Laser/PBS/Mirror/Detectors), greenPhoton.png sprites, Single + Many continuous.
+  Classical one-path / Quantum SPLIT per source. Ticker lifecycle dispose-safe.
+  Tests: 18 PASS photons_phase4; full QM folder 92 PASS; Coins regression PASS.
+  Reports: PHASE_4_REPORT + SOURCE_EVIDENCE + ASSET + TRAJECTORY + ANIMATION.
+  Spin/Bloch/Home/Android/Golden: NOT STARTED. Product: NOT READY.
+
+2026-09-30 13:20  PHASE 5 -> done (READY CANDIDATE)
+  Spin Screen: shared SternGerlachApparatus x3 + SpinExperimentViewConfiguration.
+  Experiments 1-6 + Custom; SGx/SGz; Block Up/Down; Single/Continuous; MVT 180; divider 300.
+  Tests: 17 PASS spin_phase5; Coins 11 + Photons 18 regression PASS.
+  Bloch/Home/Android/Golden: NOT STARTED. Product: NOT READY.
+
+2026-09-30 14:10  PHASE 6 -> done (READY CANDIDATE)
+  R15 MeasurementArea: root+relations HIGH; Observe absolute = CONTENT_DRIVEN limitation.
+  BlochProjection (R=100, incl=10Â°, offset=20Â°); BlochComposer; QuantumMeasurementBlochScreen.
+  Presets Â±XÂ±YÂ±Z; Observe/collapse; B-field precession via model.step(dt); Eraseâ‰ Reset.
+  Tests: 21 PASS bloch_phase6; full QM folder 130 PASS; Coins/Photons/Spin regression PASS.
+  Reports: PHASE_6_REPORT + SOURCE/PROJECTION/RESET_ERASE/ANIMATION/MEASUREMENT specs.
+  Home/Android/Final Golden: NOT STARTED. Product: NOT READY.
+
+2026-09-30 15:30  PHASE 7 -> done (Visual READY CANDIDATE)
+  Shared QmDesignFrame / QmTypography / QmExperimentDividingLine / QmPhetTextButton.
+  Bloch divider dashed [6,5]; Photons time icons not Material; greenPhoton.png from source.
+  Golden: 30 PNG under test/quantum_measurement/goldens/; scale tests 8 PASS.
+  Full QM: 167 PASS. Home/Android: NOT STARTED. Product: NOT READY.
+
+2026-09-30 16:45  PHASE 8 -> done (Behavioral READY CANDIDATE)
+  User-path behavior suite: 33 PASS (phase8_behavior_test.dart).
+  Docs: FULL_USER_JOURNEY_SPEC / BEHAVIOR_MATRIX / STATE_MACHINE_AUDIT /
+        BEHAVIORAL_EVIDENCE / PHASE_8_REPORT.
+  Fix: Spin Block chips Wrap + wider box (hit-target overflow; no Model/Golden change).
+  Full QM: 200 PASS (was 167). Golden PNG: 30 retained.
+  Home/Android: NOT STARTED. Product: NOT READY.
+
+2026-09-30 17:00  PHASE 9 -> done (Android Runtime VERIFIED)
+  Device: Pixel Tablet emulator-5554 Android 15 API 35 2560x1600 320dpi landscape.
+  Integration: 8/8 PASS quantum_measurement_android_runtime_test.dart.
+  Harness: lib/quantum_measurement/debug_quantum_measurement_main.dart (not Home).
+  Profile APK 118.3MB + Release APK 59.1MB (-t QM); assets packaged.
+  Evidence: android-qa/phase9 screenshots + mem dumps + ANDROID_* docs + PHASE_9_REPORT.
+  Regression: Full QM 200 PASS; Golden 30 retained. No ANDROID-DERIVED FIX.
+  Home: NOT STARTED. Product: NOT READY.
+
+2026-09-30 17:40  PHASE 10 -> done (Home VERIFIED / Product NOT READY)
+  Simulation ID quantum-measurement registered via SimulationRegistry.
+  Entry: QuantumMeasurementHome (KratosTabbedScreen Coins/Photons/Spin/Bloch).
+  Home card under ÎïÀí ¡ú ¹âÑ§Óë²¨¶¯; lazy builder; Back disposes runtime.
+  Event/Session boundaries: NoOp + Isolating sink; persistence NOT IMPLEMENTED.
+  Tests: phase10 7 PASS; Android Home H1/H2 2 PASS; Full QM 207 PASS; Golden 30.
+  No QM physics/Golden changes. Product: NOT READY.
+
+2026-09-30 18:00  PHASE 11 -> done (READY WITH KNOWN NON-BLOCKING RISKS)
+  Source freeze 1.0.4; Golden ¡Á3 PASS; Full QM 207 PASS; Analyze 1 info.
+  Android final: Home 2/2 + Runtime 8/8. Release APK 90.9MB
+  SHA256 7205C14BB373B2EBFF0610081227E571A5594ACFF17B04C3EAFE41562227756E
+  (clean rebuild after integration_test registrant pollution).
+  Audio NOT REQUIRED/NOT VERIFIED (soundDesign empty, 0 mp3).
+  SVG style warning NON-BLOCKING. P0=0 P1=0. Release Candidate YES.
+  Stop QM churn unless new source/product P0/P1/contract change.
+
+2026-09-30 19:07  POST-PHASE-11 visual remediation -> done (Spin + Bloch)
+  Spin: full SGz curves; hidden in-box transit (sgTransitSpeed=0.38); smooth exit;
+        Source label above body; MD center offset 111; MVT origin Y=360.
+  Bloch: remove Measurement title; equation+Basis panel; SystemUnderTest Atom;
+         T-histogram + yellow eraser; Aqua x1/x10 + axis; B-field under Atom.
+  Verify: analyze spin+bloch No issues; bloch tests 33 PASS.
+  Report: POST_PHASE11_VISUAL_REMEDIATION_REPORT.md
+  Product: READY WITH KNOWN NON-BLOCKING RISKS (unchanged).

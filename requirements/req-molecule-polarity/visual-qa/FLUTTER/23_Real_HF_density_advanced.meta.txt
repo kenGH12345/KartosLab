@@ -1,0 +1,5 @@
+state: 23_Real_HF_density_advanced
+viewport: 1280x800
+DPR: 1.0
+contentScale: 1.1636363636363636
+captured_at: 2026-09-28T01:27:01.993619

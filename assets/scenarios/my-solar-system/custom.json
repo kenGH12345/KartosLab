@@ -1,0 +1,7 @@
+{
+  "scenarioId": "custom",
+  "name": "Custom",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": []
+}

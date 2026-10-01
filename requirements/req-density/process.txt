@@ -1,0 +1,24 @@
+[2026-09-02 11:23] init: 创建需求骨架 req-density，sop=agile-vibe，phase=1.intake
+[2026-09-02 11:23] 80-kratos-sim-checklist §一 开工必读: 已读 overview.md / shared-abstraction-plan.md / edd-template.md / 00–80 rules / kratos INDEX + design-patterns + state-update-loop + add-draggable + add-custom-painter + ui-framework + app-entry
+[2026-09-02 11:23] source-gap: 本地 density 仓库仅为薄壳（3 个 Screen + 入口）。phetLibs 要求 density-buoyancy-common，本机原先缺失。
+[2026-09-02 11:24] clone: git clone --depth 1 https://github.com/phetsims/density-buoyancy-common.git → phet sourses/density-buoyancy-common-main · HEAD 0c835c642c0603531c3b9f0844fcb8b196abe003
+[2026-09-02 11:27] Phase 1 源码地图完成（Read/Search/Analyze/Document）。未写 Flutter 业务代码。停在 intake，等用户确认后再进入 Build。
+[2026-09-02 11:27] 80-kratos-sim-checklist: 开工必读通过；G1/G2/G3 与 layout 自检草稿见 notes.md。正式「全部通过」行在 phase 1→2 切换时补写（当前尚未实现代码）。
+[2026-09-02 11:35] Phase 1 文档齐套: spec.md / spec/需求简述.md / spec/context/来源归档.md / source-map.md / state-model.md / physics-model.md / interaction-map.md / ui-map.md / asset-map.md / screen-map.md / migration-plan.md。仍禁止写 Flutter 业务代码，等用户确认后进入 2.build。
+[2026-09-02 11:38] phase 1.intake → 2.build: 用户确认开始 Build。决策: 不改 lib/main.dart ExcludeSemantics；资源用 assets/density/。顺序 State→Material→DensityRelation→…→Tests。
+[2026-09-02 11:40] loop-1 done: DensityRelation + IntroState + 材料表。analyze 通过，test/density 16 passed。未改 main.dart。
+[2026-09-02 11:42] loop-2 done: CompareConstraint + MysterySets/Table + 布局摆放。
+[2026-09-02 11:48] loop-3 done: DensityMvt World↔Screen + Pool/Cuboid/Scale Painter。
+[2026-09-02 11:55] loop-4–6: BuoyancyWorld 指针约束拖拽、三屏 NineGrid、Home 入口 assets/density、块级 Semantics。flutter analyze lib/density 0 issues；test/density 39 passed。未改 lib/main.dart ExcludeSemantics。
+[2026-09-02 11:55] 遗留: 材质 jpg 未从 *_jpg.ts 抽出（现用程序色）；抓放音静默；p2 手感为力上限 2500 的近似。
+[2026-09-02 12:30] loop-7: tool/extract_density_textures.py 抽出 9 张 col JPEG → assets/density/images/materials/；DensityTextureCache + CuboidPainter 贴图；BuoyancyWorld 弹簧阻尼拖拽 + 块碰撞 + 池壁；acceptance-runtime.md 验收清单。
+[2026-09-02 12:45] loop-8: runtime_acceptance_test.dart 61 passed；修复 840×520 footer overflow（三屏 footer 滚动）；Reset 后 Density Table 折叠（ValueKey）；runtime-findings.md。
+[2026-09-02 13:10] loop-9: 堆叠拖拽卡住 — AABB 分离方向符号反了（未抓取块被推向抓取块）；_separateUngrabbedFromGrabbed；stacked_drag_test.dart 7 cases；68 passed。
+[2026-09-02 13:20] loop-9b: 堆叠拖拽振荡 — 接触判定改为双轴穿透(OR)；分离量 overlap-slip；抓取时 1 pass；+5 轨迹稳定性测试；73 passed。
+[2026-09-02 13:25] loop-10: Y 轴上下跳 — 抓取块仍受 gravity/buoyancy 与 pointer spring 冲突；抓取时仅 pointer 力；floor 抓取块清零 vy↓；stacked_drag_y_oscillation_test 6 cases；79 passed。
+[2026-09-02 13:30] loop-10b: 静止/堆叠 Y 震荡 — 对称碰撞 overlap+slip 过推 + 支撑块下压；改为 max(overlap-slip,0) + 只抬上层块；81 passed。
+[2026-09-02 13:35] loop-11: Density Table Stack overlay 修复；About 署名对话框；TextureCache.dispose；final-file-map + final-regression-matrix。
+[2026-09-02 13:45] phase 2.build → 3.close: Loop 11 回归完成，进入 Close（code review 已执行）。
+[2026-09-02 13:50] loop-11 gates: test/density 81 passed；flutter analyze lib/density 0 errors；full analyze FAIL (phet/quantum_coin_toss)；full test PARTIAL (keplers_home_nav)；apk release FAIL (integration_test plugin)。
+[2026-09-02 14:05] loop-12 close/seal: re-verify analyze lib/density+test/density → 0 errors (1 info + 1 unused_import warning in test only); flutter test test/density → 81/81 PASS. No Density code changes. Full-suite PARTIAL with 2 unrelated failures tracked in final-regression-matrix.md. meta.yaml status=done. Density implementation complete.
+[2026-09-02 14:17] loop-12 full suite re-run: 963 passed · 1 skipped · 2 failed (keplers_home_nav + forces netforce-tug). Density-related failures: 0. Seal confirmed.

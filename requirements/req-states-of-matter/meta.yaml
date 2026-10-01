@@ -1,0 +1,47 @@
+req_id: req-states-of-matter
+title: States of Matter Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-15 20:41"
+updated_at: "2026-09-16 18:25"
+phase: 3.close
+status: done
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements:
+  - req-molecule-polarity
+  - req-gas-properties
+  - req-gases-intro
+  - req-energy-forms-and-changes
+source:
+  local: "phet sourses/states-of-matter-main/states-of-matter-main"
+  version: "1.3.0-dev.3"
+  primary: local-phet-source
+  url: "https://phet.colorado.edu/sims/html/states-of-matter/latest/states-of-matter_all.html"
+artifacts:
+  report: requirements/req-states-of-matter/FINAL_REPORT.md
+  asset_map: requirements/req-states-of-matter/ASSET_MAP.md
+notes: |
+  Final Status DONE. User closed after post-READY visual polish.
+  Tests 38 PASS. Analyze CLEAN. Home WIRED.
+  L0 KratosResetAllButton + SomGraphAxes landed.
+phase_overrides:
+  - timestamp: "2026-09-15 20:41"
+    from: 1.intake
+    to: 2.build
+    reason: "Source recon + feature spec + component map complete; begin model/components"
+  - timestamp: "2026-09-15 23:10"
+    from: 2.build
+    to: 2.build
+    reason: "Visual ORIGINAL matrix + DIFF attribution + B P1 chrome; Final READY; Home deferred"
+  - timestamp: "2026-09-16 12:10"
+    from: 2.build
+    to: 2.build
+    reason: "Major Geometry Closure: States spacing, RightPanelLayout, hand/pin/graph; status VISUAL_RECONSTRUCTION"
+  - timestamp: "2026-09-16 14:20"
+    from: 2.build
+    to: 2.build
+    reason: "Browser QA + regression after geometry; Final Status READY; Home remains wired"
+  - timestamp: "2026-09-16 18:25"
+    from: 2.build
+    to: 3.close
+    reason: "User confirmed close after visual polish; FINAL_REPORT DONE; status done"

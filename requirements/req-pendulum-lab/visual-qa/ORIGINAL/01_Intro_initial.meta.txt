@@ -1,0 +1,6 @@
+state: 01_Intro_initial
+viewport: 1280x800
+DPR: 1
+actions: ["open_intro"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T11:41:41.222Z

@@ -1,0 +1,95 @@
+# process.txt ‚Äî req-resistance-in-a-wire
+# Append-only stage log. Phase switches: meta.yaml ‚Üí process.txt ‚Üí work.
+
+[2026-09-27] PHASE 0 START ‚Äî Source audit / Model-View-Interaction-Asset-Audio-A11y / Product-UX baseline
+  Authority: local HTML5 source > user Gold Standard screenshot > doc/*.md
+  Source: phet sourses/resistance-in-a-wire-main/resistance-in-a-wire-main
+  package.json: 1.8.0-dev.0 ¬∑ dependencies comment: 1.7.0-dev.11 ¬∑ sha cb399ded‚Ä¶
+  Sibling template: req-ohms-law Phase 0
+
+[2026-09-27] PHASE 0 PASS
+  Deliverables:
+    - PHASE_0_SOURCE_AUDIT.md
+    - PHASE_0_SCREENSHOT_AUDIT.md
+    - ASSET_MAP.md
+    - meta.yaml (phase: 0, status: phase0_pass)
+  Findings (blocking for later phases, not for Phase 0 gate):
+    - Screens = 1
+    - R = œÅ¬∑L/A ; defaults 0.5 / 10 / 7.5 ‚Üí R‚âà0.666‚Ä¶ ‚Üí display "0.667"
+    - ResetAll radius: 30 (not 20.5 / 28)
+    - layoutBounds: Joist DEFAULT 1024√ó618 (sim does not override; Ohm's Law VD lesson)
+    - Runtime bitmaps: 0 ¬∑ Runtime audio: tambo brightMarimbaShort only (no sim-local sounds/)
+    - FormulaNode.cappedsSize for R is declared but unused (VD)
+    - Dots: dotRandom per WireNode construction (golden seed strategy needed Phase 4)
+  Flutter: no lib/resistance_in_a_wire/ ¬∑ Home untouched
+  Next: PHASE 1 ‚Äî MODEL (oracle unit tests) when product owner requests
+
+[2026-09-27] PHASE 1 START °™ MODEL
+  Authority: MODEL_CONTRACT.md + PHASE_0_SOURCE_AUDIT.md °Ï3
+  Scope: lib/resistance_in_a_wire/model/ + test oracle
+  Out of scope: View / Home / Audio wiring / a11y Fluent
+  Locked: R=¶—L/A °§ defaults 0.5/10/7.5 °˙ 0.667 °§ no R scale cap (VD-02)
+
+[2026-09-27] PHASE 1 PASS °™ MODEL FROZEN
+  Lib: lib/resistance_in_a_wire/model/{constants,property,model}.dart
+  Tests: 24/24 pass °§ dart analyze clean
+  Correction: formatted R for 20/15 = '1.33' (source 1°‹R<10 °˙ 2 dp); Phase 0 oracle updated
+  VD-02: R formula scale uncapped °§ oracle locked
+  View / Home: NOT TOUCHED
+  Next: PHASE 2 °™ VIEW when product owner requests
+
+[2026-09-27] PHASE 2 START °™ VIEW / PRODUCT UX
+  Scope: ScreenView layout + Formula + Wire + Dots + Arrow + ControlPanel + Reset
+  Model: FROZEN °§ Home: NOT TOUCHED
+  Canvas 1024°¡618 °§ bg #FFFFDF °§ Reset radius 30 °§ no R scale cap
+
+[2026-09-27] PHASE 2 PASS °™ VIEW READY CANDIDATE
+  Lib: formula / wire+dots / arrow / control panel / play area / screen
+  Tests: 55 total (model 24 + view 14 + visual 17) °§ analyze clean
+  Goldens: 12 implementation regression PNGs (seed 0x52494157)
+  Model: FROZEN °§ Home: NOT TOUCHED °§ P0=0 P1=0
+  Stopped per Phase 2 boundary °™ no Phase 3 / Home
+
+[2026-09-27] PHASE 3 START °™ BEHAVIORAL / RUNTIME / AUDIO / A11Y
+  Model: FROZEN °§ View: READY_CANDIDATE °§ Home: NOT TOUCHED
+  Scope: reactive chains, reset, keyboard, a11y semantics, audio hooks, lifecycle
+  Out of scope: Model edits, Home, Phase 4 visual polish, physics timers
+
+[2026-09-27] PHASE 3 PASS °™ RUNTIME READY CANDIDATE
+  Runtime tests: 26/26 °§ Full suite: 81 °§ analyze clean
+  Audio: PARTIAL (bin hooks) °§ A11y: PARTIAL °§ Keyboard Reset Enter: PARTIAL
+  Perf/Android: NOT VERIFIED °§ Model FROZEN °§ Home NOT TOUCHED
+  Stopped per Phase 3 boundary °™ no Phase 4 / Home
+
+[2026-09-27] PHASE 4 START °™ VISUAL QA / RASTER GOLDEN
+  Model: FROZEN °§ Home: NOT TOUCHED
+  Scope: expand golden matrix G01®CG30 + V4 contracts
+  Goldens = implementation regression (seed 0x52494157), not official pixel truth
+
+[2026-09-27] PHASE 4 PASS °™ VISUAL QA / RASTER GOLDEN
+  Golden matrix G01®CG30: 30/30 °§ Distinct PNGs: 27 °§ Visual tests: 38/38
+  Full suite: 102 °§ analyze clean °§ Model FROZEN °§ Home NOT TOUCHED
+  Goldens = implementation regression (seed 0x52494157)
+  Audio/A11y/Perf/Android: unchanged PARTIAL / NOT VERIFIED
+  Stopped per Phase 4 boundary °™ no Phase 5 / Home
+
+[2026-09-27] PHASE 5 START ? HOME INTEGRATION / FINAL ACCEPTANCE
+  Model: FROZEN ∑ View: READY_CANDIDATE (no redesign)
+  Scope: single Home entry under ????? ? ResistanceInAWireScreen
+  Peer pattern: Ohm's Law Phase 5 (lifecycle / sibling / H01?H05 goldens)
+  Out of scope: Model / R formula / Phase 4 goldens / new Home features
+
+[2026-09-27] PHASE 5 READY CANDIDATE ‚Äî HOME INTEGRATION
+  Entry: ÁîµÂ≠¶‰∏éÁîµË∑Ø ‚Üí ÂØºÁ∫øÁîµÈòª ‚Üí ResistanceInAWireScreen (unique)
+  Home tests: 21/21 ¬∑ Sibling Ohm/Faraday/Balloons home: PASS
+  Final combined: 123/123 ¬∑ analyze CLEAN ¬∑ Model FROZEN
+  production dotRandom: UNSEEDED ¬∑ H03b/H05b reuse Phase 4 g01_initial
+  Audio/A11y/Keyboard: PARTIAL ¬∑ Perf/Android: NOT VERIFIED
+  Stopped per Phase 5 boundary ‚Äî no further RIAW / Home redesign
+
+[2026-09-27] FINAL ACCEPTANCE ‚Äî READY CANDIDATE
+  Re-verify: flutter test test/resistance_in_a_wire ‚Üí 123/123
+  dart analyze ‚Üí CLEAN
+  Slider readout wrap fix (10.00) included; goldens refreshed
+  Report: requirements/req-resistance-in-a-wire/FINAL_ACCEPTANCE_REPORT.md
+  Closed for delivery. Audio/A11y/Perf/Android remain PARTIAL/NOT VERIFIED.

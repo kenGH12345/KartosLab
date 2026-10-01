@@ -1,0 +1,105 @@
+# process — req-gases-intro
+
+2026-09-06 Phase 0 Project Discovery
+- Locked local gases-intro 1.2.0-dev.0 + dependencies.json
+- Confirmed 2 screens: Intro, Laws (IdealScreen variants)
+- Created gas-properties worktree @ 10c7c08 (lock SHA)
+- Diff vs diffusion clone 7a52c48: HTML/version only
+- Output: PROJECT_DISCOVERY.md
+
+2026-09-06 Phase 1 Source Analysis
+- IdealGasLaw path: T/P/V/N, collisions, pump, heat, hold constant, clock
+- Output: SOURCE_ANALYSIS.md
+
+2026-09-06 Phase 2 Dependency Provenance
+- Output: DEPENDENCY_PROVENANCE.md
+- Status A for gas-properties lock
+
+2026-09-06 Phase 3–4 Baseline + Architecture
+- visual-qa/BASELINE.md, ASSET_MAPPING.md, GEOMETRY_CALIBRATION.md
+- ARCHITECTURE_PLAN.md, GAS_PHYSICS_VALIDATION.md
+
+2026-09-06 Phase 5–12 Implementation
+- lib/gases_intro IdealGasLawModel + dual-screen UI
+- Home: 物理 → 热学与气体 → Gases Intro
+- flutter test test/gases_intro: 10 passed
+- flutter analyze lib/gases_intro: 0 issues
+- flutter build apk --debug: OK → build/app/outputs/flutter-apk/app-debug.apk
+
+2026-09-06 View / Component Reconstruction
+- ASSET_RECONSTRUCTION.md + VIEW_RECONSTRUCTION.md
+- Copied scenery-phet flame/ice/eraser/reset → assets/gases_intro/ + pubspec
+- GaugeNode / ThermometerNode / ShadedSphere / BicyclePump Path / HeaterCooler+PNG
+- Flex layout Row(playColumn, rightPanel 225)
+- Model untouched; tests 15 passed; analyze 0
+- flutter build apk --debug OK; --release OK
+- status: view_reconstruction (NOT sealed)
+
+2026-09-06 P0 Layout + Asset Audit (no model changes)
+- Root cause RIGHT OVERFLOWED BY 11px: SizedBox(225) included margin+padding;
+  Particles spinner intrinsic ~206px > ~197px content → [迁移布局 bug] FIXED
+- Home: AspectRatio(1008/618) instead of FixedBox+FittedBox
+- Shell: SimulationViewport + ControlPanel ListView; compact Fine/Coarse buttons
+- VIEW_ASSET_AUDIT.md; updated VIEW_RECONSTRUCTION / ASSET_MAPPING /
+  FUNCTIONAL_GAP_CLOSURE / COMPLETION_REPORT / BASELINE / GEOMETRY_CALIBRATION
+- Clarified: NO piston — left-wall HandleNode only
+- flutter test 15 passed; analyze 0 issues
+- flutter build apk --debug OK; --release OK
+- status: view_reconstruction (NOT sealed)
+
+2026-09-06 SOURCE-FIRST 分析（停止打补丁 · 不改代码）
+- Re-read IdealScreenView / IdealGasLawScreenView / IdealControlPanel / ParticlesAccordionBox
+- Inventory current Flutter + B0→B1 regression (overflow rewrite)
+- Output: SOURCE_FIRST_VIEW_REBUILD.md
+  (1) 功能清单 (2) 回退清单 (3) Node→Flutter (4) Assets (5) View 重构计划
+- status: source_first_analysis — 等用户确认后再改 View
+- Model/Physics 冻结；不处理 ListTile ink warning
+
+2026-09-06 V1 — Restore B0 Capability (STOP, no V2)
+- View only: gases_intro_home.dart + gases_intro_shell.dart
+- Separated IdealControlPanel ‖ ParticlesAccordionBox (spacing 15)
+- Fine/Coarse 40×40; NumberOfParticlesControl two-row layout
+- Pump restored 120×230; Home FittedBox + 1008×618
+- Assets erase/reset/flame/ice unchanged; Model zero edits
+- test 15 passed; analyze 0
+- Report: V1_B0_RESTORE_REPORT.md
+- status: v1_b0_restored
+
+2026-09-06 V2 — IdealGasLawScreenView Anchor Reconstruction (STOP, no V3)
+- Source MVT (645,475)×0.040; IdealScreenAnchors from IdealGasLawScreenView rules
+- Shell → Stack(layoutBounds) with container-anchored gauge/thermo/erase/pump/heater/time
+- Right VBox IdealControlPanel ‖ ParticlesAccordion; ResetAll at layout BR
+- toolsParent mounts at (240,15)/(40,15) for V3
+- Model zero edits; V1 features preserved; test 15; analyze 0
+- Docs: V2_ANCHOR_MAP.md, V2_REPORT.md
+- status: v2_anchors_restored
+
+2026-09-06 V3 — Tools / Instrument Interaction (STOP, no V4)
+- ToolsController (View): positions, SW time/running, CC count/sample/running
+- GasPropertiesStopwatchTool + CollisionCounterTool: drag, bounds, chrome
+- Reset All → model.reset + tools.reset; visibility via existing checkboxes
+- Stack z-order: tools above panels (moveToBack equivalent)
+- Model/Physics/Solver zero edits; V1/V2 preserved
+- test 18 passed; Report: V3_TOOLS_REPORT.md
+- status: v3_tools_restored
+
+2026-09-06 V4 — Interaction / Component Behavior (STOP, no V5)
+- ParticleTypeRadioButtonGroup (icons, not dots); units ComboBox atm/kPa + K/°C
+- ParticlesAccordion: expanded default false; expand button left
+- Lid handle drag → lidWidth (not piston); OopsDialog + phetGirlLabCoat.png
+- ViewInteractionState only; Model/Physics/Solver zero edits
+- test 18 passed; Report: V4_INTERACTION_REPORT.md
+- status: v4_interaction_restored
+
+2026-09-06 V5 — Responsive Layout / Overflow (STOP, no V6)
+- LAYOUT_POLICY: A fixed / B flexible / C anchored / D viewport-constrained
+- Home: LayoutBuilder + fitScale (cap 1, floor 0.55); no FittedBox
+- Anchors/MVT × layoutScale; right panel logical 236 [有意差异]
+- Gauge UnitsCombo LayoutBuilder+ellipsis; Heater Slider explicit track
+- Fine/Coarse × scale (hit ≥28); ControlPanel Material (ListTile ink)
+- Tools drag delta ÷ layoutScale; ControlPanel ‖ Accordion still separate
+- Model/Physics/Solver zero edits; V1–V4 preserved
+- test 24 passed (incl. 3 viewports); analyze 0
+- Reports: LAYOUT_POLICY.md, V5_RESPONSIVE_REPORT.md
+- status: v5_responsive_provisional（初步结束可报告；sealed=false；follow_up_required）
+- 用户确认：可 report，但标记后续要改（真机视口 / chrome / V6 像素等）

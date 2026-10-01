@@ -1,7 +1,7 @@
 {
   "scenarioId": "saturation-challenge",
-  "name": "饱和挑战",
-  "description": "K₂Cr₂O₇ 饱和浓度低（0.50 M），让溶液饱和并观察沉淀形成。",
+  "name": "????",
+  "description": "K?Cr?O? ??????0.50 M???????????????",
   "version": "1.0",
   "initialParams": {
     "soluteIndex": 3,
@@ -10,27 +10,27 @@
     "valuesVisible": true
   },
   "paramRanges": {
-    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.01, "unit": "mol" },
-    "volume": { "min": 0.2, "max": 1.0, "step": 0.01, "unit": "L" }
+    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.050, "unit": "mol" },
+    "volume": { "min": 0.2, "max": 1.0, "step": 0.050, "unit": "L" }
   },
   "concentrationMax": 5.0,
   "solutes": [
-    { "name": "饮料粉", "formula": "Drink mix", "saturatedConcentration": 5.95, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
-    { "name": "硝酸钴（II）", "formula": "Co(NO₃)₂", "saturatedConcentration": 5.65, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
-    { "name": "氯化钴", "formula": "CoCl₂", "saturatedConcentration": 4.35, "solutionColorMin": "#FFF2F2", "solutionColorMax": "#FF6A6A", "particleColor": "#FF6A6A" },
-    { "name": "重铬酸钾", "formula": "K₂Cr₂O₇", "saturatedConcentration": 0.50, "solutionColorMin": "#FFE8D2", "solutionColorMax": "#FF7F00", "particleColor": "#FF7F00" },
-    { "name": "氯化金（III）", "formula": "AuCl₃", "saturatedConcentration": 2.25, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFD700", "particleColor": "#FFD700" },
-    { "name": "铬酸钾", "formula": "K₂CrO₄", "saturatedConcentration": 3.35, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFFF00", "particleColor": "#FFFF00" },
-    { "name": "氯化镍（II）", "formula": "NiCl₂", "saturatedConcentration": 5.2, "solutionColorMin": "#EAF4EA", "solutionColorMax": "#008000", "particleColor": "#008000" },
-    { "name": "硫酸铜", "formula": "CuSO₄", "saturatedConcentration": 1.40, "solutionColorMin": "#DEEEFF", "solutionColorMax": "#1E90FF", "particleColor": "#1E90FF" },
-    { "name": "高锰酸钾", "formula": "KMnO₄", "saturatedConcentration": 0.50, "solutionColorMin": "#FF00FF", "solutionColorMax": "#8B008B", "particleColor": "#000000" }
+    { "name": "???", "formula": "Drink mix", "saturatedConcentration": 5.95, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "????II?", "formula": "Co(NO?)?", "saturatedConcentration": 5.65, "solutionColorMin": "#FFE1E1", "solutionColorMax": "#FF0000", "particleColor": "#FF0000" },
+    { "name": "???", "formula": "CoCl?", "saturatedConcentration": 4.35, "solutionColorMin": "#FFF2F2", "solutionColorMax": "#FF6A6A", "particleColor": "#FF6A6A" },
+    { "name": "????", "formula": "K?Cr?O?", "saturatedConcentration": 0.50, "solutionColorMin": "#FFE8D2", "solutionColorMax": "#FF7F00", "particleColor": "#FF7F00" },
+    { "name": "????III?", "formula": "AuCl?", "saturatedConcentration": 2.25, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFD700", "particleColor": "#FFD700" },
+    { "name": "???", "formula": "K?CrO?", "saturatedConcentration": 3.35, "solutionColorMin": "#FFFFC7", "solutionColorMax": "#FFFF00", "particleColor": "#FFFF00" },
+    { "name": "????II?", "formula": "NiCl?", "saturatedConcentration": 5.2, "solutionColorMin": "#EAF4EA", "solutionColorMax": "#008000", "particleColor": "#008000" },
+    { "name": "???", "formula": "CuSO?", "saturatedConcentration": 1.40, "solutionColorMin": "#DEEEFF", "solutionColorMax": "#1E90FF", "particleColor": "#1E90FF" },
+    { "name": "????", "formula": "KMnO?", "saturatedConcentration": 0.50, "solutionColorMin": "#FF00FF", "solutionColorMax": "#8B008B", "particleColor": "#000000" }
   ],
   "performance": { "particlesPerMole": 200, "particleSize": 5 },
   "successCriteria": [
-    { "id": "sc-1", "type": "solutionSaturated", "description": "使溶液达到饱和状态", "params": {} },
-    { "id": "sc-2", "type": "concentrationReached", "description": "浓度达到 0.50 M", "params": { "targetConcentration": 0.50, "tolerance": 0.01 } }
+    { "id": "sc-1", "type": "solutionSaturated", "description": "?????????", "params": {} },
+    { "id": "sc-2", "type": "concentrationReached", "description": "???? 0.50 M", "params": { "targetConcentration": 0.50, "tolerance": 0.01 } }
   ],
   "hints": [
-    { "trigger": "precipitateAmount == 0", "message": "K₂Cr₂O₇ 饱和浓度只有 0.50 M，增加溶质量试试。" }
+    { "trigger": "precipitateAmount == 0", "message": "K?Cr?O? ?????? 0.50 M?????????" }
   ]
 }

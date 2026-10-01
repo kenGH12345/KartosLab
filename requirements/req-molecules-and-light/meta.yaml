@@ -1,0 +1,29 @@
+req_id: req-molecules-and-light
+title: Molecules and Light Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-21 10:29"
+updated_at: "2026-09-21 10:40"
+phase: 1.intake
+status: in_progress
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements: []
+source:
+  local: "phet sourses/molecules-and-light-main/molecules-and-light-main"
+  core_physics: "phet sourses/_deps-greenhouse-effect (greenhouse-effect @ 6c84ad0f)"
+  version: "1.6.0-dev.8"
+  dependencies_lock_comment: "1.6.0-dev.7"
+  primary: local-phet-source
+  web_verify: "https://phet.colorado.edu/sims/html/molecules-and-light/latest/molecules-and-light_en.html"
+phase_overrides:
+  - timestamp: "2026-09-21 10:40"
+    from: none
+    to: 1.intake
+    reason: "PHASE 0 Source Audit started and completed; awaiting Phase 1 Model"
+artifacts:
+  - PHASE_0_SOURCE_AUDIT.md
+  - SOURCE_BEHAVIOR_MATRIX.md
+platform_status:
+  web: NOT_VERIFIED
+  android: NOT_VERIFIED
+ready_status: NOT READY

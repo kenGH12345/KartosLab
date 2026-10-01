@@ -1,0 +1,9 @@
+# req-gravity-force-lab-basics process
+
+[2026-09-05 22:16] Phase 0 Discovery：本地 1.2.0-dev.0；[已确认：单 Screen]
+[2026-09-05 22:20] Phase 1：GFLBModel + ISLC 公式/箭头/半径取证完成
+[2026-09-05 22:30] Phase 4–11：Flutter 实现 + Home + puller 31 PNG
+[2026-09-05 22:45] QA：test 20 passed；analyze 0；status=done
+[2026-09-05 22:36] Build：debug APK OK；release APK OK (62.7MB)
+[2026-09-05 22:42] Audio 取证：【源码确认：原版存在音效 → 待迁移】；写出 AUDIO_ANALYSIS.md；修正 COMPLETION/GAP（非“有意无声”）
+

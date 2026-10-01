@@ -1,0 +1,6 @@
+state: 03_TwoAtoms_surface_esp
+viewport: 1280x800
+DPR: 1
+actions: ["surface ESP"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:43.973Z

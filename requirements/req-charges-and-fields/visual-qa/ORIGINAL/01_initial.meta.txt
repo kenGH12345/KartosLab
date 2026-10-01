@@ -1,0 +1,8 @@
+state: 01_initial
+viewport: 1024x768
+DPR: 1
+actions: ["load"]
+Behavior Reference: local source 1.1.0-dev.12
+Visual Reference: published latest
+interaction: pointer globalBounds
+captured_at: 2026-09-17T00:49:32.493Z

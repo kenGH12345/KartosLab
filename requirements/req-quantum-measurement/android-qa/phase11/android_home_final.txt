@@ -1,0 +1,23 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-d8a10ec8-9c15-4c3d-ace1-d15d5b92810f.ps1:124 字符: 1
++ flutter test integration_test/quantum_measurement_home_android_test.d ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+00:00 +0: loading D:/OneDrive/Desktop/KartosLab/KartosLab/integration_test/quantum_measurement_home_android_test.dart
+Running Gradle task 'assembleDebug'...                          
+WARNING: Your Android app project: app located at: D:\OneDrive\Desktop\KartosLab\KartosLab\android\app\build.gradle.kts
+applies the Kotlin Gradle Plugin, which will cause build failures in future versions of Flutter. 
+Please migrate your app to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-
+to-built-in-kotlin/for-app-developers
+
+Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+Running Gradle task 'assembleDebug'...                             47.5s
+鈭?Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...        1,240ms
+00:00 +0: H1 Home 鈫?QM 鈫?tabs 鈫?Back 鈫?Home 鈫?reopen
+unhandled element <style/>; Picture key: Svg loader
+00:12 +1: H2 peer sim open/back still works (Membrane Transport)
+00:16 +2: (tearDownAll)
+00:17 +2: All tests passed!

@@ -1,0 +1,14 @@
+req_id: req-quantum-wave-interference
+title: Quantum Wave Interference — PhET → Flutter
+sim: quantum-wave-interference
+phase: 3
+status: ready_candidate
+updated_at: 2026-09-29
+local_version: 1.0.0-dev.5
+locked_sha: d9ee906473cf4ae2ece4f18b65f715e46249dd86
+source_path: phet sourses/quantum-wave-interference-main/quantum-wave-interference-main
+official_url: https://phet.colorado.edu/sims/html/quantum-wave-interference/latest/quantum-wave-interference_all.html
+notes: >
+  HI/SP layout closeout PASS (2026-09-29). Right rail Wave→Screen→Tools;
+  particle radios 2×2 bottom-left; KratosTabSwitcher crossfade.
+  See HI_SP_LAYOUT_CLOSEOUT_REPORT.md. Experiment layout / full golden re-record deferred.

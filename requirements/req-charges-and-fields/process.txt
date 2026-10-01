@@ -1,0 +1,11 @@
+# process.txt â€” Charges and Fields
+2026-09-17 08:25 | M0 START | Source recon + KARTOSLAB scan
+2026-09-17 08:40 | M0-M2 DONE | PHASE_0/1/2 written; begin M3 model
+2026-09-17 08:55 | M3 DONE | E/V model + equipotential + 14 unit tests PASS
+2026-09-17 09:20 | M4-M5 DONE | Screen/Home/painters/widgets assembled; analyze clean
+2026-09-17 09:45 | M7 PARTIAL | ORIGINAL+FLUTTER captures + DIFF; Visual P1 remain
+2026-09-17 09:50 | GATE | Final Status NOT READY â€” Home not integrated
+2026-09-17 10:15 | P1 PASS | Voltmeter/Tape/VoltageField/Equipotential visual fixes; 23 tests; still NOT READY
+2026-09-17 09:30 | P1=0 READY | Tape rightBottom+crosshairs; Voltage Y-fix+dense sample; Equipotential PASS; 29 tests; Home¡úµçÑ§ÓëµçÂ·
+2026-09-17 09:40 | INTERACTION FIX | Listener+_sceneKey; drag bin/tools works; interaction_test PASS
+2026-09-17 09:44 | CLOSE | Final Status DONE/READY; 31 PASS; Home integrated; project closed

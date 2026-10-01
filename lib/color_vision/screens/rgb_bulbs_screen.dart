@@ -23,8 +23,6 @@ class MagicLabScreen extends StatefulWidget {
     this.scenario,
     this.scenarioList = const [],
     this.manager,
-    this.onScenarioSuccess,
-    this.onPredictionResult,
   });
   final ColorVisionScenario? scenario;
 
@@ -33,13 +31,6 @@ class MagicLabScreen extends StatefulWidget {
 
   /// 场景管理器（挑战完成触发 checkObjectives 用 · 可为空）。
   final ColorVisionScenarioManager? manager;
-
-  /// 可选钩子（T-P1-14 · 剧本模式专用）：场景 successCriteria 全满足时触发一次。
-  /// 不传 = 现行为逐字节等价（AC-R1 接线侧）。
-  final VoidCallback? onScenarioSuccess;
-
-  /// 可选转发（T-P1-14）：InquiryDrawer 预测题结果 (verified, correct)。
-  final void Function(int verified, int correct)? onPredictionResult;
   @override
   State<MagicLabScreen> createState() => _MagicLabScreenState();
 }
@@ -245,29 +236,16 @@ class _MagicLabScreenState extends State<MagicLabScreen>
     return acc;
   }
 
-  /// 统一判定入口（Blocker-1 修复 · 2026-08-25）：checkObjectives → 门控 →
-  /// 剧本完成信号外发。挑战/探索两路径共用，一次成功只外发一次。
+  /// 挑战完成 → 复用 manager 的 checkObjectives 判定 successCriteria 是否全部达成。
   ///
-  /// 返回是否本次达成（挑战庆祝弹窗 subtitle 用）。
-  bool _checkAndNotify() {
+  /// 返回是否全部达成（用于庆祝弹窗 subtitle · AC-4.4）。一次达成只通知一次。
+  bool _notifyChallengeObjective() {
     final mgr = widget.manager;
     if (mgr == null || _objectivesMetNotified) return false;
     final met = mgr.checkObjectives(_state);
     if (!met) return false;
     _objectivesMetNotified = true;
-    // T-P1-14：剧本完成信号——一次成功只外发一次（_objectivesMetNotified 门控）
-    widget.onScenarioSuccess?.call();
     return true;
-  }
-
-  /// 挑战完成 → 判定（返回是否全部达成 · AC-4.4 弹窗 subtitle 用）。
-  bool _notifyChallengeObjective() => _checkAndNotify();
-
-  /// 探索模式判定门控（Blocker-1 修复）：强度变化后判定 successCriteria，
-  /// 满足即外发剧本完成信号——纯探索场景（rgb-yellow-only 等）由此可完成，
-  /// 否则剧本卡死在探索节点（代码评审 Blocker-1 · 2026-08-25）。
-  void _maybeNotifyObjectiveMet() {
-    _checkAndNotify();
   }
 
   int _hitBottle(double dx, double dy) {
@@ -277,17 +255,16 @@ class _MagicLabScreenState extends State<MagicLabScreen>
       if (dx >= x &&
           dx <= x + _bottleW &&
           dy >= _bottlesY &&
-          dy <= _bottlesY + _bottleH)
+          dy <= _bottlesY + _bottleH) {
         return i;
+      }
     }
     return -1;
   }
 
   void _onDragUpdate(DragUpdateDetails d) {
     final idx = _hitBottle(d.localPosition.dx, d.localPosition.dy);
-    if (idx < 0) {
-      return;
-    }
+    if (idx < 0) return;
     final fy = (d.localPosition.dy - _bottlesY).clamp(0, _bottleH);
     setState(
       () => _state.updateIntensity(
@@ -295,7 +272,6 @@ class _MagicLabScreenState extends State<MagicLabScreen>
         ((1 - fy / _bottleH) * 100).clamp(0.0, 100.0),
       ),
     );
-    _maybeNotifyObjectiveMet(); // Blocker-1：探索模式拖瓶后判定
   }
 
   void _onWheelTap(TapDownDetails d) {
@@ -394,7 +370,6 @@ class _MagicLabScreenState extends State<MagicLabScreen>
               : const [],
           snapshotProvider: _colorVisionSnapshot,
           open: _inquiryOpen,
-          onPredictionResult: widget.onPredictionResult,
         ),
       ],
     );
@@ -566,65 +541,65 @@ class _MagicLabScreenState extends State<MagicLabScreen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                      // 混合色大圆
-                      Container(
-                        width: 130,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: mixed,
-                          boxShadow: [
-                            BoxShadow(
-                              color: mixed.withAlpha(120),
-                              blurRadius: 30,
-                              spreadRadius: 6,
-                            ),
-                          ],
-                          border: Border.all(color: Colors.white, width: 3),
-                        ),
-                        child: Center(
-                          child: Text(
-                            '🧪',
-                            style: TextStyle(
-                              fontSize: 48,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withAlpha(80),
-                                  blurRadius: 4,
-                                ),
-                              ],
+                        // 混合色大圆
+                        Container(
+                          width: 130,
+                          height: 130,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: mixed,
+                            boxShadow: [
+                              BoxShadow(
+                                color: mixed.withAlpha(120),
+                                blurRadius: 30,
+                                spreadRadius: 6,
+                              ),
+                            ],
+                            border: Border.all(color: Colors.white, width: 3),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '🧪',
+                              style: TextStyle(
+                                fontSize: 48,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withAlpha(80),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      // 颜色名称
-                      Text(
-                        ColorModel.colorName(mixed),
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                          color: mixed,
-                          shadows: [
-                            Shadow(
-                              color: Colors.black.withAlpha(30),
-                              blurRadius: 4,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      // RGB 值
-                      if (_showLabels)
+                        const SizedBox(height: 12),
+                        // 颜色名称
                         Text(
-                          'R:$r  G:$g  B:$b',
-                          style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF64748B),
-                            fontFamily: 'monospace',
+                          ColorModel.colorName(mixed),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: mixed,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withAlpha(30),
+                                blurRadius: 4,
+                              ),
+                            ],
                           ),
                         ),
+                        const SizedBox(height: 4),
+                        // RGB 值
+                        if (_showLabels)
+                          Text(
+                            'R:$r  G:$g  B:$b',
+                            style: const TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF64748B),
+                              fontFamily: 'monospace',
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -654,7 +629,10 @@ class _MagicLabScreenState extends State<MagicLabScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _readoutRow('亮度 Brightness', '${(_wheelBrightness * 100).round()}%'),
+              _readoutRow(
+                '亮度 Brightness',
+                '${(_wheelBrightness * 100).round()}%',
+              ),
               Slider(
                 value: _wheelBrightness,
                 min: 0.1,
@@ -702,16 +680,29 @@ class _MagicLabScreenState extends State<MagicLabScreen>
           ),
         ),
         const SizedBox(width: 14),
-        SizedBox(width: 130, child: _miniSliderVertical(0, 'R', const Color(0xFFFF0000))),
+        SizedBox(
+          width: 130,
+          child: _miniSliderVertical(0, 'R', const Color(0xFFFF0000)),
+        ),
         const SizedBox(width: 14),
-        SizedBox(width: 130, child: _miniSliderVertical(1, 'G', const Color(0xFF00CC00))),
+        SizedBox(
+          width: 130,
+          child: _miniSliderVertical(1, 'G', const Color(0xFF00CC00)),
+        ),
         const SizedBox(width: 14),
-        SizedBox(width: 130, child: _miniSliderVertical(2, 'B', const Color(0xFF0088FF))),
+        SizedBox(
+          width: 130,
+          child: _miniSliderVertical(2, 'B', const Color(0xFF0088FF)),
+        ),
       ];
     }
     // 自由探索
     return [
-      _swatchColumn(_state.mixedColor, ColorModel.colorName(_state.mixedColor), box: 28),
+      _swatchColumn(
+        _state.mixedColor,
+        ColorModel.colorName(_state.mixedColor),
+        box: 28,
+      ),
       const SizedBox(width: 14),
       FilterChip(
         label: const Text('标签 Labels', style: TextStyle(fontSize: 10)),
@@ -721,11 +712,20 @@ class _MagicLabScreenState extends State<MagicLabScreen>
       ),
       const SizedBox(width: 14),
       // RGB 数值滑块（复用挑战模式 _miniSliderVertical，提升强度调节发现性）
-      SizedBox(width: 130, child: _miniSliderVertical(0, 'R', const Color(0xFFFF0000))),
+      SizedBox(
+        width: 130,
+        child: _miniSliderVertical(0, 'R', const Color(0xFFFF0000)),
+      ),
       const SizedBox(width: 14),
-      SizedBox(width: 130, child: _miniSliderVertical(1, 'G', const Color(0xFF00CC00))),
+      SizedBox(
+        width: 130,
+        child: _miniSliderVertical(1, 'G', const Color(0xFF00CC00)),
+      ),
       const SizedBox(width: 14),
-      SizedBox(width: 130, child: _miniSliderVertical(2, 'B', const Color(0xFF0088FF))),
+      SizedBox(
+        width: 130,
+        child: _miniSliderVertical(2, 'B', const Color(0xFF0088FF)),
+      ),
     ];
   }
 
@@ -798,7 +798,6 @@ class _MagicLabScreenState extends State<MagicLabScreen>
     );
   }
 
-
   Widget _readoutRow(String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -847,10 +846,7 @@ class _MagicLabScreenState extends State<MagicLabScreen>
             max: 100,
             activeColor: color,
             inactiveColor: color.withAlpha(40),
-            onChanged: (val) {
-              setState(() => _state.updateIntensity(ch, val));
-              _maybeNotifyObjectiveMet(); // Blocker-1：探索/挑战滑块后判定
-            },
+            onChanged: (val) => setState(() => _state.updateIntensity(ch, val)),
           ),
         ),
         SizedBox(

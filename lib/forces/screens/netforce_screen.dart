@@ -216,7 +216,11 @@ class _NetForceScreenState extends State<NetForceScreen>
                 spacing: 6,
                 runSpacing: 4,
                 children: [
-                  _checkChip('合力', _showSum, (v) => setState(() => _showSum = v)),
+                  _checkChip(
+                    '合力',
+                    _showSum,
+                    (v) => setState(() => _showSum = v),
+                  ),
                   _checkChip(
                     '值',
                     _showValues,
@@ -528,11 +532,12 @@ class _NetForceScreenState extends State<NetForceScreen>
           });
         },
         onLeave: (_) {
-          if (_hoverSide == side && _hoverKnotIdx == idx)
+          if (_hoverSide == side && _hoverKnotIdx == idx) {
             setState(() {
               _hoverSide = null;
               _hoverKnotIdx = null;
             });
+          }
         },
         builder: (ctx, candidates, rejected) => Container(
           width: 20,

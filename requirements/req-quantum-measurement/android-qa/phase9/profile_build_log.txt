@@ -1,0 +1,17 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-11d948f4-e69e-4767-9d8d-4f4200f9985b.ps1:116 字符: 47
++ ... esktop\KartosLab\KartosLab"; flutter build apk --profile 2>&1 | Out-F ...
++                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Running Gradle task 'assembleProfile'...                        
+WARNING: Your Android app project: app located at: D:\OneDrive\Desktop\KartosLab\KartosLab\android\app\build.gradle.kts
+applies the Kotlin Gradle Plugin, which will cause build failures in future versions of Flutter. 
+Please migrate your app to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-
+to-built-in-kotlin/for-app-developers
+
+Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+Font asset "MaterialIcons-Regular.otf" was tree-shaken, reducing it from 1645184 to 23936 bytes (98.5% reduction). Tree-shaking can be disabled by providing the --no-tree-shake-icons flag when building your app.
+Running Gradle task 'assembleProfile'...                          101.4s
+鈭?Built build\app\outputs\flutter-apk\app-profile.apk (118.3MB)

@@ -1,0 +1,5 @@
+state: 11_RealMolecules_hf_initial
+viewport: 1280x800
+DPR: 1.0
+contentScale: 1.1636363636363636
+captured_at: 2026-09-15T16:59:57.890684

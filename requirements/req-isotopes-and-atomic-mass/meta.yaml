@@ -1,0 +1,41 @@
+req_id: req-isotopes-and-atomic-mass
+title: Isotopes and Atomic Mass Flutter Native Migration
+status: accepted
+phase: 'final-acceptance'
+created_at: '2026-09-18 10:56'
+updated_at: '2026-09-18 14:40'
+source_version: local isotopes-and-atomic-mass-main + shred@f1a7da74ae61ec0397dbeb0672fdb5ecfafa43a1
+behavior_reference: local_source
+visual_reference: published_latest_cross_check
+layout_bounds: '768x464'
+shred_dependency: locked
+shred_commit: f1a7da74ae61ec0397dbeb0672fdb5ecfafa43a1
+p0_data: 0
+p0_make_model: 0
+p0_interaction: 0
+p0_make_view: 0
+p0_mix_model: 0
+p0_mix_interaction: 0
+p0_mix_view: 0
+p1_make_view_polish: residual_known_diffs
+p1_mix_view_polish: residual_known_diffs
+human_qa: pass
+automated_qa: pass
+data_tests_pass: 22
+make_model_tests_pass: 21
+interaction_tests_pass: 19
+view_tests_pass: 6
+mix_model_tests_pass: 20
+mix_interaction_tests_pass: 13
+mix_view_tests_pass: 7
+full_suite_pass: 108
+analyze_issues: 0
+apk: debug_built
+ui: make_and_mix_accepted
+mix_ui: accepted
+home:
+  discipline: 化学
+  subdomain: 原子结构
+  integrated: true
+  tabs: [Isotopes, Mixtures]
+final_report: FINAL_ACCEPTANCE.md

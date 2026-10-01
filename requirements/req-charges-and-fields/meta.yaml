@@ -1,0 +1,17 @@
+req_id: req-charges-and-fields
+title: Charges and Fields Flutter Native Migration
+status: done
+phase: '3.close'
+created_at: '2026-09-17 08:25'
+updated_at: '2026-09-17 09:44'
+source_version: '1.1.0-dev.12'
+behavior_reference: local_source
+visual_reference: published_latest_cross_check
+final_status: READY
+closed_at: '2026-09-17 09:44'
+tests_pass: 31
+analyze_issues: 0
+home:
+  discipline: 物理
+  subdomain: 电学与电路
+  integrated: true

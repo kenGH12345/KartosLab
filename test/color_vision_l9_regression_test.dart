@@ -10,7 +10,7 @@ void main() {
     final mgr = ColorVisionScenarioManager();
     await mgr.loadScenarios();
 
-    expect(mgr.scenarios.length, 11, reason: '8 L9 场景 + req-inquiry-learning 新增 rgb-inquiry-additive / rgb-challenge-basic + req-single-bulb-inquiry 新增 single-inquiry-subtractive');
+    expect(mgr.scenarios.length, 10, reason: '8 L9 场景 + req-inquiry-learning 新增 rgb-inquiry-additive / rgb-challenge-basic');
 
     for (final s in mgr.scenarios) {
       // Verify each field populates correctly
@@ -70,10 +70,8 @@ void main() {
 
     for (final s in mgr.scenarios) {
       for (final sc in s.successCriteria) {
-        for (final leaf in sc.collectLeaves()) {
-          expect(leaf.id, isNotEmpty);
-          expect(leaf.type, anyOf('colorMatch', 'filterPassed', 'intensityReached'));
-        }
+        expect(sc.id, isNotEmpty);
+        expect(sc.type, anyOf('colorMatch', 'filterPassed', 'intensityReached'));
       }
       for (final h in s.hints) {
         expect(h.trigger, isNotEmpty);

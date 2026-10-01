@@ -1,0 +1,6 @@
+state: 10_ThreeAtoms_efield
+viewport: 1280x800
+DPR: 1
+actions: ["eField"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:49.345Z

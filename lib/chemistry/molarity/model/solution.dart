@@ -2,62 +2,111 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'molarity_constants.dart';
+import 'molarity_math.dart';
 import 'solute.dart';
 import 'solvent.dart';
 
-/// 溶液模型：Intrinsic（solute / soluteAmount / volume）+ Derived（concentration / precipitate 等）。
+/// Solution model — source: `js/molarity/model/Solution.js`.
 ///
-/// Derived 全部为 getter 即时计算（对齐蓝本 `Solution.java:31-56` · 严禁独立可写字段）：
-/// - concentration = min(饱和浓度, soluteAmount / volume)（volume≤0 时为 0）
-/// - precipitateAmount = max(0, volume × (n/V − 饱和浓度))（volume≤0 时为 soluteAmount）
-/// - isSaturated = precipitateAmount > 0
-/// - numberOfParticles = max(1, floor(particlesPerMole × precipitateAmount))
+/// Intrinsic: [solute] / [soluteAmount] / [volume]
+/// Derived (getters only — reactive, no `step(dt)`):
+/// - [concentration] = toFixedNumber(min(C_sat, n/V), 3)  (0 if V≤0)
+/// - [precipitateAmount] = max(0, n − V·C_sat) when V>0; else n
+/// - [isSaturated] ⇔ precipitateAmount ≠ 0
+/// - [numberOfParticles] from global PARTICLES_PER_MOLE=200
+///
+/// Cross-sim isolation: do **not** import Beer's Law Lab / Concentration physics.
 class Solution extends ChangeNotifier {
   Solution({
     required this.solvent,
     required this.solute,
-    this.soluteAmount = 0.5,
-    this.volume = 0.5,
-  });
+    double soluteAmount = MolarityConstants.soluteAmountDefault,
+    double volume = MolarityConstants.volumeDefault,
+  })  : _soluteAmount = MolarityConstants.constrainSoluteAmount(soluteAmount),
+        _volume = _constrainVolumeAllowZero(volume);
 
   final Solvent solvent;
 
-  /// 当前溶质（Intrinsic P1）。
+  /// Current solute (intrinsic).
   Solute solute;
 
-  /// 溶质量 mol（Intrinsic P2 · 0–1）。
-  double soluteAmount;
+  double _soluteAmount;
+  double _volume;
 
-  /// 溶液体积 L（Intrinsic P3 · 0.2–1）。
-  double volume;
+  /// Solute amount (mol), range 0…1, 3 decimal places.
+  double get soluteAmount => _soluteAmount;
 
-  /// 摩尔浓度（M）· Derived。
-  double get concentration => volume > 0
-      ? math.min(solute.saturatedConcentration, soluteAmount / volume)
-      : 0;
+  /// Solution volume (L). UI range 0.2…1; Model allows 0 for defensive tests.
+  double get volume => _volume;
 
-  /// 沉淀量 mol · Derived。
-  double get precipitateAmount => volume > 0
-      ? math.max(0, volume * (soluteAmount / volume - solute.saturatedConcentration))
-      : soluteAmount;
-
-  /// 是否饱和 · Derived。
-  bool get isSaturated => precipitateAmount > 0;
-
-  /// 沉淀粒子数 · Derived（>0 时至少 1 个粒子）。
-  int get numberOfParticles {
-    final n = (solute.particlesPerMole * precipitateAmount).floor();
-    return precipitateAmount > 0 && n < 1 ? 1 : n;
+  /// Molarity (mol/L) — Derived with source precision.
+  ///
+  /// ```
+  /// volume > 0
+  ///   ? toFixedNumber(min(C_sat, n/V), 3)
+  ///   : 0
+  /// ```
+  double get concentration {
+    if (_volume <= 0) return 0;
+    final raw = math.min(
+      solute.saturatedConcentration,
+      _soluteAmount / _volume,
+    );
+    return MolarityMath.toFixedNumber(
+      raw,
+      MolarityConstants.concentrationDecimalPlaces,
+    );
   }
 
-  /// 溶液颜色 · Derived：浓度 0 → 溶剂色；否则 ColorRange 按 浓度/饱和浓度 插值。
-  /// 饱和浓度 ≤0 的异常配置 → 直接取饱和色（防除零 Infinity）。
+  /// Precipitate (mol) — CODE wins over doc/model.md.
+  ///
+  /// ```
+  /// volume > 0 ? max(0, n - V*C_sat) : n
+  /// ```
+  double get precipitateAmount {
+    if (_volume <= 0) return _soluteAmount;
+    return math.max(
+      0.0,
+      _volume *
+          ((_soluteAmount / _volume) - solute.saturatedConcentration),
+    );
+  }
+
+  /// Source: `precipitateAmountProperty.value !== 0`.
+  bool get isSaturated => precipitateAmount != 0;
+
+  /// Source: `atMaxConcentration()`.
+  bool get atMaxConcentration =>
+      solute.saturatedConcentration == concentration;
+
+  /// Source: `hasSolute()` — concentration > 0.
+  bool get hasSolute => concentration > 0;
+
+  /// View-facing particle count — source `PrecipitateNode.getNumberOfParticles`.
+  int get numberOfParticles {
+    final amount = precipitateAmount;
+    var n = (MolarityConstants.particlesPerMole * amount).floor();
+    if (n == 0 && amount > 0) n = 1;
+    return n;
+  }
+
+  /// Solution color — source `getColor()`.
+  /// C=0 → Water; else interpolate(minColor, maxColor, C/C_sat).
   Color get solutionColor {
     if (concentration <= 0) return solvent.color;
     final sat = solute.saturatedConcentration;
     if (sat <= 0) return solute.solutionColor.maxColor;
-    final t = concentration / sat;
+    final t = MolarityMath.linear(0, sat, 0, 1, concentration);
     return solute.solutionColor.interpolate(t);
+  }
+
+  /// Beaker label formula — source `BeakerLabelNode`.
+  /// volume==0 → ''; concentration==0 → H₂O; else solute.formula.
+  String get beakerLabel {
+    if (_volume == 0) return '';
+    if (concentration == 0) return solvent.formula;
+    return solute.formula;
   }
 
   void setSolute(Solute v) {
@@ -65,13 +114,45 @@ class Solution extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Constrains to 0…1 with 3 decimal places (slider contract).
   void setSoluteAmount(double v) {
-    soluteAmount = v;
+    _soluteAmount = MolarityConstants.constrainSoluteAmount(v);
     notifyListeners();
   }
 
+  /// Constrains to UI range 0.2…1 with 3 dp, **except** volume==0 for tests.
   void setVolume(double v) {
-    volume = v;
+    _volume = _constrainVolumeAllowZero(v);
     notifyListeners();
+  }
+
+  void reset({
+    required Solute solute,
+    double soluteAmount = MolarityConstants.soluteAmountDefault,
+    double volume = MolarityConstants.volumeDefault,
+  }) {
+    this.solute = solute;
+    _soluteAmount = MolarityConstants.constrainSoluteAmount(soluteAmount);
+    _volume = MolarityConstants.constrainVolume(volume);
+    notifyListeners();
+  }
+
+  /// Static helper — source `Solution.computePrecipitateAmount`.
+  static double computePrecipitateAmount(
+    double volume,
+    double soluteAmount,
+    double saturatedConcentration,
+  ) {
+    if (volume <= 0) return soluteAmount;
+    return math.max(
+      0.0,
+      volume * ((soluteAmount / volume) - saturatedConcentration),
+    );
+  }
+
+  /// Allow exactly 0 for defensive Model tests; otherwise UI clamp.
+  static double _constrainVolumeAllowZero(double value) {
+    if (value == 0) return 0;
+    return MolarityConstants.constrainVolume(value);
   }
 }

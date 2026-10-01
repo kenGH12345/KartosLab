@@ -1,0 +1,24 @@
+req_id: req-projectile-motion
+title: Projectile Motion Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-14 22:10"
+updated_at: "2026-09-15 16:05"
+phase: 4.closing
+status: done
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements:
+  - req-pendulum-lab
+source:
+  local: "phet sourses/projectile-motion-main/projectile-motion-main"
+  version: "1.1.0-dev.41"
+  primary: local-phet-source
+phase_overrides:
+  - timestamp: "2026-09-15 00:46"
+    from: 1.intake
+    to: 4.closing
+    reason: "M0–M7 已落地（源码侦察、模型、视图、交互、Visual QA、Final Gate）；SOP 合法阶段为 4.closing"
+  - timestamp: "2026-09-15 16:05"
+    from: 4.closing
+    to: 4.closing
+    reason: "用户确认结束；收尾 polish（工具箱/卷尺壳体/工具叠层/ResetAll 3D）完成；FINAL_REPORT DONE；status→done"

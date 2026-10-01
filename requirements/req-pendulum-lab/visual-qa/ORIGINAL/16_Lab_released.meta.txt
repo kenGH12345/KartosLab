@@ -1,0 +1,6 @@
+state: 16_Lab_released
+viewport: 1280x800
+DPR: 1
+actions: ["release","play_15f"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T11:41:53.508Z

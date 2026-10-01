@@ -1,0 +1,33 @@
+req_id: req-port-color-vision
+sim_id: color-vision
+sim_title: Color Vision
+abbreviation: CV
+phase: 7
+status: ready
+overall: READY
+source_version: 1.4.0-dev.0
+source_sha: fb9da1b9d610746b61f5c25a41fe803e68867d9c
+screens:
+  - Single Bulb
+  - RGB Bulbs
+home: PASS
+android: NOT_VERIFIED
+windows: VERIFIED
+chrome: VERIFIED
+edge: NOT_VERIFIED
+home_category: 物理 / 光学与波动
+strategy: rewrite_over_magic_lab
+substituted_assets: 0
+model_tests_pass: 26
+view_smoke: PASS
+behavioral: PASS
+analyze: clean
+visual: PASS
+behavior: PASS
+full_regression_passed: 3035
+full_regression_failed: 56
+full_regression_cv_failures: 0
+visual_p0: 0
+visual_p1: 0
+visual_p2: 5
+updated_at: 2026-09-22

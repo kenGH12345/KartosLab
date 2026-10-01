@@ -1,0 +1,56 @@
+{
+  "scenarioId": "hyperbolic",
+  "name": "Hyperbolic",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 250,
+      "position": {
+        "x": 0,
+        "y": 0.25
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": -2.5,
+        "y": -0.7
+      },
+      "velocity": {
+        "x": 25.3467,
+        "y": 0
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": -2.5,
+        "y": -1.4
+      },
+      "velocity": {
+        "x": 25.3467,
+        "y": 0
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": -2.5,
+        "y": -2.1
+      },
+      "velocity": {
+        "x": 25.3467,
+        "y": 0
+      }
+    }
+  ]
+}

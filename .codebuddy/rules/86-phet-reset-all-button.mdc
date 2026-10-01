@@ -1,0 +1,31 @@
+---
+description: 所有 PhET 移植必须用 L0 KratosResetAllButton，禁止 Material 刷新图标或自绘细线箭头。
+alwaysApply: true
+---
+
+# Reset All 按钮（阻塞级）
+
+PhET `ResetAllButton` **一律**用 L0：
+
+`lib/common/widgets/kratos_reset_all_button.dart` → `KratosResetAllButton`
+
+## 必须
+
+- 球面高光（`ThreeDAppearanceStrategy`）+ 白色填充 `ResetShape` 箭头
+- 按下缩小，松开 `elasticOut` 回弹
+- `baseColor` = `PhetColorScheme.RESET_ALL_BUTTON_BASE_COLOR` `#F79722`
+- 半径跟该 sim 的 PhET `ResetAllButton` radius；未写明时用 `20.5`
+
+## 严禁
+
+- `Icons.refresh` / `Icons.restart_alt` / Material `IconButton` 冒充 Reset All
+- 细线圆弧箭头、PNG `resetArrow`、各 sim 再复制一套 painter
+- 新建 `*ResetAllButton.dart`（SoM 可保留 `SomResetButton` 薄封装）
+
+```dart
+// ✅
+KratosResetAllButton(onPressed: controller.reset, radius: 20.5)
+
+// ❌
+IconButton(icon: Icon(Icons.refresh), onPressed: ...)
+```

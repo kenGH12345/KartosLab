@@ -1,0 +1,33 @@
+req_id: req-molecule-polarity
+title: Molecule Polarity Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-15 16:10"
+updated_at: "2026-09-15 20:15"
+phase: 3.close
+status: done
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements:
+  - req-build-a-molecule
+  - req-projectile-motion
+  - req-pendulum-lab
+source:
+  local: "phet sourses/molecule-polarity-main/molecule-polarity-main"
+  version: "2.1.0-dev.0"
+  primary: local-phet-source
+  url: "https://phet.colorado.edu/sims/html/molecule-polarity/latest/molecule-polarity_all.html"
+notes: |
+  CLOSED. Final Status READY. Simulation-content Visual Gate PASS.
+  Full-frame Diff retains known shell/framing delta (not a fail criterion).
+  Home: 化学 → 分子极性 → MoleculePolarityHome.
+  Post-gate polish: MpResetAllButton 3D + elasticOut.
+  Tests 40 PASS · Analyze CLEAN_WITH_INFO.
+phase_overrides:
+  - timestamp: "2026-09-15 18:45"
+    from: 2.build
+    to: 3.close
+    reason: "Final Gate PASS; Home integrated"
+  - timestamp: "2026-09-15 20:15"
+    from: 3.close
+    to: 3.close
+    reason: "FINAL_REPORT closed; Reset 3D polish; req done"

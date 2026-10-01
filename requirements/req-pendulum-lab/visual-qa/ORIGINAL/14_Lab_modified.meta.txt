@@ -1,0 +1,6 @@
+state: 14_Lab_modified
+viewport: 1280x800
+DPR: 1
+actions: ["length_0.5","gravity_1.62","velocity_on","acceleration_on","two_pendula","play_25f","pause"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T11:41:52.771Z

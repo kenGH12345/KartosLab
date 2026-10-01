@@ -1,0 +1,56 @@
+{
+  "scenarioId": "double_double",
+  "name": "Double Double",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 60,
+      "position": {
+        "x": -1.15,
+        "y": -0.03
+      },
+      "velocity": {
+        "x": 0,
+        "y": -32.5283
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 70,
+      "position": {
+        "x": 1.02,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0.2112,
+        "y": 31.6834
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 55,
+      "position": {
+        "x": -0.77,
+        "y": -0.02
+      },
+      "velocity": {
+        "x": -0.2112,
+        "y": 8.8713
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 62,
+      "position": {
+        "x": 1.35,
+        "y": 0
+      },
+      "velocity": {
+        "x": -0.2112,
+        "y": -10.9836
+      }
+    }
+  ]
+}

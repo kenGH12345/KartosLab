@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'buoyancy/buoyancy_module.dart';
+import 'quantum_measurement/quantum_measurement_module.dart';
 import 'screens/home_screen.dart';
 
 Future<void> main() async {
@@ -10,6 +12,9 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
+  // Register Simulation Modules before Home (lazy builders only).
+  QuantumMeasurementModule.register();
+  BuoyancyModule.register();
   runApp(const KratosApp());
 }
 

@@ -1,0 +1,19 @@
+# Hooke's Law — Final Acceptance Matrix
+
+Phase 8. Status values are only PASS, FAIL, PARTIAL, or NOT VERIFIED. A row is not PASS just because no one found a counterexample in a window that was never opened.
+
+| Gate         | Evidence | Result | Status |
+| ------------ | -------- | ------ | ------ |
+| Source Audit | `SOURCE_AUDIT.md` | Local TypeScript is the behavior source. `package.json` is 1.3.0-dev.0. `dependencies.json` snapshot comment is 1.2.0-dev.3. Recorded SHA is `66c44cc9c3a8bcccc3446ecd2156dc2b79151cc7`. The source directory is not a git repo, so `git rev-parse` cannot confirm that SHA | PASS |
+| Model        | Phase 1 report + `test/hookes_law/model/hookes_law_model_test.dart` (27 tests, included in the 78) | F = kx, spring force = −F, E = kx²/2, clamp, 10-decimal rounding, no F↔x recursion, Intro keeps F, Energy keeps x, series F1 = F2, parallel x1 = x2 and F = F1 + F2, hidden reset, three isolated models, no mass, no oscillation | PASS |
+| Intro        | Phase 2 report, Intro QA, Phase 6 matrix | Two systems, default one system, 1/2 control, drag, 0.01 m snap only on drag, k keeps F, arrows and values, zero / positive / negative force, asymmetric 1↔2 animation, release stops, reset, ticker disposed | PASS |
+| Systems      | Phase 3 report, Systems QA, Phase 6 matrix | Series and parallel both exist, parallel is the default view, unequal k, Total/Components changes arrows only, drag snap, release stops, hidden reset, leave does not copy state | PASS |
+| Energy       | Phase 4 report, Energy QA, Phase 6 matrix | One spring, x is the input, k keeps x, F and E follow, bar / energy / force plots share one model, bar stays mounted, two quadratic Béziers, triangle only when Energy is on for Force Plot, reset, leave does not reset | PASS |
+| Visual       | `visual-qa/FINAL_VISUAL_MATRIX.md`, Phase 5 report, Intro/Systems/Energy QA notes | P0 = 0. P1 open structural = 0. Geometry rows in the final matrix are PASS. Six control-face rows stay VERSION_DELTA. Two rows are NOT VERIFIED (installed Arial face, official pixel diff). Four P2 notes remain (panel radius, flat slider track, antialiasing, 1 px bevel). Early QA P1 notes were either fixed in Phase 5 or moved into VERSION_DELTA. They were not promoted to PASS | PARTIAL |
+| Behavior     | `FINAL_BEHAVIOR_MATRIX.md`, `test/hookes_law/final_behavior_test.dart` (12 tests) | Precision, cross-screen isolation, tab switch without reset, pointer-up stability, listener dispose, rapid input, graph switch, hidden reset. Asserted in the Flutter tester, not in a Chrome or Windows window | PASS |
+| Home         | `HOME_INTEGRATION_MAP.md`, Phase 7 report, `test/hookes_law/home/home_integration_test.dart` (5 tests) | 物理 → 力学 card, title `Hooke's Law`, `MaterialPageRoute` → `HookesLawHome`, default Intro, Systems and Energy present, AppBar back, tab switch does not reset, leaving Home builds a new default instance. 1024×618 stage. Arial not replaced by the Home theme | PASS |
+| Tests        | `flutter test test/hookes_law/` on 2026-09-21 | 78 passed. No skip. `final_behavior_test.dart` is present and ran. Prior expectations were not weakened | PASS |
+| Analyze      | `dart analyze lib/hookes_law lib/screens/home_screen.dart test/hookes_law` | No issues found | PASS |
+| Chrome       | Phase 6 and Phase 7 | `flutter test --platform chrome` stayed on loading (Phase 6 > 5 min; Phase 7 ~175 s) and was stopped. The same file passed on the tester. No Chrome window was operated | NOT VERIFIED |
+| Windows      | Phase 7 | Debug `kratos.exe` built and the process started. `flutter test -d windows` did not open a window. Home → Hooke's Law was not operated in a Windows window | NOT VERIFIED |
+| Android      | `flutter devices` | No Android device and no emulator. No APK result is treated as verification | NOT VERIFIED |

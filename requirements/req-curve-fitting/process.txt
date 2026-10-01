@@ -1,0 +1,16 @@
+# req-curve-fitting process log
+
+[2026-09-04 23:32] Phase 0 Project Discovery 开始
+[2026-09-04 23:35] 本地版本确认: package.json 1.1.0-dev.0；dependencies.json comment 1.0.0-dev.19；[已确认：单 Screen]
+[2026-09-04 23:40] Phase 1 Source/Statistical Analysis：Curve.js / Point.js / FitType / ResidualsNode / BarometerX2 取证完成
+[2026-09-04 23:42] Phase 3 Architecture：sim 内自研，不抽跨 sim regression framework
+[2026-09-04 23:45] Phase 4 Model/Fit/State：Dart 数学核心落地，flutter test test/curve_fitting/ 22 passed
+[2026-09-04 23:45] meta.yaml status=build phase=2.build
+[2026-09-04 23:55] Phase 5–8 UI + Home：painters/widgets/screens；力学入口
+[2026-09-05 00:00] Phase 10 QA：test 28 passed；analyze 0；debug APK OK
+[2026-09-05 00:05] Phase 10–12：release APK OK；COMPLETION_REPORT；status=done
+[2026-09-05 00:05] meta.yaml status=done phase=3.close
+[2026-09-05 01:10] Visual QA P0/P1: 三列布局 + Deviations 气压计 + 默认隐藏 Order/Fit + Bucket 几何；test 29 passed
+[2026-09-05 01:25] [迁移引入：DataPoint Drag / Hit-Test Regression] 修复：full-bleed hit layer + IgnorePointer + Listener + paintEpoch；test 38 passed
+[2026-09-05 01:35] 用户确认移植成功 · COMPLETION_REPORT 终稿 · status=done
+[2026-09-04 23:55] Phase 5 UI/Interaction/Home：painters+widgets+screens+Home 力学入口+lifecycle/interaction 测试+gap docs

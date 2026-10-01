@@ -1,0 +1,535 @@
+{
+  "original_decay_fe69": {
+    "size": [
+      1024,
+      672
+    ],
+    "note": "1024x672 page. Avoid AA edges.",
+    "samples": {
+      "page_bg_left": {
+        "xy": [
+          80,
+          280
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "page_bg_center_away_nucleus": {
+        "xy": [
+          200,
+          200
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "electron_cloud_mid": {
+        "xy": [
+          360,
+          310
+        ],
+        "rgb": [
+          242,
+          181,
+          153
+        ],
+        "hex": "#F2B599",
+        "var": 3195.5,
+        "edge_suspect": true
+      },
+      "nucleus_cluster_center": {
+        "xy": [
+          341,
+          340
+        ],
+        "rgb": [
+          250,
+          194,
+          168
+        ],
+        "hex": "#FAC2A8",
+        "var": 705.0,
+        "edge_suspect": true
+      },
+      "half_life_info_bg": {
+        "xy": [
+          200,
+          40
+        ],
+        "rgb": [
+          255,
+          253,
+          255
+        ],
+        "hex": "#FFFDFF",
+        "var": 22.1,
+        "edge_suspect": false
+      },
+      "info_button": {
+        "xy": [
+          140,
+          28
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "available_decays_panel": {
+        "xy": [
+          880,
+          280
+        ],
+        "rgb": [
+          242,
+          242,
+          242
+        ],
+        "hex": "#F2F2F2",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "decay_button_enabled": {
+        "xy": [
+          820,
+          220
+        ],
+        "rgb": [
+          155,
+          155,
+          155
+        ],
+        "hex": "#9B9B9B",
+        "var": 30202.6,
+        "edge_suspect": true
+      },
+      "decay_button_disabled": {
+        "xy": [
+          820,
+          160
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "counter_panel": {
+        "xy": [
+          900,
+          80
+        ],
+        "rgb": [
+          135,
+          135,
+          135
+        ],
+        "hex": "#878787",
+        "var": 33540.7,
+        "edge_suspect": true
+      },
+      "symbol_panel": {
+        "xy": [
+          900,
+          130
+        ],
+        "rgb": [
+          252,
+          254,
+          255
+        ],
+        "hex": "#FCFEFF",
+        "var": 101.0,
+        "edge_suspect": false
+      },
+      "reset_button": {
+        "xy": [
+          980,
+          580
+        ],
+        "rgb": [
+          248,
+          155,
+          44
+        ],
+        "hex": "#F89B2C",
+        "var": 10608.0,
+        "edge_suspect": true
+      },
+      "undo_button": {
+        "xy": [
+          720,
+          400
+        ],
+        "rgb": [
+          231,
+          231,
+          231
+        ],
+        "hex": "#E7E7E7",
+        "var": 2852.0,
+        "edge_suspect": true
+      },
+      "joist_bar": {
+        "xy": [
+          512,
+          650
+        ],
+        "rgb": [
+          0,
+          0,
+          0
+        ],
+        "hex": "#000000",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "electron_cloud_checkbox_area": {
+        "xy": [
+          780,
+          560
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  },
+  "flutter_decay_fe69": {
+    "size": [
+      2560,
+      1600
+    ],
+    "note": "2560x1600 physical, logical*2.",
+    "samples": {
+      "scaffold_bg": {
+        "xy": [
+          400,
+          600
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "appbar": {
+        "xy": [
+          1280,
+          56
+        ],
+        "rgb": [
+          180,
+          83,
+          9
+        ],
+        "hex": "#B45309",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "canvas_bg_near_nucleus": {
+        "xy": [
+          852,
+          1086
+        ],
+        "rgb": [
+          209,
+          209,
+          209
+        ],
+        "hex": "#D1D1D1",
+        "var": 115.9,
+        "edge_suspect": false
+      },
+      "electron_cloud": {
+        "xy": [
+          960,
+          1086
+        ],
+        "rgb": [
+          181,
+          176,
+          255
+        ],
+        "hex": "#B5B0FF",
+        "var": 12.1,
+        "edge_suspect": false
+      },
+      "available_decays_panel": {
+        "xy": [
+          2456,
+          500
+        ],
+        "rgb": [
+          242,
+          242,
+          242
+        ],
+        "hex": "#F2F2F2",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "decay_alpha_btn": {
+        "xy": [
+          2456,
+          594
+        ],
+        "rgb": [
+          245,
+          220,
+          180
+        ],
+        "hex": "#F5DCB4",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "decay_beta_minus_btn": {
+        "xy": [
+          2456,
+          684
+        ],
+        "rgb": [
+          29,
+          27,
+          32
+        ],
+        "hex": "#1D1B20",
+        "var": 14807.8,
+        "edge_suspect": true
+      },
+      "reset_icon_area": {
+        "xy": [
+          2456,
+          1360
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "half_life_band": {
+        "xy": [
+          1280,
+          416
+        ],
+        "rgb": [
+          255,
+          0,
+          255
+        ],
+        "hex": "#FF00FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "generator_area": {
+        "xy": [
+          854,
+          1514
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  },
+  "flutter_chart_intro_c12_partial": {
+    "size": [
+      1280,
+      800
+    ],
+    "note": "1280x800 DPR1. NineGrid FittedBox shrinks midRight.",
+    "samples": {
+      "scaffold_bg": {
+        "xy": [
+          400,
+          200
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "appbar": {
+        "xy": [
+          640,
+          28
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "periodic_table_panel": {
+        "xy": [
+          1228,
+          82
+        ],
+        "rgb": [
+          165,
+          166,
+          167
+        ],
+        "hex": "#A5A6A7",
+        "var": 29561.7,
+        "edge_suspect": true
+      },
+      "chart_panel": {
+        "xy": [
+          1228,
+          380
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 1548.6,
+        "edge_suspect": true
+      },
+      "element_area": {
+        "xy": [
+          52,
+          65
+        ],
+        "rgb": [
+          255,
+          0,
+          0
+        ],
+        "hex": "#FF0000",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  },
+  "flutter_chart_intro_c12_zoom": {
+    "size": [
+      1280,
+      800
+    ],
+    "samples": {
+      "chart_panel": {
+        "xy": [
+          1228,
+          380
+        ],
+        "rgb": [
+          180,
+          181,
+          226
+        ],
+        "hex": "#B4B5E2",
+        "var": 11678.0,
+        "edge_suspect": true
+      },
+      "full_chart_btn": {
+        "xy": [
+          1240,
+          431
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 70227.0,
+        "edge_suspect": true
+      }
+    }
+  },
+  "flutter_chart_intro_c12_dialog": {
+    "size": [
+      1280,
+      800
+    ],
+    "samples": {
+      "dialog_bg": {
+        "xy": [
+          620,
+          280
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "dialog_info": {
+        "xy": [
+          644,
+          350
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "scrim": {
+        "xy": [
+          80,
+          80
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  }
+}

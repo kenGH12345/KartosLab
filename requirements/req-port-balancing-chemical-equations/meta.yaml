@@ -1,0 +1,53 @@
+# meta.yaml — req-port-balancing-chemical-equations — Balancing Chemical Equations HTML5 → Flutter
+req_id: req-port-balancing-chemical-equations
+title: Balancing Chemical Equations — PhET HTML5 → Flutter (Intro / Equations / Game)
+sop: agile-vibe
+phase: 7.home-release
+status: pass
+overall_status: ready
+final_status: READY
+created_at: "2026-09-23 09:04"
+updated_at: "2026-09-23 11:10"
+source:
+  package: balancing-chemical-equations
+  version: 2.2.0-dev.0
+  sha: f09cf80cafc30a9c8b00e1b990b65c3fcf2bf910
+  local_path: "phet sourses/balancing-chemical-equations-main/balancing-chemical-equations-main"
+  nitroglycerin_sha: ca115ad1233059957fa599a7c249feef1cbfacac
+  vegas_sha: 6e4726b37f53b3d0fe6ea713787094c69d3beea3
+screens:
+  - Intro
+  - Equations
+  - Game
+flutter_target: lib/balancing_chemical_equations/
+home_category: chemistry
+home_subject_group: 配平化学方程式
+reports:
+  source_audit: SOURCE_AUDIT_REPORT.md
+  asset_map: ASSET_MAP.md
+  phase1_report: PHASE_1_MODEL_REPORT.md
+  phase2_report: PHASE_2_INTRO_REPORT.md
+  phase3_report: PHASE_3_EQUATIONS_REPORT.md
+  phase4_report: PHASE_4_GAME_REPORT.md
+  phase5_report: PHASE_5_VISUAL_QA_REPORT.md
+  phase6_report: PHASE_6_BEHAVIORAL_ACCEPTANCE_REPORT.md
+  phase7_report: PHASE_7_FINAL_RELEASE_REPORT.md
+  post_release_molecule_fix: POST_RELEASE_MOLECULE_SIZE_FIX.md
+assets_substituted: 0
+total_tests: 117
+p0: 0
+p1: 0
+p2: 8
+phase0_status: PASS
+phase1_status: PASS
+phase2_status: PASS
+phase3_status: PASS
+phase4_status: PASS
+phase5_status: PASS
+phase6_status: PASS
+phase7_status: PASS
+post_release_molecule_fix: PASS
+vegas_status: semantics_vendored
+home_status: integrated
+runtime_verified: false
+android_verified: false

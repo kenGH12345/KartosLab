@@ -1,0 +1,49 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-1cfab36c-6648-4836-965b-b4d234caa643.ps1:116 字符: 47
++ ... KartosLab"; flutter run -t lib/quantum_measurement/debug_quantum_meas ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Launching lib/quantum_measurement/debug_quantum_measurement_main.dart on Pixel Tablet in debug mode...
+Running Gradle task 'assembleDebug'...                          
+WARNING: Your Android app project: app located at: D:\OneDrive\Desktop\KartosLab\KartosLab\android\app\build.gradle.kts
+applies the Kotlin Gradle Plugin, which will cause build failures in future versions of Flutter. 
+Please migrate your app to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-
+to-built-in-kotlin/for-app-developers
+
+Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+Running Gradle task 'assembleDebug'...                             25.7s
+鈭?Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...          950ms
+I/FlutterActivityAndFragmentDelegate(26551): If you are attempting to set --enable-dart-profiling via Intent extras to launch a Flutter component outside of using the Flutter CLI, note that support for setting engine flags on Android via Intent will soon be dropped; see https://github.com/flutter/flutter/issues/180686 for more information on this breaking change. To migrate, set --enable-dart-profiling or any other flags specified via Intent extras on the command line instead or see https://github.com/flutter/flutter/blob/main/docs/engine/Flutter-Android-Engine-Flags.md for alternative methods.
+D/FlutterJNI(26551): Beginning load of flutter...
+D/FlutterJNI(26551): flutter (null) was loaded normally!
+I/flutter (26551): [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+D/FlutterRenderer(26551): Width is zero. 0,0
+Syncing files to device Pixel Tablet...                         
+I/flutter (26551): unhandled element <style/>; Picture key: Svg loader
+I/Choreographer(26551): Skipped 71 frames!  The application may be doing too much work on its main thread.
+I/com.demo.kratos(26551): Compiler allocated 5174KB to compile void android.view.ViewRootImpl.performTraversals()
+I/WindowExtensionsImpl(26551): Initializing Window Extensions, vendor API level=6, activity embedding enabled=true
+D/FlutterRenderer(26551): Width is zero. 0,0
+Syncing files to device Pixel Tablet...                            149ms
+D/FlutterJNI(26551): Sending viewport metrics to the engine.
+W/HWUI    (26551): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+W/HWUI    (26551): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+I/Gralloc4(26551): mapper 4.x is not supported
+
+Flutter run key commands.
+r Hot reload. 
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on Pixel Tablet is available at: http://127.0.0.1:58497/_XzEhGxcaZg=/
+The Flutter DevTools debugger and profiler on Pixel Tablet is available at: http://127.0.0.1:58497/_XzEhGxcaZg=/devtools/?uri=ws://127.0.0.1:58497/_XzEhGxcaZg=/ws
+I/Choreographer(26551): Skipped 33 frames!  The application may be doing too much work on its main thread.
+D/FlutterJNI(26551): Sending viewport metrics to the engine.
+D/FlutterJNI(26551): Sending viewport metrics to the engine.
+D/ProfileInstaller(26551): Installing profile for com.demo.kratos

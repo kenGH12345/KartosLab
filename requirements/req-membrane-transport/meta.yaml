@@ -1,0 +1,137 @@
+req_id: req-membrane-transport
+title: 迁移 PhET Membrane Transport → KartosLab Flutter Native
+status: done
+phase: '9.final-qa'
+created_at: '2026-09-29 13:56'
+updated_at: '2026-09-29 20:51'
+repo_path: '.'
+
+source:
+  type: html5-typescript
+  repo: https://github.com/phetsims/membrane-transport
+  local_path: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\membrane-transport-main\membrane-transport-main'
+  url: https://phet.colorado.edu/sims/html/membrane-transport/latest/membrane-transport_all.html
+  package_version: '1.1.0-dev.0'
+  dependencies_snapshot: '1.0.0-dev.28 (2025-09-09)'
+  published_release: '1.0 (2025-10-01)'
+  main_commit_sha: 'a06047f9b76e381390548f9f7318a1fcd3294e32'
+
+screens:
+  - simpleDiffusion
+  - facilitatedDiffusion
+  - activeTransport
+  - playground
+
+model_sharing: per-screen-independent  # each Screen creates own MembraneTransportModel(featureSet)
+
+phase_0:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_0_REPORT.md
+  artifacts:
+    - SOURCE_MAP.md
+    - FUNCTION_MAP.md
+    - NUMERICAL_MODEL.md
+    - RESET_SEMANTICS.md
+    - VISUAL_ASSET_AUDIT.md
+    - RISK_REGISTER.md
+    - COMPONENT_MAP.md
+    - PHASE_0_REPORT.md
+
+phase_1_layout:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_1_REPORT.md
+  artifact: LAYOUT_SPEC.md
+
+phase_2_model:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_2_REPORT.md
+  tests: '17 PASS'
+
+phase_3_screen:
+  status: done
+  primary: simpleDiffusion
+  report: requirements/req-membrane-transport/PHASE_3_REPORT.md
+  tests: '18 PASS'
+
+phase_4_screens:
+  status: done
+  remaining: []
+  report: requirements/req-membrane-transport/PHASE_4_REPORT.md
+  tests: '23 PASS'
+  notes: 'tap-to-place proteins; drag deferred'
+
+phase_5_visual:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_5_REPORT.md
+  tests: '41 PASS'
+  goldens: '10 states + determinism ×3'
+  notes: 'LayoutComposer; ThumbnailNode; no Home/Android'
+
+phase_6_behavioral:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_6_REPORT.md
+  artifact: DRAG_DROP_BEHAVIOR.md
+  tests: '62 PASS'
+  notes: 'toolbox+membrane drag; snap; swap/replace; reset-during-drag'
+
+phase_7_android:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_7_REPORT.md
+  device: 'Pixel Tablet emulator-5554 Android 15'
+  debug_apk: PASS
+  release_apk: PASS
+  android_runtime: VERIFIED
+  tests: '62 PASS'
+  artifacts: requirements/req-membrane-transport/android-qa/
+
+phase_8_home:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_8_REPORT.md
+  artifact: HOME_INTEGRATION_MAP.md
+  tests: '73 PASS'
+  home_goldens: '2 / 2'
+  category: '物理 / 热学与气体'
+  android_home: PASS
+  notes: 'Formal Home card + original simple_diffusion_home_icon; tabBarIsScrollable'
+
+phase_9_final:
+  status: done
+  report: requirements/req-membrane-transport/PHASE_9_REPORT.md
+  tests: '73 PASS'
+  goldens: '10 / 10'
+  home_goldens: '2 / 2'
+  release_apk: PASS
+  android_final: PASS
+  artifacts: requirements/req-membrane-transport/android-qa/final/
+  p0: 0
+  p1: 0
+  p2: 4
+
+post_ready_visual_polish:
+  status: done
+  report: requirements/req-membrane-transport/POST_READY_VISUAL_POLISH_REPORT.md
+  tests: '74 PASS'
+  goldens: '10 / 10'
+  home_goldens: '2 / 2'
+  design_canvas: '1024×618'
+  p0: 0
+  p1: 0
+  p2: 2
+  notes: 'SVG inline; tab FeatureSet; layout proportion; concentrations; eraser; particle clip'
+
+home:
+  discipline: 物理
+  subdomain: 热学与气体
+  card_title: Membrane Transport
+  status: INTEGRATED
+
+acceptance_gates:
+  final_status: READY
+  android_runtime: VERIFIED
+  home: INTEGRATED
+  visual_golden: READY
+  behavioral: READY
+  technical_android: READY
+  home_integration: READY
+  final_qa: READY
+  post_ready_visual_polish: READY

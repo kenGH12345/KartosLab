@@ -1,0 +1,6 @@
+state: 10_reset
+viewport: 1024x768
+DPR: 1
+actions: reset
+source: local-flutter-widget-test
+captured_at: 2026-09-27T17:26:30.455577Z

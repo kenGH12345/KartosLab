@@ -1,0 +1,16 @@
+[2026-09-01 21:39] init: 创建需求骨架 req-my-solar-system，sop=agile-vibe，phase=1.intake
+[2026-09-01 21:39] source_of_truth: D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\my-solar-system-main\my-solar-system-main · package.json version=1.4.0-dev.4 · 非 git checkout
+[2026-09-01 21:39] intake: 主会话执行源码考古（Cursor Task 无 product-manager 类型；用户明确要求源码 Intake）。未改 Flutter 业务代码。
+[2026-09-01 21:39] blocked: 本机无 solar-system-common（phetLibs）。Body / SolarSystemCommonModel / G / MVT 父类 / MeasuringTape / Grid / TimeControl 基类均不在本树。二次证据来自 Kepler SOURCE_ANALYSIS + lib/astronomy/keplers_laws。
+[2026-09-01 21:39] 80-kratos-sim-checklist: Intake 已填表，尚未 phase 1→2（等待用户批准进入 Build）。
+[2026-09-01 21:50] intake 产物完成：spec/需求简述.md、source-analysis.md、physics-analysis.md、interaction-matrix.md、ui-mapping.md、asset-mapping.md、architecture.md、notes.md、plan.md。未改 lib/。等待用户进入 Build。
+[2026-09-01 22:07] verdict=approve_go by user / 备注: 进入 Phase 2 Build；G 用 Kepler 二次证据；OS1-4 数据保留 UI 隐藏；constrainDragPoint 等用二次证据并标记
+[2026-09-01 22:07] phase: 1.intake → 2.build，原因：用户确认 Build Loop 1 垂直切片
+[2026-09-01 22:18] Loop 1 完成：PEFRL + Intro/Lab Tab + SUN_PLANET + Play/Pause/Step/Restart/Reset + path。analyze 0 issues；flutter test test/astronomy/my_solar_system 11 passed；flutter run -d windows 成功。
+[2026-09-01 22:40] Loop 2：Body 拖拽（pause、松手不恢复）+ Velocity Vector（ArrowPainter、可拖）+ TimePanel 右上、删除 footer。constrainDragPoint 独立函数 [临时] 轴对齐夹画布，未编 closest-point。analyze 0 issues；flutter test test/astronomy/my_solar_system 28 passed。未进 Loop 3。
+[2026-09-01 23:10] Loop 3：Parameter Audit + SimulationConfig 收口；More Data / Mass / Position；CoM；Gravity Vector（应用 Four Star Ballet -1.1）；Grid；Zoom；Measuring Tape。constrainDragPoint 仍 TEMPORARY AABB。analyze 0；模块 test 通过。未进 Loop 4。
+[2026-09-01 23:55] Loop 4：Lab 状态机 + Preset + Clear/Return/Reset All + offscale。analyze 0；模块 test 69 passed。未进 Loop 5。
+[2026-09-02 08:15] Loop 5：临时实现审计索引 + 响应式 overlay + Flow A–E + preset 全回归 + loop5 截图。未进 Loop 6。
+[2026-09-02 09:45] Loop 6：PEFRL 源码对照 + Sun+Planet golden + 8 preset 长跑 + 碰撞/性能/管线审计 + LOOP6_PHYSICS_AUDIT.md。未进 Loop 7。
+[2026-09-02 10:05] Loop 6 收尾：numerical_regression_test / loop6_physics_audit_test 全通过；flutter analyze 0 issues；135 module tests passed。未进 Loop 7。
+[2026-09-02 10:30] Phase 3 Close：code-reviewer 通过（架构/L0/魔法数/溯源）；closer 完成 CLOSE_REPORT.md + meta done；knowledge-maintainer 回写 my-solar-system-migration.md。flutter analyze 0；135 tests passed。status=done。

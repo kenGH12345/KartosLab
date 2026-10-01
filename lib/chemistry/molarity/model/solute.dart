@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'color_range.dart';
 
-/// 溶质不可变数据（对齐蓝本 `Solute.java` · ROYGBIV 色序 9 种）。
+/// Immutable solute data — source: `js/molarity/model/Solute.js`.
+///
+/// Representation is **moles only** (no solid/solution form, no shaker/dropper).
+/// `molar mass` is NOT USED in source.
 @immutable
 class Solute {
   const Solute({
@@ -12,26 +15,30 @@ class Solute {
     required this.solutionColor,
     required this.particleColor,
     this.particleSize = 5,
+    // Kept for JSON scenario compat; particle count uses
+    // [MolarityConstants.particlesPerMole] (global 200).
     this.particlesPerMole = 200,
   });
 
   final String name;
   final String formula;
 
-  /// 饱和浓度（M）· 浓度 Derived 的封顶值。
+  /// Saturated concentration (M) — concentration cap (`C_sat`).
   final double saturatedConcentration;
 
-  /// 溶液颜色渐变（低浓度→饱和）。
+  /// Solution color range: min (smallest non-zero) → max (saturated).
   final ColorRange solutionColor;
 
-  /// 沉淀粒子颜色（KMnO₄ 为黑例外）。
+  /// Precipitate particle color (KMnO₄ is BLACK — source exception).
   final Color particleColor;
 
-  /// 粒子边长（正方形）。
+  /// Particle square side length (view).
   final double particleSize;
 
-  /// 每摩尔沉淀显示粒子数。
+  /// Legacy per-solute field; source uses a **global** 200 — prefer constants.
   final int particlesPerMole;
 
   Color get solutionColorMax => solutionColor.maxColor;
+  Color get minColor => solutionColor.min;
+  Color get maxColor => solutionColor.max;
 }

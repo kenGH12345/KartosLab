@@ -1,0 +1,5 @@
+﻿Applications Graphics Acceleration Info:
+Uptime: 54405204 Realtime: 54405204
+
+** Graphics info for pid 6530 [com.demo.kratos] **
+

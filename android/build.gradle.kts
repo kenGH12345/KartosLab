@@ -1,7 +1,27 @@
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+
 allprojects {
     repositories {
         google()
         mavenCentral()
+        // androidx.test:* (integration_test uses runner:1.2+) must not be
+        // resolved from FLUTTER_STORAGE_BASE_URL/download.flutter.io.
+        // That host is a Flutter-engine Maven mirror; querying
+        // androidx/test/runner/maven-metadata.xml there returns HTTP 403.
+        exclusiveContent {
+            forRepository { google() }
+            filter {
+                includeGroupByRegex("androidx\\.test.*")
+            }
+        }
+    }
+    repositories.whenObjectAdded {
+        if (this is MavenArtifactRepository &&
+            url.toString().contains("download.flutter.io")) {
+            content {
+                includeGroup("io.flutter")
+            }
+        }
     }
 }
 

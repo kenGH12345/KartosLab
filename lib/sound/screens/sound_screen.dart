@@ -7,6 +7,7 @@ import "../../common/widgets/inquiry_models.dart";
 import "../../common/widgets/inquiry_drawer.dart";
 import "../../common/widgets/experiment_logger.dart";
 import "../../common/widgets/experiment_intro_panel.dart";
+import "../../common/widgets/kratos_tab_bar.dart";
 import "../config/sound_scenario.dart";
 import "../config/sound_scenario_manager.dart";
 import "../model/sound_state.dart";
@@ -282,8 +283,8 @@ class _SoundScreenState extends State<SoundScreen>
   }
 
   Widget _buildStageContent() {
-    return IndexedStack(
-      index: _tabController.index,
+    return KratosTabSwitcher(
+      controller: _tabController,
       children: [
         CustomPaint(size: Size.infinite, painter: SphericalViewPainter(_state)),
         CustomPaint(

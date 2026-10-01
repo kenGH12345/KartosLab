@@ -1,0 +1,16 @@
+name=14_tension_min
+viewport=1024x618
+mode=oscillate
+end=fixedEnd
+amp=0.75
+freq=1.5
+pulse=0.5
+damping=0.2
+tension=0.2
+playing=true
+speed=normal
+rulers=false
+timer=false
+refLine=false
+beads=61
+bytes=44254

@@ -1,0 +1,39 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-34417509-eaf0-42fa-b74b-24f1ae4cc873.ps1:116 字符: 216
++ ... oding utf8; flutter test test/quantum_measurement/qm_visual_golden_te ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+00:00 +0: loading D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart
+00:00 +0: debug overlay never on golden path
+00:00 +1: 10k canvas geometry 100脳100 cells; revealed colors deterministic from seed
+00:00 +2: Bloch projection golden geometry +Z / 鈭抁 / 卤X / 卤Y endpoints fail if inverted
+00:00 +3: Canonical 1024脳618 screenshots coins_classical_default_1024x618
+unhandled element <style/>; Picture key: Svg loader
+00:00 +4: Canonical 1024脳618 screenshots coins_quantum_default_1024x618
+00:00 +5: Canonical 1024脳618 screenshots coins_10000_1024x618
+00:01 +6: Canonical 1024脳618 screenshots photons_default_1024x618
+00:01 +7: Canonical 1024脳618 screenshots photons_classical_1024x618
+00:01 +8: Canonical 1024脳618 screenshots photons_quantum_1024x618
+00:01 +9: Canonical 1024脳618 screenshots spin_experiment1_1024x618
+00:01 +10: Canonical 1024脳618 screenshots spin_experiment2_1024x618
+00:01 +11: Canonical 1024脳618 screenshots spin_experiment3_1024x618
+00:01 +12: Canonical 1024脳618 screenshots spin_experiment4_1024x618
+00:01 +13: Canonical 1024脳618 screenshots spin_experiment5_1024x618
+00:01 +14: Canonical 1024脳618 screenshots spin_experiment6_1024x618
+00:01 +15: Canonical 1024脳618 screenshots spin_custom_1024x618
+00:01 +16: Canonical 1024脳618 screenshots bloch_default_1024x618
+00:01 +17: Canonical 1024脳618 screenshots bloch presets 1024x618
+00:02 +18: Canonical 1024脳618 screenshots bloch_collapsed_1024x618
+00:02 +19: Canonical 1024脳618 screenshots bloch_magnetic_t0_1024x618
+00:02 +20: Canonical 1024脳618 screenshots bloch_erased_1024x618
+00:02 +21: Responsive 1280脳800 coins_classical_default_1280x800
+00:02 +22: Responsive 1280脳800 photons_default_1280x800
+00:02 +23: Responsive 1280脳800 spin_experiment1_1280x800
+00:02 +24: Responsive 1280脳800 bloch_default_1280x800
+00:02 +25: Constrained 800脳600 coins_classical_default_800x600
+00:02 +26: Constrained 800脳600 photons_default_800x600
+00:02 +27: Constrained 800脳600 bloch_default_800x600
+00:03 +28: golden geometry determinism 脳3 (coins composer + bloch projection)
+00:03 +29: All tests passed!

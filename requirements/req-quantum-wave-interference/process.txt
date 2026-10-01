@@ -1,0 +1,46 @@
+[2026-09-28] PHASE 0 START â€” Source Archaeology + Numerical Model Audit
+[2026-09-28] Scanned local tree phet sourses/quantum-wave-interference-main/quantum-wave-interference-main
+[2026-09-28] Locked version 1.0.0-dev.5 / SHA d9ee906473cf4ae2ece4f18b65f715e46249dd86 from dependencies.json
+[2026-09-28] Audited Experiment / High Intensity / Single Particles models, analytical WaveKernel, Fraunhofer DetectorPattern, probe, hits, snapshots, time controls
+[2026-09-28] Documented dependency gaps (PhET framework repos missing locally; scenery-phet present but wrong SHA)
+[2026-09-28] PHASE 0 STOP â€” NOT READY; awaiting PHASE 1 Core Model + Numerical Solver
+[2026-09-28] Forbidden this phase: Flutter UI, painters, Home integration, demo waves
+[2026-09-28] PHASE 1 START â€” Core Model + Numerical Solver
+[2026-09-28] Implemented lib/physics/quantum_wave_interference (pure Dart; no Flutter UI)
+[2026-09-28] Tests: 44 PASS (test/physics/quantum_wave_interference/)
+[2026-09-28] Analyze: CLEAN (0 errors)
+[2026-09-28] PHASE 1 STOP â€” READY CANDIDATE; P1 gaps: probe bite projection, HI slit-detector scheduler, Exp half-width scale
+[2026-09-28] Next: PHASE 2 Experiment Screen (only after gate review)[2026-09-28] PHASE 2A START ¡ª P1 Closure
+[2026-09-28] Closed P1-1 probe measurement projection (WaveMeasurementProjection bite/renorm)
+[2026-09-28] Closed P1-2 HI slit-detector decoherence scheduling (5/s after wavefront)
+[2026-09-28] Closed P1-3 DetectorScreenScale full half-width ¡À20 mm (no proxy)
+[2026-09-28] PHASE 2B ¡ª Experiment Screen + Fraunhofer RenderData/Renderer
+[2026-09-28] Design layout 768¡Á504; KratosResetAllButton; seeded hits; graph/snapshot/ruler/time
+[2026-09-28] Tests: 107 PASS; Golden 16/16; Analyze CLEAN
+[2026-09-28] PHASE 2 STOP ¡ª READY CANDIDATE; High Intensity / Single Particles / Home NOT STARTED
+[2026-09-28] PHASE 3 START ¡ª High Intensity Screen + Fresnel / WaveKernel
+[2026-09-28] Wrote HIGH_INTENSITY_MAPPING.md; layout 768¡Á504; grid 1202 ¡ú display 420¡Á385
+[2026-09-28] WaveRasterizer + WaveFieldRenderData; HI Screen/Controls/Detector/Graph/Time/Snapshot
+[2026-09-28] Backend: HighIntensityWaveSolver only (no Fraunhofer)
+[2026-09-28] Tests: 150 PASS; HI Golden 22/22; Analyze CLEAN; Experiment regression PASS
+[2026-09-28] PHASE 3 STOP ¡ª READY CANDIDATE; Single Particles / Home NOT STARTED
+[2026-09-28] LAYOUT ARCHAEOLOGY ¡ª Experiment ScreenView source-first analysis
+[2026-09-28] Created requirements/req-quantum-wave-interference/LAYOUT_SPEC.md
+[2026-09-28] Design canvas confirmed 768x504; formulas > ratios > pixels
+[2026-09-28] Flutter layout NOT modified this phase; next = Layout Composer
+[2026-09-28] Status: READY FOR LAYOUT COMPOSITION (not full READY)
+[2026-09-28] LAYOUT COMPOSITION ¡ª Experiment
+[2026-09-28] Added view/layout/{qwi_layout_primitives,experiment_layout_spec,experiment_layout_composer}.dart
+[2026-09-28] ExperimentScene ¡ú ExperimentLayoutComposer; QwiLayout delegates to Spec
+[2026-09-28] Restored PhET constants (376/180/155) per LAYOUT_SPEC
+[2026-09-28] Layout formula tests PASS; Experiment goldens updated (Spec-based geometry)
+[2026-09-28] Status: READY FOR GLOBAL LAYOUT COMPOSITION (HI/SP next)
+
+[2026-09-29] HI/SP LAYOUT CLOSEOUT START
+[2026-09-29] Aligned right rail: Wave Display -> Screen -> Tools (original top-down)
+[2026-09-29] Wave display 360x330; Configuration|Slit Separation under wave
+[2026-09-29] Particle selector forced 2x2; anchored left-column bottom blank
+[2026-09-29] KratosTabSwitcher: crossfade out/in (no white flash)
+[2026-09-29] Tests: HI/SP layout+screen + QWI home PASS (44)
+[2026-09-29] Wrote HI_SP_LAYOUT_CLOSEOUT_REPORT.md; updated HI_SP_SEAL.md
+[2026-09-29] HI/SP LAYOUT CLOSEOUT STOP - PASS; Experiment independent closeout deferred

@@ -1,0 +1,56 @@
+{
+  "scenarioId": "double_slingshot",
+  "name": "Double Slingshot",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 200,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": -0.2112
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 5,
+      "position": {
+        "x": 0,
+        "y": -1.12
+      },
+      "velocity": {
+        "x": 28.3038,
+        "y": 0
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 5,
+      "position": {
+        "x": 1.86,
+        "y": -0.05
+      },
+      "velocity": {
+        "x": 0.2112,
+        "y": 23.4457
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": 0.7,
+        "y": 0.72
+      },
+      "velocity": {
+        "x": -9.9275,
+        "y": 13.307
+      }
+    }
+  ]
+}

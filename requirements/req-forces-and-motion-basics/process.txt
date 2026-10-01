@@ -1,0 +1,43 @@
+[2026-09-24] phase=0 status=in_progress
+  Started Forces and Motion: Basics migration.
+  Completed Phase 0 Source Audit against local PhET 2.7.0-dev.0.
+  Discovered existing lib/forces stub â€” physics/visual gaps documented in PHASE0_SOURCE_AUDIT.md.
+  Next: Phase 1 Shared Model (friction 0.75, Net Force 0.003/60/403, assets inventory).
+
+[2026-09-24] phase=1 status=pass
+  Shared Model: ForcesSimulation (¦Ì_k=0.75), MotionModel, NetForceModel (0.003/60/403).
+  Assets copied (116 images + golfClap.mp3). pubspec registered.
+  Tests: force/stack/friction/net_force/clock = 34 PASS.
+[2026-09-24] phase=2 status=in_progress
+  Rebuilding Net Force screen with original puller/cart/rope assets.
+
+[2026-09-24] phase=2-5 status=ui_wired
+  NetForceScreen + MotionScreenV2 (motion/friction/acceleration) use PhET assets.
+  Unit tests 42+ PASS. Visual QA pending vs gold screenshots.
+  Home already linked via ForcesHome.
+
+
+[2026-09-24] interim gate
+  Model+screens smoke PASS. FINAL STATUS: NOT READY (Visual P1: SVG style expansion, stack bounds, pusher drag, water slosh, pixel QA).
+
+
+[2026-09-24] Visual QA phase
+  P1 cleared via screenshot capture + asset/layout fixes (no model changes).
+  Tests 52 PASS. Status: READY CANDIDATE (Android NOT VERIFIED).
+
+
+[2026-09-24] Home Integration Final Regression
+  MODEL/VIEW frozen. No P2 polish.
+  home_lifecycle_test: catalog + 4-tab cycle + reopen + sibling Friction PASS.
+  forces_scenario_test: converted asset-load cases from testWidgets¡útest (binding hang fix).
+  Suite: 62/62 PASS (excl. visual capture). Active-surface analyze CLEAN (info-only).
+  Android Runtime: NOT VERIFIED.
+  FINAL STATUS: READY CANDIDATE
+  Report: FINAL_REGRESSION_REPORT.md
+
+[2026-09-24] Visual / UX follow-up (post Home Integration)
+  Motion/Friction/Acceleration: toolbox clip+homes, Listener drag pick,
+  sitting/holding on stack, BoxFit.fill. Tab switch: KratosTabSwitcher
+  overlay fade (no scale, old page stays opaque). No model physics reopen.
+  Report: VISUAL_UX_FOLLOWUP_REPORT.md
+  FINAL STATUS: READY CANDIDATE (Android NOT VERIFIED)

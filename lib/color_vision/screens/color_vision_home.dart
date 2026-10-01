@@ -1,62 +1,40 @@
 ﻿import 'package:flutter/material.dart';
-import '../../common/widgets/kratos_tab_bar.dart';
-import '../screens/rgb_bulbs_screen.dart';
-import '../screens/single_bulb_screen.dart';
-import '../config/color_vision_scenario.dart';
-import '../config/color_vision_scenario_manager.dart';
+import 'package:kratos/color_vision/cv_assets.dart';
+import 'package:kratos/color_vision/view/rgb_screen_view.dart';
+import 'package:kratos/color_vision/view/single_bulb_screen_view.dart';
+import 'package:kratos/common/widgets/kratos_tab_bar.dart';
 
-class ColorVisionHome extends StatefulWidget {
+/// Color Vision home — PhET tabs: Single Bulb | RGB Bulbs.
+class ColorVisionHome extends StatelessWidget {
   const ColorVisionHome({super.key});
-  @override State<ColorVisionHome> createState() => _ColorVisionHomeState();
-}
 
-class _ColorVisionHomeState extends State<ColorVisionHome> {
-  ColorVisionScenarioManager? _mgr;
-
-  @override
-  void initState() {
-    super.initState();
-    _load();
-  }
-
-  Future<void> _load() async {
-    final mgr = ColorVisionScenarioManager();
-    await mgr.loadScenarios();
-    if (!mounted) return;
-    setState(() => _mgr = mgr);
-  }
+  static const String title = 'Color Vision / 色觉';
+  static const String subtitle = 'Single Bulb · RGB Bulbs';
+  static const Color accentColor = Color(0xFF1A1A1A);
 
   @override
   Widget build(BuildContext context) {
-    final mgr = _mgr;
-    if (mgr == null) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    final rgbScenario = mgr.findById('rgb-default');
-    // 默认加载滤光片减色探究场景（D-1 用户拍板）；场景缺失时回退纯观察场景
-    final filterScenario = mgr.findById('single-inquiry-subtractive') ??
-        mgr.findById('single-white-red-filter');
-    final rgbScenarios =
-        mgr.scenarios.where((s) => s.screen == CVScreen.rgb).toList(growable: false);
-
     return KratosTabbedScreen(
-      title: '色彩视觉',
-      accentColor: const Color(0xFF7C3AED),
+      title: title,
+      accentColor: accentColor,
       tabs: [
         KratosTab(
-          label: '魔法实验室',
-          icon: Icons.science,
-          child: MagicLabScreen(
-            scenario: rgbScenario,
-            scenarioList: rgbScenarios,
-            manager: mgr,
+          label: 'Single Bulb',
+          tabIcon: Image.asset(
+            CvAssets.singleColorLightIcon,
+            width: 22,
+            height: 22,
           ),
+          child: const SingleBulbScreenView(),
         ),
         KratosTab(
-          label: '滤光镜',
-          icon: Icons.filter_vintage,
-          child: SingleBulbScreen(scenario: filterScenario),
+          label: 'RGB Bulbs',
+          tabIcon: Image.asset(
+            CvAssets.flashlightIcon,
+            width: 22,
+            height: 22,
+          ),
+          child: const RgbScreenView(),
         ),
       ],
     );

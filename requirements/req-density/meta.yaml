@@ -1,0 +1,59 @@
+# 需求元数据。phase / status 由主会话按 45-state-sync 先写后做。
+req_id: req-density
+title: 迁移 PhET Density 到 KartosLab Flutter 原生实现
+sop: agile-vibe
+created_at: "2026-09-02 11:23"
+updated_at: "2026-09-02 14:05"
+
+phase: 3.close
+status: done
+
+repo_path: '.'
+related_requirements:
+  - req-port-molarity
+  - req-my-solar-system
+
+source:
+  type: html5-typescript
+  repo: https://github.com/phetsims/density
+  version: 1.3.0-dev.0
+  license: GPL-3.0
+  local_path: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\density-main\density-main'
+  source_of_truth: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\density-buoyancy-common-main'
+  url: https://phet.colorado.edu/sims/html/density/latest/density_all.html
+  html_entry: density_en.html
+  js_entry: js/density-main.ts
+  phetLibs:
+    - density-buoyancy-common
+    - mobius
+  density_buoyancy_common:
+    required: true
+    local_path: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\density-buoyancy-common-main'
+    git_sha: 0c835c642c0603531c3b9f0844fcb8b196abe003
+    version: 1.0.0-dev.0
+    note: density 仓库是薄壳；Model/View/物理/材料全部在 density-buoyancy-common
+  dependencies_json_sha_density_buoyancy_common: bc64def88a94349258c83284b9f4d88cab6020b2
+  dependencies_json_note: 本地 density/dependencies.json 注释为 1.2.0-dev.4（2024-08-22）；package.json 为 1.3.0-dev.0。分析以本地 density 入口 + 新 clone 的 common main 为准。
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC：State / PhysicsSolver / Controller / RenderData / Painter / Widget / Screen
+  - NineGrid 只负责页面级布局；实验画布保留 World→Viewport 变换
+  - 不机械套用 Buoyancy 的流体切换 / 力矢量 / 船瓶场景
+  - 不修改其它已完成 simulation
+  - 原版源码优先于网页文案与物理常识
+  - Mystery Set / Compare BlockSet 配置驱动，禁止 if (set == 1) 散落 Painter
+  - 禁止 WebView / iframe / 截图伪装 / JS runtime
+  - L0 复用 lib/common/；p2.js 与 THREE.js 不迁入，用 Dart Solver + CustomPainter 行为等价
+  - 改编标识 Adapted from PhET · 保留 GPL-3.0 与纹理 CC0 署名
+  - 接入路径为本工程惯例 lib/density/（不是 prompt 候选 lib/src/simlab/）
+  - 路由为本工程 Navigator.push（不是 /simlab/:simId）
+
+acceptance_criteria:
+  - AC-1: Intro / Compare / Mystery 三屏可进入、返回、再进入；屏间状态隔离
+  - AC-2: Intro 材料/质量/体积/密度联动与 One/Two Blocks 与源码一致
+  - AC-3: Compare Same Mass / Same Volume / Same Density 约束与四块默认数据一致
+  - AC-4: Mystery Set 1/2/3/Random + Density Table 数据与源码一致
+  - AC-5: 拖拽经 World 坐标 + 接触/浮力/重力 Solver；Painter 不改 Model
+  - AC-6: flutter analyze 对本 sim 0 issues；专项测试通过；Pad 横屏无溢出

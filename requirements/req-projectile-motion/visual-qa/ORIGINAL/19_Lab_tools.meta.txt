@@ -1,0 +1,6 @@
+state: 19_Lab_tools
+viewport: 1280x800
+DPR: 1
+actions: ["fire","wait_0.5s","pause","tape_(3,0)-(8,4)","tracer_(6,6)"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.41 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T15:04:43.554Z

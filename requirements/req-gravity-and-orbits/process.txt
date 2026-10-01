@@ -1,0 +1,27 @@
+[2026-09-16 18:28] INIT req-gravity-and-orbits
+  - 读取 .codebuddy rules / ARCHITECTURE / 80-checklist
+  - 扫描 KARTOSLAB lib/common + astronomy/my_solar_system（仅结构参考，禁抄物理）
+  - 完整扫描本地 PhET gravity-and-orbits 1.7.0-dev.7
+  - 产出 PHASE_0 / PHASE_1 / PHASE_2
+  - phase: 1.intake → 2.building
+
+[2026-09-16 18:28] KEY FINDINGS
+  - Screens: Model | To Scale（2 屏）
+  - Scenes/preset: starPlanet / starPlanetMoon / planetMoon / planetSatellite（每屏 4）
+  - Integrator: PEFRL (XI/LAMBDA/CHI) — 禁止 Euler/椭圆公式
+  - Clock: 60fps, DEFAULT_DT=36000s, substeps SLOW=1/NORMAL=4/FAST=7, step=baseDT*0.13125
+  - Model moon fudgeFactor=10200; Model sun isMovable=false
+  - G = PhysicalConstants.GRAVITATIONAL_CONSTANT (SI); positions in meters (doc km 过时)
+  - Home 接入延后至 Final Gate
+
+[2026-09-16 19:45] FINAL GATE + HOME
+  - Physics/UI assembled under lib/astronomy/gravity_and_orbits/
+  - Tests: 14 PASS; analyze: clean
+  - Home: ������ѧ �� GravityAndOrbitsHome
+  - Final Status: READY; phase��4.closing; status��done
+
+[2026-09-16 19:36] CLOSE REPORT
+  - Fixed: right panel overflow (vertical scene radios)
+  - Fixed: To Scale body labels (viewDiameter <= 12)
+  - Tests: 16 PASS; analyze: clean
+  - FINAL_REPORT updated; status remains done

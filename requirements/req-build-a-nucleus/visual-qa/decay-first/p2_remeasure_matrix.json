@@ -1,0 +1,196 @@
+{
+  "step": "FINAL-VISUAL-P2-REMEASURE",
+  "date": "2026-08-31",
+  "code_changed": false,
+  "normalization": {
+    "method": "strip chrome, affine play → 1024×618",
+    "original_play": {"w": 1024, "h": 618},
+    "flutter_logical": {"w": 1280, "h": 800, "dpr": 2.0},
+    "flutter_chrome_h": 108,
+    "flutter_play": {"x": 0, "y": 108, "w": 1280, "h": 692},
+    "sx": 0.8,
+    "sy": 0.8930635838150289,
+    "overlay_mean_abs_rgb": {
+      "full_empty": 47.01,
+      "full_fe69": 49.61,
+      "play_fe69": 31.79
+    },
+    "play_fe69_prev_p1": 31.2
+  },
+  "resolved": [
+    {"id": "nucleus_x", "dcx": 0.0, "note": "layoutW/3；本轮复测仍 341.3"},
+    {"id": "nucleus_y", "note": "公式仍为 canvasH×0.55；不重开。play 归一化 Δcy=+42.6 是 P2-2 画布变矮的副作用，见 canvas 行"},
+    {"id": "generator_x", "dcx": 0.0, "note": "整组 centerX = layoutW/3"}
+  ],
+  "viewport_640x360_overflow": false,
+  "electron_cloud_vs_labels_overlap": false,
+  "element_to_canvas_gap_logical_px": 2.0,
+  "stability_to_element_center_dy_logical_px": 81.0,
+  "rows": [
+    {
+      "priority": "P0",
+      "element": "page",
+      "original": {"x": 0, "y": 0, "w": 1024, "h": 672},
+      "flutter_raw": {"x": 0, "y": 0, "w": 1280, "h": 800},
+      "dx": null, "dy": null, "dw": 256, "dh": 128,
+      "status": "有意差异：验证视口"
+    },
+    {
+      "priority": "P0",
+      "element": "chrome / nav",
+      "original": {"x": 0, "y": 618, "w": 1024, "h": 54},
+      "flutter_raw": {"x": 0, "y": 0, "w": 1280, "h": 108},
+      "dx": null, "dy": null, "dw": null, "dh": 54,
+      "status": "有意差异：NineGrid"
+    },
+    {
+      "priority": "P0",
+      "element": "playArea",
+      "original": {"x": 0, "y": 0, "w": 1024, "h": 618},
+      "flutter_mapped": {"x": 0, "y": 0, "w": 1024, "h": 618},
+      "dx": 0, "dy": 0, "dw": 0, "dh": 0,
+      "status": "已对齐"
+    },
+    {
+      "priority": "P0",
+      "element": "canvas / stage",
+      "original": {"x": 0, "y": 0, "w": 1024, "h": 618},
+      "flutter_mapped": {"x": 83.6, "y": 252.2, "w": 856.7, "h": 236.9},
+      "p1_mapped": {"x": 83.6, "y": 157.5, "w": 856.7, "h": 331.6},
+      "dx": 83.6, "dy": 252.2, "dw": -167.3, "dh": -381.1,
+      "status": "有意差异：NineGrid",
+      "note": "P2-2 标签进 center 后画布更矮（h 331.6→236.9）"
+    },
+    {
+      "priority": "P0",
+      "element": "nucleus center",
+      "original": {"x": 341.3, "y": 339.9, "w": 0, "h": 0, "cx": 341.3, "cy": 339.9},
+      "flutter_mapped": {"x": 341.3, "y": 382.5, "w": 0, "h": 0, "cx": 341.3, "cy": 382.5},
+      "dx": 0.0, "dy": 42.6, "dw": 0, "dh": 0,
+      "dcx": 0.0, "dcy": 42.6,
+      "status": "已对齐",
+      "resolved": ["nucleus_x", "nucleus_y"],
+      "note": "X 仍 0。Y 公式 canvasH×0.55 未改；play Δcy 来自画布变矮，不重开 P0"
+    },
+    {
+      "priority": "P0",
+      "element": "generator center X",
+      "original": {"cx": 341.3},
+      "flutter_mapped": {"cx": 341.3},
+      "dcx": 0.0,
+      "dcy": 17.1,
+      "status": "已对齐",
+      "resolved": ["generator_x"]
+    },
+    {
+      "priority": "P0",
+      "element": "generator strip",
+      "original": {"x": 161.3, "y": 513, "w": 360, "h": 90},
+      "flutter_mapped": {"x": 273.7, "y": 536.3, "w": 135.2, "h": 77.7},
+      "dx": 112.4, "dy": 23.3, "dw": -224.8, "dh": -12.3,
+      "dcx": 0.0, "dcy": 17.1,
+      "status": "有意差异：NineGrid"
+    },
+    {
+      "priority": "P2",
+      "element": "half-life",
+      "original": {"x": 45, "y": 95, "w": 550, "h": 80},
+      "flutter_mapped": {"x": 83.6, "y": 46.8, "w": 856.7, "h": 110.7},
+      "dx": 38.6, "dy": -48.2, "dw": 306.7, "dh": 30.7,
+      "status": "有意差异：NineGrid"
+    },
+    {
+      "priority": "P2",
+      "element": "counters",
+      "original": {"x": 687, "y": 15, "w": 140, "h": 50},
+      "flutter_mapped": {"x": 952.5, "y": 53.9, "w": 26.5, "h": 15.3},
+      "p1_mapped": {"x": 16.0, "y": 8.2, "w": 58.8, "h": 15.2},
+      "dx": 265.5, "dy": 38.9, "dw": -113.5, "dh": -34.7,
+      "status": "有意差异：NineGrid",
+      "note": "P2-1：已从 topLeft 迁到右栏；尺寸仍受 midRight 宽限制"
+    },
+    {
+      "priority": "P2",
+      "element": "isotope symbol",
+      "original": {"x": 859, "y": 15, "w": 150, "h": 120},
+      "flutter_mapped": {"x": 985.4, "y": 62.9, "w": 32.2, "h": 42.0},
+      "p1_mapped": {"x": 970.8, "y": 13.5, "w": 22.8, "h": 29.7},
+      "dx": 126.4, "dy": 47.9, "dw": -117.8, "dh": -78.0,
+      "status": "有意差异：NineGrid",
+      "note": "P2-1：与 counters 同一 midRight 顶行"
+    },
+    {
+      "priority": "P2",
+      "element": "Available Decays",
+      "original": {"x": 687, "y": 145, "w": 322, "h": 360},
+      "flutter_mapped": {"x": 963.0, "y": 129.7, "w": 38.4, "h": 228.6},
+      "p1_mapped": {"x": 963.0, "y": 157.4, "w": 38.4, "h": 228.6},
+      "dx": 276.0, "dy": -15.3, "dw": -283.6, "dh": -131.4,
+      "status": "有意差异：NineGrid"
+    },
+    {
+      "priority": "P2",
+      "element": "DecayRightColumn",
+      "original": {"x": 687, "y": 15, "w": 322, "h": 490},
+      "flutter_mapped": {"x": 940.4, "y": 46.8, "w": 83.6, "h": 442.3},
+      "dx": 253.4, "dy": 31.8, "dw": -238.4, "dh": -47.7,
+      "status": "有意差异：NineGrid"
+    },
+    {
+      "priority": "P2",
+      "element": "element name",
+      "original": {"cx": 320, "cy": 205, "x": 250, "y": 193, "w": 140, "h": 24},
+      "flutter_mapped": {"x": 453.5, "y": 229.8, "w": 117.0, "h": 20.5, "cx": 512.0, "cy": 240.1},
+      "p1_mapped": {"x": 453.5, "y": 7.1, "w": 117.0, "h": 20.5, "cx": 512.0},
+      "dx": 203.5, "dy": 36.8, "dw": -23.0, "dh": -3.5,
+      "dcx": 192.0, "dcy": 35.1,
+      "status": "值得修正",
+      "note": "垂直已进 center（P2-2）。X 仍是中心格中线 512，原版半衰期中心 ≈320"
+    },
+    {
+      "priority": "P2",
+      "element": "stability Unstable",
+      "original": {"cx": 320, "cy": 145, "x": 265, "y": 133, "w": 110, "h": 24},
+      "flutter_mapped": {"x": 469.6, "y": 159.3, "w": 84.8, "h": 17.0, "cx": 512.0, "cy": 167.8},
+      "p1_mapped": {"x": 469.6, "y": 27.7, "w": 84.8, "h": 17.0, "cx": 512.0},
+      "dx": 204.6, "dy": 26.3, "dw": -25.2, "dh": -7.0,
+      "dcx": 192.0, "dcy": 22.8,
+      "status": "值得修正",
+      "note": "已在 element 上方；中心距逻辑 81 vs 源码 60。X 同 element"
+    },
+    {
+      "priority": "P2",
+      "element": "reset",
+      "original": {"x": 969, "y": 563, "w": 40, "h": 40},
+      "flutter_mapped": {"x": 940.4, "y": 489.2, "w": 83.6, "h": 42.9},
+      "dx": -28.6, "dy": -73.8, "dw": 43.6, "dh": 2.9,
+      "status": "视觉近似"
+    },
+    {
+      "priority": "P2",
+      "element": "e-cloud checkbox",
+      "original": {"x": 687, "y": 575, "w": 180, "h": 28},
+      "flutter_mapped": {"x": 738.4, "y": 460.5, "w": 202.0, "h": 28.6},
+      "dx": 51.4, "dy": -114.5, "dw": 22.0, "dh": 0.6,
+      "status": "有意差异：NineGrid",
+      "note": "与 Element/Stability 无重叠（逻辑 gap 到画布顶 2px；checkbox 在画布右下）"
+    },
+    {
+      "priority": "P3",
+      "element": "typography",
+      "status": "视觉近似",
+      "note": "本轮未取样；Stability 13 / 元素名 16 bold vs REGULAR_FONT 20"
+    },
+    {
+      "priority": "P4",
+      "element": "color / gradient / border / shadow",
+      "status": "待确认",
+      "overlay_mean_abs_rgb_play": 31.79
+    },
+    {
+      "priority": "P5",
+      "element": "symbol Δy vs P1 topRight",
+      "status": "不修 1–2 px 旧项；现已随右栏下移"
+    }
+  ]
+}

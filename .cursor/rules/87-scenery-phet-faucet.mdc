@@ -1,0 +1,27 @@
+---
+description: scenery-phet 水阀/FaucetNode 复用（蓝钮拖动、禁止平行发明）
+globs: "**/*faucet*"
+alwaysApply: false
+---
+
+# scenery-phet FaucetNode（阻塞级复用）
+
+完整指南：`docs/knowledge/kratos-java-simulations/scenery-phet-faucet-node.md`
+
+## 必须
+
+- 结构抄现有实现，禁止第三套 shooter：
+  - 样板：`lib/chemistry/ph_scale/view/widgets/ph_scale_faucet_node.dart`
+  - UP 交互定稿：`lib/under_pressure/view/up_faucet_node.dart`（**仅蓝钮可拖** · 无级 · 松手保持）
+- 原版 PNG：`faucetBody/Spout/HorizontalPipe/VerticalPipe/Track/Shaft/Stop/Flange/Knob(+Disabled)`
+- Shooter 顺序：shaft → stop → flange → knob@**0.6**；行程 native `4…66`
+
+## 严禁
+
+- Material Icons / 自绘「差不多」旋钮冒充 PhET 水阀
+- 整阀或 track 大面积 hit 冒充蓝钮拖动（除非 EDD 明确跟 PhET 默认 A 模式）
+- 点击蓝钮即开闸（UP 产品要求：只拖动调节）
+
+## 上抽
+
+pH Scale + Under Pressure = L1 2/3。第 3 个 sim 再抽到 `lib/common/widgets/`。

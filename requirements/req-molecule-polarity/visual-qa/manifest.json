@@ -1,0 +1,20 @@
+﻿{
+  "sim": "molecule-polarity",
+  "version": "2.1.0-dev.0",
+  "cases": [
+    {"id": "01_TwoAtoms_initial", "screen": 0, "state": "initial"},
+    {"id": "02_TwoAtoms_partial_charges", "screen": 0, "state": "partial_charges"},
+    {"id": "03_TwoAtoms_surface_esp", "screen": 0, "state": "surface_esp"},
+    {"id": "04_TwoAtoms_efield", "screen": 0, "state": "efield"},
+    {"id": "05_TwoAtoms_rotated", "screen": 0, "state": "rotated"},
+    {"id": "06_TwoAtoms_reset", "screen": 0, "state": "reset"},
+    {"id": "07_ThreeAtoms_initial", "screen": 1, "state": "initial"},
+    {"id": "08_ThreeAtoms_bond_dipoles", "screen": 1, "state": "bond_dipoles"},
+    {"id": "09_ThreeAtoms_bond_angle", "screen": 1, "state": "bond_angle"},
+    {"id": "10_ThreeAtoms_efield", "screen": 1, "state": "efield"},
+    {"id": "11_RealMolecules_hf_initial", "screen": 2, "state": "hf_initial"},
+    {"id": "12_RealMolecules_h2o", "screen": 2, "state": "h2o"},
+    {"id": "13_RealMolecules_dipoles", "screen": 2, "state": "dipoles"},
+    {"id": "14_RealMolecules_reset", "screen": 2, "state": "reset"}
+  ]
+}

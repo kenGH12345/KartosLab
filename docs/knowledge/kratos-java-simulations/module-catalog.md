@@ -187,3 +187,10 @@
 - Java 文件数**≠ 代码行数**；`fractions` 229 文件用 functionaljava 函数式，单文件小；`circuit-construction-kit` 172 文件多为图形节点，单文件中等。真实 LOC 估算需 grep 而不是 count files
 - `study` 变体与主 sim 未分开评估（如 `balance-and-torque-study`）
 - ⭐ 教学价值主要基于 PhET 官网 [kartos.colorado.edu/en/simulations/browse](https://kartos.colorado.edu/en/simulations/browse) 的公开热度经验判断，非精确统计
+
+---
+
+## Change（来源 req-masses-and-springs-basics · 2026-09-08）
+
+- **Flutter 已复刻 Basics**：`lib/masses_and_springs_basics/`（Bounce / Stretch / Lab）。
+- **不在本 Java catalog**：蓝本为 PhET HTML5，无对应 `simulations-java/simulations/masses-and-springs*` 行可改；映射与迁移要点见 [existing-flutter-map.md §五](existing-flutter-map.md)。

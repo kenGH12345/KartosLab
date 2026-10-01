@@ -1,0 +1,66 @@
+# process.txt â€” req-port-balancing-act
+# Format: [YYYY-MM-DD HH:MM] event â€” detail
+
+[2026-09-23 10:53] PHASE 0 START â€” Source Audit / Reverse Engineering for Balancing Act
+[2026-09-23 10:53] Source located: phet sourses/balancing-act-main/balancing-act-main (package 1.4.0-dev.2, sha b468e7d)
+[2026-09-23 10:54] Screens confirmed from balancing-act-main.ts: Intro â†’ Balance Lab â†’ Game (3; Game excluded under phet-io)
+[2026-09-23 10:55] Physics/model audit: Plank torque dynamics (no g), MassForceVector display g=-9.8, snap 0.25m, damping Ã—0.91/step
+[2026-09-23 10:56] View/MVT audit: LAYOUT_BOUNDS 768Ã—504; Intro/Lab scale 105; Game scale 115
+[2026-09-23 10:56] Assets audit: images/ SVG+PNG complete; mipmaps empty; no local sounds/; vegas GameAudioPlayer for Game
+[2026-09-23 10:56] Tests audit: NO unit/integration tests in balancing-act checkout
+[2026-09-23 10:57] Screenshot cross-ref: Intro / Balance Lab / Game Select Level â€” matches source
+[2026-09-23 10:57] Reports written under requirements/req-port-balancing-act/
+[2026-09-23 10:57] PHASE 0 GATE: PASS (P0=0). Flutter UI NOT STARTED. Home NOT TOUCHED. Awaiting Phase 1 instruction.
+
+[2026-09-23 11:04] PHASE 1 START ¡ª Model + Physics Core
+[2026-09-23 11:10] Implemented lib/balancing_act model (BalanceModel/Plank/Mass/Intro/Lab/Game)
+[2026-09-23 11:15] Physics SOURCE TRUTH locked: torque no g; omega+=alpha; damp 0.91; balance <1e-6; snap 0.25
+[2026-09-23 11:18] Tests: 39 PASS (physics/angular/snap/interaction/game)
+[2026-09-23 11:19] dart analyze lib/balancing_act test/balancing_act ¡ª No issues found
+[2026-09-23 11:20] PHASE 1 GATE: PASS. Flutter UI NOT STARTED. Home NOT TOUCHED. Awaiting Phase 2.
+
+[2026-09-23 11:17] PHASE 2 START ¡ª Intro Screen
+[2026-09-23 11:25] BaIntroScreen + MVT 105 + viewport 768x504; procedural scene; original SVGs
+[2026-09-23 11:30] Controls: Show/Position/ColumnSwitch/KratosResetAll; clock-driven physics
+[2026-09-23 11:34] Tests: 49 PASS (39 Phase1 + 10 Intro); analyze clean; assets substituted=0
+[2026-09-23 11:35] PHASE 2 GATE: PASS. Lab/Game/Home NOT STARTED. Awaiting Phase 3.
+
+[2026-09-23 12:53] PHASE 3 START â€” Balance Lab Screen
+[2026-09-23 13:00] Source re-audit: BalanceLabScreenView / MassCarousel / RotatingRulerNode / creators
+[2026-09-23 13:05] BaBalanceLabScreen + Controller; carousel 5 pages; creator drag; Lab miss animate-remove
+[2026-09-23 13:10] Rulers/Marks upgraded (shared painters); people+mystery SVGs; bricks procedural
+[2026-09-23 13:14] Tests: 61 PASS (49 prior + 12 Lab); dart analyze clean; assets substituted=0
+[2026-09-23 13:15] PHASE 3 GATE: PASS. Game/Home NOT STARTED. Awaiting Phase 4+.
+
+[2026-09-23 15:36] PHASE 4 START â€” Game Screen
+[2026-09-23 15:40] Source re-audit: BalanceGameModel / ChallengeFactory / Vegas / MVT 115
+[2026-09-23 15:45] SourceFaithfulChallengeFactory + BaGameScreen/Controller; Vegas audio hooks
+[2026-09-23 15:48] Tests: 79 PASS (61 prior + 18 Game); dart analyze clean; assets substituted=0
+[2026-09-23 15:50] PHASE 4 GATE: PASS. Home NOT TOUCHED. Runtime/Android NOT VERIFIED.
+
+[2026-09-23 16:05] PHASE 5 START ¡ª Full Visual Reconstruction (no Model/Game SM changes)
+[2026-09-23 16:10] BaMassValueEntry (HSlider 15x30) + BaStarNode; wired into BaGameScreen
+[2026-09-23 16:12] Lab carousel: SCALING_MVT brick/mystery 150, people 80; chrome cornerRadius/xMargin/spacing
+[2026-09-23 16:15] BaText baseline; rulers/marks Arial; shared Show/Position polish
+[2026-09-23 16:18] Tests: 84 PASS (79 prior + 5 visual geometry); dart analyze clean; assets substituted=0
+[2026-09-23 16:20] PHASE 5 GATE: PASS. Home NOT TOUCHED. Runtime/Android NOT VERIFIED. Not declaring READY.
+
+[2026-09-23 16:25] PHASE 6 START ¡ª Final Behavioral Acceptance / Regression
+[2026-09-23 16:30] Added phase6_acceptance_test.dart (Intro/Lab/Game + lifecycle + isolation + reset¡Á10)
+[2026-09-23 16:32] BA suite: 107 PASS (84 prior + 23 acceptance); analyze clean; no production behavior changes
+[2026-09-23 16:38] Full flutter test executed: BA 0 failures; global 56 fails unrelated (visual_qa timeouts / forces)
+[2026-09-23 16:40] PHASE 6 GATE: PASS. Home NOT TOUCHED. Runtime/Android NOT VERIFIED. Not declaring READY.
+
+[2026-09-23 16:45] PHASE 7 START ¡ª Home Integration / Final Release Gate
+[2026-09-23 16:50] BalancingActHome (KratosTabbedScreen) + Home ÎïÀí/Á¦Ñ§ card Icons.scale_rounded
+[2026-09-23 16:52] home_integration_test.dart: 9 tests (card/nav/back/re-entry/tabs/isolation)
+[2026-09-23 16:55] BA 116 PASS; Home regression PASS; analyze clean; assets substituted=0
+[2026-09-23 17:00] Global: +3362 ~1 -56 (baseline 56 unrelated unchanged; BA/Home new fails=0)
+[2026-09-23 17:00] PHASE 7 GATE: READY. Runtime/Android NOT VERIFIED. Global repo still FAIL unrelated.
+
+[2026-09-23 16:52] GAME VISUAL HOTFIX START — user QA: black SVGs + unplayable tilt/mass chrome
+[2026-09-23 16:55] Root: flutter_svg ignores <style/>; tilt/mass entry at model Y??0.55 vs source
+[2026-09-23 16:58] BaStyledSvg + BaSvgPicture (runtime CSS inline); wire mass/carousel/game
+[2026-09-23 17:00] Game chrome: tilt.bottom=plankH+0.8; massEntry under title; face Y=2.2
+[2026-09-23 17:03] Tests: 122 PASS (116 + 6); analyze clean; assets substituted=0; SVG files untouched
+[2026-09-23 17:05] HOTFIX GATE: PASS. Report: GAME_VISUAL_HOTFIX_REPORT.md. Phase 7 READY retained.

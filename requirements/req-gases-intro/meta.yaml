@@ -1,0 +1,19 @@
+req_id: req-gases-intro
+title: Gases Intro
+status: v5_responsive_provisional
+phase: v5_responsive_layout_overflow
+local_version: 1.2.0-dev.0
+gas_properties_lock: 10c7c08d5866622426ba1969c35465c3269a70df
+screens: 2
+tests_passed: 24
+analyze_issues: 0
+model_unchanged: true
+sealed: false
+follow_up_required: true
+notes: >
+  V5 初步结束（可报告，未 sealed）：LayoutPolicy + fitScale、anchors×scale、
+  overflow 修复、24 tests / analyze 0。Model 冻结；V1–V4 保留；STOP 不进 V6。
+  明确标记 follow_up_required：真机视口、Fine/Coarse 命中、右栏 236、
+  Gauge/Heater 视觉、Accordion 极端高度、V6 截图 QA 等后续要改。
+  详见 V5_RESPONSIVE_REPORT.md 文首「后续必须再改」。
+updated_at: 2026-09-06

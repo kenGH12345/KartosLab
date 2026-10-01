@@ -1,0 +1,6 @@
+state: 11_RealMolecules_hf_initial
+viewport: 1280x800
+DPR: 1
+actions: ["HF"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:51.949Z

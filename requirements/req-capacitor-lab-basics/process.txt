@@ -1,0 +1,135 @@
+# process.txt — req-capacitor-lab-basics
+
+[2026-09-12 16:50] phase → 1.asset-policy | status=intake
+  - 用户下达「原版 Assets 与视觉一致性」强制规则
+  - 落成 .cursor/rules/85-phet-original-assets.mdc + .codebuddy/rules/85-phet-original-assets.mdc
+  - 写入 VISUAL_ASSET_POLICY.md（全文政策）
+  - 扫描 PhET 源码 images/ mipmaps/ assets/ + scenery-phet lightBulb*，建立 ASSET_MAP.md
+  - 结论摘要：运行时原图 = probeBlack/Red + voltmeterBody + switchCueArrow + capacitanceScreenIcon + lightBulbBase；电池/电容板/场/电荷/导线为 Scenery 绘制，禁止 Icon 替代
+
+[2026-09-12 16:46] phase → 1.source-analysis | status=intake
+  - 进入 Phase 1 Intake / Source Analysis（禁止大规模 Flutter 编码 / 禁止先拷 assets）
+  - 目标产物：SOURCE_ANALYSIS / SOURCE_TO_FLUTTER_MAP / ARCHITECTURE_PLAN / SOURCE_BEHAVIOR_MATRIX + 阶段报告
+
+[2026-09-12 17:00] phase 1.source-analysis → DONE | checks 38/38 PASS
+  - 产物齐全；PHASE_1_REPORT.md；无阻塞架构决策
+  - 自动进入 Phase 2（model-constants）
+
+[2026-09-12 17:05] phase → 2.model-constants | status=build
+  - 起步：clb_constants / colors / strings / capacitor 纯函数 + unit tests
+  - 打包 6 原版 PNG（仍不做大规模 Painter / Home）
+
+[2026-09-12 17:20] phase 2 进展
+  - dart analyze lib/capacitor_lab_basics: No issues
+  - capacitor_physics_test: 8/8 PASS
+  - 新增 Battery / Capacitor ChangeNotifier 骨架
+  - assets/simulations/capacitor_lab_basics/ ×6 + pubspec 注册
+  - 下一步：ParallelCircuit + CLBModel + 屏级 Model（仍无 Painter/Home）
+
+[2026-09-12 17:30] phase 2.model-circuit → DONE
+  - ParallelCircuit / CapacitanceCircuit / LightBulbCircuit
+  - ClbModel + ClbSharedState + CapacitanceModel + ClbLightBulbModel
+  - tests 27/27 PASS；analyze clean
+  - MODEL_REPORT.md / PHASE_2_REPORT.md；矩阵与映射已更新
+  - 自动进入 Phase 3：YawPitchMvt 起步（PHASE_3_KICKOFF.md）
+
+[2026-09-12 17:15] phase 3.static-render → DONE
+  - MVT + BoxShapeCreator + CircuitGeometry + CircuitRenderData
+  - BatteryPainter / CapacitorPlatesPainter / WirePainter + StaticCircuitView
+  - 原图 voltmeter/probes/cue 接入；Substituted=0
+  - analyze clean；tests 42+ PASS（含 widget smoke）
+  - STATIC_RENDER.md / PHASE_3_REPORT.md
+  - 自动进入 Phase 4 interaction（PHASE_4_KICKOFF.md）
+
+[2026-09-12 17:45] phase 4.interaction → DONE
+  - CircuitRenderData 扩展：开关 tip/hinge、把手锚点、电表/条表、按连接重建导线
+  - BatteryVoltageSlider / SwitchGestureLayer / PlateHandles / panels / toolbox / voltmeter drag
+  - CapacitanceInteractiveScreenBody + ResetAll；未注册 Home
+  - interaction_test + docs（INTERACTION_* / PHASE_4_REPORT）；矩阵与映射已更新
+  - Gate: dart analyze clean；suite PASS（含 interaction + MVT）
+  - 自动进入 Phase 5：测压 + 电荷/电场可视化（PHASE_5_KICKOFF.md）
+
+[2026-09-12 18:15] phase 5.voltmeter-viz → DONE
+  - ProbeTarget / CircuitPosition / VoltmeterShapeCreator / ProbeHitTester
+  - Voltmeter.computeValue + updateMeasuredVoltage 挂到 ClbModel
+  - PlateChargePainter / EFieldPainter；StaticCircuitView 层级 bottom→E→top
+  - voltmeter_measurement_test；suite 57 PASS；analyze clean
+  - PHASE_5_REPORT.md；自动进入 Phase 6 Light Bulb（PHASE_6_KICKOFF.md）
+
+[2026-09-12 18:40] phase 6.light-bulb → DONE
+  - 3-state switch；LightBulb wires；BulbNodeOverlay + light_bulb_base.png
+  - Probe bulb hit；LightBulbInteractiveScreenBody + TimeControl/Stopwatch
+  - light_bulb_interaction_test；suite 64 PASS；analyze clean
+  - PHASE_6_REPORT.md；自动进入 Phase 7（PHASE_7_KICKOFF.md）
+
+[2026-09-12 18:55] phase 7.current-polish → DONE
+  - CurrentIndicatorsLayer（fade / electrons·conventional / battery+bulb）
+  - 两屏 interactive body 接入；current_indicator_test
+  - suite 67 PASS；analyze clean；PHASE_7_REPORT.md
+  - 进入 Phase 8 Visual QA / Final（Home 待确认 · PHASE_8_KICKOFF.md）
+
+[2026-09-12 19:30] phase 8.home → DONE
+  - CapacitorLabBasicsHome（KratosTabbedScreen）+ home_screen 最小接线
+  - home_lifecycle_test；CLB suite PASS；apk debug PASS
+  - PHASE_8_REPORT.md
+
+[2026-09-12 19:45] phase 9.visual-fix → DONE
+  - PlateAreaDragHandler LinearFunction（源码一致）
+  - BatteryPainter createGradient stops 对齐 BatteryGraphicNode.js
+  - Asset 审计 Substituted=0；PHASE_9_REPORT.md
+
+[2026-09-12 19:50] phase 10.final-qa → DONE
+  - COMPLETION_REPORT.md / PHASE_10_REPORT.md
+  - status: done · phase: 10.final
+  - Gate: Home/Nav/Back/Re-entry/Reset/Dispose + analyze(CLB) + test(CLB) + apk
+
+[2026-09-12 18:25] visual-gap-fix（用户截图对照）
+  - 根因：Toolbox Transform.scale 撑破布局 → 显式尺寸 + VoltmeterIconNode
+  - Bar 0.30 pF；Separation/Area 标签；电池 1.5/0/−1.5；ConnectionNode 接点
+  - LB 秒表默认隐藏；TimeControl 紧凑化
+  - VISUAL_GAP_FIX.md；analyze clean；suite 72 PASS
+
+[2026-09-14 10:57] functional-spec-audit
+  - �û����浵 FUNCTIONAL_SPEC.md
+  - ˫�����ܸ��� FUNCTIONAL_SPEC_AUDIT.md�����ձ��� PhET��
+  - Voltmeter ά�� [Դ��һ��]��VOLTMETER_FINAL_AUDIT��
+  - P0 ȱ�ڣ�Tab �������� step��Capacitance �� model.step��������
+
+[2026-09-14 11:03] P0 fix (hidden ticker + Capacitance step)
+  - CapacitanceInteractiveScreenBody: Ticker �� model.step (TickerMode gated)
+  - LightBulb _onTick: TickerMode.valuesOf.enabled guard
+  - p0_clock_lifecycle_test.dart; suite 95 PASS
+  - P0_FIX_REPORT.md; FUNCTIONAL_SPEC_AUDIT / COMPLETION / PHASE_10 ����
+  - P0: 0; P1 backlog δ��
+
+[2026-09-14 11:10] P1 fix (sep clickOffset / current fade pause / stopwatch return)
+  - PlateSeparationDragHandler + PlateHandleGestureLayer
+  - CurrentIndicatorsLayer: fade gated by isPlaying (PhET stepEmitter)
+  - Stopwatch place/drag/returnStopwatchToToolbox (full bounds)
+  - tests: plate_distance / current_indicator_pause / stopwatch_toolbox
+  - suite 107 PASS; P1_FIX_REPORT.md; P1: 0
+
+[2026-09-14 11:17] Final Behavioral Acceptance
+  - flutter test CLB: 107 PASS
+  - dart analyze (CLB+home): clean
+  - flutter build apk --debug: PASS
+  - Original assets=6 Substituted=0
+  - FINAL_BEHAVIOR_MATRIX.md + COMPLETION_REPORT ����
+  - ��ͼ���� [��ȷ��]��������˹���
+  - P0=0 P1=0 BLOCKED=��
+
+[2026-09-14 11:45] Final Visual QA
+  - Official 9 screenshots: visual-qa/final/original/
+  - Flutter 9 screenshots: visual-qa/final/flutter/ (Windows integration_test)
+  - FINAL_VISUAL_QA.md written
+  - bulb_node_overlay: glass gradient + black filament + white halo (BulbNode.js)
+  - flutter test CLB: 107 PASS; analyze clean
+  - Assets 6/0 unchanged; no Model/VM/Circuit/Tab/Clock architecture change
+  - Visual: aligned / approx / intentional / pending (Pause chrome)
+
+[2026-09-14 12:55] Light Bulb Visual QA pass (same flow)
+  - ClbTimeControlNode + ClbStopwatchNode (TimeControlNode/StopwatchNode skin)
+  - Pause/Resume/Step/Slow/Reset logic unchanged; spacing 50 to ResetAll
+  - VQA recapture LB paused + reset on LB tab
+  - suite 107 PASS; analyze clean
+  - TimeControl: [视觉已对齐] (bevel approx); official Pause chrome still [待确认] at 580x421

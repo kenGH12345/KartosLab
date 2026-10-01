@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kratos/common/scenario/success_condition.dart';
 import 'package:kratos/forces/config/forces_scenario.dart';
 import 'package:kratos/forces/config/scenario_manager.dart';
 
@@ -58,9 +57,8 @@ void main() {
     expect(scenario.objects[0].mass, equals(10));
     expect(scenario.objects[0].icon, equals('inventory_2'));
     expect(scenario.successCriteria.length, equals(1));
-    final leaf = scenario.successCriteria[0] as LeafCondition;
-    expect(leaf.type, equals('speedReached'));
-    expect(leaf.params['minSpeed'], equals(5));
+    expect(scenario.successCriteria[0].type, equals('speedReached'));
+    expect(scenario.successCriteria[0].params['minSpeed'], equals(5));
     expect(scenario.hints.length, equals(1));
     expect(scenario.hints[0].trigger, equals('always'));
   });
@@ -75,8 +73,7 @@ void main() {
     expect(scenario.pullers.length, equals(2));
     expect(scenario.pullers[0].force, equals(50));
     expect(scenario.pullers[1].side, isTrue);
-    expect((scenario.successCriteria[0] as LeafCondition).type,
-        equals('gameWon'));
+    expect(scenario.successCriteria[0].type, equals('gameWon'));
   });
 
   test('ForcesScenario.fromJson parses acceleration mode with accelerometer', () {
@@ -108,15 +105,12 @@ void main() {
     expect(() => ForcesScenario.fromJson(data), throwsA(isA<ArgumentError>()));
   });
 
-  // 注意：读 asset 的用例必须用 tester.runAsync 包裹。
-  // 若在 testWidgets 里直接 `await rootBundle.loadString`，该 Future 会被存进
-  // CachingAssetBundle._stringCache 并绑定到本用例的 FakeAsync zone；用例结束后
-  // zone 销毁，缓存项变成永久 pending —— 之后任何读同一 asset 的用例都会挂到
-  // 超时（实测本文件曾因此卡 10 分钟，且报错指向的是后一个用例而非污染源）。
-  testWidgets('forces manifest loads via rootBundle and all 5 scenarios parse',
-      (tester) async {
+  // Use plain `test` (not testWidgets): these only need rootBundle, and a
+  // second consecutive testWidgets that never pumps can hang the binding.
+  test('forces manifest loads via rootBundle and all 5 scenarios parse', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
     final mgr = ForcesScenarioManager();
-    await tester.runAsync(() => mgr.loadScenarios());
+    await mgr.loadScenarios();
     expect(mgr.scenarios.length, equals(5));
     final ids = mgr.scenarios.map((s) => s.scenarioId).toSet();
     expect(ids, contains('default'));
@@ -131,9 +125,10 @@ void main() {
     expect(modes, contains(ForcesMode.acceleration));
   });
 
-  testWidgets('netforce-tug scenario has valid pullers', (tester) async {
+  test('netforce-tug scenario has valid pullers', () async {
+    TestWidgetsFlutterBinding.ensureInitialized();
     final mgr = ForcesScenarioManager();
-    await tester.runAsync(() => mgr.loadScenarios());
+    await mgr.loadScenarios();
     final s = mgr.loadScenario('netforce-tug');
     expect(s.pullers.length, greaterThanOrEqualTo(2));
     final lefts = s.pullers.where((p) => !p.side).length;

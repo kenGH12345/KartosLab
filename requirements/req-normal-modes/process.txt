@@ -1,0 +1,12 @@
+[2026-09-03 03:34] intake: 用户下达 Normal Modes HTML5 → KARTOSLAB Flutter 全阶段自动迁移
+[2026-09-03 03:40] phase 0: 开始 Project Discovery（KARTOSLAB 工程 + 本地 phet sourses/normal-modes-main）
+[2026-09-03 03:50] 80-kratos-sim-checklist: 开工阅读 overview / 本表；G1=复用 NineGrid+KratosTabbedScreen+Ticker墙钟dt · 不用 TimeControlBar/KratosSlider/Chart/Scenario（语义或外观不等价）· G2=sim 内 L1 候选（VSlider/Accordion/AmplitudeSelector）第1/3用户 · G3=未触发上抽 · EDD=v2.0 字段已写 · layout=NineGrid 外壳 + 内部 1024×618 局部坐标
+[2026-09-03 03:50] phase 0 → 1: PROJECT_DISCOVERY.md 完成，无阻塞决策，自动进入 Source Analysis
+[2026-09-03 04:10] phase 1: SOURCE_ANALYSIS.md · 核心公式可闭合，不暂停
+[2026-09-03 04:20] phase 2: visual-qa/BASELINE.md · [待确认：缺少原版运行截图]
+[2026-09-03 04:30] phase 3: ARCHITECTURE_PLAN.md · lib/normal_modes/ · 不改 common
+[2026-09-03 05:00] phase 4–8: Model/Solver/UI/Home 落地
+[2026-09-03 05:15] phase 10: analyze 0 · test/normal_modes 45 passed · debug+release APK
+[2026-09-03 05:20] phase 11–12: Home 注册完成 · 无旧代码可归档 · COMPLETION_REPORT.md · status=done
+[2026-09-03 05:15+] visual-qa layout: SimulationViewport/ControlColumn · 50 tests · GEOMETRY_CALIBRATION.md
+[2026-09-03 05:23] close: 用户确认移植成功可 report · Pixel Tablet 调试通过 · COMPLETION_REPORT 结项

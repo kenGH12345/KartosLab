@@ -1,0 +1,10 @@
+2026-09-22 PHASE 0 Source Audit å®Œæˆ â€” 7 ä»½æ–‡æ¡£ + meta.yaml
+2026-09-22 PHASE 1 Core Reaction Model å®Œæˆ â€” 16 tests PASS, analyze clean
+2026-09-22 PHASE 2 Sandwiches Screen å®Œæˆ â€” 29 tests PASS, analyze clean, Substituted=0, Overall=NOT READY
+2026-09-22 PHASE 3 Molecules Screen å®Œæˆ â€” 44 tests PASS, analyze clean, Overall=NOT READY
+2026-09-22 PHASE 4 Game Screen Íê³É ¡ª 62 tests PASS, analyze clean, Game=COMPLETE, Home=NOT STARTED, Overall=NOT READY
+2026-09-22 PHASE 5 Final QA Íê³É ¡ª 106 tests PASS, analyze clean, P0=0 P1=0, Sandwiches/Molecules/Game=FINAL QA PASS, Home=NOT STARTED, Overall=NOT READY
+2026-09-22 PHASE 6 Home Integration Íê³É ¡ª 119 tests PASS, Home=INTEGRATED, Overall=READY CANDIDATE, Android=NOT VERIFIED
+2026-09-22 PHASE 7 Final Acceptance ¡ª RPL 119 PASS, analyze clean, P0=0 P1=0 Substituted=0, full project +2668 ~1 -56 (0 RPL failures), Overall=READY, Android=NOT VERIFIED, CODE_CHANGES=0
+2026-09-22 hotfix Game viewport clip ¡ª FittedBox.scaleDown challenge + SafeArea bottom + RandomBox inset; RPL tests PASS
+2026-09-22 POST-READY hotfix closed ¡ª viewport clip + full Game MoleculeIcon pool (SO2/S/etc); RPL tests PASS, analyze clean, P2 FormulaText chip CLOSED (P2 6¡ú5), Overall=READY, report=POST_READY_HOTFIX_REPORT.md

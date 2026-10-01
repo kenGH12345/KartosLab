@@ -1,0 +1,41 @@
+req_id: req-energy-skate-park
+title: 迁移 PhET Energy Skate Park 到 KARTOSLAB Flutter
+status: done
+phase: '12-cleanup'
+created_at: '2026-09-03 19:47'
+updated_at: '2026-09-03 23:15'
+acceptance: passed-measurement-skater-closure
+repo_path: '.'
+
+source:
+  type: html5-typescript
+  repo: https://github.com/phetsims/energy-skate-park
+  version: 1.6.0-dev.2
+  local_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\energy-skate-park-main\energy-skate-park-main'
+  url: https://phet.colorado.edu/sims/html/energy-skate-park/latest/energy-skate-park_all.html
+  note: '本地源码为唯一第一事实来源；不以官网 latest / GitHub main 自动替换；dependencies.json 注释写 1.5.0-rc.0，以 package.json 为准'
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC：Track / Spline / SkaterState / PhysicsSolver / Energy / GraphHistory / RenderData / Painter / Widget / Screen 分离
+  - 禁止用教材公式重写 track/spline/Euler/离轨/能量；必须移植本地源码语义
+  - NineGrid 只负责页面级外壳；模拟内部使用局部坐标（米 · +y 向上 · 原点在地面中心）
+  - 不修改其他已完成 simulation
+  - 不修改 common API / 全局 Theme / Navigation 架构
+  - common 仅在语义真正通用时抽取
+  - stepEuler 顺序 = 先 v 后 x；轨上 4×(dt/4) 子步进
+  - 离轨条件必须移植 circular-motion + curvature 判定，禁止自编 v²/r≥g
+  - Playground 不得简化为固定轨道模板
+  - Graphs/Sensor 能量必须来自 DataSample / Model history，禁止 Widget 重算
+
+acceptance_criteria:
+  - AC-1: 四屏 Intro / Measure / Graphs / Playground 可从 Home 进入、切换、返回、再进入并重新初始化
+  - AC-2: Track spline / Skater Euler / Energy / Friction / Gravity / Jump·Loop 离轨对照源码
+  - AC-3: Energy Bar / Pie / Graph / Stopwatch / Measuring Tape / Energy Sensor 数据来自 Model
+  - AC-4: Playground 加轨 / 擦除 / 控制点 / 连接 / 分裂对照源码
+  - AC-5: flutter analyze 0 issues；专项物理+样条测试 + 回归通过；debug/release APK
+
+notes: |
+  status=done：核心 AC 已满足。非阻塞剩余项见 FUNCTIONAL_GAP_CLOSURE / COMPLETION_REPORT
+  （像素 QA、preferences、键盘连接、split 后 smooth）。不宣称与 PhET 完全一模一样。

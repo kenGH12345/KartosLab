@@ -1,0 +1,22 @@
+[2026-09-30 19:18] phase-0 start: SOURCE ARCHAEOLOGY + MIGRATION ARCHITECTURE AUDIT. No Flutter UI, Model, Layout, Golden, Android, or Home.
+[2026-09-30 19:18] governance: .cursor/rules present (00, 10, 20, 30, 35, 40, 45, 60, 70, 80, 85, 86, 87). 80-phet-sim-checklist.mdc is a one-line redirect to C:/workspace/phet/.codebuddy/rules/80-phet-sim-checklist.mdc and was not expanded. Named skills phet-migration / source-archaeology / layout-archaeology / visual-convergence / behavioral-acceptance / platform-integration / runtime-release-gate are NOT in .cursor/skills. Governance was not modified.
+[2026-09-30 19:18] version lock: package.json name=buoyancy version=1.3.0-dev.2. dependencies.json comment "buoyancy 1.3.0-dev.2 Wed Feb 26 2025". lockfile buoyancy sha e3a4d490dd75a4be8ad8a6f4744fc691d533c6f2. Working tree has no .git. SOURCE_COMMIT=UNKNOWN.
+[2026-09-30 19:18] common: local path phet sourses/density-buoyancy-common-main exists. HEAD 0c835c642c0603531c3b9f0844fcb8b196abe003 (2026-04-20). lockfile sha 0295f8f62bff7f345185fbf11a9e42c08206e4c5 is not an object in this clone. Common package version 1.0.0-dev.0. No dependencies.json inside the common checkout.
+[2026-09-30 19:18] screens from buoyancy-main.ts: Compare, Explore, Lab, Shapes, Applications. Models and views live in density-buoyancy-common, not in buoyancy/js.
+[2026-09-30 19:18] missing framework checkouts: axon, dot, scenery, scenery-phet, sun, tambo, tandem, joist, kite, phet-core, mobius, sherpa. p2-0.7.1.js and three-r104.js are preload paths only; the files are not in this tree.
+[2026-09-30 19:18] existing KartosLab: lib/density is the Density sim (req-density done) with a simplified Dart solver. No lib/buoyancy. Home not modified.
+[2026-09-30 19:18] phase-0 docs written under requirements/req-buoyancy. Status READY CANDIDATE. Model/Layout/UI/Golden/Android/Home NOT STARTED.
+[2026-09-30 19:31] phase-1a start: SHARED DOMAIN + PHYSICS CORE. Provenance lock LOCAL_COMMON_HEAD=0c835c64 PINNED_LOCKFILE_SHA=0295f8f6 OPEN P1. Ban reuse of lib/density/solver/buoyancy_world.dart. No Screen Model / Layout / UI / Golden / Android / Home.
+[2026-09-30 19:45] phase-1a complete: Shared Domain + Physics Core READY CANDIDATE. 33 physics tests PASS. Density smoke PASS. Provenance P1 OPEN. Boat/Bottle tables DEFERRED. No UI/Layout/Screen Models. Next: PHASE 1B Five Screen Model Mapping.
+[2026-09-30 19:39] phase-1b start: FIVE SCREEN MODEL MAPPING. No Layout/UI/Golden/Android/Home. Local snapshot 0c835c64. Boat/Bottle geometry remains DEFERRED until source tables extracted.
+[2026-09-30 20:30] phase-1b complete: Five Screen Model Mapping READY CANDIDATE. Compare/Explore/Lab/Shapes PASS. Applications PARTIAL (tables PASS; basin DEFERRED). Tests 104 PASS (1A 33 + 1B 71). Density 81 PASS. Analyze 0 errors. Physics pipeline APPROXIMATE P1 OPEN. Next: PHASE 2 Layout Archaeology.
+[2026-09-30 20:00] phase-2a complete: Global Layout Archaeology READY CANDIDATE. Design 1024x618. THREE MVT documented. Geometry tests PASS.
+[2026-09-30 20:05] phase-2b complete: Compare/Explore/Lab Layout Specs READY CANDIDATE.
+[2026-09-30 20:10] phase-2c complete: Shapes/Applications Layout Specs READY CANDIDATE (basin coupling DEFERRED).
+[2026-09-30 20:15] phase-2 complete: Layout Archaeology READY CANDIDATE. Composer/UI/Golden/Android/Home NOT STARTED. Physics P1s FROZEN OPEN.
+
+[2026-09-30 21:55] PHASE 5 golden+behavioral complete ¡ú READY CANDIDATE (frozen P1s open). Buoyancy 180 / Density 81. Stop.
+
+[2026-10-01 00:45] PHASE 6 P1 closure complete. P1=0. Stop before Android/Home.
+
+[2026-10-01 01:35] PHASE 7 Android runtime VERIFIED on Pixel Tablet emulator-5554 (API 35). integration_test 8/8 PASS. Home NOT STARTED. Stop.

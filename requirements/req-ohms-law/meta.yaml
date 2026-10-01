@@ -1,0 +1,46 @@
+req_id: req-ohms-law
+sim_id: ohms-law
+sim_title: Ohm's Law
+abbreviation: OL
+phase: 5
+status: ready_candidate
+overall: READY_CANDIDATE
+android: NOT_VERIFIED
+source_version: 1.5.0-dev.6
+source_path: phet sourses/ohms-law-main/ohms-law-main
+updated_at: 2026-09-27
+flutter_impl: model_view_runtime_visual_home
+home_integration: DONE
+home_category: 物理 → 电学与电路
+home_title: "Ohm's Law"
+layout_bounds: 1024x618
+substituted_assets: 0
+phase0_gate: PASS
+phase1_gate: PASS
+phase2_gate: PASS
+phase3_gate: PASS
+phase4_gate: PASS
+phase5_gate: READY_CANDIDATE
+post_phase5_layout: FIXED
+model: FROZEN
+view: LAYOUT_FIXED_POST_P5
+home: MODIFIED
+oracle_tests: 27
+view_tests: 12
+runtime_tests: 23
+visual_tests: 22
+golden_files: 12
+home_tests: 19
+home_goldens: 5
+full_ohms_law_tests: 103
+analyze: clean
+p0: 0
+p1: 0
+audio: PARTIAL
+accessibility: PARTIAL
+keyboard: PARTIAL
+performance: NOT_VERIFIED
+notes: >
+  Phase 0–5 complete. Post-P5 fixes: layoutBounds 1024×618 (Joist DEFAULT);
+  resistor dots once-only (PhET ResistorNode); SliderUnit compact; Units below panel.
+  READY CANDIDATE — Android/60fps/audio heard/SR not verified.

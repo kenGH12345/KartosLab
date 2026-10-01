@@ -1,0 +1,54 @@
+[
+  {
+    "region": "RIGHT_PANEL",
+    "box": [
+      940,
+      10,
+      1230,
+      560
+    ],
+    "mean": 22.434,
+    "max": 255,
+    "pct_gt32": 16.91,
+    "pct_changed": 38.22
+  },
+  {
+    "region": "PLAY",
+    "box": [
+      940,
+      10,
+      1230,
+      125
+    ],
+    "mean": 19.261,
+    "max": 255,
+    "pct_gt32": 17.87,
+    "pct_changed": 27.72
+  },
+  {
+    "region": "PEG_CONTROLS",
+    "box": [
+      940,
+      120,
+      1230,
+      365
+    ],
+    "mean": 20.918,
+    "max": 255,
+    "pct_gt32": 13.79,
+    "pct_changed": 17.45
+  },
+  {
+    "region": "STATISTICS",
+    "box": [
+      940,
+      360,
+      1230,
+      560
+    ],
+    "mean": 25.354,
+    "max": 255,
+    "pct_gt32": 19.61,
+    "pct_changed": 68.11
+  }
+]

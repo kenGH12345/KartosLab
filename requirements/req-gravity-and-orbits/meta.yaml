@@ -1,0 +1,37 @@
+req_id: req-gravity-and-orbits
+title: Gravity and Orbits Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-16 18:28"
+updated_at: "2026-09-16 19:36"
+phase: 4.closing
+status: done
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements:
+  - req-my-solar-system
+  - req-keplers-laws
+source:
+  local: "phet sourses/gravity-and-orbits-main/gravity-and-orbits-main"
+  version: "1.7.0-dev.7"
+  primary: local-phet-source
+  web_verify: "https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits_all.html"
+phase_overrides:
+  - timestamp: "2026-09-16 18:28"
+    from: 1.intake
+    to: 2.building
+    reason: "M0 源码取证完成；进入 Build"
+  - timestamp: "2026-09-16 19:45"
+    from: 2.building
+    to: 4.closing
+    reason: "Final Gate READY；Home 已接入；status→done"
+artifacts:
+  - PHASE_0_SOURCE_RECON.md
+  - PHASE_1_FEATURE_SPEC.md
+  - PHASE_2_COMPONENT_MAP.md
+  - PHASE_3_MODEL_REPORT.md
+  - PHASE_4_VIEW_INTERACTION_REPORT.md
+  - PHASE_5_VISUAL_QA.md
+  - BROWSER_QA.md
+  - ASSET_MAP.md
+  - VISUAL_LAYOUT_BASELINE.md
+  - FINAL_REPORT.md

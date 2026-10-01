@@ -1,0 +1,6 @@
+state: 06_Intro_reset
+viewport: 1280x800
+DPR: 1
+actions: ["reset_all"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.41 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T15:04:22.367Z

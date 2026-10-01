@@ -1,0 +1,49 @@
+req_id: req-energy-forms-and-changes
+title: Energy Forms and Changes
+status: conditional_close
+phase: '3.close'
+updated_at: '2026-09-11 18:25'
+tests_passed: 69
+analyze_efac_errors: 0
+assets_extracted: 116
+home_wired: true
+notes: >-
+  Session 2026-09-11: Intro heater VSlider + block immerse; Systems biker heat/FeedMe;
+  faucet/sun/teaKettle sources; 69 PASS. CONDITIONAL CLOSE — BLOCKED D flame/ice/Faucet
+  pixel fidelity + systems_initial Original still open.
+repo_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab'
+local_version: 1.5.0-dev.5
+screens: 2
+home:
+  discipline: 物理
+  subdomain: 热学与气体
+source:
+  local_path: 'phet sourses/energy-forms-and-changes-main/energy-forms-and-changes-main'
+  package_name: energy-forms-and-changes
+  entry: js/energy-forms-and-changes-main.ts
+  tech_stack: typescript-scenery
+edd_template_version: v2.0
+baseline:
+  analyze_full_issues: 499
+  analyze_full_errors: 371
+  analyze_lib_errors: 0
+  analyze_lib_warnings: 0
+  analyze_lib_infos: 18
+  sample_tests: 'test/blackbody_spectrum + test/curve_fitting → 98 passed'
+design_constraints:
+  - 源码行为保真优先于工程惯例
+  - MVC + RenderData + Painter 分层
+  - NineGridLayout 页面级；sim 内部局部坐标系
+  - 复用原版 images/*_png.ts 导出的 raster
+  - L0：KratosTabbedScreen / SimulationClock / NineGridLayout；TimeControl 需原版外观等价（不可盲目套 Material Icon）
+  - 固定双屏场景；不做 scenario JSON（见 PROJECT_DISCOVERY 规则冲突）
+acceptance_criteria:
+  - AC-1: Intro 屏热传导/能量块/拖拽/加热器行为与源码一致
+  - AC-2: Systems 屏 Source→Converter→User 管线与 carousel 行为与源码一致
+  - AC-3: 原版 asset 复用；禁止 Material Icon 冒充
+  - AC-4: Home 物理→热学与气体 接入；lifecycle/reset/reopen
+  - AC-5: flutter analyze lib 对本 sim 0 error；核心 model/interaction 测试覆盖
+sealed: false
+conditional_seal_reason: >-
+  BLOCKED D (flame/ice/Faucet pixel) + missing systems_initial Original capture
+session_report: visual-qa/SESSION_REPORT_2026-09-11.md

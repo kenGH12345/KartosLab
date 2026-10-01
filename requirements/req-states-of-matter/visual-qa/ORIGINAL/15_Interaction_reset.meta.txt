@@ -1,0 +1,8 @@
+state: 15_Interaction_reset
+viewport: 1280x800
+DPR: 1
+actions: ["resetAllButton","pause"]
+source: visual-ref: phet.colorado.edu latest; PRIMARY behavior = local 1.3.0-dev.3; UI=tandem click/drag
+paused: true
+interaction_mode: tandem_click_drag
+captured_at: 2026-09-15T14:59:29.412Z

@@ -1,0 +1,4 @@
+﻿assets/flutter_assets/assets/simulations/quantum_measurement/images/classicalCoinHeads.svg
+assets/flutter_assets/assets/simulations/quantum_measurement/images/classicalCoinTails.svg
+assets/flutter_assets/assets/simulations/quantum_measurement/images/greenPhoton.png
+assets/flutter_assets/assets/simulations/quantum_measurement/images/spinScreenIcon.png

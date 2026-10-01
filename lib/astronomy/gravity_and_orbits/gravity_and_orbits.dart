@@ -1,0 +1,33 @@
+/// Gravity and Orbits — barrel export.
+library;
+
+export 'controller/gao_controller.dart';
+export 'gao_assets.dart';
+export 'gao_colors.dart';
+export 'gao_constants.dart';
+export 'gao_strings.dart';
+export 'model/body_state.dart';
+export 'model/body_type.dart';
+export 'model/gao_body.dart';
+export 'model/gao_model.dart';
+export 'model/gao_scene.dart';
+export 'model/gao_vec.dart';
+export 'model/mode_config.dart';
+export 'painters/bodies_painter.dart';
+export 'painters/grid_painter.dart';
+export 'painters/path_painter.dart';
+export 'painters/vectors_painter.dart';
+export 'physics/model_state.dart';
+export 'physics/physics_engine.dart';
+export 'render/gao_mvt.dart';
+export 'screens/gravity_and_orbits_home.dart';
+export 'screens/gravity_and_orbits_screen.dart';
+export 'widgets/bodies_layer.dart';
+export 'widgets/checkbox_panel.dart';
+export 'widgets/gao_time_control.dart';
+export 'widgets/gravity_control.dart';
+export 'widgets/mass_control_panel.dart';
+export 'widgets/return_objects_button.dart';
+export 'widgets/scene_selection_controls.dart';
+export 'widgets/time_counter.dart';
+export 'widgets/zoom_control.dart';

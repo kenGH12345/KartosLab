@@ -1,0 +1,32 @@
+{
+  "scenarioId": "sun_planet",
+  "name": "Sun, Planet",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 250,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": -2.3446
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 25,
+      "position": {
+        "x": 2.0,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 23.4457
+      }
+    }
+  ]
+}

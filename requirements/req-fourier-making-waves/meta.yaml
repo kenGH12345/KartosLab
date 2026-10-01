@@ -1,0 +1,39 @@
+req_id: req-fourier-making-waves
+title: 迁移 PhET Fourier Making Waves 到 KARTOSLAB Flutter
+status: done
+phase: '12.close'
+created_at: '2026-09-03 05:26'
+updated_at: '2026-09-03 06:15'
+acceptance: user-confirmed-success
+repo_path: '.'
+
+source:
+  type: html5-typescript
+  repo: https://github.com/phetsims/fourier-making-waves
+  version: 1.2.0-dev.0
+  local_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\fourier-making-waves-main\fourier-making-waves-main'
+  local_sha_in_dependencies: '04217277c1990c5937b3bc6114d78afbb4a2dc79'
+  url: https://phet.colorado.edu/sims/html/fourier-making-waves/latest/fourier-making-waves_all.html
+  note: '本地源码是第一事实来源；不以官网 latest / GitHub 其他版本替换'
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC：State/Model / Solver / Controller / RenderData / Painter / Widget / Screen 职责分离
+  - 数学逻辑不得写入 CustomPainter；禁止自行用教科书公式替换源码公式
+  - NineGrid 只负责页面级外壳；模拟内部使用 PhET layoutBounds 局部坐标
+  - 不修改其他已完成 simulation
+  - 不修改 common API / 全局 Theme / Navigation 架构
+  - common 仅在语义真正通用时抽取
+  - 原版源码优先于截图、直觉与教科书公式
+  - Discrete 动画：墙钟 dt → TIME_SCALE → tProperty；仅 SPACE_AND_TIME；禁止 AnimationController+Tween 替代波形
+  - Wave Packet / Wave Game：无物理时钟演化（t≡0）；Wave Game 判定为振幅向量精确相等
+  - 无 JSON scenario（原版无场景系统）→ 有意差异，不做假 schema
+  - 三 Screen 各自独立 Model，不共享状态
+
+acceptance_criteria:
+  - AC-1: 三屏 Discrete / Wave Game / Wave Packet 可从 Home 进入、返回、再进入并重新初始化
+  - AC-2: Discrete 默认 sinusoid、Domain.SPACE、11 harmonics；预设波形振幅与 Waveform.ts 一致
+  - AC-3: Fourier 合成与 getAmplitudeFunction 六式一致；Infinite Harmonics 为硬编码折线
+  - AC-4: Wave Game 振幅阈值=0 判定 + 计分；Wave Packet 高斯 A(k) + 解析包络
+  - AC-5: flutter analyze（本包）0 issues；专项测试 + debug/release APK

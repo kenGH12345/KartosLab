@@ -1,0 +1,6 @@
+state: 01_TwoAtoms_initial
+viewport: 1280x800
+DPR: 1
+actions: ["default"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:43.045Z

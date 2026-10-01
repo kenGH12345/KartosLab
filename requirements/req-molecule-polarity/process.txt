@@ -1,0 +1,64 @@
+# req-molecule-polarity process log
+
+[2026-09-15 16:10] PHASE ‚Üí 1.intake
+  - M0: ËØªÂèñ .codebuddy rules + Êâ´Êèè KARTOSLAB ÂèØÂ§çÁî®ÁªÑ‰ª∂
+  - M1: Êâ´ÊèèÊú¨Âú∞ molecule-polarity 2.1.0-dev.0 Ê∫êÁ†Å
+  - ‰∫ßÂá∫: PHASE_0_SOURCE_RECON / PHASE_1_* maps
+  - Á∫¶Êùü: Final Gate ÈÄöËøáÂâç‰∏çÊé•ÂÖ• Home
+
+[2026-09-15 17:00] M1-M6 progress
+  - Phase 0/1 docs written
+  - Model+View+Interaction for Two/Three Atoms assembled
+  - Real Molecules ball-stick + slim JSON
+  - Tests: 16 PASS
+  - Home NOT wired (await Final Gate)
+  - Visual QA / mesh / preferences UI remaining
+
+[2026-09-15 16:45] Analyze policy
+  - STATUS: CLEAN_WITH_INFO (0e/0w/4 info use_super_parameters)
+  - Not P0/P1; not Analyze FAILED
+  - EN panel + bond-dipole offset + hint arrows visual pass started
+
+[2026-09-15 17:05] P1 visual pass
+  - EN Panel / BondDipole / hints state machine
+  - Tests 28 PASS; Analyze CLEAN_WITH_INFO
+  - Visual delta_gt32 ~22% (improved from ~24%); Final NOT READY
+  - Home still blocked
+
+[2026-09-15 17:30] Real Molecules mesh
+  - all_molecules.json + Canvas SurfaceMesh dual-pass
+  - initialRotation from RealMoleculeCustomization
+  - PhET checkbox + HSeparator
+  - Tests 38 PASS; Analyze CLEAN_WITH_INFO
+  - Final Status still NOT READY (pixel Gate ~22%); Home blocked
+
+[2026-09-15 17:30] Real Molecules mesh implemented; Tests 38 PASS; Final NOT READY; Home blocked
+
+[2026-09-15 17:40] Visual content polish
+  - Lambert atom shading; mesh rim shade
+  - Bottom Molecule ComboBox (RealMoleculesControl)
+  - AquaRadio rgb(143,197,250)+black center radius 9
+  - Real DIFF ~16.3% (was 18.3%); Two ~21.8%
+  - Tests 38 PASS; Final NOT READY; Home blocked
+
+[2026-09-15 18:15] Diff attribution + chrome
+  - DIFF_ATTRIBUTION.md (A shell vs B content)
+  - MpDipoleIcon createIcon; MpToggleSwitch EFieldControl
+  - Tests 38 PASS; Final NOT READY; Home blocked
+
+[2026-09-15 18:45] Final Visual Gate
+  - DIFF_ATTRIBUTION + VISUAL_GATE: content PASS (P1=0)
+  - Full-frame Diff = shell/framing (known)
+  - Browser QA PASS; Final Status READY
+  - Home: ªØ—ß °˙ ∑÷◊”º´–‘ °˙ MoleculePolarityHome
+
+[2026-09-15 18:50] Home integration
+  - home_screen: ªØ—ß °˙ ∑÷◊”º´–‘ °˙ MoleculePolarityHome
+  - mp_home_nav_test: open/interact/back/reopen PASS
+  - Tests: 40 PASS °§ Analyze: CLEAN_WITH_INFO (4 infos)
+
+[2026-09-15 20:15] CLOSE / FINAL_REPORT
+  - req-molecule-polarity CLOSED °§ Final Status READY
+  - Tests 40 PASS °§ Analyze CLEAN_WITH_INFO
+  - Home wired; Reset 3D+elastic polish included
+  - See FINAL_REPORT.md

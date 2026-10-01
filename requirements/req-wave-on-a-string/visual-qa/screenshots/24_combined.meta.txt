@@ -1,0 +1,16 @@
+name=24_combined
+viewport=1024x618
+mode=oscillate
+end=looseEnd
+amp=1.1
+freq=2.0
+pulse=0.5
+damping=0.15
+tension=0.5
+playing=true
+speed=normal
+rulers=true
+timer=true
+refLine=true
+beads=61
+bytes=49752

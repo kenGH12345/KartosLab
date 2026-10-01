@@ -1,0 +1,6 @@
+# req-greenhouse-effect · process log
+
+[2026-09-21 10:40] PHASE 1 START — Model/Physics. greenhouse-effect-main was MISSING; downloaded zip @ SHA 6c84ad0f (same lock as MAL deps).
+[2026-09-21 10:45] Mapped LayersModel energy-packet pipeline + ConcentrationModel. Implementing Dart model (no View/Home).
+[2026-09-21 10:55] PHASE 1 COMPLETE — ConcentrationModel + LayersModel Dart port; 12 tests PASS; dart analyze clean. Gaps: PhotonCollection/Waves/LayerModelModel/View.
+[2026-09-21 11:20] PHASE 2 COMPLETE — PhotonCollection, WavesModel, LayerModelModel, FluxMeter, main screen + MVT + assets; 20 tests PASS. Status NOT READY (no Home).

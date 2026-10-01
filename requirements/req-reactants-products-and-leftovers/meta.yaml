@@ -1,0 +1,30 @@
+req_id: req-reactants-products-and-leftovers
+sim_id: reactants-products-and-leftovers
+sim_title: Reactants, Products and Leftovers
+abbreviation: RPL
+phase: 7
+status: done
+source_version: 1.4.0-dev.0
+sandwiches_screen: pass
+molecules_screen: pass
+game_screen: pass
+home_integration: pass
+overall: READY
+android: NOT_VERIFIED
+source_dependencies_comment: 1.3.0-dev.6 Mon Oct 28 2024
+source_path: phet sourses/reactants-products-and-leftovers-main/reactants-products-and-leftovers-main
+updated_at: 2026-09-22
+tests_pass: 119
+full_project_passed: 2668
+full_project_skipped: 1
+full_project_failed: 56
+full_project_rpl_failures: 0
+full_regression: PASS_WITH_KNOWN_UNRELATED_FAILURES
+analyze: clean
+visual_p0: 0
+visual_p1: 0
+visual_p2_accepted: 5
+substituted_assets: 0
+code_changes_phase_7: 0
+post_ready_hotfix: done
+post_ready_hotfix_report: POST_READY_HOTFIX_REPORT.md

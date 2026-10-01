@@ -1,0 +1,29 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-d8a10ec8-9c15-4c3d-ace1-d15d5b92810f.ps1:125 字符: 1
++ flutter test integration_test/quantum_measurement_android_runtime_tes ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+00:00 +0: loading D:/OneDrive/Desktop/KartosLab/KartosLab/integration_test/quantum_measurement_android_runtime_test.dart
+Running Gradle task 'assembleDebug'...                          
+WARNING: Your Android app project: app located at: D:\OneDrive\Desktop\KartosLab\KartosLab\android\app\build.gradle.kts
+applies the Kotlin Gradle Plugin, which will cause build failures in future versions of Flutter. 
+Please migrate your app to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-
+to-built-in-kotlin/for-app-developers
+
+Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+Running Gradle task 'assembleDebug'...                             25.7s
+鈭?Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...        1,012ms
+00:00 +0: A1 Launch + four screens first frame
+unhandled element <style/>; Picture key: Svg loader
+00:09 +1: A2 Coins Classical + Quantum path
+00:15 +2: A3 Coins count 10 / 100 / 10000
+00:23 +3: A4 Photons Classical/Quantum/Continuous stop
+00:37 +4: A5 Spin Exp / Block / Cont
+00:49 +5: A6 Bloch presets Observe Erase Reset Field
+01:01 +6: A7 Rapid screen switch 脳10 + leave dispose
+01:57 +7: A8 Full Android user journey (long path)
+02:24 +8: (tearDownAll)
+02:24 +8: All tests passed!

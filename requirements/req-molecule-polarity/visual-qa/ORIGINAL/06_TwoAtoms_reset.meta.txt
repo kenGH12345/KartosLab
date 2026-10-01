@@ -1,0 +1,6 @@
+state: 06_TwoAtoms_reset
+viewport: 1280x800
+DPR: 1
+actions: ["reset"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:46.242Z

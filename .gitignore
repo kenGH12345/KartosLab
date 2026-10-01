@@ -44,23 +44,22 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-# ==== 以下为 refactor-baseline 前置的追加规则 · 2026-07-20 ====
+# Local tool / platform caches (do not publish)
+android/.gradle/
+windows/flutter/ephemeral/
+linux/flutter/ephemeral/
+macos/Flutter/ephemeral/
+**/flutter/ephemeral/
+node_modules/
+/tool/node_modules/
+/package.json
+/package-lock.json
 
-# --- vibe-loop 临时产物（根目录）---
-/analyze*.txt
-/analyze*.json
-/analysis*.txt
-/analysis*.json
-/test_*.txt
-/test_output*.txt
-/final_analysis.txt
-
-# --- vibe-loop 产物目录 ---
-/output/
-
-# --- AIVibe 协作框架资产（.codebuddy/ 为源 · .claude/ .cursor/ 镜像同步纳入版本库 · 2026-08-13 用户决策）---
-
-# --- 第三方参考代码（外部下载/复制的原始项目 · 已验证 lib/ 下无 import 依赖）---
-/circuit-construction-kit-black-box-study-main/
-/kratos-common-reference/
-/kratos-reference/
+# Local debug leftovers
+/tmp_*.txt
+/_vqa_list.txt
+/capture_flut_out.txt
+/dbg_out.txt
+/analyze_out.txt
+/test_out.txt
+/.vibe/

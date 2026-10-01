@@ -1,0 +1,28 @@
+{
+  "sim": "states-of-matter",
+  "primary_behavior_version": "1.3.0-dev.3",
+  "visual_ref_note": "ORIGINAL from published latest (local HTML unbuilt); behavior remains 1.3.0-dev.3",
+  "viewport": "1280x800",
+  "dpr": 1,
+  "paused_required": true,
+  "original_interaction": "scenery tandem click/drag",
+  "renderer_probe": "scenery (canvas may be 0)",
+  "cases": [
+    {"id": "01_States_neon_solid_initial", "screen": "States", "state": "neon_solid_initial"},
+    {"id": "02_States_neon_liquid", "screen": "States", "state": "neon_liquid"},
+    {"id": "03_States_neon_gas", "screen": "States", "state": "neon_gas"},
+    {"id": "04_States_argon_solid", "screen": "States", "state": "argon_solid"},
+    {"id": "05_States_oxygen_solid", "screen": "States", "state": "oxygen_solid"},
+    {"id": "06_States_water_solid", "screen": "States", "state": "water_solid"},
+    {"id": "07_States_heated", "screen": "States", "state": "heated_then_paused"},
+    {"id": "08_States_paused", "screen": "States", "state": "paused_after_run"},
+    {"id": "09_States_reset", "screen": "States", "state": "reset"},
+    {"id": "10_PhaseChanges_initial", "screen": "Phase Changes", "state": "initial"},
+    {"id": "11_PhaseChanges_compressed", "screen": "Phase Changes", "state": "compressed"},
+    {"id": "12_PhaseChanges_adjustable", "screen": "Phase Changes", "state": "adjustable"},
+    {"id": "13_Interaction_neon_initial", "screen": "Interaction", "state": "neon_initial"},
+    {"id": "14_Interaction_forces_total", "screen": "Interaction", "state": "forces_total"},
+    {"id": "15_Interaction_reset", "screen": "Interaction", "state": "reset"}
+  ],
+  "extra_original": ["smoke_test"]
+}

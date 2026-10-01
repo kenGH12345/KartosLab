@@ -1,0 +1,35 @@
+[2026-09-15 20:41] req-states-of-matter created
+[2026-09-15 20:41] phase 1.intake -> 2.build · M0 source recon + M1 feature spec + M2 component map
+[2026-09-15 20:41] primary source locked: phet sourses/states-of-matter-main/states-of-matter-main @ 1.3.0-dev.3
+[2026-09-15 20:41] screens confirmed: States -> PhaseChanges -> AtomicInteractions (entry order)
+[2026-09-15 20:41] Home / main entry: DEFERRED until Final Gate PASS
+[2026-09-15 21:10] Phase 3 monatomic MPM core complete · PHASE_3_MODEL_REPORT.md
+[2026-09-15 21:10] Phase 4 (partial): States screen View+Controller+painters+widgets
+[2026-09-15 21:10] PHASE_4_VIEW_INTERACTION_REPORT.md started (States only; Phase Changes/Interaction placeholder)
+[2026-09-15 21:10] tests: coordinate_transform_test + states_screen_smoke_test added
+[2026-09-15 21:16] Phase 4 continued: PhaseChangesModel + screen 2 (functional)
+[2026-09-15 21:16] DualAtomModel + Interaction screen 3 wired into StatesOfMatterHome tabs
+[2026-09-15 21:16] MPM injectMoleculesFromPump(+3); pointingHand / pushPin original assets
+[2026-09-15 21:16] tests: phase_changes_model_test + dual_atom_model_test; total 29 green
+[2026-09-15 21:16] tool/_run_som_analyze.bat added; analyze clean on SOM lib+test
+[2026-09-15 21:16] PHASE_4_VIEW_INTERACTION_REPORT.md updated (Water/O2 still deferred)
+[2026-09-15 21:33] Port Diatomic Oxygen + Water engines into MPM (PhET engine/*)
+[2026-09-15 21:33] Snapshots: diatomic_liquid_states + water_phase_states (JSON to Dart via gen_o2_water_phase_states.py)
+[2026-09-15 21:33] UI: States + Phase Changes substance panels include Oxygen + Water
+[2026-09-15 21:33] Tests: diatomic_water_engine_test; total 35 green; analyze 0/0
+[2026-09-15 21:33] Solid init counts: O2=50 molecules, Water=76 molecules; PHASE_3_MODEL_REPORT.md updated
+[2026-09-15 21:55] M3 monatomic model + States screen
+[2026-09-15 21:55] M4 PhaseChanges + Interaction + O2/Water engines
+[2026-09-15 21:55] Tests: 35 PASS · Analyze clean
+[2026-09-15 21:55] Visual QA: FLUTTER 15/15 · ORIGINAL 2 (browser CDP)
+[2026-09-15 21:55] FINAL_REPORT: NOT READY · Home deferred (Visual/Browser P1)
+[2026-09-15 23:10] ORIGINAL+DIFF 15/15; Visual B P1 fixed; Browser QA PASS; Final READY; Home deferred
+[2026-09-16 12:10] Major Geometry Closure: States Column+spacing10; RightPanelLayout; pointingHand WIDTH150; Interaction graph 350x262.5 + hand.png + pushPin anchors
+[2026-09-16 12:10] MAJOR_GEOMETRY_CHECKLIST.md written; ASSET_MAP hand.png; Final Status VISUAL_RECONSTRUCTION
+[2026-09-16 12:10] Tests 35 PASS; Analyze CLEAN; Physics unchanged; P2 chrome not started
+[2026-09-16 12:20] FLUTTER+DIFF 15/15 re-captured after hand precache + fingertip align; Interaction hand/pin visible
+[2026-09-16 14:20] Browser QA harness + home nav in run_som_tests.bat · 40 PASS · Analyze CLEAN
+[2026-09-16 14:20] Major Geometry Gate PASS · Visual 15/15 · Browser QA PASS · Final Status READY · Home WIRED
+[2026-09-16 18:25] Post-READY polish: hand/pump/heater/Interaction/Reset L0/SomGraphAxes (LJ+Phase Diagram)
+[2026-09-16 18:25] User confirmed close · phase 2.build -> 3.close · status done
+[2026-09-16 18:25] FINAL_REPORT.md updated · Tests 38 PASS (tool/_run_som_tests.bat) · Analyze CLEAN

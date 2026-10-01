@@ -1,0 +1,35 @@
+req_id: req-collision-lab
+title: 迁移 PhET Collision Lab 到 KARTOSLAB Flutter
+status: done
+phase: '12.close'
+created_at: '2026-09-03 13:28'
+updated_at: '2026-09-03 19:40'
+acceptance: user-confirmed-report
+repo_path: '.'
+
+source:
+  type: html5-javascript
+  repo: https://github.com/phetsims/collision-lab
+  version: 1.2.0-dev.0
+  local_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\collision-lab-main\collision-lab-main'
+  url: https://phet.colorado.edu/sims/html/collision-lab/latest/collision-lab_all.html
+  note: '本地源码为唯一第一事实来源；不以官网 latest / GitHub main 自动替换'
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC：BallState / PlayArea / CollisionEngine / Clock / RenderData / Painter / Widget / Screen 分离
+  - 禁止用教材公式重写碰撞响应；必须移植本地 CollisionEngine 语义
+  - NineGrid 只负责页面级外壳；模拟内部使用局部坐标（米 · +y 向上）
+  - 不修改其他已完成 simulation
+  - 不修改 common API / 全局 Theme / Navigation 架构
+  - common 仅在语义真正通用时抽取（本 sim 为第 1 个 Collision Lab 用户）
+  - Reverse step = 负 dt + elasticity 倒数，不是 history 回放
+  - Inelastic stick = RotatingBallCluster + 角动量守恒，禁止简化为共线粘连
+
+acceptance_criteria:
+  - AC-1: 四屏 Intro / Explore 1D / Explore 2D / Inelastic 可从 Home 进入、返回、再进入并重新初始化
+  - AC-2: Ball/PlayArea/弹性/Constant Radius/Reflecting Border/Grid Snap/Keypad/More Data 对照源码
+  - AC-3: 球-球/球-边/非弹性 stick 旋转与 CollisionEngine 族公式一致
+  - AC-4: Momenta Diagram / Change in Momentum / Paths / Reset·Restart·Step 对照源码
+  - AC-5: flutter analyze 0 issues；专项物理测试 + 回归通过

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui' show Color;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -12,11 +11,31 @@ import 'package:kratos/color_vision/solver/photon_beam.dart';
 
 ColorVisionState _state(double r, double g, double b) {
   final beams = <PhotonBeam>[
-    PhotonBeam(color: const Color(0xFFFF0000), originX: 0, originY: 0, maxDistance: 100),
-    PhotonBeam(color: const Color(0xFF00FF00), originX: 0, originY: 0, maxDistance: 100),
-    PhotonBeam(color: const Color(0xFF0000FF), originX: 0, originY: 0, maxDistance: 100),
+    PhotonBeam(
+      color: const Color(0xFFFF0000),
+      originX: 0,
+      originY: 0,
+      maxDistance: 100,
+    ),
+    PhotonBeam(
+      color: const Color(0xFF00FF00),
+      originX: 0,
+      originY: 0,
+      maxDistance: 100,
+    ),
+    PhotonBeam(
+      color: const Color(0xFF0000FF),
+      originX: 0,
+      originY: 0,
+      maxDistance: 100,
+    ),
   ];
-  final s = ColorVisionState(beams: beams, redIntensity: r, greenIntensity: g, blueIntensity: b);
+  final s = ColorVisionState(
+    beams: beams,
+    redIntensity: r,
+    greenIntensity: g,
+    blueIntensity: b,
+  );
   beams[0].setIntensity(r);
   beams[1].setIntensity(g);
   beams[2].setIntensity(b);
@@ -33,14 +52,18 @@ ColorVisionState _state(double r, double g, double b) {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  ColorVisionScenario scenarioFromJson(String scenarioId, String name, String jsonBody) =>
-      ColorVisionScenario.fromJson({
-        ...jsonDecode(jsonBody) as Map<String, dynamic>,
-        'scenarioId': scenarioId,
-        'name': name,
-      });
+  ColorVisionScenario scenarioFromJson(
+    String scenarioId,
+    String name,
+    String jsonBody,
+  ) => ColorVisionScenario.fromJson({
+    ...jsonDecode(jsonBody) as Map<String, dynamic>,
+    'scenarioId': scenarioId,
+    'name': name,
+  });
 
-  ColorVisionScenario challengeBasic() => scenarioFromJson('rgb-challenge-basic', '颜色匹配挑战 · 初级', '''
+  ColorVisionScenario challengeBasic() =>
+      scenarioFromJson('rgb-challenge-basic', '颜色匹配挑战 · 初级', '''
 {
   "screen": "rgb",
   "challenge": {
@@ -54,7 +77,8 @@ void main() {
   ]
 }''');
 
-  ColorVisionScenario inquiryAdditive() => scenarioFromJson('rgb-inquiry-additive', '加色混合探究', '''
+  ColorVisionScenario inquiryAdditive() =>
+      scenarioFromJson('rgb-inquiry-additive', '加色混合探究', '''
 {
   "screen": "rgb",
   "inquiryTask": {
@@ -69,13 +93,22 @@ void main() {
     ColorVisionScenario? initial,
   }) async {
     final mgr = ColorVisionScenarioManager();
-    final scenarios = <ColorVisionScenario>[challengeBasic(), inquiryAdditive()];
+    final scenarios = <ColorVisionScenario>[
+      challengeBasic(),
+      inquiryAdditive(),
+    ];
     final init = initial ?? scenarios.first;
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: MagicLabScreen(scenario: init, scenarioList: scenarios, manager: mgr),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: MagicLabScreen(
+            scenario: init,
+            scenarioList: scenarios,
+            manager: mgr,
+          ),
+        ),
       ),
-    ));
+    );
     return mgr;
   }
 
@@ -110,7 +143,9 @@ void main() {
     await teardown(tester);
   });
 
-  testWidgets('rgb-challenge-basic 完成黄色匹配 → checkObjectives 全达成（AC-4.4）', (tester) async {
+  testWidgets('rgb-challenge-basic 完成黄色匹配 → checkObjectives 全达成（AC-4.4）', (
+    tester,
+  ) async {
     final mgr = await pumpLab(tester);
     expect(mgr.currentScenario!.scenarioId, 'rgb-challenge-basic');
     expect(mgr.checkObjectives(_state(100, 100, 0)), isTrue);

@@ -1,0 +1,6 @@
+state: 07_grid_values
+viewport: 1024x768
+DPR: 1
+actions: grid+values
+source: local-flutter-widget-test
+captured_at: 2026-09-27T17:26:28.052842Z

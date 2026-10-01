@@ -1,0 +1,6 @@
+state: 05_TwoAtoms_rotated
+viewport: 1280x800
+DPR: 1
+actions: ["angle=pi/4"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:45.675Z

@@ -1,0 +1,202 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-f1081d14-e90f-44ee-ae47-8aa553289fd7.ps1:116 字符: 47
++ ... KartosLab"; flutter run -t lib/quantum_measurement/debug_quantum_meas ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Launching lib/quantum_measurement/debug_quantum_measurement_main.dart on Pixel Tablet in debug mode...
+Running Gradle task 'assembleDebug'...                          
+WARNING: Your Android app project: app located at: D:\OneDrive\Desktop\KartosLab\KartosLab\android\app\build.gradle.kts
+applies the Kotlin Gradle Plugin, which will cause build failures in future versions of Flutter. 
+Please migrate your app to Built-in Kotlin using this guide: https://docs.flutter.dev/release/breaking-changes/migrate-
+to-built-in-kotlin/for-app-developers
+
+Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+Running Gradle task 'assembleDebug'...                             44.1s
+鈭?Built build\app\outputs\flutter-apk\app-debug.apk
+Installing build\app\outputs\flutter-apk\app-debug.apk...        2,409ms
+I/FlutterActivityAndFragmentDelegate(27175): If you are attempting to set --enable-dart-profiling via Intent extras to launch a Flutter component outside of using the Flutter CLI, note that support for setting engine flags on Android via Intent will soon be dropped; see https://github.com/flutter/flutter/issues/180686 for more information on this breaking change. To migrate, set --enable-dart-profiling or any other flags specified via Intent extras on the command line instead or see https://github.com/flutter/flutter/blob/main/docs/engine/Flutter-Android-Engine-Flags.md for alternative methods.
+D/FlutterJNI(27175): Beginning load of flutter...
+D/FlutterJNI(27175): flutter (null) was loaded normally!
+I/flutter (27175): [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+D/FlutterRenderer(27175): Width is zero. 0,0
+Syncing files to device Pixel Tablet...                            158ms
+
+Flutter run key commands.
+r Hot reload. 
+R Hot restart.
+h List all available interactive commands.
+d Detach (terminate "flutter run" but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+
+A Dart VM Service on Pixel Tablet is available at: http://127.0.0.1:49772/GjZFP9WUDyY=/
+The Flutter DevTools debugger and profiler on Pixel Tablet is available at: http://127.0.0.1:49772/GjZFP9WUDyY=/devtools/?uri=ws://127.0.0.1:49772/GjZFP9WUDyY=/ws
+I/flutter (27175): unhandled element <style/>; Picture key: Svg loader
+I/Choreographer(27175): Skipped 101 frames!  The application may be doing too much work on its main thread.
+I/WindowExtensionsImpl(27175): Initializing Window Extensions, vendor API level=6, activity embedding enabled=true
+I/com.demo.kratos(27175): Compiler allocated 5174KB to compile void android.view.ViewRootImpl.performTraversals()
+D/FlutterRenderer(27175): Width is zero. 0,0
+D/FlutterJNI(27175): Sending viewport metrics to the engine.
+W/HWUI    (27175): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+W/HWUI    (27175): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+I/Gralloc4(27175): mapper 4.x is not supported
+I/Choreographer(27175): Skipped 38 frames!  The application may be doing too much work on its main thread.
+D/FlutterJNI(27175): Sending viewport metrics to the engine.
+D/FlutterJNI(27175): Sending viewport metrics to the engine.
+D/ProfileInstaller(27175): Installing profile for com.demo.kratos
+D/EGL_emulation(27175): app_time_stats: avg=130946.56ms min=24.83ms max=261868.30ms count=2
+D/EGL_emulation(27175): app_time_stats: avg=1253.30ms min=1253.30ms max=1253.30ms count=1
+D/EGL_emulation(27175): app_time_stats: avg=131630.34ms min=1461.63ms max=261799.06ms count=2
+I/com.demo.kratos(27175): Explicit concurrent mark compact GC freed 566KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 2636KB/5272KB, paused 593us,2.204ms total 17.003ms
+D/EGL_emulation(27175): app_time_stats: avg=24951.45ms min=259.50ms max=49643.41ms count=2
+D/EGL_emulation(27175): app_time_stats: avg=2108.51ms min=2108.51ms max=2108.51ms count=1
+D/EGL_emulation(27175): app_time_stats: avg=38.41ms min=4.16ms max=156.74ms count=26
+D/EGL_emulation(27175): app_time_stats: avg=26.05ms min=9.22ms max=62.12ms count=38
+D/EGL_emulation(27175): app_time_stats: avg=18.88ms min=11.24ms max=34.16ms count=49
+D/EGL_emulation(27175): app_time_stats: avg=13.82ms min=8.27ms max=25.92ms count=58
+D/EGL_emulation(27175): app_time_stats: avg=11.47ms min=6.63ms max=21.61ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=11.28ms min=8.29ms max=16.15ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=10.61ms min=6.75ms max=23.93ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=15.22ms min=8.62ms max=29.48ms count=59
+D/EGL_emulation(27175): app_time_stats: avg=13.16ms min=6.71ms max=23.85ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.15ms min=7.97ms max=26.78ms count=58
+D/EGL_emulation(27175): app_time_stats: avg=16.88ms min=12.52ms max=27.78ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=12.70ms max=20.47ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.64ms min=11.42ms max=20.39ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.88ms min=13.86ms max=24.62ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.60ms min=13.48ms max=20.68ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.57ms min=13.59ms max=19.64ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.67ms min=12.05ms max=22.25ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=12.02ms max=20.35ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=12.72ms min=6.03ms max=27.75ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=8.17ms min=6.01ms max=11.62ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.51ms min=3.74ms max=17.67ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.38ms min=5.47ms max=10.28ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.72ms min=6.06ms max=12.10ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.32ms min=5.74ms max=10.44ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.23ms min=5.63ms max=9.50ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.37ms min=5.54ms max=9.39ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.28ms min=5.56ms max=11.40ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.01ms min=5.06ms max=9.43ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=13.24ms min=5.86ms max=27.66ms count=59
+D/EGL_emulation(27175): app_time_stats: avg=16.72ms min=14.06ms max=22.22ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.54ms min=10.56ms max=20.29ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.61ms min=13.10ms max=18.69ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=9.02ms min=5.55ms max=22.52ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.06ms min=3.95ms max=9.59ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.42ms min=5.51ms max=10.02ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.99ms min=6.03ms max=10.46ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.14ms min=5.41ms max=9.87ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.13ms min=4.46ms max=9.40ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=13.19ms min=6.30ms max=28.95ms count=59
+D/EGL_emulation(27175): app_time_stats: avg=16.61ms min=14.24ms max=19.39ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.64ms min=12.06ms max=21.30ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.59ms min=11.46ms max=20.65ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=13.99ms max=19.00ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=14.36ms max=19.09ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=11.97ms max=21.80ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=11.48ms max=20.64ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.44ms min=9.00ms max=23.29ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=6.72ms min=5.43ms max=9.45ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.30ms min=5.51ms max=24.35ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.23ms min=5.37ms max=9.92ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.50ms min=5.44ms max=10.92ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.07ms min=5.80ms max=10.34ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.04ms min=5.59ms max=8.93ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.70ms min=4.16ms max=9.36ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.12ms min=4.47ms max=13.47ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.63ms min=5.32ms max=8.70ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=6.75ms min=4.90ms max=10.02ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.55ms min=4.97ms max=9.67ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.67ms min=6.44ms max=29.22ms count=58
+D/EGL_emulation(27175): app_time_stats: avg=16.60ms min=14.60ms max=19.48ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=13.66ms max=21.46ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.60ms min=13.13ms max=21.11ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.61ms min=12.32ms max=19.83ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.58ms min=13.27ms max=20.59ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.67ms min=13.22ms max=20.99ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.64ms min=11.04ms max=21.28ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=10.09ms min=3.90ms max=20.75ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.79ms min=5.09ms max=22.79ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.85ms min=13.41ms max=27.40ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.64ms min=13.48ms max=19.00ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=13.50ms max=19.94ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=10.24ms min=5.00ms max=30.41ms count=59
+D/EGL_emulation(27175): app_time_stats: avg=6.74ms min=5.21ms max=10.53ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.53ms min=4.97ms max=8.62ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.80ms min=5.04ms max=10.54ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=7.44ms min=5.53ms max=10.07ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=8.05ms min=4.98ms max=30.45ms count=59
+D/EGL_emulation(27175): app_time_stats: avg=10.41ms min=5.84ms max=40.16ms count=57
+D/EGL_emulation(27175): app_time_stats: avg=16.64ms min=12.53ms max=21.75ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.53ms min=12.35ms max=21.10ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=15.45ms min=5.28ms max=31.91ms count=59
+D/EGL_emulation(27175): app_time_stats: avg=6.68ms min=4.92ms max=8.64ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=6.68ms min=5.26ms max=9.76ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.67ms min=4.59ms max=8.41ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.55ms min=7.02ms max=19.89ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=13.03ms max=20.31ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.60ms min=13.46ms max=18.93ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=15.42ms min=5.72ms max=27.77ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=6.60ms min=4.84ms max=10.00ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.82ms min=5.09ms max=10.38ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=6.88ms min=5.18ms max=9.00ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.81ms min=5.30ms max=11.30ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.86ms min=5.27ms max=9.44ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.28ms min=5.40ms max=12.79ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=6.95ms min=2.81ms max=10.16ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=6.80ms min=4.90ms max=11.55ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.06ms min=5.13ms max=9.95ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=7.52ms min=4.96ms max=16.38ms count=61
+I/com.demo.kratos(27175): Explicit concurrent mark compact GC freed 306KB AllocSpace bytes, 1(20KB) LOS objects, 49% free, 2632KB/5264KB, paused 817us,1.303ms total 16.330ms
+D/EGL_emulation(27175): app_time_stats: avg=15.10ms min=5.60ms max=54.90ms count=52
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=9.91ms max=24.15ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=13.27ms min=1.97ms max=31.18ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=13.78ms min=2.39ms max=23.22ms count=58
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=13.54ms max=19.80ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.64ms min=14.01ms max=19.52ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.65ms min=12.96ms max=21.04ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.55ms min=11.47ms max=18.87ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=13.34ms max=20.62ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.61ms min=12.02ms max=21.97ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=9.09ms max=22.68ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=14.45ms max=19.01ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=13.43ms max=21.50ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=14.20ms max=19.03ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.62ms min=14.14ms max=19.62ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.60ms min=13.65ms max=18.87ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.61ms min=14.28ms max=19.65ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.66ms min=14.66ms max=18.80ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.60ms min=9.76ms max=23.86ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=13.01ms max=19.90ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.63ms min=13.22ms max=19.18ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.60ms min=13.44ms max=19.47ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=16.03ms min=2.47ms max=40.76ms count=60
+I/com.demo.kratos(27175): Explicit concurrent mark compact GC freed 161KB AllocSpace bytes, 1(20KB) LOS objects, 49% free, 2632KB/5264KB, paused 302us,1.071ms total 6.347ms
+D/EGL_emulation(27175): app_time_stats: avg=13.09ms min=1.89ms max=67.43ms count=57
+D/EGL_emulation(27175): app_time_stats: avg=16.67ms min=13.34ms max=24.18ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=12.14ms min=3.06ms max=33.36ms count=56
+D/VRI[MainActivity](27175): visibilityChanged oldVisibility=true newVisibility=false
+D/FlutterJNI(27175): Sending viewport metrics to the engine.
+D/FlutterJNI(27175): Sending viewport metrics to the engine.
+D/EGL_emulation(27175): app_time_stats: avg=5.08ms min=2.82ms max=39.14ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=3.57ms min=2.55ms max=5.48ms count=61
+D/EGL_emulation(27175): app_time_stats: avg=4.11ms min=2.73ms max=20.48ms count=60
+D/EGL_emulation(27175): app_time_stats: avg=20.47ms min=3.22ms max=320.52ms count=39
+D/VRI[MainActivity](27175): visibilityChanged oldVisibility=true newVisibility=false
+W/WindowOnBackDispatcher(27175): sendCancelIfRunning: isInProgress=false callback=android.view.ViewRootImpl$$ExternalSyntheticLambda11@ffa91ea
+I/EGL_emulation(27175): Opening libGLESv1_CM_emulation.so
+I/EGL_emulation(27175): Opening libGLESv2_emulation.so
+I/flutter (27175): [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+D/FlutterRenderer(27175): Width is zero. 0,0
+I/Choreographer(27175): Skipped 72 frames!  The application may be doing too much work on its main thread.
+D/FlutterRenderer(27175): Width is zero. 0,0
+D/FlutterJNI(27175): Sending viewport metrics to the engine.
+W/HWUI    (27175): Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+W/HWUI    (27175): Failed to initialize 101010-2 format, error = EGL_SUCCESS
+I/flutter (27175): unhandled element <style/>; Picture key: Svg loader
+I/Choreographer(27175): Skipped 41 frames!  The application may be doing too much work on its main thread.
+D/FlutterJNI(27175): Sending viewport metrics to the engine.
+D/FlutterJNI(27175): Sending viewport metrics to the engine.

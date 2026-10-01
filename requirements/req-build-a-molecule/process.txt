@@ -1,0 +1,49 @@
+[2026-09-04 15:40] Phase 0 START Â· Project Discovery
+  - å·¥ä½œåŒº: KartosLab Flutter (kratos)
+  - æœ¬åœ°æº: phet sourses/build-a-molecule-main/build-a-molecule-main @ 1.1.0-dev.2
+  - SHA: 9f605a7f540bcc145e56bedc285344362acb9bee
+  - åŽŸåˆ™: æœ¬åœ°æºç å”¯ä¸€ç¬¬ä¸€äº‹å®žæ¥æºï¼›å…ˆå–è¯åŽç¼–ç 
+
+[2026-09-04 15:55] Phase 0 DONE Â· PROJECT_DISCOVERY.md + meta.yaml
+  - Screens: 3 (Single â†’ Multiple â†’ Playground)ï¼›æ— ç‹¬ç«‹ Game
+  - Data: collectionMolecules(26) + otherMolecules(~9k) + structures(~30k)
+  - Matching: isEquivalent å›¾åŒæž„ï¼›bonding gated by isAllowedStructure
+  - 3D: Dialog=WebGLï¼›Molecule3DNode=Canvas æŠ•å½± â†’ Flutter é»˜è®¤ Canvas 2.5D
+  - Home ç›®æ ‡: åŒ–å­¦ â†’ åˆ†å­æ­å»º â†’ Build a Molecule
+  - æ— é˜»å¡žå†³ç­– â†’ è‡ªåŠ¨è¿›å…¥ Phase 1
+
+[2026-09-04 16:20] Phase 1¨C3 DONE ¡¤ SOURCE_ANALYSIS / DATA_MAPPING / BASELINE / ARCHITECTURE
+[2026-09-04 16:40] Phase 4 PARTIAL ¡¤ Molecule model + catalog JSON migrated
+  - collection 26 / other 9329 / structures 29882
+  - flutter test bam_*: 8 passed
+  - 3D: Canvas 2.5D (no new framework)
+
+[2026-09-04 17:00] Phase 4¨C9 DONE ¡¤ Kit/Collection/UI/Home
+  - flutter test: 13 passed
+  - Home: »¯Ñ§ ¡ú ·Ö×Ó´î½¨ ¡ú ´î½¨·Ö×Ó
+  - 3D: Canvas space-fill (ÓÐÒâ²îÒì vs WebGL)
+
+[2026-09-04 17:20] Phase 10¨C11 ¡¤ ¶Ï¼ü³¤°´/ÓÒ¼ü + Æ¥ÅäÃûÐ¾Æ¬ + scissors ×Ê²ú
+  - FUNCTIONAL_GAP_CLOSURE / GEOMETRY / ASSET_MAPPING
+
+[2026-09-04 17:30] Phase 12¨C13 CLOSE ¡¤ COMPLETION_REPORT ¡¤ status: done
+  - ÎÞ legacy BAM ¿ÉÇåÀí£»Î´É¾ÆäËû sim
+
+[2026-09-04 16:15] Follow-up ¡¤ PhET source explore report ([Analyze BAM PhET source](e1958113-afcd-46c7-945e-1224468b1a52))
+  - ²¹Æë Single/Multiple ÊÕ¼¯Ïä±êÇ©Ä£Ê½ (collectionSinglePattern vs Goal/You have)
+  - getGeneralFormula + H3N¡úNH3£»BamStrings.fillIn£»Next Collection ÎÄ°¸
+  - flutter test: 14 passed
+
+[2026-09-04 18:10] Visual P0 layout pass ¡¤ single-molecule.png baseline
+  - BamScreenBody: Column(Row(viewport|panel), inventory) ¡ª no region Stack
+  - BamAtomInventory / BamYourMoleculesPanel / BamMoleculeViewport / BamMoleculeThumbnail
+  - Tabs: Single Molecule / Multiple Molecules / Free Build
+  - GEOMETRY_CALIBRATION.md updated (normalized fractions)
+  - flutter test: 14 passed; analyze: element-name info only
+
+[2026-09-04 19:10] Correct-match feedback (cue + blink) from PhET source
+  - KitCollection: triggerCue + willAllowMoleculeDrop + hasBlinkedOnce + acceptedMoleculeCreation
+  - CollectionBoxNode.blink: 1.3s / 100ms / blue BORDER_BLINK
+  - BamBoxFeedbackState -> BamCollectionFeedbackDriver -> BamYourMoleculesPanel
+  - Tests: bam_collection_feedback_test (9 scenarios); suite 25 passed
+  - Docs: BASELINE / FUNCTIONAL_GAP_CLOSURE / COMPLETION_REPORT updated

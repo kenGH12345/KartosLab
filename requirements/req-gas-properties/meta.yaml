@@ -1,0 +1,31 @@
+req_id: req-gas-properties
+title: 迁移 PhET Gas Properties 到 KARTOSLAB Flutter Native
+status: done
+phase: 'final.done'
+created_at: '2026-09-06 17:53'
+updated_at: '2026-09-07 00:05'
+home:
+  discipline: 物理
+  subdomain: 热力学
+  card_title: Gas Properties
+repo_path: '.'
+
+source:
+  type: html5-javascript-typescript
+  repo: https://github.com/phetsims/gas-properties
+  local_path: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\gas-properties-main\gas-properties-main'
+  url: https://phet.colorado.edu/sims/html/gas-properties/latest/gas-properties_all.html
+
+final:
+  report: requirements/req-gas-properties/FINAL_RELEASE.md
+  status: DONE
+  release_ready: true
+  gas_properties_tests: '73 PASS + 2 known diffusion golden drift'
+  analyze: '0 issues'
+  apk_debug: PASS
+  screenshots: 16
+  note: 'Project complete. Model/Solver locked. Diffusion product UI = lib/diffusion unmodified. No Phase 5+.'
+
+phase_4:
+  report: requirements/req-gas-properties/PHASE_4_VALIDATION.md
+  final_status: SUPERSEDED_BY_FINAL_DONE

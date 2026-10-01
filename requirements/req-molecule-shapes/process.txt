@@ -1,0 +1,17 @@
+2026-09-21 15:43  PHASE 0 start — source audit of local molecule-shapes (isBasicsVersion=false)
+2026-09-21 15:43  PHASE 0 complete — audit docs written from local js/assets/strings
+2026-09-21 15:43  PHASE 1 start — model / VSEPR only, no screen UI, no Home
+2026-09-21 16:10  PHASE 1 complete — 21 tests passed, dart analyze clean. UI not started.
+2026-09-21 16:06  PHASE 2 start — Model Screen view + attractor + interaction
+2026-09-21 16:20  PHASE 2 complete — Model Screen functional; 29 tests PASS; analyze clean; Overall NOT READY (no Real Screen / Home)
+2026-09-21 16:23  PHASE 3 start — Real Molecules Screen
+2026-09-21 16:35  PHASE 3 complete — Real Screen PASS; 42 tests PASS; analyze clean; Overall READY CANDIDATE (no Phase 4 / Home)
+2026-09-21 16:30  PHASE 4 start — Final behavioral + visual QA (no Home)
+2026-09-21 16:45  PHASE 4 complete — dual-screen regression + isolation; 58 tests PASS; analyze clean; P0=0 P1=0; READY CANDIDATE; Home deferred
+2026-09-21 16:46  HOME INTEGRATION start — audit Home + wire MoleculeShapesHome
+2026-09-21 16:55  HOME INTEGRATION complete — 化学/分子形状 card; 65 tests PASS; analyze clean; FINAL READY CANDIDATE; Android NOT VERIFIED
+2026-09-21 17:05  Global flutter test +2548 ~1 -56 — failures unrelated (SoM/Gas/Pendulum/Projectile/Forces); no other-sim edits
+2026-09-21 17:10  P2 CLOSE-OUT start — lone-pair balloon, bonding thumb painter, Real/Model Attractor match, bond half audit
+2026-09-21 17:20  P2 CLOSE-OUT complete — 66 tests PASS; analyze clean; P2=0; FINAL STATUS READY; Android NOT VERIFIED
+2026-09-21 17:30  Visual polish — Bonding thumbs (BondGroupNode-style), HIGH_DETAIL balloon, sphere/bond shading
+2026-09-22 08:50  CLOSE — FINAL_ACCEPTANCE_REPORT updated; 66 PASS; analyze clean; status done / READY

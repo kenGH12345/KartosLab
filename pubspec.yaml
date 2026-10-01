@@ -62,18 +62,86 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/build_an_atom/images/
     - assets/images/
+    - assets/molecules_and_light/
+    - assets/images/full_nuclide_chart.png
+    - assets/images/build_a_molecule/
     - assets/sounds/
+    - assets/data/
+    - assets/data/build_a_molecule/
     - assets/scenarios/
     - assets/scenarios/circuit/
     - assets/scenarios/forces/
     - assets/scenarios/color-vision/
     - assets/scenarios/sound/
     - assets/scenarios/radio-waves/
-    - assets/lessons/
     - assets/scenarios/wave-interference/
     - assets/scenarios/molarity/
-
+    - assets/chemistry/molarity/
+    - assets/chemistry/molarity/sounds/
+    - assets/scenarios/my-solar-system/
+    - assets/density/
+    - assets/density/images/materials/
+    - assets/buoyancy/images/
+    - assets/cck_ac_virtual_lab/images/
+    - assets/energy_skate_park/
+    - assets/energy_skate_park/usa/
+    - assets/energy_skate_park/scenery_phet/
+    - assets/phet/vector_addition/
+    - assets/phet/vector_addition/scenery_phet/
+    - assets/phet/gravity_force_lab_basics/pullers/
+    - assets/phet/gravity_force_lab/sounds/
+    - assets/phet/waves_intro/
+    - assets/phet/diffusion/
+    - assets/gases_intro/
+    - assets/energy_forms_and_changes/
+    - assets/simulations/capacitor_lab_basics/
+    - assets/simulations/pendulum_lab/
+    - assets/simulations/bending_light/
+    - assets/simulations/projectile_motion/
+    - assets/simulations/molecule_polarity/
+    - assets/simulations/membrane_transport/images/
+    - assets/simulations/molecule_polarity/all_molecules.json
+    - assets/states_of_matter/mipmaps/
+    - assets/states_of_matter/images/
+    - assets/astronomy/gravity_and_orbits/
+    - assets/simulations/plinko_probability/images/
+    - assets/simulations/plinko_probability/sounds/
+    - assets/simulations/charges_and_fields/
+    - assets/simulations/rutherford_scattering/
+    - assets/simulations/isotopes_and_atomic_mass/images/
+    - assets/simulations/reactants_products_and_leftovers/images/
+    - assets/simulations/faradays_law/
+    - assets/simulations/wave_on_a_string/
+    - assets/simulations/color_vision/images/
+    - assets/simulations/ph_scale/images/
+    - assets/simulations/ph_scale/icons/
+    - assets/simulations/acid_base_solutions/images/
+    - assets/simulations/balancing_act/images/
+    - assets/simulations/balancing_act/images/objects/
+    - assets/simulations/balancing_act/images/usa/
+    - assets/simulations/under_pressure/images/
+    - assets/simulations/under_pressure/images/faucet/
+    - assets/simulations/friction/sounds/
+    - assets/simulations/concentration/images/
+    - assets/simulations/concentration/sounds/
+    - assets/simulations/john_travoltage/images/
+    - assets/simulations/john_travoltage/sounds/
+    - assets/simulations/balloons_and_static_electricity/images/
+    - assets/simulations/balloons_and_static_electricity/sounds/
+    - assets/simulations/forces_and_motion_basics/images/
+    - assets/simulations/forces_and_motion_basics/images/pushPullFigures/
+    - assets/simulations/forces_and_motion_basics/images/usa/
+    - assets/simulations/forces_and_motion_basics/images/africa/
+    - assets/simulations/forces_and_motion_basics/images/asia/
+    - assets/simulations/forces_and_motion_basics/images/latinAmerica/
+    - assets/simulations/forces_and_motion_basics/images/oceania/
+    - assets/simulations/forces_and_motion_basics/sounds/
+    - assets/simulations/quantum_wave_interference/images/
+    - assets/simulations/quantum_wave_interference/sounds/
+    - assets/simulations/quantum_coin_toss/images/
+    - assets/simulations/quantum_measurement/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

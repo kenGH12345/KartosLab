@@ -1,0 +1,24 @@
+req_id: req-faradays-law
+sim_id: faradays-law
+sim_title: Faraday's Law
+abbreviation: FL
+phase: 7
+status: done
+overall: READY
+android: NOT_VERIFIED
+source_version: 1.5.0-dev.3
+updated_at: 2026-09-22
+tests_pass: 136
+analyze: clean
+visual_p0: 0
+visual_p1: 0
+visual_p2_accepted: 9
+view_physics_calculations: 0
+substituted_assets: 0
+home_integration: INTEGRATED
+home_category: 物理/电磁学
+full_regression: PASS_WITH_KNOWN_UNRELATED
+full_regression_counts: '+2805 ~1 -56'
+faraday_failures: 0
+code_changes_phase_7: 0
+git: unavailable

@@ -1,0 +1,45 @@
+req_id: req-resistance-in-a-wire
+sim_id: resistance-in-a-wire
+sim_title: Resistance in a Wire
+abbreviation: RIAW
+phase: 5
+status: ready_candidate
+overall: READY_CANDIDATE
+android: NOT_VERIFIED
+source_version: 1.8.0-dev.0
+source_path: phet sourses/resistance-in-a-wire-main/resistance-in-a-wire-main
+updated_at: 2026-09-27
+flutter_impl: model_view_runtime_visual_home
+home_integration: DONE
+layout_bounds: 1024x618
+substituted_assets: 0
+phase0_gate: PASS
+phase1_gate: PASS
+phase2_gate: PASS
+phase3_gate: PASS
+phase4_gate: PASS
+phase5_gate: READY_CANDIDATE
+model: FROZEN
+view: READY_CANDIDATE
+home: INTEGRATED
+oracle_tests: 24
+view_tests: 14
+visual_tests: 38
+golden_files: 27
+golden_matrix: 30
+runtime_tests: 26
+home_tests: 21
+full_riaw_tests: 123
+analyze: clean
+p0: 0
+p1: 0
+p2: headless_font_antialias_partial_audio_a11y_keyboard_perf_android
+audio: PARTIAL
+accessibility: PARTIAL
+keyboard: PARTIAL
+performance: NOT_VERIFIED
+notes: >
+  Phase 5 READY CANDIDATE. Home → 电学与电路 → 导线电阻 → ResistanceInAWireScreen.
+  Single entry. Model FROZEN. production dotRandom unseeded.
+  Sibling Ohm/Balloons category goldens refreshed. Final combined 123/123.
+  Audio/A11y/Keyboard/Perf/Android remain PARTIAL/NOT VERIFIED.

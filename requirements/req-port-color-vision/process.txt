@@ -1,0 +1,27 @@
+# req-port-color-vision process log
+
+[2026-09-22] Phase 0 START — PhET Color Vision HTML5 source audit
+[2026-09-22] Phase 0 PASS — SOURCE_AUDIT_REPORT.md written
+  - Screens: Single Bulb + RGB Bulbs confirmed
+  - Source: package 1.4.0-dev.0 / deps SHA fb9da1b9
+  - Existing lib/color_vision = Magic Lab demo → rewrite strategy
+  - Next: Phase 1 Model
+[2026-09-22] Phase 1 PASS — Model + tests
+  - SingleBulbModel / RgbModel / VisibleColor / Photon beams / EventTimer
+  - flutter test test/color_vision/model/: 26 PASS
+  - dart analyze lib/color_vision/model: CLEAN
+  - Next: Phase 2 Single Bulb View
+[2026-09-22] Phase 2–3 PASS — Single Bulb + RGB views
+  - Original PNG assets copied; ASSET_MAP.md; Substituted=0
+  - Home tabs: Single Bulb | RGB Bulbs (Magic Lab removed from entry)
+  - smoke + model tests PASS; analyze CLEAN
+[2026-09-22] Phase 7 Home PASS — subtitle updated; lifecycle test added
+[2026-09-22] READY CANDIDATE recorded
+[2026-09-22] READY closure START — Pixel QA + Behavior + Full regression + Platforms
+[2026-09-22] Visual Pixel QA PASS — S1/R1 captures + DIFF; RGB slider + FilterWire fixes (View only)
+[2026-09-22] Behavioral acceptance PASS — acceptance_matrix_test
+[2026-09-22] Full flutter test: +3035 ~1 -56; color_vision failures = 0
+[2026-09-22] dart analyze lib/color_vision: CLEAN
+[2026-09-22] Windows VERIFIED — flutter run -d windows (kratos.exe + VM service)
+[2026-09-22] Chrome VERIFIED — Home + Color Vision Single Bulb live smoke
+[2026-09-22] Final Status: READY

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/scenario/success_condition.dart';
 import '../../../common/widgets/inquiry_models.dart';
 import '../model/color_range.dart';
 import '../model/solute.dart';
+import 'molarity_criterion.dart';
 
 /// 参数范围（min/max/step/unit）· 对应 JSON `paramRanges` 段。
 @immutable
@@ -50,8 +50,10 @@ class MolarityScenario {
     this.description = '',
     this.version = '1.0',
     this.initialValuesVisible = false,
-    this.soluteAmountRange = const ParamRange(min: 0, max: 1, step: 0.01, unit: 'mol'),
-    this.volumeRange = const ParamRange(min: 0.2, max: 1, step: 0.01, unit: 'L'),
+    this.soluteAmountRange =
+        const ParamRange(min: 0, max: 1, step: 0.050, unit: 'mol'),
+    this.volumeRange =
+        const ParamRange(min: 0.2, max: 1, step: 0.050, unit: 'L'),
     this.concentrationMax = 5.0,
     this.solutes = const [],
     this.performance = const PerformanceConfig(),
@@ -73,7 +75,7 @@ class MolarityScenario {
   final double concentrationMax;
   final List<Solute> solutes;
   final PerformanceConfig performance;
-  final List<SuccessCondition> successCriteria;
+  final List<MolarityCriterion> successCriteria;
   final List<HintConfig> hints;
   final InquiryTask? inquiryTask;
 
@@ -91,10 +93,10 @@ class MolarityScenario {
       initialValuesVisible: (ip['valuesVisible'] as bool?) ?? false,
       soluteAmountRange: pr['soluteAmount'] != null
           ? ParamRange.fromJson(pr['soluteAmount'] as Map<String, dynamic>)
-          : const ParamRange(min: 0, max: 1, step: 0.01, unit: 'mol'),
+          : const ParamRange(min: 0, max: 1, step: 0.050, unit: 'mol'),
       volumeRange: pr['volume'] != null
           ? ParamRange.fromJson(pr['volume'] as Map<String, dynamic>)
-          : const ParamRange(min: 0.2, max: 1, step: 0.01, unit: 'L'),
+          : const ParamRange(min: 0.2, max: 1, step: 0.050, unit: 'L'),
       concentrationMax: (json['concentrationMax'] as num?)?.toDouble() ?? 5.0,
       solutes: (json['solutes'] as List<dynamic>? ?? const [])
           .map((e) => _parseSolute(e as Map<String, dynamic>,
@@ -102,7 +104,7 @@ class MolarityScenario {
           .toList(growable: false),
       performance: PerformanceConfig.fromJson(json['performance'] as Map<String, dynamic>?),
       successCriteria: (json['successCriteria'] as List<dynamic>? ?? const [])
-          .map((e) => SuccessCondition.fromJson(e as Map<String, dynamic>))
+          .map((e) => MolarityCriterion.fromJson(e as Map<String, dynamic>))
           .toList(growable: false),
       hints: (json['hints'] as List<dynamic>? ?? const [])
           .map((e) => HintConfig.fromJson(e as Map<String, dynamic>))

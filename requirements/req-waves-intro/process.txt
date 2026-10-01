@@ -1,0 +1,11 @@
+# req-waves-intro process
+
+[2026-09-05 22:53] Phase 0：waves-intro 1.2.0-dev.0；[已确认：3 Screens] Water/Sound/Light
+[2026-09-05 22:55] Phase 1：WI clone 5443da0 + scenery-phet Lattice 取证
+[2026-09-05 23:10] Phase 4–11：lib/waves_intro + Home + 15 tests
+[2026-09-05 23:20] QA：analyze 0；debug APK OK；status=done（工具层 gap 见 FUNCTIONAL_GAP_CLOSURE）
+[2026-09-05 23:50] Dependency Provenance：核心波判定 A；P0 取证强制 31ebfd7；写出 DEPENDENCY_PROVENANCE.md
+[2026-09-05 23:55] P0 Gap Closure：WaterDrop + Tape + Stopwatch + WaveMeter；tests 22；analyze 0；FDTD 未改
+[2026-09-06 00:05] P1：Side View + Light IntensitySample；P2 AUDIO_ANALYSIS + 基础音效资产；tests 32；analyze 0
+[2026-09-06 00:40] P0 Audio Gap Closure（State→Renderer）+ Wave meter presentation + Visual QA 6 PNG；tests 45；analyze 0；Wave Model 未改
+[2026-09-06 00:55] View/Interaction Reconciliation：Screen-specific View + Waves/Particles/Both + shell layout；tests 56；analyze 0；标 [迁移架构/视图问题]

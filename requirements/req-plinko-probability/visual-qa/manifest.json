@@ -1,0 +1,41 @@
+{
+  "simulation": "plinko-probability",
+  "viewport": "1280x800",
+  "dpr": 1,
+  "behavior_reference": "local phet source 1.2.0-dev.6",
+  "visual_reference": "phet.colorado.edu latest published build",
+  "renderer_probe": {
+    "canvas": 2,
+    "svg": 5,
+    "ready": "joist.sim.currentScreenProperty.value.model (NOT canvas-only wait)"
+  },
+  "notes": [
+    "A = KARTOSLAB global shell (KratosTabbedScreen) — known difference, do not modify",
+    "B = Plinko simulation content — P1 must clear before READY",
+    "Published UI shows ×All; local source IntroPlayPanel uses × + maxBallsIntro (100)",
+    "Some ORIGINAL mode switches used property fallback when RadioButton walk missed (documented in meta WARN)"
+  ],
+  "states": [
+    {"state": "01_Intro_initial", "screen": "intro"},
+    {"state": "02_Intro_oneBall", "screen": "intro"},
+    {"state": "03_Intro_tenBalls", "screen": "intro"},
+    {"state": "04_Intro_hundredBalls", "screen": "intro"},
+    {"state": "05_Intro_counterMode", "screen": "intro"},
+    {"state": "06_Intro_cylinderMode", "screen": "intro"},
+    {"state": "07_Intro_erase", "screen": "intro"},
+    {"state": "08_Intro_reset", "screen": "intro"},
+    {"state": "01_Lab_initial", "screen": "lab"},
+    {"state": "02_Lab_rows_low", "screen": "lab"},
+    {"state": "03_Lab_rows_high", "screen": "lab"},
+    {"state": "04_Lab_p_low", "screen": "lab"},
+    {"state": "05_Lab_p_high", "screen": "lab"},
+    {"state": "06_Lab_one_mode", "screen": "lab"},
+    {"state": "07_Lab_continuous_mode", "screen": "lab"},
+    {"state": "08_Lab_ball_mode", "screen": "lab"},
+    {"state": "09_Lab_path_mode", "screen": "lab"},
+    {"state": "10_Lab_none_mode", "screen": "lab"},
+    {"state": "11_Lab_statistics", "screen": "lab"},
+    {"state": "12_Lab_ideal_distribution", "screen": "lab"},
+    {"state": "13_Lab_reset", "screen": "lab"}
+  ]
+}

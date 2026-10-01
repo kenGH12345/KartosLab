@@ -1,0 +1,54 @@
+[2026-09-03 13:28] Phase 0 START · Project Discovery
+  - 工作区: KartosLab Flutter (kratos)
+  - 本地源: phet sourses/collision-lab-main/collision-lab-main @ 1.2.0-dev.0
+  - 原则: 本地源码唯一第一事实来源；先取证后编码
+
+[2026-09-03 13:40] Phase 0 DONE · 写入 PROJECT_DISCOVERY.md
+  - Screens: 4 (Intro → Explore1D → Explore2D → Inelastic)；默认 Intro
+  - 无独立 Clock 类；无 trajectory history；无 SVG 业务资源
+  - Home 目标: 物理 → 力学 → Collision Lab
+  - 无阻塞决策 → 自动进入 Phase 1
+
+[2026-09-03 13:48] Phase 1 DONE · SOURCE_ANALYSIS.md
+  - 碰撞公式 / stick ω / 1D e=0 / 负步进 1/e / 半径公式均已取证
+  - 无 BLOCKED → Phase 2
+
+[2026-09-03 13:52] Phase 2 DONE · visual-qa/BASELINE.md
+  - assets 四屏截图 1536×1008 已复制到 visual-qa/ref/
+  - [待确认：缺少本机原版运行截图]
+  - 布局锚点来自 CollisionLabScreenView 常量
+
+[2026-09-03 13:55] Phase 3 DONE · ARCHITECTURE_PLAN.md
+  - lib/collision_lab/ · stateful CollisionEngine · 不改 common
+  - 无阻塞 → Phase 4 Model/Solver
+
+[2026-09-03 14:30] Phase 4–8 DONE · Model/Solver/Controller/Render/UI/Screens
+  - flutter analyze lib/collision_lab: No issues
+  - physics_test: 12 passed
+
+[2026-09-03 14:45] Phase 9–10 · Visual structure + QA
+  - Paths 轨迹按 CollisionLabPath 语义落地
+  - debug APK build OK
+  - PHYSICS_VALIDATION / FUNCTIONAL_GAP_CLOSURE / GEOMETRY_CALIBRATION
+
+[2026-09-03 15:00] Phase 11 DONE · Home 力学 → Collision Lab
+
+[2026-09-03 15:10] Phase 12 DONE · 无 legacy 可归档 · COMPLETION_REPORT · status: done
+
+[2026-09-03 18:40] Functional Gap Closure + Visual QA
+  - Velocity tip drag (BallVelocityVectorNode) · ScaleBar 0.5m · bump/repel
+  - 未修改 CollisionEngine / stick / 负步进
+  - test/collision_lab: physics 12 + gap + visual capture OK
+  - 更新 FUNCTIONAL_GAP_CLOSURE / BASELINE / GEOMETRY / COMPLETION_REPORT
+
+[2026-09-03 19:50] P0 Visual QA fixes
+  - [迁移引入：Render clipping bug] BallPainter clipRect(playAreaRect) = PhET BallNode clipArea
+  - [迁移引入：Hit-test bug] Listener + view-space hit + IgnorePointer overlays
+  - clip_drag_test + visual A/B/C/D captures; analyze clean; 未改物理引擎
+
+[2026-09-03 19:40] CLOSE · 用户确认可 report
+  - acceptance: user-confirmed-report
+  - COMPLETION_REPORT 终稿 · status: done · 项目关闭
+
+
+

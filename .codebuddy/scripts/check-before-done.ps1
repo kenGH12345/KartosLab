@@ -44,8 +44,7 @@ $errors = @()
 
 # === Exemption check ===
 # Bilingual match: 'skip closer' | '跳过 closer' (aligned with check-before-done.sh)
-# -Encoding UTF8: 无 BOM 的 UTF-8 在中文 Windows 默认按 ANSI 读会乱码导致正则失配
-$processContent = Get-Content $processFile -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+$processContent = Get-Content $processFile -Raw -ErrorAction SilentlyContinue
 if ($processContent -match '(skip closer|跳过 closer)' -and $processContent -match 'verdict=approve_go') {
     Write-Host "User explicitly exempted closer (verdict + skip closer logged)"
     exit 0
@@ -126,7 +125,7 @@ if (-not (Test-Path $acVerify -PathType Leaf)) {
     }
 } else {
     # Verify honesty declaration checkbox count
-    $acContent = Get-Content $acVerify -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+    $acContent = Get-Content $acVerify -Raw -ErrorAction SilentlyContinue
     $checkedCount = ([regex]::Matches($acContent, '^- \[x\]', 'Multiline')).Count
     if ($checkedCount -lt 3) {
         Write-Host "WARNING: ac-verification.md exists but honesty declaration checkboxes < 3 (current: $checkedCount, agile-vibe SOP 9.4)"

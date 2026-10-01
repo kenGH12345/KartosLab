@@ -1,0 +1,68 @@
+{
+  "scenarios": [
+    {
+      "id": "sun_planet",
+      "file": "sun_planet.json"
+    },
+    {
+      "id": "sun_planet_moon",
+      "file": "sun_planet_moon.json"
+    },
+    {
+      "id": "sun_planet_comet",
+      "file": "sun_planet_comet.json"
+    },
+    {
+      "id": "trojan_asteroids",
+      "file": "trojan_asteroids.json"
+    },
+    {
+      "id": "ellipses",
+      "file": "ellipses.json"
+    },
+    {
+      "id": "hyperbolic",
+      "file": "hyperbolic.json"
+    },
+    {
+      "id": "slingshot",
+      "file": "slingshot.json"
+    },
+    {
+      "id": "double_slingshot",
+      "file": "double_slingshot.json"
+    },
+    {
+      "id": "binary_star_planet",
+      "file": "binary_star_planet.json"
+    },
+    {
+      "id": "four_star_ballet",
+      "file": "four_star_ballet.json"
+    },
+    {
+      "id": "double_double",
+      "file": "double_double.json"
+    },
+    {
+      "id": "orbital_system_1",
+      "file": "orbital_system_1.json"
+    },
+    {
+      "id": "orbital_system_2",
+      "file": "orbital_system_2.json"
+    },
+    {
+      "id": "orbital_system_3",
+      "file": "orbital_system_3.json"
+    },
+    {
+      "id": "orbital_system_4",
+      "file": "orbital_system_4.json"
+    },
+    {
+      "id": "custom",
+      "file": "custom.json"
+    }
+  ]
+}

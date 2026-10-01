@@ -1,0 +1,12 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-80fd4b2e-44c4-4a75-98b5-d0a23534e686.ps1:122 字符: 1
++ flutter analyze lib/quantum_measurement lib/common/simulation lib/scr ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+Analyzing 4 items...                                            
+
+   info - Parameters ''initialBias', 'random', and 'classicalStartHidden'' could be super parameters. Trying converting ''initialBias', 'random', and 'classicalStartHidden'' to super parameters - lib\quantum_measurement\coins\model\coin_set.dart:199:3 - use_super_parameters
+
+1 issue found. (ran in 24.0s)

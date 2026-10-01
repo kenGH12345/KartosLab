@@ -10,8 +10,8 @@
     "valuesVisible": true
   },
   "paramRanges": {
-    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.01, "unit": "mol" },
-    "volume": { "min": 0.2, "max": 1.0, "step": 0.01, "unit": "L" }
+    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.050, "unit": "mol" },
+    "volume": { "min": 0.2, "max": 1.0, "step": 0.050, "unit": "L" }
   },
   "concentrationMax": 5.0,
   "solutes": [
@@ -30,6 +30,6 @@
     { "id": "sc-1", "type": "concentrationReached", "description": "调整参数使浓度 = 1.00 M", "params": { "targetConcentration": 1.00, "tolerance": 0.01 } }
   ],
   "hints": [
-    { "trigger": "concentration < 0.9", "message": "浓度 = 溶质量 ÷ 体积，试着同时调整两个滑块。" }
+    { "trigger": "concentration < 0.9", "message": "浓度 = 溶质量 / 体积，试着同时调整两个滑块。" }
   ]
 }

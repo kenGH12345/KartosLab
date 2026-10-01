@@ -1,0 +1,14 @@
+req_id: req-friction
+title: PhET Friction → Flutter Native Migration
+phase: close
+status: ready_candidate
+updated_at: 2026-09-24
+source: friction 1.7.0-dev.0
+home: 物理 → 力学 → Friction
+tests: 16 PASS
+analyze: clean
+android_runtime: NOT VERIFIED
+notes: |
+  Core model/view/interaction complete. Book drag: gentle particle motion +
+  PhET-amplified heating. Shear-off each step while hot. P2: NoiseGenerator
+  rub/cooling sounds; full Voicing/PDOM.

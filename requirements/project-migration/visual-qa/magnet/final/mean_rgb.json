@@ -1,0 +1,37 @@
+{
+  "note": "Auxiliary only. Do not optimize these numbers. Debug original overflow stripes may be in-frame.",
+  "png_size_px": {
+    "original": [
+      2560,
+      1600
+    ],
+    "flutter": [
+      2560,
+      1600
+    ]
+  },
+  "original_full_screen": {
+    "r": 26.45,
+    "g": 20.99,
+    "b": 23.97,
+    "hex": "#1A1518"
+  },
+  "original_play_area": {
+    "r": 26.45,
+    "g": 20.99,
+    "b": 23.97,
+    "hex": "#1A1518"
+  },
+  "flutter_full_screen": {
+    "r": 28.25,
+    "g": 27.16,
+    "b": 35.14,
+    "hex": "#1C1B23"
+  },
+  "flutter_play_area": {
+    "r": 40.09,
+    "g": 32.26,
+    "b": 37.03,
+    "hex": "#282025"
+  }
+}

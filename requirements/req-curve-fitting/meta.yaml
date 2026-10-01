@@ -1,0 +1,50 @@
+req_id: req-curve-fitting
+title: 迁移 PhET Curve Fitting 到 KARTOSLAB Flutter
+status: done
+phase: '3.close'
+created_at: '2026-09-04 23:32'
+updated_at: '2026-09-05 01:35'
+completion:
+  verdict: done
+  report: requirements/req-curve-fitting/COMPLETION_REPORT.md
+  tests: 38 passed
+  analyze: 0 issues
+  builds: 'debug APK OK; release APK OK'
+  visual: '[视觉已对齐目标]; [视觉近似] equation/bumpOut; [待确认：缺原版截图]'
+  note: '移植成功封板；拖点 hit-test 回归已修'
+home:
+  discipline: 物理
+  subdomain: 力学
+  card_title: Curve Fitting
+  note: '对齐 Vector Addition：不新建一级「数学」；不改 Home taxonomy；挂物理→力学'
+repo_path: '.'
+
+source:
+  type: html5-javascript
+  repo: https://github.com/phetsims/curve-fitting
+  version: 1.1.0-dev.0
+  dependencies_comment: '1.0.0-dev.19 Wed Sep 04 2019 13:08:08 GMT-0600 (Mountain Daylight Time)'
+  local_sha_in_dependencies_json: cb6f00b03721427040808eaca67575dafb6ad13e
+  local_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\curve-fitting-main\curve-fitting-main'
+  url: https://phet.colorado.edu/sims/html/curve-fitting/latest/curve-fitting_all.html
+  note: '本地源码为唯一第一事实来源；不以官网 latest / GitHub main 自动替换；无内嵌 .git，以 package.json version 为准'
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC：DataPoint / DataSet / CurveModel / RegressionSolver / StatisticsSolver / MathCoordinateTransform / RenderData / Painter / Widget / Screen 分离
+  - 禁止用教材公式重写加权最小二乘 / r² / χ²；必须移植本地 Curve.js
+  - Painter 不计算拟合；Y 翻转只在 MathCoordinateTransform
+  - NineGrid 只负责页面级外壳；模拟内部使用 PhET layoutBounds + FittedBox
+  - 不修改其他 simulation；不修改 common API / 全局 Theme / Navigation / Home taxonomy
+  - common 仅在语义真正通用时抽取（本 sim 为第 1 个 Curve Fitting 用户，图区自研）
+  - 不用 Material Icon 冒充 PhET bucket / barometer geometry
+  - 不为截图写死 pixel；不用 mean RGB 作为唯一视觉指标
+
+acceptance_criteria:
+  - AC-1: 单屏 Curve Fitting 可从 Home 进入、返回、再进入并重新初始化
+  - AC-2: Linear/Quadratic/Cubic + Best Fit / Adjustable Fit 与源码一致
+  - AC-3: Residuals / r² / reduced χ²（chiSquaredProperty）与 Curve.js 一致
+  - AC-4: Data point drag / delta bars / bucket / reset 对照源码
+  - AC-5: Graph MVT（inverted-Y scale 25.5）集中在 MathCoordinateTransform
+  - AC-6: flutter analyze 0 issues；专项 regression/statistics/interaction 测试 + 回归通过

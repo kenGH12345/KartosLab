@@ -1,0 +1,35 @@
+req_id: req-cck-ac-virtual-lab
+title: 迁移 PhET Circuit Construction Kit AC Virtual Lab 到 KARTOSLAB Flutter
+status: done
+phase: '12.close'
+created_at: '2026-09-02 14:27'
+updated_at: '2026-09-02 18:40'
+repo_path: '.'
+
+source:
+    type: html5-typescript
+    repo: https://github.com/phetsims/circuit-construction-kit-ac-virtual-lab
+    version: 1.1.0-dev.0
+    local_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\circuit-construction-kit-ac-virtual-lab-main\circuit-construction-kit-ac-virtual-lab-main'
+    url: https://phet.colorado.edu/sims/html/circuit-construction-kit-ac-virtual-lab/latest/circuit-construction-kit-ac-virtual-lab_all.html
+    depends_on:
+        - https://github.com/phetsims/circuit-construction-kit-ac
+        - https://github.com/phetsims/circuit-construction-kit-common
+
+edd_template_version: v2.0
+
+design_constraints:
+    - MVC：State / Solver(MNA) / Controller / Render / Painter / Widget / Screen 职责分离
+    - NineGrid 只负责页面级布局；电路画布保留局部坐标
+    - 不机械复制 Build a Nucleus 目录
+    - 不修改、不合并现有 lib/circuit（DC 简化沙盒，行为不同）
+    - common 仅在语义真正通用时抽取（本 sim 为第 1 个 CCK-AC 用户）
+    - 原版源码优先于截图与物理常识
+    - 默认求解器为 PhET MNA（query ?solver=phet），不嵌入 ngspice
+
+acceptance_criteria:
+    - AC-1: 单屏 Lab 可从 Home 进入、返回、再进入并重新初始化
+    - AC-2: 工具箱元件集合与 LabScreenView 一致（含 AC 源 / C / L / 日用品；无非接触安培计）
+    - AC-3: 电路求解与原版 DynamicCircuit/MNA companion 模型一致（DC+AC+电容+电感）
+    - AC-4: 电压表 / 串联安培计 / 图表 / 时间控制 / Reset / Zoom 行为对照源码
+    - AC-5: flutter analyze 0 issues；专项测试 + 回归通过

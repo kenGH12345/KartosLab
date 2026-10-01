@@ -1,0 +1,8 @@
+state: 09_States_reset
+viewport: 1280x800
+DPR: 1.0
+design: 834.0x504.0
+scene_scale: joist-fit (SomSceneShell)
+paused: true
+source: local-flutter-widget-test
+captured_at: 2026-09-28T01:29:44.212694

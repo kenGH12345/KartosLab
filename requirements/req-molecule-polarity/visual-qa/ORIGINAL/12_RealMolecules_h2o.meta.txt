@@ -1,0 +1,6 @@
+state: 12_RealMolecules_h2o
+viewport: 1280x800
+DPR: 1
+actions: ["H2O"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:53.092Z

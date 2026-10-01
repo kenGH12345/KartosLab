@@ -1,0 +1,46 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-9d142e54-e5bd-4186-b1cd-9da8e69afc8a.ps1:116 字符: 47
++ ... KartosLab"; flutter test test/quantum_measurement/phase10_platform_te ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+00:00 +0: loading D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart
+00:00 +0: Registry + Descriptor stable id quantum-measurement
+00:00 +1: Registry + Descriptor idempotent register
+00:00 +2: Event boundary Isolating sink swallows adapter failures
+00:00 +3: Session persistence boundary NoOp store returns null 鈥?NOT IMPLEMENTED
+00:00 +4: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+unhandled element <style/>; Picture key: Svg loader
+鈺愨晲鈺?EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK 鈺炩晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺?The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "QuantumMeasurementHome": [
+            QuantumMeasurementHome(state: _QuantumMeasurementHomeState#6a197),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.<anonymous closure> (file:///D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart:88:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart line 88
+The test description was:
+  Home card opens QuantumMeasurementHome
+鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲
+00:02 +4 -1: Home 鈫?QM Entry Home card opens QuantumMeasurementHome [E]
+  Test failed. See exception logs above.
+  The test description was: Home card opens QuantumMeasurementHome
+  
+00:02 +4 -1: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:03 +5 -1: Home 鈫?QM Entry leave QM disposes runtime (no QM home)
+00:03 +6 -1: Some tests failed.
+
+Failing tests:
+  D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome

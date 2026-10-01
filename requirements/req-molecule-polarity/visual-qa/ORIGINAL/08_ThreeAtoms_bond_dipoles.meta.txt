@@ -1,0 +1,6 @@
+state: 08_ThreeAtoms_bond_dipoles
+viewport: 1280x800
+DPR: 1
+actions: ["bond dipoles"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:47.641Z

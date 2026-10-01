@@ -1,0 +1,62 @@
+# meta.yaml — Balancing Act PhET → Flutter
+req_id: req-port-balancing-act
+title: Balancing Act — PhET HTML5 → Flutter (Intro / Balance Lab / Game)
+sop: agile-vibe
+phase: 7.home_release
+status: ready
+overall_status: ready
+created_at: "2026-09-23 10:53"
+updated_at: "2026-09-23 17:05"
+source:
+  package: balancing-act
+  version: 1.4.0-dev.2
+  sha: b468e7d73dafcd093839b28a792b49ff090329bf
+  local_path: "phet sourses/balancing-act-main/balancing-act-main"
+  online: "https://phet.colorado.edu/sims/html/balancing-act/latest/balancing-act_all.html"
+screens:
+  - Intro
+  - Balance Lab
+  - Game
+flutter_target: lib/balancing_act/
+home_entry:
+  status: ready
+  category: 物理 / 力学
+  widget: BalancingActHome
+reports:
+  source_audit: SOURCE_AUDIT_REPORT.md
+  phase_1_model: PHASE_1_MODEL_REPORT.md
+  phase_2_intro: PHASE_2_INTRO_REPORT.md
+  phase_2_visual_qa: PHASE_2_INTRO_VISUAL_QA.md
+  phase_3_balance_lab: PHASE_3_BALANCE_LAB_REPORT.md
+  phase_4_game: PHASE_4_GAME_REPORT.md
+  phase_5_visual: PHASE_5_VISUAL_REPORT.md
+  phase_6_behavioral: PHASE_6_FINAL_BEHAVIORAL_ACCEPTANCE.md
+  phase_7_home_release: PHASE_7_HOME_RELEASE_REPORT.md
+  game_visual_hotfix: GAME_VISUAL_HOTFIX_REPORT.md
+phase0: pass
+phase1: pass
+phase2: pass
+phase3: pass
+phase4: pass
+phase5: pass
+phase6: pass
+phase7: ready
+tests_balancing_act: 122
+analyze: clean
+assets_substituted: 0
+p0: 0
+p1: 0
+p2: 3
+flutter_ui_intro: pass
+balance_lab: pass
+game: pass
+game_visual_hotfix: pass
+visual_reconstruction: pass
+behavioral_acceptance: pass
+home_integration: pass
+home: ready
+runtime: not_verified
+android: not_verified
+global_regression: fail_unrelated_baseline_56
+new_ba_home_global_failures: 0
+svg_css_inliner: pass

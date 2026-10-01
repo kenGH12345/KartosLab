@@ -1,0 +1,57 @@
+{
+  "scenarioId": "four_star_ballet",
+  "name": "Four Star Ballet",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 120,
+      "position": {
+        "x": -1.0,
+        "y": 1.0
+      },
+      "velocity": {
+        "x": -10.5611,
+        "y": -10.5611
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 120,
+      "position": {
+        "x": 1.0,
+        "y": 1.0
+      },
+      "velocity": {
+        "x": -10.5611,
+        "y": 10.5611
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 120,
+      "position": {
+        "x": 1.0,
+        "y": -1.0
+      },
+      "velocity": {
+        "x": 10.5611,
+        "y": 10.5611
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 120,
+      "position": {
+        "x": -1.0,
+        "y": -1.0
+      },
+      "velocity": {
+        "x": 10.5611,
+        "y": -10.5611
+      }
+    }
+  ],
+  "gravityForceScalePower": -1.1
+}

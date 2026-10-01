@@ -1,0 +1,6 @@
+state: 13_RealMolecules_dipoles
+viewport: 1280x800
+DPR: 1
+actions: ["dipoles"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:54.175Z

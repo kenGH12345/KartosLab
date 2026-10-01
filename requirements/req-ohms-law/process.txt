@@ -1,0 +1,44 @@
+[2026-09-27] PHASE 0 START â€” Source Audit / Model-Contract / View-Contract / Product-UX Baseline for Ohm's Law
+[2026-09-27] Source root confirmed: phet sourses/ohms-law-main/ohms-law-main (HTML5, package 1.5.0-dev.6)
+[2026-09-27] Visual Gold Standard: user-provided official PhET screenshot (default V=4.5 R=500 I=9.0 mA)
+[2026-09-27] Flutter lib/ohms_law: NOT PRESENT. requirements/req-ohms-law: created this session.
+[2026-09-27] PHASE 0 GATE: PASS (P0=0). Flutter UI NOT STARTED. Home NOT TOUCHED. Awaiting Phase 1 instruction.
+[2026-09-27] PHASE 1 START ¡ª Model / Oracle Tests / Source-Contract Implementation
+[2026-09-27] Created lib/ohms_law/model/{ohms_law_model,ohms_law_constants,current_units,ohms_law_property}.dart
+[2026-09-27] Created test/ohms_law/model/ohms_law_model_test.dart (27 tests)
+[2026-09-27] dart analyze lib/ohms_law test/ohms_law: CLEAN
+[2026-09-27] flutter test test/ohms_law: 27/27 PASS
+[2026-09-27] Peer smoke faradays_law + hookes_law model tests: PASS
+[2026-09-27] VD-03 faithfully /100 (not corrected to /1000); reset preserves units locked
+[2026-09-27] PHASE 1 GATE: PASS. Model FROZEN. View NOT TOUCHED. Home NOT TOUCHED. Stop ¡ª await Phase 2.
+[2026-09-27] PHASE 2 START ¡ª View / Product UX / Visual Reconstruction
+[2026-09-27] Implemented lib/ohms_law/view/* + ohms_law_view_constants.dart; Model untouched
+[2026-09-27] Layout 768x504, bg #FFFFE8, Formula/WireBox/Sliders/Units/ResetAll radius 28
+[2026-09-27] flutter test test/ohms_law: 38 PASS (27 model + 11 view); golden ohms_law_initial.png
+[2026-09-27] dart analyze lib/ohms_law test/ohms_law: CLEAN
+[2026-09-27] PHASE 2 GATE: PASS. Home NOT TOUCHED. Model FROZEN. Stop ¡ª await Phase 3.
+[2026-09-27] PHASE 3 START ¡ª Behavioral / Runtime / Audio / Accessibility Acceptance
+[2026-09-27] View: keyboard steps (V 0.5/R 20), Semantics, OhmsLawAudioHooks (event-only)
+[2026-09-27] Model FROZEN; formula/ranges/VD-03/reset-units unchanged
+[2026-09-27] flutter test test/ohms_law: 61 PASS (27+11+23)
+[2026-09-27] Audio/A11y SR/Performance/Android: PARTIAL or NOT VERIFIED (honest)
+[2026-09-27] PHASE 3 GATE: PASS. Home NOT TOUCHED. Stop ¡ª await Phase 4 / Home.
+[2026-09-27] PHASE 4 START ¡ª Visual QA / Raster Golden / Product-Grade Visual Acceptance
+[2026-09-27] Added test/ohms_law/visual/ with 12 deterministic goldens covering G01-G38 (aliases in PHASE_4_GOLDEN_MATRIX.md)
+[2026-09-27] Model/View lib untouched this phase; seed 0x4F484D53
+[2026-09-27] flutter test test/ohms_law: 81 PASS; analyze CLEAN
+[2026-09-27] PHASE 4 GATE: PASS. Home NOT TOUCHED. Stop ¡ª await Phase 5 / Home.
+[2026-09-27] PHASE 5 START ¡ª Home Integration / Final Acceptance
+[2026-09-27] Audit: no prior Ohm's Law Home card/route; circuit_screen text only
+[2026-09-27] Registered under ÎïÀí ¡ú µçÑ§ÓëµçÂ· ¡ú OhmsLawScreen (title Ohm's Law)
+[2026-09-27] Home tests: 14 lifecycle + 5 screenshots; goldens H01-H05
+[2026-09-27] flutter test test/ohms_law: 100 PASS (81+19); analyze CLEAN
+[2026-09-27] Sibling Faraday home / Balloons home / Hooke: PASS
+[2026-09-27] PHASE 5 GATE: READY CANDIDATE (P0=0 P1=0; Audio/A11y/Perf/Android unverified)
+[2026-09-27] STOP ¡ª no further Ohm's Law / Home expansion
+[2026-09-27] LAYOUT FIX ¡ª SliderUnit compact header + width 89 (PhET); Units below ControlPanel (no readout collide); formulaLeft=0; goldens refreshed; +layout overlap test; flutter test test/ohms_law: 101 PASS
+[2026-09-27] LAYOUT FIX 2 ¡ª VD-01: Joist DEFAULT_LAYOUT_BOUNDS is 1024x618 (not 768x504). Panel no longer crushes circuit/formula. Goldens 1024x618. test/ohms_law 101 PASS
+[2026-09-27] FINAL ¡ª Ohm's Law closed as READY CANDIDATE
+[2026-09-27] Post-P5: layout 1024x618; dots once-only; SliderUnit compact; Units below panel
+[2026-09-27] flutter test test/ohms_law: 103 PASS; analyze CLEAN; P0=0 P1=0
+[2026-09-27] Report: requirements/req-ohms-law/FINAL_ACCEPTANCE_REPORT.md

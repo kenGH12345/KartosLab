@@ -1,0 +1,62 @@
+[2026-09-16 19:38] PHASE 1.intake → 2.building
+  - 读取 .codebuddy rules / 80-checklist / asset / reset 政策
+  - 扫描 KARTOSLAB 可复用组件（SimulationClock / KratosTabbedScreen / KratosResetAllButton / Slider / Radio）
+  - 本地源码取证完成：plinko-probability 1.2.0-dev.6
+  - 关键发现：球路径 = 构造时预采样 Bernoulli(p)；动画 = 抛物线插值；无刚体碰撞
+  - 产出：PHASE_0_SOURCE_RECON.md / PHASE_1_FEATURE_SPEC.md / PHASE_2_COMPONENT_MAP.md
+
+[2026-09-16 20:10] M3 Model + M4 Screen assemble (independent Home)
+  - Model/Controller/Painters/Screens：lib/plinko_probability/
+  - 原版 assets：assets/simulations/plinko_probability/
+  - flutter test test/plinko_probability → 27 PASS
+  - PlinkoProbabilityHome 独立运行；Home 接入仍禁止
+
+[2026-09-16 21:30] Major Geometry pass 2
+  - MVT 改为 PhET ScreenView 768×504；board 600×300
+  - HistogramNode 横幅/坐标轴；气缸前后层 Path
+  - Peg 半径/角度/阴影偏移按 PegsNode.js
+  - FLUTTER 21 重拍；model 28 PASS；analyze clean
+  - Final Status 仍 NOT READY（vs ORIGINAL 全帧含 navbar）
+  - Home 禁止接入
+
+[2026-09-16 21:00] Content-crop Diff + B-P1 pass
+  - tool/diff_plinko_content_crop.py（navbar crop + 区域归因）
+  - Capture letterbox 1280×737 + ClipRect + Arial FontLoader
+  - VerticalAqua：Intro/Lab play radios；HopperMode 竖排
+  - Peg multi-stop shadow；Cylinder darker/brighter + 5-stop
+  - PegControls fill=white；Statistics 去粉头
+  - Content-crop mean Intro~23.9 Lab~33；overall~31.3
+  - Model 28 PASS；Final Status 仍 NOT READY；Home 禁止
+[2026-09-16 22:50] Final B-P1 Visual Closure v2
+  - Peg: confirmed no PNG; PegRaster bake (toCanvas/toImage parity) + drawImage
+  - HistogramLayout + normalized bars + Bin/Count/triangles
+  - PlinkoNumberControl (triangle arrows, 170x2 track, rect thumb)
+  - CylinderGeometry unified top/body/bottom
+  - Content-crop: Intro~21.7 Lab~31 overall~29.5; board_pegs 35->29
+  - Model 28 PASS; analyze clean; Final Status NOT READY; Home blocked
+[2026-09-16 23:41] Final Pixel Closure v3
+- layoutBounds 768x504 -> 1024x618 (ScreenView.DEFAULT)
+- HistogramLayoutBaseline + Y-label left anchor
+- PlinkoNumberControl: ArrowButton/NumberDisplay/170x2/17x34 + layoutScale
+- Cylinder 3-stop shading; Peg board_pegs ~4.2
+- Content-crop overall ~29.5 -> ~8.3; Lab right_panel still P1 (~26)
+- Tests 29 PASS, analyze clean; Final Status NOT READY; Home blocked
+[2026-09-17 00:04] Lab Right Panel Final Closure
+- Local RIGHT_PANEL/{PLAY,PEG,STATS} crops + Diff
+- Play: radius*scale, rgb(0,224,121), triangle Path, Pause red, Center align
+- Statistics: AccordionBox, #FFF5EE, EquationNode format, s_mean RichText, HistogramIcon
+- LabRightPanelLayout + LAB_RIGHT_PANEL_BASELINE.md
+- Local: Play/Peg/Stats = PASS (P2 residual); B-P1=0
+- Tests 29 PASS, analyze clean; Final NOT READY (Browser QA pending); Home blocked
+
+[2026-09-17 00:20] Browser QA → READY → Home
+- Harness: test/plinko_probability/browser_qa/browser_qa_test.dart
+- Intro/Lab/Stats/Ideal/Audio/Reset all PASS; evidence visual-qa/BROWSER_QA/
+- Behavior baseline 1.2.0-dev.6; no Model/Visual/Audio edits
+- Tests **33 PASS**, analyze CLEAN; Final Status READY
+- Home: 物理 → 数学与概率 → PlinkoProbabilityHome
+- Lifecycle: open/Intro/Lab/reset/reopen PASS
+
+[2026-09-17 00:25] CLOSE · 结项
+- FINAL_REPORT 定稿；status=done；phase=3.close
+- 项目正式结束

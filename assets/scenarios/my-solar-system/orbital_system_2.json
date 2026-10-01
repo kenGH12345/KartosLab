@@ -1,0 +1,56 @@
+{
+  "scenarioId": "orbital_system_2",
+  "name": "Orbital System 2",
+  "comboVisible": false,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 100,
+      "position": {
+        "x": -3,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 10
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 100,
+      "position": {
+        "x": -1,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 10
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 100,
+      "position": {
+        "x": 1,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 10
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 100,
+      "position": {
+        "x": 3,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 10
+      }
+    }
+  ]
+}

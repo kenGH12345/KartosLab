@@ -3,14 +3,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/drag_drop_workspace.dart';
-import '../../common/geometry/projection.dart';
 import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/widgets/inquiry_models.dart';
 import '../../common/widgets/inquiry_drawer.dart';
 import '../../common/widgets/experiment_logger.dart';
 import '../../common/widgets/experiment_intro_panel.dart';
 import '../../common/widgets/scenario_menu_button.dart';
-import '../../common/scenario/success_condition.dart';
 import '../config/scenario_manager.dart';
 import '../config/scenario_runtime_policy.dart';
 import '../config/lab_scenario.dart';
@@ -115,12 +113,13 @@ class _OpticsScreenState extends State<OpticsScreen> {
         _solve();
       });
     } catch (_) {
-      if (mounted)
+      if (mounted) {
         setState(() {
           _world = OpticsWorld.empty();
           _nextElementId = 1;
           _solve();
         });
+      }
     }
   }
 
@@ -234,12 +233,11 @@ class _OpticsScreenState extends State<OpticsScreen> {
           NineGridLayout(
             // 中间格 = 纯实验画布（光路图）· 面积 ≥ 70% 屏 · DragTarget 接收元件
             center: DropCanvas<String>(
-              canvasBuilder: (context, proj, canvasSize) => _OpticsScene(
+              canvasBuilder: (context, proj) => _OpticsScene(
                 world: _world,
                 solved: _solved,
                 selectedId: _selectedElementId,
                 projection: proj,
-                canvasSize: canvasSize,
                 onElementTap: _selectElement,
                 onDragSelect: _dragSelectElement,
                 onElementDrag: _moveElement,
@@ -454,8 +452,7 @@ class _OpticsScene extends StatefulWidget {
   final OpticsWorld world;
   final SolvedOptics? solved;
   final String? selectedId;
-  final SceneProjection projection;
-  final Size canvasSize;
+  final CanvasProjection projection;
   final void Function(String?) onElementTap;
   final void Function(String) onDragSelect;
   final void Function(String, Offset) onElementDrag;
@@ -465,7 +462,6 @@ class _OpticsScene extends StatefulWidget {
     required this.solved,
     required this.selectedId,
     required this.projection,
-    required this.canvasSize,
     required this.onElementTap,
     required this.onDragSelect,
     required this.onElementDrag,
@@ -484,8 +480,7 @@ class _OpticsSceneState extends State<_OpticsScene> {
   OpticsWorld get world => widget.world;
   SolvedOptics? get solved => widget.solved;
   String? get selectedId => widget.selectedId;
-  SceneProjection get projection => widget.projection;
-  Size get canvasSize => widget.canvasSize;
+  CanvasProjection get projection => widget.projection;
 
   @override
   Widget build(BuildContext context) => GestureDetector(
@@ -535,8 +530,9 @@ class _OpticsSceneState extends State<_OpticsScene> {
       if (d.pointerCount >= 2) return;
       if (_dragId == null ||
           _dragElementStart == null ||
-          _dragPointerStart == null)
+          _dragPointerStart == null) {
         return;
+      }
       final wp = projection.toWorld(d.localFocalPoint);
       final delta = wp - _dragPointerStart!;
       widget.onElementDrag(_dragId!, _dragElementStart! + delta);
@@ -547,8 +543,8 @@ class _OpticsSceneState extends State<_OpticsScene> {
       _dragPointerStart = null;
     },
     child: SizedBox(
-      width: canvasSize.width,
-      height: canvasSize.height,
+      width: projection.canvasSize.width,
+      height: projection.canvasSize.height,
       child: Stack(
         children: [
           Positioned.fill(child: Container(color: const Color(0xFFF8FCFE))),
@@ -587,7 +583,7 @@ class _OpticsSceneState extends State<_OpticsScene> {
     ),
   );
 
-  Widget _debugDot(dynamic info, SceneProjection p) {
+  Widget _debugDot(dynamic info, CanvasProjection p) {
     final imagePoint = info.imagePoint as Offset;
     final sp = p.toScreen(imagePoint);
     return Positioned(
@@ -604,7 +600,7 @@ class _OpticsSceneState extends State<_OpticsScene> {
     );
   }
 
-  Widget _elementWidget(OpticalElement e, SceneProjection p, bool sel) {
+  Widget _elementWidget(OpticalElement e, CanvasProjection p, bool sel) {
     final sp = p.toScreen(Offset(e.x, e.y));
     late final double left, top;
     if (e is LightSourceElement) {
@@ -645,7 +641,7 @@ class _OpticsSceneState extends State<_OpticsScene> {
     return const SizedBox.shrink();
   }
 
-  List<Widget> _rayWidgets(SolvedOptics s, SceneProjection p) => [
+  List<Widget> _rayWidgets(SolvedOptics s, CanvasProjection p) => [
     ...s.rays
         .where((r) => r.points.length >= 2 || r.virtualPoints.isNotEmpty)
         .map(
@@ -664,7 +660,7 @@ class _OpticsSceneState extends State<_OpticsScene> {
         ),
   ];
 
-  Widget _imageWidget(SolvedOptics s, SceneProjection p) {
+  Widget _imageWidget(SolvedOptics s, CanvasProjection p) {
     final info = s.imageInfo;
     if (info == null) return const SizedBox.shrink();
     final sp = p.toScreen(info.imagePoint);
@@ -705,7 +701,7 @@ class _OpticsSceneState extends State<_OpticsScene> {
     );
   }
 
-  List<Widget> _screenHitWidgets(SolvedOptics s, SceneProjection p) =>
+  List<Widget> _screenHitWidgets(SolvedOptics s, CanvasProjection p) =>
       s.screenHits.map((h) {
         final sp = p.toScreen(h.point);
         return Positioned(
@@ -872,7 +868,7 @@ class _ScreenIcon extends StatelessWidget {
 
 class _RayPainter extends CustomPainter {
   final RayPath ray;
-  final SceneProjection proj;
+  final CanvasProjection proj;
   const _RayPainter({required this.ray, required this.proj});
   @override
   void paint(Canvas c, Size s) {
@@ -926,7 +922,7 @@ class _RayPainter extends CustomPainter {
 /// - mirror：反射系统 F 在镜面前方（凹面镜 → 左侧）；平面镜 focalLength 为 infinity，跳过。
 class _FocalPointsPainter extends CustomPainter {
   final OpticsWorld world;
-  final SceneProjection proj;
+  final CanvasProjection proj;
   const _FocalPointsPainter({required this.world, required this.proj});
 
   @override
@@ -1083,16 +1079,15 @@ class _RightPanel extends StatelessWidget {
             children: [
               for (final c
                   in scenario.objectives?.successCriteria ??
-                      <SuccessCondition>[])
-                for (final leaf in c.collectLeaves())
-                  _listCard(
-                    const Icon(
-                      Icons.radio_button_unchecked,
-                      color: Color(0xFF9CA3AF),
-                      size: 16,
-                    ),
-                    leaf.description,
+                      <SuccessCriterion>[])
+                _listCard(
+                  const Icon(
+                    Icons.radio_button_unchecked,
+                    color: Color(0xFF9CA3AF),
+                    size: 16,
                   ),
+                  c.description,
+                ),
             ],
           ),
         ),

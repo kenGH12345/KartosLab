@@ -105,3 +105,18 @@
 - 未使用 `knowledgebase_search`（背景知识库都是 AgentHub 相关，与 PhET 无关）
 - 未使用 web_search（本次分析全部基于本地文件事实，避免外部信息干扰）
 - 未生成 Mermaid / PlantUML（本知识库偏"清单型" · 少流程图需求）
+
+---
+
+## Change（来源 req-masses-and-springs-basics · 2026-09-08）
+
+### 迁移经验 · Lab PeriodTrace 必须接真实 peak/cross
+
+- **规则**：复刻 PhET Masses and Springs（HTML5）Lab **Period Trace** 时，轨迹必须由质量运动的 **peak / cross** 状态机驱动（状态 0→4 + fade），**禁止**用预生成正弦曲线冒充周期迹。
+- **Flutter 证据**：`lib/masses_and_springs_basics/model/period_trace.dart`；Close 依据见该 req `COMPLETION_REPORT.md`、`spec/最终需求.md` 决策 3。
+- **模块映射**：`lib/masses_and_springs_basics/`（Bounce / Stretch / Lab）→ [existing-flutter-map.md §五](existing-flutter-map.md)。
+- **L1**：尺 / 周期迹登记见 [shared-abstraction-plan.md](shared-abstraction-plan.md) 文末 Change（第 1/3，不上抽）。
+
+### 跳过本条不重复写
+
+- NineGrid / KratosSlider 布局债：checklist L0-4 与 `shared-abstraction-plan` 候选 7 已强制；MASB 推迟细节留在 req `notes.md`（需求级）。

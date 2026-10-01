@@ -1,0 +1,56 @@
+# meta.yaml ? req-port-ph-scale ? pH Scale HTML5 ? Flutter
+req_id: req-port-ph-scale
+title: pH Scale ? PhET HTML5 ? Flutter (Macro / Micro / My Solution)
+sop: agile-vibe
+phase: 9.final
+status: pass
+overall_status: ready_candidate
+final_status: READY CANDIDATE
+post_phase9_ux: pass
+created_at: "2026-09-22 20:23"
+updated_at: "2026-09-22 23:55"
+source:
+  package: ph-scale
+  version: 1.8.0-dev.0
+  sha: 9026dbeca73543f3cc3967dac553ae412bfbca18
+  local_path: "phet sourses/ph-scale-main/ph-scale-main"
+  online: "https://phet.colorado.edu/sims/html/ph-scale/latest/ph-scale_all.html"
+screens:
+  - Macro
+  - Micro
+  - My Solution
+flutter_target: lib/chemistry/ph_scale/
+home_category: chemistry
+home_entry:
+  category: ??
+  subcategory: ?????
+  title: pH ??
+  target: PhScaleScreen
+reports:
+  source_audit: SOURCE_AUDIT_REPORT.md
+  asset_map: ASSET_MAP.md
+  phase_4_graph: PHASE_4_GRAPH_REPORT.md
+  phase_5_visual_audit: PHASE_5_VISUAL_AUDIT.md
+  phase_5_visual: PHASE_5_VISUAL_REPORT.md
+  phase_6_behavior_matrix: PHASE_6_BEHAVIOR_MATRIX.md
+  phase_6_behavior: PHASE_6_BEHAVIOR_REPORT.md
+  phase_7_regression: PHASE_7_REGRESSION_REPORT.md
+  phase_8_home: PHASE_8_HOME_REPORT.md
+  phase_9_final: PHASE_9_FINAL_REPORT.md
+  post_phase9_ux: POST_PHASE9_UX_REPORT.md
+model: locked
+phase3_ratio_particle_counts: pass
+phase4_graph: pass
+phase5_visual: partial
+phase6_behavior: pass
+phase7_regression: pass
+phase8_home: pass
+phase9_final: pass
+visual: candidate
+visual_screenshot_harness: blocked
+assets_substituted: 0
+tests_ph_scale: 94
+p0: 0
+p1: 0
+p2: 5
+android_runtime: not_verified

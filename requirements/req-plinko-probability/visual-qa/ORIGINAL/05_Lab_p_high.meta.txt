@@ -1,0 +1,7 @@
+state: 05_Lab_p_high
+viewport: 1280x800
+DPR: 1
+actions: ["set_p_0.9_verified"]
+visual_reference: published latest
+behavior_reference: local 1.2.0-dev.6
+captured_at: 2026-09-16T12:16:07.400Z

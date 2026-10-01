@@ -1,0 +1,13 @@
+﻿req_id: req-masses-and-springs-basics
+title: Masses and Springs Basics
+phase: done
+status: done
+milestone: closed
+sop: agile-vibe
+created_at: "2026-09-08"
+updated_at: "2026-09-08 05:07"
+completed_at: "2026-09-08 05:04"
+final_summary_path: "spec/最终需求.md"
+# Close 完成：code-reviewer → closer → knowledge-maintainer
+# VCS 不可用：未 commit；工作区文件即为交付态
+# check-before-done: PASS（WARNING: 缺 ac-verification.md，非阻塞）

@@ -1,0 +1,128 @@
+[2026-09-04 19:10] Phase 0 START · Project Discovery
+  - 工作区: KartosLab Flutter (kratos)
+  - 本地源: phet sourses/vector-addition-main/vector-addition-main @ package.json 1.3.0-dev.0
+  - dependencies.json comment: 1.2.0-dev.11 (2025-11-25) — 不以官网 latest 替换
+  - 原则: 本地源码唯一第一事实来源；先取证后编码
+  - 范围: 仅 vector-addition（含内置 Equations 屏）；不迁移独立 sim vector-addition-equations
+
+[2026-09-04 19:10] Phase 0 DONE · PROJECT_DISCOVERY.md
+  - Screens: 4 (Explore1D → Explore2D → Lab → Equations)；默认 Explore1D
+  - Canonical: tailPosition + xyComponents；Sum = Σ on-graph xy
+  - MVT: inverted-Y · scale 14.5
+
+[2026-09-04 19:13] 用户确认 Home 归类 = A
+  - Home → 物理 → 力学 → Vector Addition
+  - 不新建一级「数学」；不改 Home taxonomy 结构
+  - 范围确认：只迁 vector-addition 四屏（含内置 Equations）；不迁 vector-addition-equations
+
+[2026-09-04 19:15] Phase 1 DONE · SOURCE_ANALYSIS.md
+  - Snap / drag / isOnGraph / Resultant / ComponentStyle / Equations 三方程 / Arrow / Hit-test / Anchors / Reset / Assets 均已取证
+  - Canonical 重申：禁止 tip 升格
+  - 门禁 PASS（angle 顺逆时针留给 Phase 4 单测）
+  - 无 BLOCKED → 默认进入 Phase 2
+
+[2026-09-04 19:15] Phase 2 DONE · Visual Baseline
+  - 复制 assets screen1–4 → visual-qa/ref/
+  - 写入 visual-qa/BASELINE.md（结构清单 + 颜色/箭头/Graph 基线）
+  - [待确认] 本机 runtime 全页 overlay
+  - 基线资产就位 → 可进入 Phase 3 Architecture（待用户指示或默认推进）
+
+[2026-09-04 19:32] 用户确认推进 Phase 3 → Phase 4（无需再问）
+
+[2026-09-04 19:35] Phase 3 DONE · ARCHITECTURE_PLAN.md
+  - Canonical tail+xy；Sum≠Equations；Transform 集中；无跨 sim framework
+  - 无重大不可逆决策 → 自动进入 Phase 4 Model
+
+[2026-09-04 19:35] Phase 4 START · Model / Snap / Transform / Resultant
+
+[2026-09-04 19:50] Phase 4 DONE · Model core + tests
+  - lib/vector_addition/: RootVector / VaVector / SnapPolicy / MathCoordinateTransform
+  - SumVector (isOnGraph only) ≠ EquationsResultant (addition/subtraction/negation)
+  - ComponentVector 4 styles · VectorInteractionController · VaHitTester
+  - test/vector_addition: 25 passed
+  - flutter analyze lib/vector_addition: No issues
+  - 未改 common / 其他 sim / Home
+  - 下一阶段: Phase 5+ Screen models / Render / UI（待推进）
+
+[2026-09-04 19:44] 用户确认推进 Phase 5 STATIC_RENDER → 自动 Phase 6
+
+[2026-09-04 19:55] Phase 5 DONE · STATIC_RENDER.md
+  - RenderData / Builder / ArrowGeometry / ScenePainter / VaScreenBody
+  - 四屏默认状态按源码；Equations 用 EquationsResultant
+  - Home 力学 → Vector Addition 四 Tab
+  - test: 36 passed · analyze: No issues
+  - visual-qa/flutter/screen1–4.png
+  - 无重大架构问题 → 自动进入 Phase 6 INTERACTION.md
+
+[2026-09-04 20:00] Phase 6 IN PROGRESS · 核心交互接线
+  - VaGraphInteractor: tip/body hit + toolbox activate/drop
+  - test: 38 passed · analyze clean
+  - 仍待: grab-offset / shadow / origin drag / animateToToolbox
+
+[2026-09-04 20:25] Phase 6 DONE · INTERACTION.md
+  - Grab-offset（SoundDragListener 语义）；Origin drag + preserve view tails
+  - Pop ≠ delete；shadow；clip ⊥ isOnGraph
+  - Snap on move；toolbox return 动画 speed=75
+  - Resultant/Equations tip 限制保持；无自制 multi-touch
+  - test/vector_addition: 54 passed · analyze: No issues
+  - 未改 Canonical / SumVector / EquationsResultant / Transform / SnapPolicy
+  - 自动进入 Phase 7 CONTROLS
+
+[2026-09-04 20:25] Phase 7 START · Controls / AC 收口
+  - 范围: VectorValues / Components / Sum / Angles / Grid / SceneRadio / Eraser / Reset / Equations 方程条
+  - 禁止改 Phase 3–6 核心 model
+
+[2026-09-04 20:40] Phase 7 IN PROGRESS · CONTROLS.md
+  - Vector Values accordion：折叠 + |v|/θ/x/y 读数
+  - Angles 弧线；Equations Base Vectors checkbox；面板溢出修复
+  - phase7_controls_test + 全 suite 通过；analyze clean
+  - 仍待: Base Vector 几何精修、AC-1 手测 Home 往返
+
+[2026-09-04 20:50] Phase 7 DONE · PHASE_7_CONTROLS.md
+  - Base Vector 渲染（白+stroke 1.5）；Angle arc 对齐 CurvedArrowNode
+  - atan2 CCW 钉死；sweep = -modelAngle；signed/unsigned chips
+  - AC-1 reopen 自动化；Reset/Eraser/Scene 独立性
+  - test: 81 passed · analyze: No issues
+  - 文档: GEOMETRY_CALIBRATION.md · COMPLETION_REPORT.md
+  - 自动进入 Phase 8 Visual / Screen Integration
+
+[2026-09-04 20:50] Phase 8 START · Visual / Screen Integration
+  - 范围: 对照 visual-qa/ref 局部精修、Equations polar/base pickers、AC 收口
+  - 禁止改 Phase 3–7 核心语义
+
+[2026-09-04 21:05] Phase 8 DONE · PHASE_8_VISUAL.md
+  - EquationsVector：coeff −5…5；Cartesian+Polar scenes；VaNumberPicker
+  - EquationsResultant 保持；Lab≠Explore2D；eraser 非 Material Icon
+  - screen{1..4}_final.png；test 88 passed
+  - 自动进入 Phase 9 Final QA
+
+[2026-09-04 21:05] Phase 9 START · Final QA
+  - AC 全表 + 回归冻结 + Close
+
+[2026-09-04 22:40] Phase 9 DONE · 封板
+  - AngleConventionUtils：0→0；unsigned picker 0…355；双 picker 同步
+  - 未改 CCW / sweep=-θ / EquationsResultant / Lab u/v
+  - test: 102 passed · analyze: 0 issues
+  - meta status: done · PHASE_9_FINAL_QA.md 可封板
+
+[2026-09-04 23:30] Phase 10 START/DONE �� Visual Layout Fidelity
+  - Equation bar: ���� �� ���� (Values ��)�������� Grid
+  - Home Tab �� �ײ���Components 2x2 icons��Base Vectors �ҲࣻReset �Զ���
+  - Grid viewBounds δ�� (725x435)���Ӿ����ٱ��������ڵ�
+  - test: 102 passed �� analyze: 0
+  - �ж�: [�Ӿ�������] �� �� visual-qa/PHASE_10.md
+
+[2026-09-04 23:20] Phase 10.5 �� Original Asset Reuse
+  - ɨ�� vector-addition assets + scenery-phet/images
+  - Ψһ UI ͼ: eraser.svg �� assets/phet/vector_addition/scenery_phet/
+  - Components/Cartesian/Polar/Reset/Base icon: PhET ���� �� Custom Draw Required
+  - �Ƴ� Material Icons.add/remove��Eraser �� SvgPicture
+  - ASSET_INVENTORY.md��Material replacements: 0
+  - test 102 passed
+
+[2026-09-04 23:35] CLOSE · 移植结束 · COMPLETION_REPORT.md
+  - status: done · phase: close
+  - AC-1..6 PASS · test 102 · analyze 0
+  - 数学/行为 Phase 9 封板；视觉 [视觉待修正] 不阻塞关闭
+  - Asset: eraser.svg reused · Material 0
+  - 用户确认可 report / 结束

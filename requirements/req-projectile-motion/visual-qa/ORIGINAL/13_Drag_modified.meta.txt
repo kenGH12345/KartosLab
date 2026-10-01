@@ -1,0 +1,6 @@
+state: 13_Drag_modified
+viewport: 1280x800
+DPR: 1
+actions: ["reset","altitude_1600_flatirons","Cd_0.8","fire","wait_0.5s"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.41 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T15:04:35.631Z

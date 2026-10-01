@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "my_solar_system_scenario.schema.json",
+  "title": "My Solar System orbital preset",
+  "type": "object",
+  "required": ["scenarioId", "name", "comboVisible", "bodies"],
+  "properties": {
+    "scenarioId": { "type": "string" },
+    "name": { "type": "string" },
+    "comboVisible": { "type": "boolean" },
+    "gravityForceScalePower": { "type": "number" },
+    "source": { "type": "string" },
+    "bodies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["mass", "position", "velocity"],
+        "properties": {
+          "isActive": { "type": "boolean" },
+          "mass": { "type": "number" },
+          "position": {
+            "type": "object",
+            "required": ["x", "y"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" }
+            }
+          },
+          "velocity": {
+            "type": "object",
+            "required": ["x", "y"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

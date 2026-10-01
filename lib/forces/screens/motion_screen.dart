@@ -43,7 +43,7 @@ class _MotionScreenState extends State<MotionScreen>
       _showValues = true,
       _showMasses = true,
       _showSpeed = true;
-  bool _showChart = false;
+  final bool _showChart = false;
   int _chartMode = 0;
   double _friction = 0;
   bool _inquiryOpen = false;
@@ -187,18 +187,35 @@ class _MotionScreenState extends State<MotionScreen>
               child: Row(
                 children: [
                   for (final c in [
-                    _chip('力', _showForces, (v) => setState(() => _showForces = v)),
+                    _chip(
+                      '力',
+                      _showForces,
+                      (v) => setState(() => _showForces = v),
+                    ),
                     if (widget.mode != MotionScreenMode.motion)
-                      _chip('合力', _showSum, (v) => setState(() => _showSum = v)),
-                    _chip('值', _showValues, (v) => setState(() => _showValues = v)),
-                    _chip('质量', _showMasses, (v) => setState(() => _showMasses = v)),
-                    _chip('速度', _showSpeed, (v) => setState(() => _showSpeed = v)),
+                      _chip(
+                        '合力',
+                        _showSum,
+                        (v) => setState(() => _showSum = v),
+                      ),
+                    _chip(
+                      '值',
+                      _showValues,
+                      (v) => setState(() => _showValues = v),
+                    ),
+                    _chip(
+                      '质量',
+                      _showMasses,
+                      (v) => setState(() => _showMasses = v),
+                    ),
+                    _chip(
+                      '速度',
+                      _showSpeed,
+                      (v) => setState(() => _showSpeed = v),
+                    ),
                     _chip('图表', _showChart, (v) => _showChartDialog()),
                   ])
-                    Padding(
-                      padding: const EdgeInsets.only(right: 6),
-                      child: c,
-                    ),
+                    Padding(padding: const EdgeInsets.only(right: 6), child: c),
                 ],
               ),
             ),
@@ -444,10 +461,12 @@ class _MotionScreenState extends State<MotionScreen>
 
   Widget _itemTray(ItemSide side) {
     final items = kForceItems.where((i) {
-      if (widget.mode == MotionScreenMode.acceleration && i.id == 'bucket')
+      if (widget.mode == MotionScreenMode.acceleration && i.id == 'bucket') {
         return true;
-      if (widget.mode != MotionScreenMode.acceleration && i.id == 'bucket')
+      }
+      if (widget.mode != MotionScreenMode.acceleration && i.id == 'bucket') {
         return false;
+      }
       return i.side == side;
     }).toList();
     return ListView(
@@ -532,7 +551,7 @@ class _MotionScreenState extends State<MotionScreen>
               titleColor: Color(0xFFF59E0B),
               desc:
                   '合力不为零→速度改变(加速/减速/转向)。合力为零→速度不变(静止或匀速)。'
-                  '不是\"力维持运动\"而是\"力改变运动\"——这是从亚里士多德到牛顿的认知革命。',
+                  '不是"力维持运动"而是"力改变运动"——这是从亚里士多德到牛顿的认知革命。',
             ),
             KnowledgeItem(
               icon: '📐',

@@ -10,8 +10,6 @@ import '../services/sound_effects.dart';
 import '../widgets/component_icon.dart';
 import '../widgets/circuit_controls.dart';
 import '../../common/widgets/drag_drop_workspace.dart';
-import '../../common/geometry/projection.dart';
-import '../../common/geometry/hit_test.dart';
 import '../../common/widgets/knowledge_panel.dart';
 import '../../common/widgets/nine_grid_layout.dart';
 import '../../common/widgets/inquiry_models.dart';
@@ -30,29 +28,7 @@ const bool useScenarioLoader = true;
 const String _defaultScenarioId = 'default';
 
 class CircuitScreen extends StatefulWidget {
-  const CircuitScreen({
-    super.key,
-    this.initialScenarioId = _defaultScenarioId,
-    this.onScenarioSuccess,
-    this.onPredictionResult,
-    this.showScenarioMenu = true,
-  });
-
-  /// 初始场景 id（T-P1-06 · 剧本模式 host 注入用）。默认 'default' =
-  /// 现行为不变；内部仍走 manager.loadScenario（AC-12 · C5）。
-  final String initialScenarioId;
-
-  /// 可选钩子（T-P1-06 · 剧本模式专用）：场景 successCriteria 全满足时触发一次。
-  /// 不传 = 现行为逐字节等价（AC-R1 接线侧）。
-  final VoidCallback? onScenarioSuccess;
-
-  /// 可选转发（T-P1-06）：InquiryDrawer 预测题结果 (verified, correct)。
-  final void Function(int verified, int correct)? onPredictionResult;
-
-  /// Major-3 · 剧本模式 false 时禁用 AppBar 场景切换下拉（防学生在节点内
-  /// 逃逸剧本编排）。默认 true = 现行为不变。
-  final bool showScenarioMenu;
-
+  const CircuitScreen({super.key});
   @override
   State<CircuitScreen> createState() => _CircuitScreenState();
 }
@@ -74,6 +50,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
   Offset? _doubleTapWorld;
   bool _objectiveMetNotified = false;
   bool _inquiryOpen = true; // 预测阶段默认展开：进入即见预测题（置顶），可手动收起
+  Size? _canvasSize; // DropCanvas 画布尺寸（拖放投影转换用）
 
   String _vid() => 'v${_nextId++}';
   String _cid() => 'c${_nextId++}';
@@ -97,12 +74,12 @@ class _CircuitScreenState extends State<CircuitScreen> {
       await manager.loadScenarios();
       if (!mounted) return;
       _scenarioManager = manager;
-      final next = manager.loadScenario(widget.initialScenarioId);
+      final next = manager.loadScenario(_defaultScenarioId);
       setState(() {
         _state = next;
         _solved = CircuitSolver.solve(next);
         _nextId = _computeNextId(next);
-        _currentScenarioId = widget.initialScenarioId;
+        _currentScenarioId = _defaultScenarioId;
       });
     } catch (e) {
       debugPrint('Failed to load default circuit scenario: $e');
@@ -167,27 +144,12 @@ class _CircuitScreenState extends State<CircuitScreen> {
   }
 
   /// 探究目标达成检测（轻量 · 一次成功只提示一次）。
-  ///
-  /// T-P1-06（v1.1 任务卡口径）：判定门控从 `_inquiryTask == null` 扩为
-  /// `(widget.onScenarioSuccess == null && _inquiryTask == null)`——
-  /// 原 `_inquiryTask == null` 单门控致无 inquiryTask 场景（controlled-switch
-  /// 等试点三场景）checkObjectives 永不执行，剧本完成信号死路。达成时二选一
-  /// （评审 Minor-3）：剧本模式（钩子非空）→ 抑制自带 SnackBar 仅外发钩子；
-  /// 非剧本 → 既有 SnackBar 通知逻辑原样执行（无 inquiryTask 场景本就不弹）。
-  /// 不传钩子时现有行为逐字节等价（AC-R1）。
   void _maybeNotifyObjectiveMet() {
     final mgr = _scenarioManager;
-    if (mgr == null || _objectiveMetNotified) return;
-    if (widget.onScenarioSuccess == null && _inquiryTask == null) return;
+    if (mgr == null || _inquiryTask == null || _objectiveMetNotified) return;
     final met = mgr.checkObjectives(_state);
     if (!met) return;
     _objectiveMetNotified = true;
-    // T-P1-06：剧本完成信号——一次成功只外发一次（_objectiveMetNotified 门控）
-    widget.onScenarioSuccess?.call();
-    // 剧本模式：抑制自带 SnackBar（完成反馈由剧本层流转反馈承担）
-    if (widget.onScenarioSuccess != null) return;
-    // Snackbar 提示仅探案场景（无 inquiryTask 的场景不提示）
-    if (_inquiryTask == null) return;
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -207,8 +169,21 @@ class _CircuitScreenState extends State<CircuitScreen> {
   void _onComponentDrop(ComponentType type, Offset worldPos) {
     _isToolboxDropActive = true;
     try {
-      // worldPos 来自 DropCanvas 注入的同一投影实例（projectionFactory），
-      // 与渲染/hitTest 坐标系天然一致，无需再转换（req-unify-projection-layer MT-4 根治）。
+      // DropCanvas 放置坐标基于 CanvasProjection（origin=(W/2, H*0.55)）→
+      // 转换到 SceneProjection（origin=(W/2, H/2)）坐标系，保证渲染与 hitTest 一致。
+      // （否则拖放后元件渲染位置偏移、点击无法选中——既有 bug，测试暴露）
+      final size = _canvasSize;
+      if (size != null) {
+        final canvasProj = CanvasProjection(canvasSize: size, scale: 1.0);
+        final screenLocal = canvasProj.toScreen(worldPos);
+        final sceneProj = SceneProjection(
+          scale: 1,
+          origin: Offset(size.width / 2, size.height / 2),
+          // 用当前 zoom（Major-1 评审修复）：渲染/hitTest 用 _state.zoom，缩放后拖放坐标一致
+          zoom: _state.zoom,
+        );
+        worldPos = sceneProj.toWorld(screenLocal);
+      }
       _addComponent(type, worldPos);
     } finally {
       _isToolboxDropActive = false;
@@ -302,29 +277,32 @@ class _CircuitScreenState extends State<CircuitScreen> {
   }
 
   void _onWireTap(int idx) {
-    if (idx < _state.wires.length)
+    if (idx < _state.wires.length) {
       _update(_state.copyWith(selectedId: _state.wires[idx].id));
+    }
   }
 
   Offset? _dragStartMousePos, _dragStartCompPos;
 
   void _onDragStart(Offset w) {
-    if (_state.creatingWireStartVertexId != null)
+    if (_state.creatingWireStartVertexId != null) {
       setState(
         () => _state = _state.copyWith(
           creatingWireStartVertexId: null,
           dragPos: null,
         ),
       );
+    }
     final sel = _state.selected;
     if (sel != null && !_state.wires.any((wr) => wr.id == _state.selectedId)) {
-      if (_state.draggingVertexId != null)
+      if (_state.draggingVertexId != null) {
         setState(
           () => _state = _state.copyWith(
             draggingVertexId: null,
             dragVertexNewPos: null,
           ),
         );
+      }
       _dragStartMousePos = w;
       _dragStartCompPos = Offset(sel.x, sel.y);
       return;
@@ -398,10 +376,12 @@ class _CircuitScreenState extends State<CircuitScreen> {
                 .map((c) => c.id == nc.id ? c.copyWith(x: nx, y: ny) : c)
                 .toList(),
             vertices: _state.vertices.map((v) {
-              if (v.id == nc.startVertexId)
+              if (v.id == nc.startVertexId) {
                 return v.copyWith(x: v.x + incX, y: v.y + incY);
-              if (v.id == nc.endVertexId)
+              }
+              if (v.id == nc.endVertexId) {
                 return v.copyWith(x: v.x + incX, y: v.y + incY);
+              }
               return v;
             }).toList(),
           ),
@@ -461,10 +441,12 @@ class _CircuitScreenState extends State<CircuitScreen> {
           if (wiresOnTerminal.isNotEmpty) {
             final newV = Vertex(id: _vid(), x: np.dx, y: np.dy);
             final newWires = _state.wires.map((wr) {
-              if (wr.startVertexId == vId)
+              if (wr.startVertexId == vId) {
                 return wr.copyWith(startVertexId: newV.id);
-              if (wr.endVertexId == vId)
+              }
+              if (wr.endVertexId == vId) {
                 return wr.copyWith(endVertexId: newV.id);
+              }
               return wr;
             }).toList();
             _update(
@@ -500,18 +482,20 @@ class _CircuitScreenState extends State<CircuitScreen> {
   void _mergeVertices(String old, String nw) => _update(
     _state.copyWith(
       wires: _state.wires.map((w) {
-        if (w.startVertexId == old)
+        if (w.startVertexId == old) {
           return WireSegment(
             id: w.id,
             startVertexId: nw,
             endVertexId: w.endVertexId,
           );
-        if (w.endVertexId == old)
+        }
+        if (w.endVertexId == old) {
           return WireSegment(
             id: w.id,
             startVertexId: w.startVertexId,
             endVertexId: nw,
           );
+        }
         return w;
       }).toList(),
       components: _state.components.map((c) {
@@ -530,7 +514,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
     if (_state.selectedId == null) return;
     final id = _state.selectedId!;
     final wi = _state.wires.indexWhere((w) => w.id == id);
-    if (wi != -1)
+    if (wi != -1) {
       _update(
         _state.copyWith(
           wires: List<WireSegment>.from(_state.wires)..removeAt(wi),
@@ -538,8 +522,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
         ),
         sound: true,
       );
-    else
+    } else {
       _update(_state.removeComponent(id));
+    }
   }
 
   void _toggleSwitch() {
@@ -593,20 +578,22 @@ class _CircuitScreenState extends State<CircuitScreen> {
 
   void _undo() {
     final p = _history.undo(_state);
-    if (p != null)
+    if (p != null) {
       setState(() {
         _state = p;
         _solved = CircuitSolver.solve(p);
       });
+    }
   }
 
   void _redo() {
     final n = _history.redo(_state);
-    if (n != null)
+    if (n != null) {
       setState(() {
         _state = n;
         _solved = CircuitSolver.solve(n);
       });
+    }
   }
 
   void _clear() => showDialog(
@@ -703,9 +690,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
       autofocus: true,
       onKeyEvent: (event) {
         if (event is KeyDownEvent) {
-          if (event.logicalKey == LogicalKeyboardKey.delete)
+          if (event.logicalKey == LogicalKeyboardKey.delete) {
             _deleteSelected();
-          else if (event.logicalKey == LogicalKeyboardKey.keyR)
+          } else if (event.logicalKey == LogicalKeyboardKey.keyR)
             _rotateSelected();
           else if (event.logicalKey == LogicalKeyboardKey.escape)
             _update(_state.copyWith(selectedId: null));
@@ -737,82 +724,83 @@ class _CircuitScreenState extends State<CircuitScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
-              icon: const Icon(Icons.menu_book_outlined),
-              tooltip: '知识点',
-              onPressed: _showKnowledgeDialog,
-            ),
-            // 320 窄视口隐藏场景下拉（140px 最占空间 · AppBar 21px 溢出修复）
-            // Major-3：剧本模式 showScenarioMenu=false 禁用（防节点内逃逸编排）
-            if (_scenarioManager != null &&
-                widget.showScenarioMenu &&
-                MediaQuery.sizeOf(context).width >= 600)
-              SizedBox(
-                width: 140,
-                child: KratosComboBox<String>(
-                  items: _scenarioManager!.scenarios
-                      .map((s) => s.scenarioId)
-                      .toList(),
-                  itemLabels: _scenarioManager!.scenarios
-                      .map((s) => s.name)
-                      .toList(),
-                  value: _currentScenarioId,
-                  onChanged: _switchScenario,
-                ),
-              ),
-            const SizedBox(width: 8),
-            if (sel != null && sel.type == ComponentType.switch_)
-              IconButton(
-                icon: Icon(
-                  sel.isClosed ? Icons.toggle_on : Icons.toggle_off,
-                  color: const Color(0xFF22C55E),
-                ),
-                tooltip: '切换',
-                onPressed: _toggleSwitch,
-              ),
-            if (sel != null)
-              IconButton(
-                icon: const Icon(Icons.rotate_right, color: Color(0xFFCBD5E1)),
-                tooltip: '旋转(R)',
-                onPressed: _rotateSelected,
-              ),
-            if (hasSelection)
-              IconButton(
-                icon: const Icon(
-                  Icons.delete_outline,
-                  color: Color(0xFFEF4444),
-                ),
-                tooltip: '删除',
-                onPressed: _deleteSelected,
-              ),
-            IconButton(
-              icon: const Icon(Icons.undo, size: 20),
-              tooltip: '撤销',
-              onPressed: _history.canUndo ? _undo : null,
-            ),
-            IconButton(
-              icon: const Icon(Icons.redo, size: 20),
-              tooltip: '重做',
-              onPressed: _history.canRedo ? _redo : null,
-            ),
-            IconButton(
-              icon: const Icon(Icons.zoom_out, size: 20),
-              tooltip: '缩小',
-              onPressed: () => _setZoom(_state.zoom - 0.1),
-            ),
-            Text(
-              '${(_state.zoom * 100).toInt()}%',
-              style: const TextStyle(fontSize: 11),
-            ),
-            IconButton(
-              icon: const Icon(Icons.zoom_in, size: 20),
-              tooltip: '放大',
-              onPressed: () => _setZoom(_state.zoom + 0.1),
-            ),
+                    icon: const Icon(Icons.menu_book_outlined),
+                    tooltip: '知识点',
+                    onPressed: _showKnowledgeDialog,
+                  ),
+                  // 320 窄视口隐藏场景下拉（140px 最占空间 · AppBar 21px 溢出修复）
+                  if (_scenarioManager != null &&
+                      MediaQuery.sizeOf(context).width >= 600)
+                    SizedBox(
+                      width: 140,
+                      child: KratosComboBox<String>(
+                        items: _scenarioManager!.scenarios
+                            .map((s) => s.scenarioId)
+                            .toList(),
+                        itemLabels: _scenarioManager!.scenarios
+                            .map((s) => s.name)
+                            .toList(),
+                        value: _currentScenarioId,
+                        onChanged: _switchScenario,
+                      ),
+                    ),
+                  const SizedBox(width: 8),
+                  if (sel != null && sel.type == ComponentType.switch_)
+                    IconButton(
+                      icon: Icon(
+                        sel.isClosed ? Icons.toggle_on : Icons.toggle_off,
+                        color: const Color(0xFF22C55E),
+                      ),
+                      tooltip: '切换',
+                      onPressed: _toggleSwitch,
+                    ),
+                  if (sel != null)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.rotate_right,
+                        color: Color(0xFFCBD5E1),
+                      ),
+                      tooltip: '旋转(R)',
+                      onPressed: _rotateSelected,
+                    ),
+                  if (hasSelection)
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline,
+                        color: Color(0xFFEF4444),
+                      ),
+                      tooltip: '删除',
+                      onPressed: _deleteSelected,
+                    ),
                   IconButton(
-              icon: const Icon(Icons.restart_alt_rounded),
-              tooltip: '清空',
-              onPressed: _clear,
-            ),
+                    icon: const Icon(Icons.undo, size: 20),
+                    tooltip: '撤销',
+                    onPressed: _history.canUndo ? _undo : null,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.redo, size: 20),
+                    tooltip: '重做',
+                    onPressed: _history.canRedo ? _redo : null,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.zoom_out, size: 20),
+                    tooltip: '缩小',
+                    onPressed: () => _setZoom(_state.zoom - 0.1),
+                  ),
+                  Text(
+                    '${(_state.zoom * 100).toInt()}%',
+                    style: const TextStyle(fontSize: 11),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.zoom_in, size: 20),
+                    tooltip: '放大',
+                    onPressed: () => _setZoom(_state.zoom + 0.1),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.restart_alt_rounded),
+                    tooltip: '清空',
+                    onPressed: _clear,
+                  ),
                 ],
               ),
             ),
@@ -823,14 +811,13 @@ class _CircuitScreenState extends State<CircuitScreen> {
             NineGridLayout(
               // 中间格 = 纯电路画布 · 面积 ≥ 70% 屏 · DragTarget 接收元件
               center: DropCanvas<ComponentType>(
-              // 工厂注入：渲染/hitTest/拖放落点共用同一投影实例（origin 居中 + 当前 zoom）
-              projectionFactory: (sz) => SceneProjection(
-                origin: Offset(sz.width / 2, sz.height / 2),
-                zoom: _state.zoom,
+                canvasBuilder: (_, wsProj) {
+                  _canvasSize = wsProj.canvasSize;
+                  return _buildCanvas(wsProj.canvasSize);
+                },
+                onItemDropped: _onComponentDrop,
+                scale: 1.0,
               ),
-              canvasBuilder: (_, proj, sz) => _buildCanvas(sz, proj),
-              onItemDropped: _onComponentDrop,
-            ),
               // 底部中格 = 元件托盘（永久 UI · 贴屏底；临时调节条在画布内跟随选中元件）
               bottomCenter: DragTray<ComponentType>(
                 layout: DragDropLayout.bottomTray,
@@ -858,7 +845,6 @@ class _CircuitScreenState extends State<CircuitScreen> {
                   : const [],
               snapshotProvider: _circuitSnapshot,
               open: _inquiryOpen,
-              onPredictionResult: widget.onPredictionResult,
             ),
           ],
         ),
@@ -932,8 +918,13 @@ class _CircuitScreenState extends State<CircuitScreen> {
     );
   }
 
-  Widget _buildCanvas(Size sz, SceneProjection proj) {
+  Widget _buildCanvas(Size sz) {
     final pw = _solved;
+    final proj = SceneProjection(
+      scale: 1,
+      origin: Offset(sz.width / 2, sz.height / 2),
+      zoom: _state.zoom,
+    );
     final isWire = _state.selected != null
         ? false
         : _state.selectedId != null &&
@@ -967,8 +958,9 @@ class _CircuitScreenState extends State<CircuitScreen> {
             _doubleTapWorld = null;
           },
           onScaleStart: (d) {
-            if (d.pointerCount < 2)
+            if (d.pointerCount < 2) {
               _onDragStart(proj.toWorld(d.localFocalPoint));
+            }
           },
           onScaleUpdate: (d) => d.pointerCount >= 2
               ? _setZoom(_state.zoom * d.horizontalScale)
@@ -1092,9 +1084,12 @@ class _CircuitScreenState extends State<CircuitScreen> {
       ];
       var md = double.infinity;
       for (var j = 0; j < pts.length - 1; j++) {
+        final ab = pts[j + 1] - pts[j], ap = sp - pts[j];
+        final ls = ab.distanceSquared,
+            t = ls == 0 ? 0 : (ap.dx * ab.dx + ap.dy * ab.dy) / ls;
         md = math.min(
           md,
-          pointToSegmentDistance(sp, pts[j], pts[j + 1]),
+          (sp - (pts[j] + ab * (t.clamp(0.0, 1.0) as double))).distance,
         );
       }
       if (md < 15) return i;
@@ -1174,6 +1169,24 @@ class _CircuitScreenState extends State<CircuitScreen> {
   }
 }
 
+class SceneProjection {
+  final double scale;
+  final Offset origin;
+  final double zoom;
+  const SceneProjection({
+    required this.scale,
+    required this.origin,
+    this.zoom = 1.0,
+  });
+  Offset toScreen(Offset w) =>
+      Offset(w.dx * scale * zoom + origin.dx, w.dy * scale * zoom + origin.dy);
+  Offset toWorld(Offset s) => Offset(
+    (s.dx - origin.dx) / (scale * zoom),
+    (s.dy - origin.dy) / (scale * zoom),
+  );
+  double toScreenLength(double w) => w * scale * zoom;
+}
+
 class CircuitPainter extends CustomPainter {
   final CircuitState state;
   final SolvedCircuit solved;
@@ -1211,10 +1224,12 @@ class CircuitPainter extends CustomPainter {
       ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
     final g = 40 * projection.scale * projection.zoom;
-    for (double x = 0; x < size.width; x += g)
+    for (double x = 0; x < size.width; x += g) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), p);
-    for (double y = 0; y < size.height; y += g)
+    }
+    for (double y = 0; y < size.height; y += g) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
+    }
   }
 
   void _wires(Canvas canvas) {
@@ -1271,8 +1286,9 @@ class CircuitPainter extends CustomPainter {
   }
 
   void _components(Canvas canvas) {
-    for (final comp in state.components)
+    for (final comp in state.components) {
       _draw(canvas, comp, comp.id == state.selectedId);
+    }
   }
 
   void _draw(Canvas canvas, CircuitComponent c, bool sel) {
@@ -1282,7 +1298,7 @@ class CircuitPainter extends CustomPainter {
     final r = Rect.fromCenter(center: pos, width: w, height: h);
     _t(canvas, Offset(r.left, pos.dy));
     _t(canvas, Offset(r.right, pos.dy));
-    if (sel)
+    if (sel) {
       canvas.drawRRect(
         RRect.fromRectAndRadius(r.inflate(6), const Radius.circular(8)),
         Paint()
@@ -1290,6 +1306,7 @@ class CircuitPainter extends CustomPainter {
           ..style = PaintingStyle.stroke
           ..strokeWidth = 2,
       );
+    }
   }
 
   void _t(Canvas c, Offset o) {

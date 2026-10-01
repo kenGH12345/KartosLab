@@ -1,0 +1,615 @@
+{
+  "step": "FINAL-VISUAL-REMEASURE",
+  "code_changed": false,
+  "normalization": {
+    "sx": 0.8,
+    "sy": 0.8930635838150289,
+    "chrome_h": 108.0,
+    "play": {
+      "x": 0,
+      "y": 108.0,
+      "w": 1280.0,
+      "h": 692.0
+    }
+  },
+  "p5_2_side_effects": {
+    "generator_logical": {
+      "x": 217.66666666666669,
+      "y": 730.0,
+      "w": 418.00000000000006,
+      "h": 55.0,
+      "cx": 426.66666666666674,
+      "cy": 757.5
+    },
+    "addProton": {
+      "x": 217.66666666666669,
+      "y": 730.0,
+      "w": 28.0,
+      "h": 24.0,
+      "cx": 231.66666666666669,
+      "cy": 742.0
+    },
+    "addPair": {
+      "x": 405.6666666666667,
+      "y": 730.0,
+      "w": 42.0,
+      "h": 24.0,
+      "cx": 426.6666666666667,
+      "cy": 742.0
+    },
+    "empty_generator": {
+      "x": 217.66666666666669,
+      "y": 730.0,
+      "w": 418.00000000000006,
+      "h": 55.0,
+      "cx": 426.66666666666674,
+      "cy": 757.5
+    },
+    "parent_bounds_changed": false,
+    "hit_area_box": "28×24 / 42×24 与 P2-5 相同"
+  },
+  "decay_rows": [
+    {
+      "screen": "Decay",
+      "component": "play area",
+      "original": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 618,
+        "cx": 512,
+        "cy": 309
+      },
+      "flutter_mapped": {
+        "x": 0,
+        "y": 0,
+        "w": 1024,
+        "h": 618,
+        "cx": 512,
+        "cy": 309
+      },
+      "dx": 0,
+      "dy": 0,
+      "dw": 0,
+      "dh": 0,
+      "dcx": 0,
+      "dcy": 0,
+      "classification": "[视觉已对齐]",
+      "note": "参考框"
+    },
+    {
+      "screen": "Decay",
+      "component": "nucleus",
+      "original": {
+        "x": 341.3,
+        "y": 339.9,
+        "w": 0,
+        "h": 0,
+        "cx": 341.3,
+        "cy": 339.9
+      },
+      "flutter_mapped": {
+        "x": 341.3,
+        "y": 388.9,
+        "w": 0.0,
+        "h": 0.0,
+        "cx": 341.3,
+        "cy": 388.9
+      },
+      "dx": 0.0,
+      "dy": 49.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 49.0,
+      "classification": "[视觉已对齐]",
+      "note": "Δcx=0 resolved；Δcy 来自 NineGrid 画布高，公式 canvasH×0.55 不重开"
+    },
+    {
+      "screen": "Decay",
+      "component": "generator",
+      "original": {
+        "x": 161.3,
+        "y": 513,
+        "w": 360,
+        "h": 90,
+        "cx": 341.3,
+        "cy": 558
+      },
+      "flutter_mapped": {
+        "x": 174.1,
+        "y": 555.5,
+        "w": 334.4,
+        "h": 49.1,
+        "cx": 341.3,
+        "cy": 580.0
+      },
+      "dx": 12.8,
+      "dy": 42.5,
+      "dw": -25.6,
+      "dh": -40.9,
+      "dcx": 0.0,
+      "dcy": 22.0,
+      "classification": "[视觉已对齐]",
+      "note": "Δcx=0 resolved；bottom orig=603.0 fl=604.6"
+    },
+    {
+      "screen": "Decay",
+      "component": "Half-Life",
+      "original": {
+        "x": 45,
+        "y": 95,
+        "w": 550,
+        "h": 80,
+        "cx": 320,
+        "cy": 135
+      },
+      "flutter_mapped": {
+        "x": 83.6,
+        "y": 46.8,
+        "w": 856.7,
+        "h": 110.7,
+        "cx": 512.0,
+        "cy": 102.1
+      },
+      "dx": 38.6,
+      "dy": -48.2,
+      "dw": 306.7,
+      "dh": 30.7,
+      "dcx": 192.0,
+      "dcy": -32.9,
+      "classification": "[有意差异：NineGrid]",
+      "note": "拉满中心格；冻结中心 X 仍 320"
+    },
+    {
+      "screen": "Decay",
+      "component": "counters",
+      "original": {
+        "x": 687,
+        "y": 15,
+        "w": 140,
+        "h": 50,
+        "cx": 757,
+        "cy": 40
+      },
+      "flutter_mapped": {
+        "x": 950.9,
+        "y": 53.9,
+        "w": 28.1,
+        "h": 7.5,
+        "cx": 964.9,
+        "cy": 57.6
+      },
+      "dx": 263.9,
+      "dy": 38.9,
+      "dw": -111.9,
+      "dh": -42.5,
+      "dcx": 207.9,
+      "dcy": 17.6,
+      "classification": "[有意差异：NineGrid]",
+      "note": "midRight 窄列；proton 行代表"
+    },
+    {
+      "screen": "Decay",
+      "component": "Element",
+      "original": {
+        "x": 250,
+        "y": 193,
+        "w": 140,
+        "h": 24,
+        "cx": 320,
+        "cy": 205
+      },
+      "flutter_mapped": {
+        "x": 247.1,
+        "y": 238.8,
+        "w": 145.8,
+        "h": 25.9,
+        "cx": 320.0,
+        "cy": 251.7
+      },
+      "dx": -2.9,
+      "dy": 45.8,
+      "dw": 5.8,
+      "dh": 1.9,
+      "dcx": 0.0,
+      "dcy": 46.7,
+      "classification": "[视觉已对齐]",
+      "note": "cx=320 resolved（半衰期冻结中心，≠ atom 341.3）"
+    },
+    {
+      "screen": "Decay",
+      "component": "Stability",
+      "original": {
+        "x": 265,
+        "y": 133,
+        "w": 110,
+        "h": 24,
+        "cx": 320,
+        "cy": 145
+      },
+      "flutter_mapped": {
+        "x": 255.2,
+        "y": 159.3,
+        "w": 129.6,
+        "h": 25.9,
+        "cx": 320.0,
+        "cy": 172.2
+      },
+      "dx": -9.8,
+      "dy": 26.3,
+      "dw": 19.6,
+      "dh": 1.9,
+      "dcx": 0.0,
+      "dcy": 27.2,
+      "classification": "[视觉已对齐]",
+      "note": "cx=320 与 Element 同 X"
+    },
+    {
+      "screen": "Decay",
+      "component": "symbol",
+      "original": {
+        "x": 859,
+        "y": 15,
+        "w": 150,
+        "h": 120,
+        "cx": 934,
+        "cy": 75
+      },
+      "flutter_mapped": {
+        "x": 985.4,
+        "y": 62.9,
+        "w": 32.2,
+        "h": 42.0,
+        "cx": 1001.5,
+        "cy": 83.9
+      },
+      "dx": 126.4,
+      "dy": 47.9,
+      "dw": -117.8,
+      "dh": -78.0,
+      "dcx": 67.5,
+      "dcy": 8.9,
+      "classification": "[有意差异：NineGrid]",
+      "note": ""
+    },
+    {
+      "screen": "Decay",
+      "component": "Available Decays",
+      "original": {
+        "x": 687,
+        "y": 145,
+        "w": 322,
+        "h": 360,
+        "cx": 848,
+        "cy": 325
+      },
+      "flutter_mapped": {
+        "x": 943.6,
+        "y": 117.3,
+        "w": 77.2,
+        "h": 233.1,
+        "cx": 982.2,
+        "cy": 233.9
+      },
+      "dx": 256.6,
+      "dy": -27.7,
+      "dw": -244.8,
+      "dh": -126.9,
+      "dcx": 134.2,
+      "dcy": -91.1,
+      "classification": "[有意差异：NineGrid]",
+      "note": ""
+    },
+    {
+      "screen": "Decay",
+      "component": "Reset",
+      "original": {
+        "x": 969,
+        "y": 563,
+        "w": 40,
+        "h": 40,
+        "cx": 989,
+        "cy": 583
+      },
+      "flutter_mapped": {
+        "x": 940.4,
+        "y": 489.2,
+        "w": 83.6,
+        "h": 42.9,
+        "cx": 982.2,
+        "cy": 510.7
+      },
+      "dx": -28.6,
+      "dy": -73.8,
+      "dw": 43.6,
+      "dh": 2.9,
+      "dcx": -6.8,
+      "dcy": -72.3,
+      "classification": "[视觉近似]",
+      "note": ""
+    },
+    {
+      "screen": "Decay",
+      "component": "Undo",
+      "original": null,
+      "flutter_mapped": null,
+      "classification": "[有意差异：Material]",
+      "note": "Fe-69 无 Undo；出现时为 Icons.undo 非黄 ReturnButton"
+    },
+    {
+      "screen": "Decay",
+      "component": "Electron Cloud",
+      "original": {
+        "x": 687,
+        "y": 575,
+        "w": 180,
+        "h": 28,
+        "cx": 777,
+        "cy": 589
+      },
+      "flutter_mapped": {
+        "x": 738.4,
+        "y": 460.5,
+        "w": 202.0,
+        "h": 28.6,
+        "cx": 839.4,
+        "cy": 474.8
+      },
+      "dx": 51.4,
+      "dy": -114.5,
+      "dw": 22.0,
+      "dh": 0.6,
+      "dcx": 62.4,
+      "dcy": -114.2,
+      "classification": "[有意差异：NineGrid]",
+      "note": ""
+    },
+    {
+      "screen": "Decay",
+      "component": "right column",
+      "original": {
+        "x": 687,
+        "y": 15,
+        "w": 322,
+        "h": 490,
+        "cx": 848,
+        "cy": 260
+      },
+      "flutter_mapped": {
+        "x": 940.4,
+        "y": 46.8,
+        "w": 83.6,
+        "h": 442.3,
+        "cx": 982.2,
+        "cy": 267.9
+      },
+      "dx": 253.4,
+      "dy": 31.8,
+      "dw": -238.4,
+      "dh": -47.7,
+      "dcx": 134.2,
+      "dcy": 7.9,
+      "classification": "[有意差异：NineGrid]",
+      "note": ""
+    },
+    {
+      "screen": "Decay",
+      "component": "addProton button",
+      "original": {
+        "x": 0,
+        "y": 0,
+        "w": 28,
+        "h": 24,
+        "cx": 14,
+        "cy": 12
+      },
+      "flutter_mapped": {
+        "x": 28.0,
+        "y": 24.0,
+        "w": 28.0,
+        "h": 24.0,
+        "cx": 14.0,
+        "cy": 12.0
+      },
+      "dx": 28.0,
+      "dy": 24.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 0.0,
+      "classification": "[视觉已对齐]",
+      "note": "逻辑 28×24 未变（P5-2 只换 Path）"
+    },
+    {
+      "screen": "Decay",
+      "component": "addPair button",
+      "original": {
+        "x": 0,
+        "y": 0,
+        "w": 42,
+        "h": 24,
+        "cx": 21,
+        "cy": 12
+      },
+      "flutter_mapped": {
+        "x": 42.0,
+        "y": 24.0,
+        "w": 42.0,
+        "h": 24.0,
+        "cx": 21.0,
+        "cy": 12.0
+      },
+      "dx": 42.0,
+      "dy": 24.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 0.0,
+      "classification": "[视觉已对齐]",
+      "note": "逻辑 42×24 未变"
+    }
+  ],
+  "chart_rows": [
+    {
+      "screen": "Chart Intro",
+      "component": "play / screen bg",
+      "original": "WHITE",
+      "flutter": "#FFFFFF",
+      "classification": "[视觉已对齐]",
+      "note": "C-12 取样 var=0；无原版 PNG"
+    },
+    {
+      "screen": "Chart Intro",
+      "component": "Shell / mini-atom / chart / periodic / symbol / element",
+      "original": "绝对定位 1024×618",
+      "flutter_raw": {
+        "element": {
+          "x": 0.0,
+          "y": 58.52654490943588,
+          "w": 104.53758301819164,
+          "h": 13.609831234691619,
+          "cx": 52.26879150909582,
+          "cy": 65.33146052678168
+        },
+        "chart": {
+          "x": 1175.4624169818085,
+          "y": 322.9474841697461,
+          "w": 104.53758301819153,
+          "h": 114.10503166050785,
+          "cx": 1227.7312084909042,
+          "cy": 380.0
+        },
+        "periodicTable": {
+          "x": 1175.4624169818085,
+          "y": 61.53528329661447,
+          "w": 104.53758301819153,
+          "h": 41.851584809730575,
+          "cx": 1227.7312084909042,
+          "cy": 82.46107570147976
+        },
+        "isotopeSymbol": {
+          "x": 1213.476083533878,
+          "y": 62.997347394771,
+          "w": 12.0620288097914,
+          "h": 14.255124957026126,
+          "cx": 1219.5070979387738,
+          "cy": 70.12490987328405
+        },
+        "decayEquation": {
+          "x": 1177.810257139432,
+          "y": 334.4519009421018,
+          "w": 63.27429224795651,
+          "h": 12.208768819642842,
+          "cx": 1209.4474032634103,
+          "cy": 340.55628535192324
+        },
+        "decayButton": {
+          "x": 1217.37136379539,
+          "y": 349.00850991936824,
+          "w": 27.70451385995875,
+          "h": 11.269632756593353,
+          "cx": 1231.2236207253693,
+          "cy": 354.6433262976649
+        },
+        "fullChart": {
+          "x": 1220.247467988479,
+          "y": 425.78288307366057,
+          "w": 39.44371464807682,
+          "h": 11.269632756593353,
+          "cx": 1239.9693253125174,
+          "cy": 431.4176994519572
+        },
+        "partial": {
+          "x": 1175.4624169818085,
+          "y": 428.013331223403,
+          "w": 24.828409666869675,
+          "h": 6.808736457108523,
+          "cx": 1187.8766218152432,
+          "cy": 431.4176994519572
+        },
+        "zoom": {
+          "x": 1202.1690987747772,
+          "y": 428.013331223403,
+          "w": 16.2000970876029,
+          "h": 6.808736457108523,
+          "cx": 1210.2691473185787,
+          "cy": 431.4176994519572
+        },
+        "reset": {
+          "x": 1175.4624169818085,
+          "y": 653.5389242985202,
+          "w": 104.53758301819153,
+          "h": 48.0,
+          "cx": 1227.7312084909042,
+          "cy": 677.5389242985202
+        }
+      },
+      "classification": "[有意差异：NineGrid]",
+      "note": "右栏约 104.5 宽；无原版截图，不造叠图"
+    },
+    {
+      "screen": "Chart Intro",
+      "component": "Focused",
+      "original": "fill 不变，窗外 0.65，框 1.5",
+      "flutter": "同配方；无独立 Focused 整页 PNG（Zoom 帧含 focused 子图）",
+      "classification": "[视觉已对齐]",
+      "note": "源码几何；C-12 Zoom 有 chart 盒"
+    },
+    {
+      "screen": "Chart Intro",
+      "component": "Equation",
+      "original": "minHeight 30 为下限",
+      "flutter": {
+        "x": 1177.810257139432,
+        "y": 334.4519009421018,
+        "w": 63.27429224795651,
+        "h": 12.208768819642842,
+        "cx": 1209.4474032634103,
+        "cy": 340.55628535192324
+      },
+      "classification": "[待确认]",
+      "note": "C-12 稳定无箭。衰变核素 A/Z 列可 overflow 30（已知）"
+    },
+    {
+      "screen": "Chart Intro",
+      "component": "Radio Partial/Zoom",
+      "original": "缩微核素图，fill #F1FAFE",
+      "flutter": {
+        "partial": {
+          "x": 1175.4624169818085,
+          "y": 430.3611713810266,
+          "w": 24.828409666869675,
+          "h": 6.808736457108523,
+          "cx": 1187.8766218152432,
+          "cy": 433.76553960958086
+        },
+        "zoom": {
+          "x": 1202.1690987747772,
+          "y": 428.013331223403,
+          "w": 16.2000970876029,
+          "h": 6.808736457108523,
+          "cx": 1210.2691473185787,
+          "cy": 431.4176994519572
+        }
+      },
+      "classification": "[有意差异：Material]",
+      "note": "fill 已齐；图标是字"
+    },
+    {
+      "screen": "Chart Intro",
+      "component": "Full Chart dialog",
+      "original": "INFO_DIALOG 无 fill（可能白）",
+      "flutter": {
+        "x": 256.0,
+        "y": 256.5,
+        "w": 728.0,
+        "h": 46.0,
+        "cx": 620.0,
+        "cy": 279.5
+      },
+      "classification": "[待确认]",
+      "note": "底 #FFFEF4 未改；有 C-12 dialog PNG"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+[2026-09-23] PHASE 0 Source Audit started for Under Pressure.
+[2026-09-23] Finding: under-pressure is thin shell; real code in fluid-pressure-and-flow.
+[2026-09-23] Audited pressure chain from FPAF UnderPressureModel + Constants + Units + getStandardAirPressure.
+[2026-09-23] Confirmed 1 Joist screen + 4 scenes (square/trapezoid/chamber/mystery).
+[2026-09-23] Source tests: 0. Physics Oracle A鈥揌 designed.
+[2026-09-23] PHASE 0 STATUS: PASS. Report: PHASE_0_SOURCE_AUDIT.md
+[2026-09-23] FPAF zip downloaded+extracted to phet sourses/fluid-pressure-and-flow-main; UP assets Found=7 Missing=0.
+[2026-09-23] Flutter UI NOT STARTED. Home NOT TOUCHED.
+[2026-09-23] PHASE 1 Model/Physics Core started.
+[2026-09-23] Implemented lib/under_pressure/model/** from FPAF source (absolute pressure, 4 scenes, faucet, chamber masses, units).
+[2026-09-23] Physics Oracle A-H + Chamber + Faucet + Geometry: 33 tests PASS.
+[2026-09-23] dart analyze: No issues found!
+[2026-09-23] PHASE 1 STATUS: PASS. Report: PHASE_1_MODEL_REPORT.md
+[2026-09-23] Flutter UI NOT STARTED. Home NOT TOUCHED.
+[2026-09-23] PHASE 2 Core Screen / Square Scene started.
+[2026-09-23] Implemented UnderPressureScreen + MVT + tip-offset barometers + controls + ruler/grid + scene shell.
+[2026-09-23] Tip-offset P1 CLOSED (51px * 1.5 scale).
+[2026-09-23] Tests: 50 PASS. Analyze: No issues found!
+[2026-09-23] PHASE 2 STATUS: PASS. Trapezoid/Chamber/Mystery NOT COMPLETED. Home NOT TOUCHED.
+[2026-09-23] PHASE 3 Advanced Scenes started.
+[2026-09-23] Implemented Trapezoid/Chamber/Mystery views + FaucetFluid + Mass drop hit + Mystery controls.
+[2026-09-23] Chamber drop hit QA CLOSED; faucet/water View CLOSED. Model LOCKED.
+[2026-09-23] Tests: 71 PASS (50+21). Analyze: No issues found!
+[2026-09-23] PHASE 3 STATUS: PASS. Home NOT TOUCHED. Runtime/Android NOT VERIFIED.
+[2026-09-23] PHASE 4 Visual Reconstruction / Golden QA started.
+[2026-09-23] Accordion chrome + custom HSlider; Cement ImageShader; scenery-phet faucet PNGs; Mystery ComboBox list.
+[2026-09-23] Goldens: 12 PASS. Tests: 86 PASS (71+15). Analyze clean. Model LOCKED.
+[2026-09-23] PHASE 4 STATUS: PASS. Home NOT TOUCHED. Runtime/Android NOT VERIFIED.
+[2026-09-23] PHASE 5 Final Behavioral Acceptance started.
+[2026-09-23] Added acceptance tests (30). Model LOCKED. No UI expansion. Home NOT TOUCHED.
+[2026-09-23] under_pressure: 116 PASS. Goldens 12/12. Analyze clean.
+[2026-09-23] flutter test global: +3649 ~1 -56; Under Pressure failures: 0; Other: 56.
+[2026-09-23] PHASE 5 STATUS: PASS. NOT READY for release (Home Phase 6).
+[2026-09-23] PHASE 6 Home Integration / Release Gate started.
+[2026-09-23] Added UnderPressureHome + Home card under 物理/密度与浮力. Material Icons.compress_rounded.
+[2026-09-23] Home lifecycle tests: 10. UP suite: 126 PASS. Goldens 12/12. Analyze clean.
+[2026-09-23] flutter test: +3659 ~1 -56; New UP/Home failures: 0.
+[2026-09-23] PHASE 6 STATUS: READY (Under Pressure). Global Repository: FAIL — unrelated baseline.
+[2026-09-24] Faucet alignment: structure = PhScale/scenery-phet ShooterNode; UX = drag blue knob only, stepless, keep on release.
+[2026-09-24] Tests: 126 PASS. Goldens updated 12/12. Report: FAUCET_INTERACTION_REPORT.md
+[2026-09-24] Knowledge: docs/knowledge/kratos-java-simulations/scenery-phet-faucet-node.md + rule 87-scenery-phet-faucet.mdc (L1 2/3).
+[2026-09-24] Under Pressure faucet closeout DONE. Model/Home unchanged. Runtime/Android NOT VERIFIED.

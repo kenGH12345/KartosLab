@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="10.86" height="10.86" viewBox="0 0 10.86 10.86">
+  <defs>
+    <radialGradient id="radial-gradient" gradientUnits="objectBoundingBox" cx="0.35" cy="0.32" r="0.75"><stop offset="0" stop-color="#aad1e4" stop-opacity=".6"/><stop offset=".17" stop-color="#a2c8dd" stop-opacity=".6"/><stop offset=".36" stop-color="#8db1cb" stop-opacity=".6"/><stop offset=".58" stop-color="#6a89ac" stop-opacity=".6"/><stop offset=".8" stop-color="#395381" stop-opacity=".6"/><stop offset=".84" stop-color="#2f4778" stop-opacity=".6"/></radialGradient>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <circle cx="5.43" cy="5.43" r="5.43" fill="url(#radial-gradient)"/>
+  </g>
+</svg>

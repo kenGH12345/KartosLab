@@ -1,0 +1,6 @@
+state: 04_TwoAtoms_efield
+viewport: 1280x800
+DPR: 1
+actions: ["eField=true"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:45.227Z

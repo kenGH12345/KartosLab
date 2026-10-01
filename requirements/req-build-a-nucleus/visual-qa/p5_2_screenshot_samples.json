@@ -1,0 +1,203 @@
+{
+  "fe69_dpr2": {
+    "size": [
+      2560,
+      1600
+    ],
+    "samples": {
+      "add_proton_center": {
+        "xy": [
+          463,
+          1484
+        ],
+        "rgb": [
+          209,
+          70,
+          0
+        ],
+        "hex": "#D14600",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "add_proton_bg": {
+        "xy": [
+          444,
+          1484
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "add_pair_left": {
+        "xy": [
+          832,
+          1484
+        ],
+        "rgb": [
+          213,
+          87,
+          24
+        ],
+        "hex": "#D55718",
+        "var": 31487.0,
+        "edge_suspect": true
+      },
+      "add_pair_right": {
+        "xy": [
+          874,
+          1484
+        ],
+        "rgb": [
+          176,
+          176,
+          176
+        ],
+        "hex": "#B0B0B0",
+        "var": 12584.2,
+        "edge_suspect": true
+      },
+      "add_neutron_center": {
+        "xy": [
+          1243,
+          1484
+        ],
+        "rgb": [
+          115,
+          115,
+          115
+        ],
+        "hex": "#737373",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "less_stable_arrow": {
+        "xy": [
+          260,
+          540
+        ],
+        "rgb": [
+          191,
+          191,
+          191
+        ],
+        "hex": "#BFBFBF",
+        "var": 36634.2,
+        "edge_suspect": true
+      },
+      "more_stable_arrow": {
+        "xy": [
+          2280,
+          540
+        ],
+        "rgb": [
+          110,
+          110,
+          110
+        ],
+        "hex": "#6E6E6E",
+        "var": 39750.0,
+        "edge_suspect": true
+      }
+    }
+  },
+  "empty_dpr2": {
+    "size": [
+      2560,
+      1600
+    ],
+    "samples": {
+      "add_pair_left": {
+        "xy": [
+          832,
+          1484
+        ],
+        "rgb": [
+          213,
+          87,
+          24
+        ],
+        "hex": "#D55718",
+        "var": 31487.0,
+        "edge_suspect": true
+      },
+      "add_pair_right": {
+        "xy": [
+          874,
+          1484
+        ],
+        "rgb": [
+          176,
+          176,
+          176
+        ],
+        "hex": "#B0B0B0",
+        "var": 12584.2,
+        "edge_suspect": true
+      }
+    }
+  },
+  "c12_dialog_dpr1": {
+    "size": [
+      1280,
+      800
+    ],
+    "samples": {
+      "play_bg": {
+        "xy": [
+          200,
+          400
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "dialog_close_guess": {
+        "xy": [
+          1240,
+          80
+        ],
+        "rgb": [
+          229,
+          229,
+          229
+        ],
+        "hex": "#E5E5E5",
+        "var": 16600.3,
+        "edge_suspect": true
+      }
+    }
+  },
+  "c12_zoom_dpr1": {
+    "size": [
+      1280,
+      800
+    ],
+    "note": "C-12 is stable: no in-cell decay arrow (correct).",
+    "samples": {
+      "play_bg": {
+        "xy": [
+          200,
+          400
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  }
+}

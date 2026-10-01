@@ -1,0 +1,238 @@
+{
+  "note": "1280x800 DPR1 standalone Scaffold; AppBar is Theme chrome. Play body should be WHITE.",
+  "fe69": "Chart Intro max 10 protons; Fe-69 does not exist on this screen.",
+  "partial": {
+    "size": [
+      1280,
+      800
+    ],
+    "samples": {
+      "play_bg_left": {
+        "xy": [
+          200,
+          400
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "play_bg_mid": {
+        "xy": [
+          400,
+          350
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "play_bg_below_appbar": {
+        "xy": [
+          80,
+          120
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "appbar": {
+        "xy": [
+          640,
+          28
+        ],
+        "rgb": [
+          254,
+          247,
+          255
+        ],
+        "hex": "#FEF7FF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "element_name": {
+        "xy": [
+          52,
+          65
+        ],
+        "rgb": [
+          255,
+          0,
+          0
+        ],
+        "hex": "#FF0000",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "radio_partial_selected": {
+        "xy": [
+          1188,
+          434
+        ],
+        "rgb": [
+          116,
+          119,
+          124
+        ],
+        "hex": "#74777C",
+        "var": 29003.4,
+        "edge_suspect": true
+      },
+      "radio_zoom_unselected": {
+        "xy": [
+          1210,
+          434
+        ],
+        "rgb": [
+          88,
+          89,
+          94
+        ],
+        "hex": "#58595E",
+        "var": 35333.1,
+        "edge_suspect": true
+      },
+      "accordion_area": {
+        "xy": [
+          1228,
+          360
+        ],
+        "rgb": [
+          162,
+          218,
+          228
+        ],
+        "hex": "#A2DAE4",
+        "var": 8171.3,
+        "edge_suspect": true
+      },
+      "periodic_area": {
+        "xy": [
+          1228,
+          82
+        ],
+        "rgb": [
+          165,
+          166,
+          167
+        ],
+        "hex": "#A5A6A7",
+        "var": 29561.7,
+        "edge_suspect": true
+      },
+      "reset_area": {
+        "xy": [
+          1228,
+          678
+        ],
+        "rgb": [
+          103,
+          80,
+          164
+        ],
+        "hex": "#6750A4",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  },
+  "zoom": {
+    "size": [
+      1280,
+      800
+    ],
+    "samples": {
+      "play_bg_left": {
+        "xy": [
+          200,
+          400
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "radio_partial_unselected": {
+        "xy": [
+          1188,
+          434
+        ],
+        "rgb": [
+          241,
+          250,
+          254
+        ],
+        "hex": "#F1FAFE",
+        "var": 24016.7,
+        "edge_suspect": true
+      },
+      "radio_zoom_selected": {
+        "xy": [
+          1210,
+          434
+        ],
+        "rgb": [
+          241,
+          250,
+          254
+        ],
+        "hex": "#F1FAFE",
+        "var": 26244.1,
+        "edge_suspect": true
+      }
+    }
+  },
+  "dialog": {
+    "size": [
+      1280,
+      800
+    ],
+    "samples": {
+      "play_behind_dialog": {
+        "xy": [
+          200,
+          400
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      },
+      "dialog_center": {
+        "xy": [
+          640,
+          400
+        ],
+        "rgb": [
+          255,
+          255,
+          255
+        ],
+        "hex": "#FFFFFF",
+        "var": 0.0,
+        "edge_suspect": false
+      }
+    }
+  }
+}

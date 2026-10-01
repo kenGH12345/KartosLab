@@ -10,8 +10,8 @@
     "valuesVisible": false
   },
   "paramRanges": {
-    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.01, "unit": "mol" },
-    "volume": { "min": 0.2, "max": 1.0, "step": 0.01, "unit": "L" }
+    "soluteAmount": { "min": 0, "max": 1.0, "step": 0.050, "unit": "mol" },
+    "volume": { "min": 0.2, "max": 1.0, "step": 0.050, "unit": "L" }
   },
   "concentrationMax": 5.0,
   "solutes": [

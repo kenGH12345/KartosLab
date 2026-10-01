@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/widgets/kratos_tab_bar.dart';
 import '../optics/config/scenario_manager.dart';
 import '../optics/config/lab_scenario.dart';
 
@@ -77,7 +78,7 @@ class _ScenarioSelectionScreenState extends State<ScenarioSelectionScreen>
           ? const Center(child: CircularProgressIndicator())
           : _domainOrder.isEmpty
               ? _buildEmptyState()
-              : TabBarView(
+              : KratosTabSwitcher(
                   controller: _tabController,
                   children: _domainOrder.map((domain) {
                     final scenarios = _domainGroups[domain] ?? [];

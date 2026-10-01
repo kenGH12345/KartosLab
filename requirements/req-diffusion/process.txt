@@ -1,0 +1,9 @@
+# req-diffusion process
+
+[2026-09-06] Phase 0：本地 diffusion 1.2.0-dev.0；[已确认：单 Screen]；薄壳 → gas-properties
+[2026-09-06] Phase 1–2：clone GP @ 7a52c48；SOURCE_ANALYSIS + DEPENDENCY_PROVENANCE A
+[2026-09-06] Phase 3–4：BASELINE / ARCHITECTURE（禁止 Ideal Gas / Collision Lab）
+[2026-09-06] Phase 5–12：lib/diffusion 模型+碰撞+UI+Home；tests 12；analyze 0
+[2026-09-06] Phase 13：报告齐全；Flow Rate / 音效 / Flutter 截图集标待实现
+[2026-09-06] Tail seal：ParticleFlowRate 完整迁移；Audio → [源码一致：原版无音效]；Visual QA 7 PNG；tests 27；analyze 0；封板
+[2026-09-06] Control fidelity：源码确认 NumberSpinner（非 Slider）；Data 默认折叠置容器上；Stopwatch；Divider 入控制面板；tests 44

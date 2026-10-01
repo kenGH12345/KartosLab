@@ -1,0 +1,122 @@
+# process.txt â req-port-ph-scale
+
+[2026-09-22 20:23] PHASE 0 START â Source Audit
+  - æ¬å°æºç : phet sourses/ph-scale-main/ph-scale-main
+  - package.json: 1.8.0-dev.0
+  - dependencies.json ph-scale sha: 9026dbeca73543f3cc3967dac553ae412bfbca18
+  - å¥å£ç¡®è®¤ screens: MacroScreen â MicroScreen â MySolutionScreenï¼3 å±ï¼ä¸å¯ç¼ºï¼
+
+[2026-09-22 20:45] PHASE 0 PASS â SOURCE_AUDIT_REPORT.md äº¤ä»
+  - Chemistry: æ  Ka/Kbï¼åºå­ pH + ä½ç§¯æ··åï¼æ°´æµåº¦ 55ï¼Avogadro 6.023E23
+  - Base state Macro/Micro: soluteVolume + waterVolumeï¼My Solution: pH + volume
+  - Particles: Particle Countsï¼çå® Nï¼vs Ratioï¼è§è§ç¼©æ¾ï¼ä¸­æ§ 100ï¼ä¸¤å¥
+  - Graph: Micro å¯¹æ°+çº¿æ§ï¼My Solution ä»å¯¹æ°å¯æææ 
+  - Assets: sim åä» 6 å±å¾æ ï¼æ°´é¾å¤´/æ»´ç®¡æ¥èª scenery-phet
+  - Pause/Step: ä¸å­å¨
+  - Next: PHASE 1 Model + chemistry unit tests
+  - çºªå¾: Phase 0 å®æåæªç¼å Flutter UI
+
+[2026-09-22 21:15] PHASE 1 PASS ¡ª Model + chemistry unit tests
+  - lib/chemistry/ph_scale/model/* (PhChemistry, BeakerSolution, PhModel, Macro/Micro/MySolution, RatioParticleCounts)
+  - test/chemistry/ph_scale/ph_chemistry_test.dart: 37 PASS
+  - dart analyze lib/chemistry/ph_scale: CLEAN
+  - Key truths: Water.c=55; Avogadro=6.023e23; no Ka/Kb; base state volumes; Ratio ¡Ù ParticleCounts
+  - Next: PHASE 2 Core View (Macro beaker / meter / faucets / dropper)
+
+[2026-09-22 21:45] PHASE 2 PARTIAL ¡ª Core View + Home entry
+  - Macro: beaker/solution/volume/neutral/combo/dropper/faucets/meter+probe+scale/reset
+  - Micro/MySolution: interactive skeletons (pH accordion/spinner); Graph+Ratio deferred Phase 3-4
+  - Assets: scenery-phet faucet+dropper + 6 screen icons copied; pubspec registered
+  - Home: »¯Ñ§ ¡ú ÈÜÒºÓëÅ¨¶È ¡ú pH ±ê¶È
+  - Tests: 38 PASS (37 model + 1 screen)
+  - Next: PHASE 3 Ratio/ParticleCounts; PHASE 4 Graph log/linear + polish
+
+[2026-09-22 21:55] PHASE 3 PASS ¡ª Ratio + Particle Counts
+  - Model LOCKED (no chemistry formula changes)
+  - Ratio: RatioParticlesLayer Canvas ¡ª H3O+/OH- flat circles r=3, clip to solution volume
+    algorithm = RatioParticleCounts (TOTAL_AT_PH7=100, LOG[6,8], max 3000)
+  - Particle Counts: Avogadro N + ScientificNotation (H2O fixed exp 25) + molecule icons
+  - BeakerControlPanel checkboxes on Micro + My Solution; Reset clears view props
+  - Macro: unchanged (no Ratio/Counts in source)
+  - Tests: 50 PASS; analyze CLEAN
+  - Next: PHASE 4 Graph (log + linear Micro; log My Solution)
+
+[2026-09-22 22:40] PHASE 4 PASS â Graph (log/linear indicators, not curves)
+  - Source: GraphNode / LogarithmicGraphNode / LinearGraphNode / GraphIndicator*
+  - Semantics: vertical scale + H2O/H3O+/OH- indicators (NO continuous curves)
+  - Macro: no Graph; Micro: log 485 + linear 440 read-only; My Solution: log 565 draggable
+  - Data path: SolutionDerivedProperties â graphValueFor â valueToY â indicators
+  - Model LOCKED; Phase 3 Ratio/ParticleCounts unchanged
+  - Tests: 66 PASS (test/chemistry/ph_scale/); dart analyze CLEAN
+  - Visual: CANDIDATE; Overall: NOT READY
+  - Report: PHASE_4_GRAPH_REPORT.md
+  - Next: PHASE 5 Full Visual Reconstruction / Screenshot QA
+
+[2026-09-22 22:55] PHASE 5 PARTIAL â Full Visual Reconstruction
+  - Audit: PHASE_5_VISUAL_AUDIT.md (source coords + official screenshots)
+  - Fixes: PhScaleFonts(Arial); Macro sliding PHIndicator; combo/neutral positions;
+    Micro/MySol graph right-align; MySol accordion left=beaker.left (P0);
+    probe stick; ResetAll r=20.8*1.32; log tick font 22
+  - Model LOCKED; Phase 3 math unchanged; Graph still indicators not curves
+  - Tests: 66 PASS; analyze CLEAN; Substituted=0
+  - Screenshot matrix: deferred (capture hung on SimulationClock) â Visual CANDIDATE
+  - Status: PHASE 5 PARTIAL; Overall NOT READY
+  - Next: PHASE 6 Final Behavioral Acceptance
+
+[2026-09-22 23:10] PHASE 6 PASS â Final Behavioral Acceptance
+  - Matrix: PHASE_6_BEHAVIOR_MATRIX.md
+  - Report: PHASE_6_BEHAVIOR_REPORT.md
+  - KeepAlive on Macro/Micro/MySolution (source: joist preserves screen models)
+  - Model UNCHANGED; visual P2 deferred
+  - Tests: 66 â 84 PASS (+phase6_behavior_test); analyze CLEAN
+  - SimulationClock toImage = VISUAL-HARNESS ISSUE only
+  - Overall: NOT READY (Phase 5 visual PARTIAL; Gates 7â9 remain)
+  - Next: PHASE 7 Full Regression
+
+[2026-09-22 23:50] PHASE 7 PASS â Full Regression
+  - flutter test test/chemistry/ph_scale/: 84 PASS
+  - flutter test (full): +3119 ~1 -56; duration ~690s
+  - Failures: 0 ph_scale; 56 = PRE-EXISTING (visual QA capture + netforce-tug)
+    matches Faraday Phase 7 fail count baseline (56)
+  - dart analyze lib/chemistry/ph_scale + home_screen: CLEAN
+  - flutter build apk --debug: PASS (app-debug.apk)
+  - Home: åå­¦âæº¶æ¶²ä¸æµåº¦âpH æ åº¦ wired; no redesign
+  - PhScaleFonts local; assets OK; KeepAlive lifecycle OK
+  - CODE CHANGES this phase: 0
+  - Report: PHASE_7_REGRESSION_REPORT.md
+  - Overall: NOT READY (Phase 5 Visual PARTIAL; Gates 8â9 remain)
+  - Next: PHASE 8 Home Final Verification
+
+[2026-09-22 23:55] PHASE 8 PASS â Home Final Verification
+  - Entry: åå­¦ â æº¶æ¶²ä¸æµåº¦ â pH æ åº¦ â PhScaleScreen (already wired; CODE CHANGES 0)
+  - Default: Macro (initialIndex 0)
+  - Nav / Back / Re-entry / LifecycleÃ3 / Reset: PASS
+  - Category integrity: single card; sibling æ©å°æµåº¦ OK
+  - Tests: 84 â 88 PASS (+ph_scale_home_lifecycle_test Ã4)
+  - Analyze: CLEAN (ph_scale + home_screen)
+  - Android Runtime: NOT VERIFIED (build PASS from Phase 7)
+  - Report: PHASE_8_HOME_REPORT.md
+  - Overall: NOT READY (Phase 5 Visual PARTIAL; Phase 9 remains)
+  - Next: PHASE 9 Final Status
+
+[2026-09-22 24:10] PHASE 9 PASS ¡ª Final Visual Reconciliation & Release Gate
+  - Reconciled Phase 5 issues: structural P0/P1 = A (still fixed); remaining = P2 + harness
+  - Production View/Model/Home code fixes: 0
+  - Added: phase9_visual_structure_test (+6); ASSET_MAP.md; PHASE_9_FINAL_REPORT.md
+  - Tests: 88 ¡ú 94 PASS; dart analyze lib/chemistry/ph_scale: CLEAN
+  - Visual Screenshot Harness: BLOCKED (SimulationClock + toImage); runtime UNCHANGED
+  - Assets Substituted: 0
+  - P0=0 P1=0 P2=5
+  - Android Runtime: NOT VERIFIED
+  - FINAL STATUS: READY CANDIDATE (not READY ¡ª Visual evidence incomplete; Phase 5 remains PARTIAL)
+  - Stop ¡ª no further refactor
+
+[2026-09-22 23:55] POST–PHASE 9 UX POLISH PASS — user confirmed close
+  - FaucetNode full PNG assembly + mirror drag + tapToDispense (0.05 L / 333 ms)
+  - Probe absolute drag; meter chrome IgnorePointer; faucets above meter
+  - PhScaleViewport BoxFit.fill (Macro / Micro / My Solution)
+  - Micro Graph left clamp + larger formula/molecule callouts
+  - Tests: 94 PASS; dart analyze CLEAN; Substituted=0
+  - Report: POST_PHASE9_UX_REPORT.md
+  - FINAL STATUS: READY CANDIDATE (unchanged — harness / Android / P2 remain)
+  - User: 「这个结束，可以 report 了」→ closed

@@ -1,0 +1,41 @@
+---
+description: 原版 PhET Assets 优先 · 禁止替代素材 · 视觉一致性强制规则
+alwaysApply: true
+---
+
+# 原版 Assets 与视觉一致性（阻塞级）
+
+> **Flutter 页面必须尽可能与原 PhET 页面保持一致。**  
+> 完整政策：`requirements/<req-id>/VISUAL_ASSET_POLICY.md`（Capacitor Lab：`req-capacitor-lab-basics`）
+
+## 使用优先级（严格）
+
+```
+原 PhET Asset → 原 SVG/PNG/Mipmap → 原 Scenery geometry → Flutter Canvas 等价重建 → 最后才自行绘制
+```
+
+- 有图：**必须** `Image.asset` / 矢量复用，禁止重画「差不多」
+- 无图、源码用 Path/Shape/Node：**才**用 `CustomPainter`
+- `new Node(...)` 必须继续追子节点（Image / Path / Text / Shadow），禁止默认自行绘制
+
+## 严禁
+
+- Material / Cupertino Icons、Emoji、网络图、AI 图、第三方图冒充 PhET
+- `Icons.battery_std` / `Icons.add` / `Icons.close` / `Icons.refresh` 等冒充原版
+- 截图 crop 当可交互 asset（除非本身是官方原始 asset）
+- 非等比拉伸、擅自裁透明区、错误 origin/anchor
+
+## 尺寸 / Anchor
+
+使用原图必须对齐：intrinsic size、aspect ratio、origin、center、scale、rotation、透明 padding。  
+位置偏差时**先查** asset origin → transform → parent 坐标，禁止先瞎改 `left/top`。
+
+## Visual Diff 顺序
+
+1 Asset 正确 → 2 加载 → 3 尺寸 → 4 anchor → 5 transform → 6 图层 → 7 Painter → 8 Text → 9 Color/Gradient → 10 Micro geometry
+
+## 交付硬门槛
+
+- 每个 sim 必须有 `requirements/<req-id>/ASSET_MAP.md`（Original Path / Used By / Flutter Path / Scale / Rotation / Crop / Opacity / Transform）
+- Final QA：`Substituted Assets` **必须为 0**（否则逐项证明无法直接复用）
+- 视觉判定须写明：`[原版资源一致]` `[布局已对齐]` `[动态绘制已对齐]` 等；禁止只写 `Visual: PASS`

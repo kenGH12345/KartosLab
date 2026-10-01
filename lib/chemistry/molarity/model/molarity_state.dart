@@ -1,40 +1,70 @@
+import 'molarity_model.dart';
 import 'solute.dart';
 import 'solution.dart';
 
-/// 组装后的摩尔浓度状态：solutes 列表 + 当前 solution + 视图开关。
+/// Scenario-bound wrapper around [MolarityModel].
 ///
-/// 初始值由场景构建（config 层 `buildInitialState`）· [reset] 恢复场景初始参数。
+/// Keeps inquiry / scenario metadata; physics lives in [model].
+/// Legacy getters (`solutes` / `solution` / `valuesVisible`) keep existing View.
 class MolarityState {
   MolarityState({
     required this.scenarioId,
-    required this.solutes,
-    required this.solution,
+    required List<Solute> solutes,
+    required Solution solution,
     required this.initialSoluteIndex,
     required this.initialSoluteAmount,
     required this.initialVolume,
     required this.initialValuesVisible,
     bool? valuesVisible,
-  }) : valuesVisible = valuesVisible ?? initialValuesVisible;
+  }) : model = MolarityModel.wrap(
+          solutes: solutes,
+          solution: solution,
+          valuesVisible: valuesVisible ?? initialValuesVisible,
+        );
 
-  /// 当前场景 id（checkObjectives 定位 successCriteria 用）。
+  /// Direct wrap of an existing [MolarityModel].
+  MolarityState.fromModel({
+    required this.scenarioId,
+    required this.model,
+    required this.initialSoluteIndex,
+    required this.initialSoluteAmount,
+    required this.initialVolume,
+    required this.initialValuesVisible,
+  });
+
+  /// Current scenario id (checkObjectives / inquiry).
   final String scenarioId;
 
-  final List<Solute> solutes;
-  final Solution solution;
+  final MolarityModel model;
 
-  /// 场景初始参数（reset 目标）。
+  /// Scenario reset targets.
   final int initialSoluteIndex;
   final double initialSoluteAmount;
   final double initialVolume;
   final bool initialValuesVisible;
 
-  /// 是否显示数值（Show Values 开关）。
-  bool valuesVisible;
+  List<Solute> get solutes => model.solutes;
+  Solution get solution => model.solution;
 
+  bool get valuesVisible => model.valuesVisible;
+  set valuesVisible(bool v) => model.valuesVisible = v;
+
+  bool get resetInProgress => model.resetInProgress;
+  double get maxPrecipitateAmount => model.maxPrecipitateAmount;
+
+  /// Scenario reset: restore scenario initial params + valuesVisible initial.
   void reset() {
-    solution.setSolute(solutes[initialSoluteIndex]);
-    solution.setSoluteAmount(initialSoluteAmount);
-    solution.setVolume(initialVolume);
+    model.resetInProgress = true;
+    final idx = initialSoluteIndex.clamp(0, solutes.length - 1);
+    solution.reset(
+      solute: solutes[idx],
+      soluteAmount: initialSoluteAmount,
+      volume: initialVolume,
+    );
     valuesVisible = initialValuesVisible;
+    model.resetInProgress = false;
   }
+
+  /// PhET Reset All (Drink mix / 0.5 / 0.5 / values off).
+  void resetAllPhET() => model.reset();
 }

@@ -1,0 +1,179 @@
+req_id: req-quantum-measurement
+title: 迁移 PhET Quantum Measurement 到 KartosLab Flutter
+status: done
+phase: '11.final-release-gate'
+created_at: '2026-09-30 09:29'
+updated_at: '2026-09-30 19:07'
+home:
+  discipline: 物理
+  subdomain: 量子 / 测量
+  card_title: Quantum Measurement
+repo_path: '.'
+
+source:
+  type: html5-typescript
+  version: '1.0.4'
+  repo: https://github.com/phetsims/quantum-measurement
+  sha: 69440e4f25488028894cd366c110bc8426df715f
+  branch: '1.0'
+  local_path: 'D:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\quantum-measurement-main'
+  url: https://phet.colorado.edu/sims/html/quantum-measurement/latest/quantum-measurement_all.html
+  dependencies_locked_at: 'Fri Mar 27 2026 17:45:06 GMT-0600'
+
+screens:
+  - coins
+  - photons
+  - spin
+  - bloch-sphere
+
+existing_related:
+  quantum_coin_toss:
+    path: lib/quantum_coin_toss/
+    note: >
+      KartosLab 已有独立 Home 入口 Quantum Coin Toss，实现主要对应
+      Quantum Measurement 的 Coins Screen。必须嵌入复用审计，禁止 Navigator.push 替代。
+
+phase_0:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_0_REPORT.md
+
+phase_1:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_1_REPORT.md
+  tests: '47 PASS test/quantum_measurement/'
+
+phase_2:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_2_REPORT.md
+  geometry_tests: '16 PASS test/quantum_measurement/layout_geometry_test.dart'
+
+phase_3:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_3_REPORT.md
+  embedding: requirements/req-quantum-measurement/QUANTUM_COIN_EMBEDDING_PHASE3.md
+  tests: '11 PASS test/quantum_measurement/coins_phase3_test.dart'
+  note: Coins Visual Component + Composer READY CANDIDATE
+
+phase_4:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_4_REPORT.md
+  evidence: requirements/req-quantum-measurement/PHOTONS_SOURCE_EVIDENCE_PHASE4.md
+  assets: requirements/req-quantum-measurement/PHOTONS_ASSET_GEOMETRY_PHASE4.md
+  trajectory: requirements/req-quantum-measurement/PHOTON_TRAJECTORY_SPEC_PHASE4.md
+  animation: requirements/req-quantum-measurement/PHOTONS_ANIMATION_SPEC_PHASE4.md
+  tests: '18 PASS test/quantum_measurement/photons_phase4_test.dart'
+  note: Photons Visual + Composer + Animation READY CANDIDATE
+
+phase_5:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_5_REPORT.md
+  evidence: requirements/req-quantum-measurement/SPIN_SOURCE_EVIDENCE_PHASE5.md
+  config: requirements/req-quantum-measurement/SPIN_EXPERIMENT_CONFIG_PHASE5.md
+  trajectory: requirements/req-quantum-measurement/SPIN_TRAJECTORY_SPEC_PHASE5.md
+  animation: requirements/req-quantum-measurement/SPIN_ANIMATION_SPEC_PHASE5.md
+  tests: '17 PASS test/quantum_measurement/spin_phase5_test.dart'
+  note: Spin Visual + Composer + Experiments READY CANDIDATE
+
+phase_6:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_6_REPORT.md
+  evidence: requirements/req-quantum-measurement/BLOCH_SOURCE_EVIDENCE_PHASE6.md
+  projection: requirements/req-quantum-measurement/BLOCH_PROJECTION_SPEC_PHASE6.md
+  reset_erase: requirements/req-quantum-measurement/BLOCH_RESET_ERASE_SPEC_PHASE6.md
+  animation: requirements/req-quantum-measurement/BLOCH_ANIMATION_SPEC_PHASE6.md
+  measurement: requirements/req-quantum-measurement/BLOCH_MEASUREMENT_SPEC_PHASE6.md
+  tests: '21 PASS test/quantum_measurement/bloch_phase6_test.dart'
+  note: Bloch Visual + Composer + Measurement + Magnetic Field READY CANDIDATE; R15 elevated
+
+phase_7:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_7_REPORT.md
+  tests: '167 PASS test/quantum_measurement/'
+  goldens: '30 PNG test/quantum_measurement/goldens/'
+  note: Global Visual Convergence + Golden Matrix READY CANDIDATE; Home/Android open
+
+phase_8:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_8_REPORT.md
+  journey: requirements/req-quantum-measurement/FULL_USER_JOURNEY_SPEC_PHASE8.md
+  matrix: requirements/req-quantum-measurement/BEHAVIOR_MATRIX_PHASE8.md
+  state_machine: requirements/req-quantum-measurement/STATE_MACHINE_AUDIT_PHASE8.md
+  evidence: requirements/req-quantum-measurement/BEHAVIORAL_EVIDENCE_PHASE8.md
+  tests: '33 PASS test/quantum_measurement/phase8_behavior_test.dart'
+  full_qm: '200 PASS test/quantum_measurement/'
+  goldens: '30 PNG retained'
+  note: >
+    Behavioral Acceptance READY CANDIDATE. Block chip Wrap hit-target fix only.
+    Home/Android open. Product NOT READY.
+
+phase_9:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_9_REPORT.md
+  evidence: requirements/req-quantum-measurement/ANDROID_RUNTIME_EVIDENCE_PHASE9.md
+  matrix: requirements/req-quantum-measurement/ANDROID_ACCEPTANCE_MATRIX_PHASE9.md
+  hardening: requirements/req-quantum-measurement/RELEASE_HARDENING_PHASE9.md
+  harness: lib/quantum_measurement/debug_quantum_measurement_main.dart
+  integration: '8 PASS integration_test/quantum_measurement_android_runtime_test.dart'
+  device: 'Pixel Tablet emulator-5554 Android 15 API 35 2560x1600 320dpi'
+  android_runtime: VERIFIED
+  full_qm: '200 PASS'
+  goldens: '30 PNG retained'
+  note: >
+    Android Runtime VERIFIED on Pixel Tablet. Profile/Release APKs PASS.
+    Home NOT STARTED. Product NOT READY.
+
+phase_10:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_10_REPORT.md
+  home_evidence: requirements/req-quantum-measurement/HOME_SOURCE_EVIDENCE_PHASE10.md
+  events: requirements/req-quantum-measurement/PLATFORM_EVENT_MAPPING_PHASE10.md
+  gestures: requirements/req-quantum-measurement/HOST_GESTURE_BOUNDARY_PHASE10.md
+  acceptance: requirements/req-quantum-measurement/PLATFORM_ACCEPTANCE_PHASE10.md
+  simulation_id: quantum-measurement
+  entry: lib/quantum_measurement/screens/quantum_measurement_home.dart
+  registry: lib/common/simulation/simulation_registry.dart
+  tests: '7 PASS test/quantum_measurement/phase10_platform_test.dart'
+  android_home: '2 PASS integration_test/quantum_measurement_home_android_test.dart'
+  full_qm: '207 PASS'
+  home: VERIFIED
+  android_runtime: VERIFIED
+  note: >
+    Registered Simulation Module under 物理/光学与波动. Mixed Home migration.
+    Session persistence NOT IMPLEMENTED. Product NOT READY.
+
+phase_11:
+  status: done
+  report: requirements/req-quantum-measurement/PHASE_11_REPORT.md
+  freeze: requirements/req-quantum-measurement/FINAL_SOURCE_FREEZE_PHASE11.md
+  traceability: requirements/req-quantum-measurement/FINAL_REQUIREMENT_TRACEABILITY_PHASE11.md
+  assets: requirements/req-quantum-measurement/FINAL_ASSET_MANIFEST_PHASE11.md
+  evidence_index: requirements/req-quantum-measurement/FINAL_EVIDENCE_INDEX_PHASE11.md
+  release_candidate: requirements/req-quantum-measurement/RELEASE_CANDIDATE_PHASE11.md
+  golden_x3: '29 PASS ×3'
+  full_qm: '207 PASS'
+  android_home_final: '2 PASS'
+  android_runtime_final: '8 PASS'
+  apk: build/app/outputs/flutter-apk/app-release.apk
+  apk_sha256: 7205C14BB373B2EBFF0610081227E571A5594ACFF17B04C3EAFE41562227756E
+  apk_size_mb: 90.9
+  product: READY WITH KNOWN NON-BLOCKING RISKS
+  release_candidate_flag: YES
+  note: >
+    Final gate READY WITH KNOWN NON-BLOCKING RISKS. P0=0 P1=0.
+    P2: SVG style warning, sparse a11y, audio NOT REQUIRED/NOT VERIFIED,
+    performance QUALITATIVE, session NOT IMPLEMENTED.
+
+post_phase11_visual:
+  status: done
+  report: requirements/req-quantum-measurement/POST_PHASE11_VISUAL_REMEDIATION_REPORT.md
+  audit: requirements/req-quantum-measurement/VISUAL_GAP_AUDIT_POST_PHASE11.md
+  spin: PASS
+  bloch: PASS
+  tests: '33 PASS bloch_sphere_model_test + bloch_phase6_test'
+  analyze: 'spin + bloch_sphere No issues'
+  note: >
+    Spin: full SGz curves, hidden in-box particle, smooth exit.
+    Bloch: equation+Basis, Atom chamber, T-histogram, eraser, Aqua radios.
+
+final_status: READY WITH KNOWN NON-BLOCKING RISKS
+phase_status_note: PHASE 11 Product READY; post-P11 Spin+Bloch visual remediation CLOSED

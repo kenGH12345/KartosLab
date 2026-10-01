@@ -1,0 +1,222 @@
+﻿flutter : Flutter assets will be downloaded from https://storage.flutter-io.cn. Make sure you trust this source!
+所在位置 C:\Users\LENOVO\AppData\Local\Temp\ps-script-637be78f-dae8-4723-9fe3-d8f443069a36.ps1:116 字符: 47
++ ... osLab\KartosLab"; flutter test test/quantum_measurement/ 2>&1 | Out-F ...
++                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Flutter assets ...st this source!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+00:00 +0: loading D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart
+00:00 +0: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochProjection +Z tip at (0, 鈭扲)
+00:00 +1: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochProjection 鈭抁 tip at (0, +R)
+00:00 +2: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochProjection +X uses equator azimuth 0 with offset
+00:00 +3: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochProjection 鈭扻 opposite equator
+00:00 +4: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochProjection +Y / 鈭扽 equator points
+00:00 +5: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochProjection pure-state tip distance from center equals R (local)
+00:00 +6: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochProjection raw radius 100 vs prep scale 0.9
+00:00 +7: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochComposer divider 350 and measurement left 390
+00:00 +8: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochComposer controls origin = sphere.right + 60 relation
+00:00 +9: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: BlochComposer uniform scale preserves circle (no ellipse)
+00:00 +10: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Presets 鈫?Model 鈫?Projection each preset updates preparation and measure spheres
+00:00 +11: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Measurement collapse visual sync same seed 鈫?same outcome + tip
+00:00 +12: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Measurement collapse visual sync collapse endpoint matches 卤Z for Z measure of +Z
+00:00 +13: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Measurement collapse visual sync repeated observe uses collapsed state after reprepare cycle
+00:00 +14: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Magnetic field precession time-based fixed dt 鈫?deterministic 蠁 independent of call count grouping
+00:00 +15: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Magnetic field precession time-based B-field Start 鈫?timing 鈫?collapse via stepFixed
+00:00 +16: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Erase vs Reset erase clears counts only
+00:00 +17: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Erase vs Reset reset restores +X and clears B-field
+00:00 +18: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +19: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +20: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +21: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +22: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +23: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +24: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +25: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +26: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +27: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +28: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +29: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +30: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +31: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +32: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +33: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +34: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +35: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +36: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +37: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +38: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +39: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +40: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +41: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +42: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +43: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +44: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +45: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +46: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +47: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +48: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +49: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/bloch_phase6_test.dart: Screen lifecycle builds and disposes without ticker leak
+00:00 +50: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +51: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +52: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +53: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +54: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +55: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +56: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +57: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +58: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +59: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +60: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:00 +61: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: 10k canvas 10000 mode does not create 10000 widgets
+00:01 +62: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/layout_geometry_test.dart: Global layout design canvas 1024脳618
+00:01 +63: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/layout_geometry_test.dart: Global layout design canvas 1024脳618
+00:01 +64: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +65: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +66: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +67: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +68: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +69: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +70: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +71: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +72: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +73: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +74: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +75: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +76: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +77: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +78: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+00:01 +79: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke ClassicalCoinDisplay + CoinControls + CoinCountSelector
+unhandled element <style/>; Picture key: Svg loader
+00:01 +80: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke QuantumCoinDisplay + quantum controls labels
+00:01 +81: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/coins_phase3_test.dart: component smoke Coins screen mounts Classical and switches to Quantum
+00:04 +82: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Registry + Descriptor stable id quantum-measurement
+00:04 +83: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Registry + Descriptor idempotent register
+00:04 +84: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Event boundary Isolating sink swallows adapter failures
+00:04 +85: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Session persistence boundary NoOp store returns null 鈥?NOT IMPLEMENTED
+00:04 +86: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +87: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +88: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +89: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +90: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +91: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +92: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +93: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +94: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +95: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:04 +96: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +97: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +98: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +99: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +100: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +101: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +102: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +103: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +104: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +105: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +106: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +107: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +108: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +109: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +110: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +111: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +112: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +113: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +114: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +115: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +116: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +117: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +118: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +119: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +120: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +121: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +122: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +123: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +124: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +125: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +125: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Coins Classical (user taps) C1 default preparing 鈥?Flip hidden until Start Measurement
+unhandled element <style/>; Picture key: Svg loader
+00:05 +126: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +127: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +128: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +129: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +130: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +131: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +132: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +133: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +134: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +135: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +136: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +137: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +138: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +139: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +140: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +141: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +142: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:05 +143: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +143: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Canonical 1024脳618 screenshots coins_classical_default_1024x618
+unhandled element <style/>; Picture key: Svg loader
+00:06 +144: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +145: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +146: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +147: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +148: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +149: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +150: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+00:06 +151: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry Home card opens QuantumMeasurementHome
+unhandled element <style/>; Picture key: Svg loader
+00:06 +152: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Coins Classical (user taps) Count modes 10 / 100 / 10000
+00:06 +153: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Canonical 1024脳618 screenshots photons_default_1024x618
+00:06 +154: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:06 +155: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:06 +156: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:06 +157: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:06 +158: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:06 +159: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +160: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +161: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +162: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +163: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +164: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +165: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +166: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +167: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +168: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +169: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase10_platform_test.dart: Home 鈫?QM Entry QM internal tabs: Photons / Spin / Bloch
+00:07 +170: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Photons behavior Continuous leave disposes ticker 鈥?no leak
+00:07 +171: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Canonical 1024脳618 screenshots bloch presets 1024x618
+00:07 +172: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Canonical 1024脳618 screenshots bloch presets 1024x618
+00:07 +173: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Canonical 1024脳618 screenshots bloch presets 1024x618
+00:07 +174: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spin behavior Experiment selector 1鈫?鈫扖ustom
+00:07 +175: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spin behavior Experiment selector 1鈫?鈫扖ustom
+00:07 +176: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Canonical 1024脳618 screenshots bloch_magnetic_t0_1024x618
+00:07 +177: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Canonical 1024脳618 screenshots bloch_magnetic_t0_1024x618
+00:07 +178: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spin behavior Block Up / Down change blockingMode via chips
+00:08 +179: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spin behavior Block Up / Down change blockingMode via chips
+00:08 +180: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spin behavior Block Up / Down change blockingMode via chips
+00:08 +181: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spin behavior Block Up / Down change blockingMode via chips
+00:08 +182: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Responsive 1280脳800 spin_experiment1_1280x800
+00:08 +183: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Responsive 1280脳800 spin_experiment1_1280x800
+00:08 +184: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spin behavior Spin screen dispose cleans ticker
+00:08 +185: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/qm_visual_golden_test.dart: Responsive 1280脳800 bloch_default_1280x800
+00:08 +186: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Presets +X鈥︹垝Z via dropdown update model
+00:08 +187: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Presets +X鈥︹垝Z via dropdown update model
+00:08 +188: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Presets +X鈥︹垝Z via dropdown update model
+00:08 +189: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Presets +X鈥︹垝Z via dropdown update model
+00:08 +190: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Presets +X鈥︹垝Z via dropdown update model
+00:09 +191: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Observe collapses; Erase 鈮?Reset
+00:09 +192: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Magnetic Field Start 鈫?timing 鈫?collapse via elapsed time
+00:09 +193: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior FPS independence: same elapsed 鈫?same 蠁
+00:09 +194: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Bloch behavior Repeated Observe uses collapsed state after Reprepare cycle
+00:09 +195: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Cross-screen isolation + rapid switch four models remain isolated under mutations
+00:09 +196: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Cross-screen isolation + rapid switch rapid widget switch 脳10 no crash / dispose
+00:10 +197: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Reset during animation / continuous Photons reset clears photons and rate
+00:10 +198: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Reset during animation / continuous Spin reset path: clear particles + model.reset
+00:10 +199: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Reset during animation / continuous Bloch Reset during TIMING stops precession rates
+00:10 +200: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spam / double action Coins Flip spam does not crash
+00:10 +201: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Spam / double action Bloch Observe spam after observed shows Reprepare
+00:10 +202: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Seeded replay 脳3 same seed same Bloch Observe outcome 脳3
+00:10 +203: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Full user journey (long path) Coins 鈫?Photons 鈫?Spin 鈫?Bloch 鈫?Reset sequence
+00:11 +204: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Controller lifecycle unit PhotonAnimationController dispose stops
+00:11 +205: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Controller lifecycle unit SpinAnimationController dispose stops
+00:11 +206: D:/OneDrive/Desktop/KartosLab/KartosLab/test/quantum_measurement/phase8_behavior_test.dart: Controller lifecycle unit BlochAnimationController dispose stops
+00:11 +207: All tests passed!

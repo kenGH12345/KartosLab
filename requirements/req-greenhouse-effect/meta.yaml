@@ -1,0 +1,41 @@
+req_id: req-greenhouse-effect
+title: Greenhouse Effect Flutter Native Migration
+sop: agile-vibe
+created_at: "2026-09-21 10:40"
+updated_at: "2026-09-21 11:20"
+phase: 2.building
+status: in_progress
+edd_template_version: v2.0
+repo_path: "d:\\OneDrive\\Desktop\\KartosLab\\KartosLab"
+related_requirements:
+  - req-molecules-and-light
+source:
+  local: "phet sourses/greenhouse-effect-main/greenhouse-effect-main"
+  sha: "6c84ad0f43dfc71f8abd72119eef59a3b8b5de9d"
+  deps_snapshot: "phet sourses/_deps-greenhouse-effect"
+  primary: local-phet-source
+  web_verify: "https://phet.colorado.edu/sims/html/greenhouse-effect/latest/greenhouse-effect_en.html"
+phase_overrides:
+  - timestamp: "2026-09-21 10:40"
+    from: none
+    to: 2.building
+    reason: "Full source acquired at pinned SHA; enter Phase 1 Model"
+  - timestamp: "2026-09-21 10:55"
+    from: 2.building
+    to: 2.building
+    reason: "PHASE 1 Model complete; next Phase 2 View"
+  - timestamp: "2026-09-21 11:20"
+    from: 2.building
+    to: 2.building
+    reason: "PHASE 2 Main View complete; Home still blocked"
+artifacts:
+  - PHASE_1_MODEL_STATE_GRAPH.md
+  - PHASE_1_MODEL_REPORT.md
+  - PHASE_2_VIEW_SOURCE_MAP.md
+  - GREENHOUSE_EFFECT_VIEWPORT_REPORT.md
+  - PHASE_2_MAIN_VIEW_REPORT.md
+  - PHASE_2_VISUAL_QA.md
+platform_status:
+  web: NOT_VERIFIED
+  android: NOT_VERIFIED
+ready_status: NOT READY

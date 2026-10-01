@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="271.6" height="155.06" viewBox="0 0 271.6 155.06">
+  <defs>
+    <clipPath id="clippath">
+      <circle cx="195.17" cy="78.38" r="73.96" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="121.21" y1="78.38" x2="130.45" y2="78.38" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#000"/>
+      <stop offset=".08" stop-color="#050000"/>
+      <stop offset=".18" stop-color="#150000"/>
+      <stop offset=".29" stop-color="#2e0000"/>
+      <stop offset=".4" stop-color="#520000"/>
+      <stop offset=".52" stop-color="maroon"/>
+      <stop offset=".63" stop-color="#ac0606"/>
+      <stop offset=".74" stop-color="#d00b0b"/>
+      <stop offset=".84" stop-color="#e90f0f"/>
+      <stop offset=".93" stop-color="#f91212"/>
+      <stop offset="1" stop-color="#ff1313"/>
+      <stop offset="1" stop-color="red"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="-1606.01" y1="-310.9" x2="-1596.77" y2="-310.9" gradientTransform="translate(1736.47 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-3" x1="139.7" x2="148.94"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-4" x1="-1624.5" y1="-310.9" x2="-1615.26" y2="-310.9" gradientTransform="translate(1773.44 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-5" x1="158.19" x2="167.43"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-6" x1="-1642.99" y1="-310.9" x2="-1633.75" y2="-310.9" gradientTransform="translate(1810.42 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-7" x1="176.68" x2="185.92"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-8" x1="-1661.48" y1="-310.9" x2="-1652.23" y2="-310.9" gradientTransform="translate(1847.4 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-9" x1="195.17" x2="204.41"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-10" x1="-1679.97" y1="-310.9" x2="-1670.72" y2="-310.9" gradientTransform="translate(1884.38 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-11" x1="213.65" x2="222.9"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-12" x1="-1698.46" y1="-310.9" x2="-1689.21" y2="-310.9" gradientTransform="translate(1921.36 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-13" x1="232.14" x2="241.39"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-14" x1="-1716.95" y1="-310.9" x2="-1707.7" y2="-310.9" gradientTransform="translate(1958.33 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-15" x1="250.63" x2="259.88"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <linearGradient id="linear-gradient-16" x1="-1735.44" y1="-310.9" x2="-1726.19" y2="-310.9" gradientTransform="translate(1995.31 389.27)"><stop offset="0" stop-color="#000"/><stop offset=".08" stop-color="#050000"/><stop offset=".18" stop-color="#150000"/><stop offset=".29" stop-color="#2e0000"/><stop offset=".4" stop-color="#520000"/><stop offset=".52" stop-color="maroon"/><stop offset=".63" stop-color="#ac0606"/><stop offset=".74" stop-color="#d00b0b"/><stop offset=".84" stop-color="#e90f0f"/><stop offset=".93" stop-color="#f91212"/><stop offset="1" stop-color="#ff1313"/><stop offset="1" stop-color="red"/></linearGradient>
+    <radialGradient id="radial-gradient" gradientUnits="objectBoundingBox" cx="0.35" cy="0.32" r="0.75"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".11" stop-color="#fff" stop-opacity=".02"/><stop offset=".22" stop-color="#fff" stop-opacity=".06"/><stop offset=".33" stop-color="#fff" stop-opacity=".14"/><stop offset=".43" stop-color="#fff" stop-opacity=".25"/><stop offset=".54" stop-color="#fff" stop-opacity=".39"/><stop offset=".65" stop-color="#fff" stop-opacity=".57"/><stop offset=".76" stop-color="#fff" stop-opacity=".77"/><stop offset=".77" stop-color="#fff" stop-opacity=".8"/><stop offset=".8" stop-color="#fff" stop-opacity=".86"/><stop offset=".85" stop-color="#fff" stop-opacity=".94"/><stop offset=".91" stop-color="#fff" stop-opacity=".98"/><stop offset=".96" stop-color="#fff"/></radialGradient>
+    <linearGradient id="linear-gradient-17" x1="95.64" y1="6.6" x2="95.6" y2="149.27" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#999"/>
+      <stop offset=".32" stop-color="#fff"/>
+      <stop offset="1" stop-color="#000"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-18" x1="47.2" y1=".68" x2="47.15" y2="154.35" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#999"/>
+      <stop offset=".32" stop-color="#fff"/>
+      <stop offset="1" stop-color="#595959"/>
+    </linearGradient>
+    <clipPath id="clippath-1">
+      <rect y="44.64" width="32.46" height="66.59" fill="none"/>
+    </clipPath>
+    <radialGradient id="radial-gradient-2" gradientUnits="objectBoundingBox" cx="0.35" cy="0.32" r="0.75"><stop offset=".2" stop-color="#fff"/><stop offset=".26" stop-color="#fbedec"/><stop offset=".4" stop-color="#f2bfbc"/><stop offset=".59" stop-color="#e4756f"/><stop offset=".73" stop-color="#d93b32"/><stop offset=".77" stop-color="#c2342d"/><stop offset=".84" stop-color="#9e2a24"/><stop offset=".9" stop-color="#83231e"/><stop offset=".96" stop-color="#731e1b"/><stop offset="1" stop-color="#6e1d1a"/></radialGradient>
+  </defs>
+  <g id="Layer_1-2" data-name="Layer 1">
+    <g>
+      <g clip-path="url(#clippath)">
+        <g>
+          <g>
+            <rect x="128.05" y="2.8" width="4.8" height="151.14" fill="red"/>
+            <rect x="146.54" y="2.8" width="4.8" height="151.14" fill="red"/>
+            <rect x="165.03" y="2.8" width="4.8" height="151.14" fill="red"/>
+            <rect x="183.52" y="2.8" width="4.8" height="151.14" fill="red"/>
+            <rect x="202.01" y="2.8" width="4.8" height="151.14" fill="red"/>
+            <rect x="220.5" y="2.8" width="4.8" height="151.14" fill="red"/>
+            <rect x="238.99" y="2.8" width="4.8" height="151.14" fill="red"/>
+            <rect x="257.48" y="2.8" width="4.8" height="151.14" fill="red"/>
+          </g>
+          <g>
+            <rect x="137.3" y="2.8" width="4.8" height="151.14"/>
+            <rect x="155.79" y="2.8" width="4.8" height="151.14"/>
+            <rect x="174.28" y="2.8" width="4.8" height="151.14"/>
+            <rect x="192.77" y="2.8" width="4.8" height="151.14"/>
+            <rect x="211.25" y="2.8" width="4.8" height="151.14"/>
+            <rect x="229.74" y="2.8" width="4.8" height="151.14"/>
+            <rect x="248.23" y="2.8" width="4.8" height="151.14"/>
+          </g>
+          <rect x="121.21" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient)"/>
+          <rect x="130.45" y="2.8" width="9.24" height="151.14" transform="translate(270.15 156.75) rotate(180)" fill="url(#linear-gradient-2)"/>
+          <rect x="139.7" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient-3)"/>
+          <rect x="148.94" y="2.8" width="9.24" height="151.14" transform="translate(307.13 156.75) rotate(180)" fill="url(#linear-gradient-4)"/>
+          <rect x="158.19" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient-5)"/>
+          <rect x="167.43" y="2.8" width="9.24" height="151.14" transform="translate(344.11 156.75) rotate(180)" fill="url(#linear-gradient-6)"/>
+          <rect x="176.68" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient-7)"/>
+          <rect x="185.92" y="2.8" width="9.24" height="151.14" transform="translate(381.09 156.75) rotate(180)" fill="url(#linear-gradient-8)"/>
+          <rect x="195.17" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient-9)"/>
+          <rect x="204.41" y="2.8" width="9.24" height="151.14" transform="translate(418.06 156.75) rotate(180)" fill="url(#linear-gradient-10)"/>
+          <rect x="213.65" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient-11)"/>
+          <rect x="222.9" y="2.8" width="9.24" height="151.14" transform="translate(455.04 156.75) rotate(180)" fill="url(#linear-gradient-12)"/>
+          <rect x="232.14" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient-13)"/>
+          <rect x="241.39" y="2.8" width="9.24" height="151.14" transform="translate(492.02 156.75) rotate(180)" fill="url(#linear-gradient-14)"/>
+          <rect x="250.63" y="2.8" width="9.24" height="151.14" fill="url(#linear-gradient-15)"/>
+          <rect x="259.88" y="2.8" width="9.24" height="151.14" transform="translate(529 156.75) rotate(180)" fill="url(#linear-gradient-16)"/>
+        </g>
+      </g>
+      <circle cx="195.17" cy="78.38" r="76.43" fill="url(#radial-gradient)"/>
+      <g>
+        <g>
+          <rect x="79.09" y="6.6" width="33.06" height="142.66" rx="9.06" ry="9.06" fill="url(#linear-gradient-17)"/>
+          <rect x="79.09" y="6.6" width="33.06" height="142.66" rx="9.06" ry="9.06" fill="none" stroke-width="1.81px" stroke="#221f20"/>
+        </g>
+        <g>
+          <path d="M0,44.64h36.49c3.83,0,8.98-2.41,11.44-5.35L69.96,6.05c2.46-2.94,6.79-5.35,10.62-5.35h6.78c3.83,0,6.97,3.14,6.97,6.97v139.72c0,3.83-3.14,6.97-6.97,6.97h-6.78c-3.83,0-8.2-2.38-10.69-5.3l-22.14-32.54c-2.49-2.91-7.67-5.3-11.5-5.3H0" fill="url(#linear-gradient-18)"/>
+          <path d="M0,44.64h36.49c3.83,0,8.98-2.41,11.44-5.35L69.96,6.05c2.46-2.94,6.79-5.35,10.62-5.35h6.78c3.83,0,6.97,3.14,6.97,6.97v139.72c0,3.83-3.14,6.97-6.97,6.97h-6.78c-3.83,0-8.2-2.38-10.69-5.3l-22.14-32.54c-2.49-2.91-7.67-5.3-11.5-5.3H0" fill="none" stroke="#221f20" stroke-width="1.39px"/>
+        </g>
+        <g clip-path="url(#clippath-1)">
+          <g>
+            <circle cx="0" cy="77.94" r="26.41" fill="url(#radial-gradient-2)"/>
+            <circle cx="0" cy="77.94" r="23.39" fill="#d93b32"/>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

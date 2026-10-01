@@ -1,0 +1,629 @@
+{
+  "phase": "M5-FINAL Magnet Visual QA",
+  "date": "2026-08-31",
+  "implementation_changes": 0,
+  "environment": {
+    "label": "Pixel Tablet landscape",
+    "physical": {
+      "w": 2560,
+      "h": 1600
+    },
+    "logical": {
+      "w": 1280,
+      "h": 800
+    },
+    "dpr": 2.0,
+    "orientation": "landscape",
+    "mediaQuerySize": {
+      "w": 1280.0,
+      "h": 800.0
+    },
+    "viewPadding": {
+      "top": 0.0,
+      "right": 0.0,
+      "bottom": 0.0,
+      "left": 0.0
+    },
+    "padding": {
+      "top": 0.0,
+      "right": 0.0,
+      "bottom": 0.0,
+      "left": 0.0
+    },
+    "capture_host": "flutter_test WidgetTester (not a physical device)",
+    "theme_original": "ThemeData.dark() — matches phet MagnetApp",
+    "theme_flutter": "KratosApp seed 0xFF1177AA / Material 3 light — current app theme",
+    "flutter_as_home": "MagnetAndCompassScreen is MaterialApp.home; AppBar leading back is absent because the route cannot pop. Home is not wired."
+  },
+  "overflow": {
+    "original": [
+      "overflowed by 55 pixels",
+      "overflowed by 55 pixels"
+    ],
+    "flutter": [],
+    "note": "Original still overflowed by 55px (Legacy A). Flutter 0 after M5-3."
+  },
+  "earth": {
+    "status": "BLOCKED: missing earth.svg",
+    "tapped": false,
+    "asset": "assets/earth.svg"
+  },
+  "electromagnet": "BLOCKED",
+  "mean_rgb": {
+    "note": "Auxiliary only. Do not optimize these numbers. Debug original overflow stripes may be in-frame.",
+    "png_size_px": {
+      "original": [
+        2560,
+        1600
+      ],
+      "flutter": [
+        2560,
+        1600
+      ]
+    },
+    "original_full_screen": {
+      "r": 26.45,
+      "g": 20.99,
+      "b": 23.97,
+      "hex": "#1A1518"
+    },
+    "original_play_area": {
+      "r": 26.45,
+      "g": 20.99,
+      "b": 23.97,
+      "hex": "#1A1518"
+    },
+    "flutter_full_screen": {
+      "r": 28.25,
+      "g": 27.16,
+      "b": 35.14,
+      "hex": "#1C1B23"
+    },
+    "flutter_play_area": {
+      "r": 40.09,
+      "g": 32.26,
+      "b": 37.03,
+      "hex": "#282025"
+    }
+  },
+  "rows": [
+    {
+      "component": "simulation canvas",
+      "original_rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1280.0,
+        "h": 800.0,
+        "cx": 640.0,
+        "cy": 400.0,
+        "right": 1280.0,
+        "bottom": 800.0
+      },
+      "flutter_rect": {
+        "x": 104.5,
+        "y": 105.7,
+        "w": 1070.9,
+        "h": 632.5,
+        "cx": 640.0,
+        "cy": 422.0,
+        "right": 1175.5,
+        "bottom": 738.3
+      },
+      "dx": 104.5,
+      "dy": 105.7,
+      "dw": -209.1,
+      "dh": -167.5,
+      "dcx": 0.0,
+      "dcy": 22.0,
+      "classification": "SOURCE-ALIGNED / LAYOUT-DIFFERENT",
+      "notes": "Original canvas = full window. Flutter = NineGrid center after AppBar 44. Engineering chrome."
+    },
+    {
+      "component": "magnet",
+      "original_rect": {
+        "x": 287.6,
+        "y": 336.0,
+        "w": 500.0,
+        "h": 128.0,
+        "cx": 537.6,
+        "cy": 400.0,
+        "right": 787.6,
+        "bottom": 464.0
+      },
+      "flutter_rect": {
+        "x": 287.6,
+        "y": 336.0,
+        "w": 500.0,
+        "h": 128.0,
+        "cx": 537.6,
+        "cy": 400.0,
+        "right": 787.6,
+        "bottom": 464.0
+      },
+      "dx": 0.0,
+      "dy": 0.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 0.0,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "Window center (0.42W, 0.50H). Size 500×128. Δx=Δy=Δw=Δh=0.",
+      "flutter_canvas_local": {
+        "x": 183.1,
+        "y": 230.3,
+        "w": 500.0,
+        "h": 128.0,
+        "cx": 433.1,
+        "cy": 294.3
+      }
+    },
+    {
+      "component": "compass",
+      "original_rect": {
+        "x": 692.0,
+        "y": 452.0,
+        "w": 152.0,
+        "h": 152.0,
+        "cx": 768.0,
+        "cy": 528.0,
+        "right": 844.0,
+        "bottom": 604.0
+      },
+      "flutter_rect": {
+        "x": 692.0,
+        "y": 452.0,
+        "w": 152.0,
+        "h": 152.0,
+        "cx": 768.0,
+        "cy": 528.0,
+        "right": 844.0,
+        "bottom": 604.0
+      },
+      "dx": 0.0,
+      "dy": 0.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 0.0,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "Window center (0.60W, 0.66H). Size 152×152. Vector vs magnet (230.4, 128).",
+      "flutter_canvas_local": {
+        "x": 587.5,
+        "y": 346.3,
+        "w": 152.0,
+        "h": 152.0,
+        "cx": 663.5,
+        "cy": 422.3
+      }
+    },
+    {
+      "component": "field meter",
+      "original_rect": {
+        "x": 228.4,
+        "y": 144.0,
+        "w": 260.0,
+        "h": 192.0,
+        "cx": 358.4,
+        "cy": 240.0,
+        "source": "phet SimulationPage: w=260 h=192 center=(0.28W, 0.30H)"
+      },
+      "flutter_rect": {
+        "x": 228.4,
+        "y": 144.0,
+        "w": 260.0,
+        "h": 192.0,
+        "cx": 358.4,
+        "cy": 240.0,
+        "right": 488.4,
+        "bottom": 336.0
+      },
+      "dx": 0.0,
+      "dy": 0.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 0.0,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "Window center (0.28W, 0.30H). Size 260×192. Magnet−Meter (179.2, 160). Finder on original hits B= text; rect is source geometry.",
+      "original_text_finder": {
+        "x": 239.9,
+        "y": 155.5,
+        "w": 134.8,
+        "h": 17.0,
+        "cx": 307.3,
+        "cy": 164.0,
+        "right": 374.7,
+        "bottom": 172.5
+      },
+      "flutter_canvas_local": {
+        "x": 123.9,
+        "y": 38.3,
+        "w": 260.0,
+        "h": 192.0,
+        "cx": 253.9,
+        "cy": 134.3
+      }
+    },
+    {
+      "component": "control panel",
+      "original_rect": {
+        "x": 1038.0,
+        "y": 12.0,
+        "w": 230.0,
+        "h": 298.0,
+        "cx": 1153.0,
+        "cy": 161.0,
+        "right": 1268.0,
+        "bottom": 310.0
+      },
+      "flutter_rect": {
+        "x": 933.5,
+        "y": 117.7,
+        "w": 230.0,
+        "h": 298.0,
+        "cx": 1048.5,
+        "cy": 266.7,
+        "right": 1163.5,
+        "bottom": 415.7
+      },
+      "dx": -104.5,
+      "dy": 105.7,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": -104.5,
+      "dcy": 105.7,
+      "classification": "SOURCE-ALIGNED / LAYOUT-DIFFERENT",
+      "notes": "Same 230×298 and canvas-local top:12 right:12. Window origin follows NineGrid center.",
+      "flutter_canvas_local": {
+        "x": 828.9,
+        "y": 12.0,
+        "w": 230.0,
+        "h": 298.0,
+        "cx": 943.9,
+        "cy": 161.0
+      }
+    },
+    {
+      "component": "reset",
+      "original_rect": {
+        "x": 1210.0,
+        "y": 730.0,
+        "w": 52.0,
+        "h": 52.0,
+        "cx": 1236.0,
+        "cy": 756.0,
+        "right": 1262.0,
+        "bottom": 782.0
+      },
+      "flutter_rect": {
+        "x": 1210.0,
+        "y": 738.3,
+        "w": 52.0,
+        "h": 52.0,
+        "cx": 1236.0,
+        "cy": 764.3,
+        "right": 1262.0,
+        "bottom": 790.3
+      },
+      "dx": 0.0,
+      "dy": 8.3,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 8.3,
+      "classification": "SOURCE-ALIGNED / LAYOUT-DIFFERENT",
+      "notes": "Circle 52×52 restored. Slot remains NineGrid.bottomRight. right inset 18; bottom inset limited by side cell (~9.7). Δy≈+8.3 vs full-window bottom:18."
+    },
+    {
+      "component": "appBar / chrome",
+      "original_rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 0.0,
+        "h": 0.0,
+        "cx": 0.0,
+        "cy": 0.0
+      },
+      "flutter_rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 1280.0,
+        "h": 44.0,
+        "cx": 640.0,
+        "cy": 22.0,
+        "right": 1280.0,
+        "bottom": 44.0
+      },
+      "dx": 0.0,
+      "dy": 0.0,
+      "dw": 1280.0,
+      "dh": 44.0,
+      "dcx": 640.0,
+      "dcy": 22.0,
+      "classification": "SOURCE-ALIGNED / LAYOUT-DIFFERENT",
+      "notes": "Original SimulationPage has no AppBar. Flutter AppBar 1280×44 #1565C0. Home not wired; leading back absent in this capture."
+    },
+    {
+      "component": "Flip Polarity button",
+      "original_rect": {
+        "x": 1049.0,
+        "y": 177.0,
+        "w": 208.0,
+        "h": 48.0,
+        "cx": 1153.0,
+        "cy": 201.0,
+        "right": 1257.0,
+        "bottom": 225.0
+      },
+      "flutter_rect": {
+        "x": 944.5,
+        "y": 282.7,
+        "w": 208.0,
+        "h": 48.0,
+        "cx": 1048.5,
+        "cy": 306.7,
+        "right": 1152.5,
+        "bottom": 330.7
+      },
+      "dx": -104.5,
+      "dy": 105.7,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": -104.5,
+      "dcy": 105.7,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "Same 208×48. Window delta equals panel delta (follows canvas origin)."
+    },
+    {
+      "component": "slider",
+      "original_rect": {
+        "x": 1071.0,
+        "y": 91.0,
+        "w": 164.0,
+        "h": 14.0,
+        "cx": 1153.0,
+        "cy": 98.0,
+        "right": 1235.0,
+        "bottom": 105.0
+      },
+      "flutter_rect": {
+        "x": 966.5,
+        "y": 196.7,
+        "w": 164.0,
+        "h": 14.0,
+        "cx": 1048.5,
+        "cy": 203.7,
+        "right": 1130.5,
+        "bottom": 210.7
+      },
+      "dx": -104.5,
+      "dy": 105.7,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": -104.5,
+      "dcy": 105.7,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "Both 164×14. Flutter overflow 0 after M5-3 FittedBox. Original still overflowed by 55px (Legacy A)."
+    },
+    {
+      "component": "label Magnetic Field (B)",
+      "original_rect": {
+        "x": 1073.0,
+        "y": 111.5,
+        "w": 238.5,
+        "h": 19.0,
+        "cx": 1192.2,
+        "cy": 121.0,
+        "right": 1311.5,
+        "bottom": 130.5
+      },
+      "flutter_rect": {
+        "x": 968.5,
+        "y": 219.4,
+        "w": 184.0,
+        "h": 14.7,
+        "cx": 1060.5,
+        "cy": 226.7,
+        "right": 1152.5,
+        "bottom": 234.1
+      },
+      "dx": -104.5,
+      "dy": 107.9,
+      "dw": -54.5,
+      "dh": -4.3,
+      "dcx": -131.8,
+      "dcy": 105.7,
+      "classification": "SOURCE-ALIGNED / LAYOUT-DIFFERENT",
+      "notes": "FittedBox scaleDown: 184×14.7 vs original 238.5×19 (overflow). Intentional engineering adaptation."
+    },
+    {
+      "component": "label Bar Magnet",
+      "original_rect": {
+        "x": 1049.0,
+        "y": 23.0,
+        "w": 142.5,
+        "h": 20.0,
+        "cx": 1120.2,
+        "cy": 33.0,
+        "right": 1191.5,
+        "bottom": 43.0
+      },
+      "flutter_rect": {
+        "x": 944.5,
+        "y": 128.7,
+        "w": 142.5,
+        "h": 20.0,
+        "cx": 1015.7,
+        "cy": 138.7,
+        "right": 1087.0,
+        "bottom": 148.7
+      },
+      "dx": -104.5,
+      "dy": 105.7,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": -104.5,
+      "dcy": 105.7,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "Same 142.5×20. Window position follows panel."
+    },
+    {
+      "component": "checkbox Magnetic Field (B)",
+      "original_rect": {
+        "x": 1049.0,
+        "y": 111.0,
+        "w": 20.0,
+        "h": 20.0,
+        "cx": 1059.0,
+        "cy": 121.0,
+        "right": 1069.0,
+        "bottom": 131.0
+      },
+      "flutter_rect": {
+        "x": 944.5,
+        "y": 216.7,
+        "w": 20.0,
+        "h": 20.0,
+        "cx": 954.5,
+        "cy": 226.7,
+        "right": 964.5,
+        "bottom": 236.7
+      },
+      "dx": -104.5,
+      "dy": 105.7,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": -104.5,
+      "dcy": 105.7,
+      "classification": "MATERIAL DIFFERENCE",
+      "notes": "20×20 shrinkWrap both. Original ThemeData.dark() vs Flutter Material 3 light."
+    },
+    {
+      "component": "arrow buttons",
+      "original_rect": {
+        "x": 1050.0,
+        "y": 88.0,
+        "w": 20.0,
+        "h": 20.0,
+        "cx": 1060.0,
+        "cy": 98.0,
+        "right": 1070.0,
+        "bottom": 108.0
+      },
+      "flutter_rect": {
+        "x": 945.5,
+        "y": 193.7,
+        "w": 20.0,
+        "h": 20.0,
+        "cx": 955.5,
+        "cy": 203.7,
+        "right": 965.5,
+        "bottom": 213.7
+      },
+      "dx": -104.5,
+      "dy": 105.7,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": -104.5,
+      "dcy": 105.7,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "22×22 source; measured icon follows panel."
+    },
+    {
+      "component": "AppBar title font",
+      "original_rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 0.0,
+        "h": 0.0,
+        "cx": 0.0,
+        "cy": 0.0
+      },
+      "flutter_rect": {
+        "x": 16.0,
+        "y": 12.0,
+        "w": 80.0,
+        "h": 20.0,
+        "cx": 56.0,
+        "cy": 22.0,
+        "right": 96.0,
+        "bottom": 32.0
+      },
+      "dx": 16.0,
+      "dy": 12.0,
+      "dw": 80.0,
+      "dh": 20.0,
+      "dcx": 56.0,
+      "dcy": 22.0,
+      "classification": "FONT DIFFERENCE",
+      "notes": "CJK title 磁铁与罗盘 uses platform fallback (e.g. Microsoft YaHei). Latin panel/magnet labels unspecified → Roboto both sides."
+    },
+    {
+      "component": "Earth",
+      "original_rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 0.0,
+        "h": 0.0,
+        "cx": 0.0,
+        "cy": 0.0
+      },
+      "flutter_rect": {
+        "x": 0.0,
+        "y": 0.0,
+        "w": 0.0,
+        "h": 0.0,
+        "cx": 0.0,
+        "cy": 0.0
+      },
+      "dx": 0.0,
+      "dy": 0.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": 0.0,
+      "dcy": 0.0,
+      "classification": "BLOCKED",
+      "notes": "BLOCKED: missing earth.svg. Checkbox not tapped. No substitute asset."
+    },
+    {
+      "component": "magnet moved (Flutter only)",
+      "original_rect": {
+        "x": 287.6,
+        "y": 336.0,
+        "w": 500.0,
+        "h": 128.0,
+        "cx": 537.6,
+        "cy": 400.0,
+        "right": 787.6,
+        "bottom": 464.0
+      },
+      "flutter_rect": {
+        "x": 147.6,
+        "y": 406.0,
+        "w": 500.0,
+        "h": 128.0,
+        "cx": 397.6,
+        "cy": 470.0,
+        "right": 647.6,
+        "bottom": 534.0
+      },
+      "dx": -140.0,
+      "dy": 70.0,
+      "dw": 0.0,
+      "dh": 0.0,
+      "dcx": -140.0,
+      "dcy": 70.0,
+      "classification": "VISUALLY ALIGNED",
+      "notes": "Drag Offset(-140, 70) from body. Center 537.6,400 → 397.6,470. Drag semantics unchanged."
+    }
+  ],
+  "locked_business": [
+    "MagneticField.compute unmodified",
+    "MagnetState unmodified",
+    "CompassPainter unmodified",
+    "reset semantics unmodified",
+    "drag semantics unmodified",
+    "Home not wired",
+    "Legacy not deleted"
+  ]
+}

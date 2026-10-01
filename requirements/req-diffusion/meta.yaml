@@ -1,0 +1,14 @@
+req_id: req-diffusion
+title: Diffusion
+status: done
+phase: sealed
+local_version: 1.2.0-dev.0
+gas_properties_lock: 7a52c48ab2892644dc8afb426b523d47d621a56d
+screens: 1
+home:
+  discipline: 物理
+  subdomain: 热学与气体
+tests_passed: 27
+analyze_issues: 0
+audio: 源码一致：原版无音效
+updated_at: 2026-09-06

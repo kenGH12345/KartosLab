@@ -1,0 +1,511 @@
+{
+  "simulation": "pendulum-lab",
+  "viewport": "1280x800",
+  "dpr": 1,
+  "original_source": "phet.colorado.edu latest published build",
+  "flutter_source": "local widget-test capture (RepaintBoundary.toImage)",
+  "states": [
+    {
+      "state": "01_Intro_initial",
+      "screen": "intro",
+      "original": {
+        "screenshot": "ORIGINAL/01_Intro_initial.png",
+        "bytes": 59622,
+        "captured_at": "2026-09-14T11:41:41.222Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "open_intro"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/01_Intro_initial.png",
+        "bytes": 65182,
+        "captured_at": "2026-09-14T21:51:06.560845",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/01_Intro_initial_diff.png",
+        "mean_abs_diff": 26.656,
+        "pct_pixels_changed": 20.97,
+        "pct_pixels_delta_gt32": 15.12
+      }
+    },
+    {
+      "state": "02_Intro_running",
+      "screen": "intro",
+      "original": {
+        "screenshot": "ORIGINAL/02_Intro_running.png",
+        "bytes": 64934,
+        "captured_at": "2026-09-14T11:41:41.756Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "set_angle_pi/4",
+          "play",
+          "wait_0.5s"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/02_Intro_running.png",
+        "bytes": 70007,
+        "captured_at": "2026-09-14T21:51:21.205875",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/02_Intro_running_diff.png",
+        "mean_abs_diff": 27.227,
+        "pct_pixels_changed": 21.25,
+        "pct_pixels_delta_gt32": 15.51
+      }
+    },
+    {
+      "state": "03_Intro_paused",
+      "screen": "intro",
+      "original": {
+        "screenshot": "ORIGINAL/03_Intro_paused.png",
+        "bytes": 64233,
+        "captured_at": "2026-09-14T11:41:42.104Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "set_angle_pi/4",
+          "play_0.5s",
+          "pause"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/03_Intro_paused.png",
+        "bytes": 70434,
+        "captured_at": "2026-09-14T21:51:36.193655",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/03_Intro_paused_diff.png",
+        "mean_abs_diff": 27.419,
+        "pct_pixels_changed": 21.32,
+        "pct_pixels_delta_gt32": 15.63
+      }
+    },
+    {
+      "state": "04_Intro_modified",
+      "screen": "intro",
+      "original": {
+        "screenshot": "ORIGINAL/04_Intro_modified.png",
+        "bytes": 76917,
+        "captured_at": "2026-09-14T11:41:42.957Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "length_0.4",
+          "mass_1.2",
+          "gravity_24.79",
+          "friction_0.2",
+          "two_pendula",
+          "period_trace_on",
+          "stopwatch_on"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/04_Intro_modified.png",
+        "bytes": 82588,
+        "captured_at": "2026-09-14T21:51:51.221868",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/04_Intro_modified_diff.png",
+        "mean_abs_diff": 30.96,
+        "pct_pixels_changed": 25.42,
+        "pct_pixels_delta_gt32": 18.08
+      }
+    },
+    {
+      "state": "05_Intro_reset",
+      "screen": "intro",
+      "original": {
+        "screenshot": "ORIGINAL/05_Intro_reset.png",
+        "bytes": 59538,
+        "captured_at": "2026-09-14T11:41:43.687Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "two_pendula",
+          "play_10f",
+          "reset_all"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/05_Intro_reset.png",
+        "bytes": 65182,
+        "captured_at": "2026-09-14T21:52:06.197922",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/05_Intro_reset_diff.png",
+        "mean_abs_diff": 26.656,
+        "pct_pixels_changed": 20.96,
+        "pct_pixels_delta_gt32": 15.12
+      }
+    },
+    {
+      "state": "06_Energy_initial",
+      "screen": "energy",
+      "original": {
+        "screenshot": "ORIGINAL/06_Energy_initial.png",
+        "bytes": 62560,
+        "captured_at": "2026-09-14T11:41:46.386Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "open_energy"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/06_Energy_initial.png",
+        "bytes": 69240,
+        "captured_at": "2026-09-14T21:52:21.204369",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/06_Energy_initial_diff.png",
+        "mean_abs_diff": 26.817,
+        "pct_pixels_changed": 20.93,
+        "pct_pixels_delta_gt32": 13.3
+      }
+    },
+    {
+      "state": "07_Energy_running",
+      "screen": "energy",
+      "original": {
+        "screenshot": "ORIGINAL/07_Energy_running.png",
+        "bytes": 69364,
+        "captured_at": "2026-09-14T11:41:47.106Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "set_angle_pi/3",
+          "play",
+          "wait_0.67s"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/07_Energy_running.png",
+        "bytes": 77529,
+        "captured_at": "2026-09-14T21:52:36.214714",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/07_Energy_running_diff.png",
+        "mean_abs_diff": 29.008,
+        "pct_pixels_changed": 22.44,
+        "pct_pixels_delta_gt32": 14.88
+      }
+    },
+    {
+      "state": "08_Energy_paused",
+      "screen": "energy",
+      "original": {
+        "screenshot": "ORIGINAL/08_Energy_paused.png",
+        "bytes": 70015,
+        "captured_at": "2026-09-14T11:41:47.436Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "set_angle_pi/3",
+          "play_0.67s",
+          "pause"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/08_Energy_paused.png",
+        "bytes": 77960,
+        "captured_at": "2026-09-14T21:52:51.215739",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/08_Energy_paused_diff.png",
+        "mean_abs_diff": 29.1,
+        "pct_pixels_changed": 22.48,
+        "pct_pixels_delta_gt32": 14.95
+      }
+    },
+    {
+      "state": "09_Energy_pendulum2",
+      "screen": "energy",
+      "original": {
+        "screenshot": "ORIGINAL/09_Energy_pendulum2.png",
+        "bytes": 83814,
+        "captured_at": "2026-09-14T11:41:47.826Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "two_pendula",
+          "active_energy_pendulum_2",
+          "angle2_pi/5",
+          "play_0.33s"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/09_Energy_pendulum2.png",
+        "bytes": 90895,
+        "captured_at": "2026-09-14T21:53:06.231031",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/09_Energy_pendulum2_diff.png",
+        "mean_abs_diff": 30.668,
+        "pct_pixels_changed": 25.12,
+        "pct_pixels_delta_gt32": 15.83
+      }
+    },
+    {
+      "state": "10_Energy_reset",
+      "screen": "energy",
+      "original": {
+        "screenshot": "ORIGINAL/10_Energy_reset.png",
+        "bytes": 62560,
+        "captured_at": "2026-09-14T11:41:48.370Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "reset_all"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/10_Energy_reset.png",
+        "bytes": 69240,
+        "captured_at": "2026-09-14T21:53:21.229308",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/10_Energy_reset_diff.png",
+        "mean_abs_diff": 26.818,
+        "pct_pixels_changed": 20.93,
+        "pct_pixels_delta_gt32": 13.3
+      }
+    },
+    {
+      "state": "11_Lab_initial",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/11_Lab_initial.png",
+        "bytes": 58870,
+        "captured_at": "2026-09-14T11:41:51.187Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "open_lab"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/11_Lab_initial.png",
+        "bytes": 70482,
+        "captured_at": "2026-09-14T21:53:36.222985",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/11_Lab_initial_diff.png",
+        "mean_abs_diff": 26.081,
+        "pct_pixels_changed": 20.35,
+        "pct_pixels_delta_gt32": 12.47
+      }
+    },
+    {
+      "state": "12_Lab_running",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/12_Lab_running.png",
+        "bytes": 64029,
+        "captured_at": "2026-09-14T11:41:51.737Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "set_angle_pi/4",
+          "play",
+          "wait_0.5s"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/12_Lab_running.png",
+        "bytes": 75944,
+        "captured_at": "2026-09-14T21:53:51.230608",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/12_Lab_running_diff.png",
+        "mean_abs_diff": 26.85,
+        "pct_pixels_changed": 20.72,
+        "pct_pixels_delta_gt32": 12.96
+      }
+    },
+    {
+      "state": "13_Lab_paused",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/13_Lab_paused.png",
+        "bytes": 64716,
+        "captured_at": "2026-09-14T11:41:52.088Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "set_angle_pi/4",
+          "play_0.5s",
+          "pause"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/13_Lab_paused.png",
+        "bytes": 76369,
+        "captured_at": "2026-09-14T21:54:06.238298",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/13_Lab_paused_diff.png",
+        "mean_abs_diff": 26.944,
+        "pct_pixels_changed": 20.78,
+        "pct_pixels_delta_gt32": 13.05
+      }
+    },
+    {
+      "state": "14_Lab_modified",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/14_Lab_modified.png",
+        "bytes": 68678,
+        "captured_at": "2026-09-14T11:41:52.771Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "length_0.5",
+          "gravity_1.62",
+          "velocity_on",
+          "acceleration_on",
+          "two_pendula",
+          "play_25f",
+          "pause"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/14_Lab_modified.png",
+        "bytes": 82570,
+        "captured_at": "2026-09-14T21:54:21.252931",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/14_Lab_modified_diff.png",
+        "mean_abs_diff": 28.352,
+        "pct_pixels_changed": 22.9,
+        "pct_pixels_delta_gt32": 13.98
+      }
+    },
+    {
+      "state": "15_Lab_dragged",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/15_Lab_dragged.png",
+        "bytes": 70877,
+        "captured_at": "2026-09-14T11:41:53.222Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "user_control_on",
+          "drag_to_pi/2.2"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/15_Lab_dragged.png",
+        "bytes": 73406,
+        "captured_at": "2026-09-14T21:54:36.258950",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/15_Lab_dragged_diff.png",
+        "mean_abs_diff": 28.517,
+        "pct_pixels_changed": 23.5,
+        "pct_pixels_delta_gt32": 13.61
+      }
+    },
+    {
+      "state": "16_Lab_released",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/16_Lab_released.png",
+        "bytes": 71827,
+        "captured_at": "2026-09-14T11:41:53.508Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "release",
+          "play_15f"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/16_Lab_released.png",
+        "bytes": 79010,
+        "captured_at": "2026-09-14T21:54:51.250821",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/16_Lab_released_diff.png",
+        "mean_abs_diff": 28.857,
+        "pct_pixels_changed": 23.78,
+        "pct_pixels_delta_gt32": 13.84
+      }
+    },
+    {
+      "state": "17_Lab_period_timer",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/17_Lab_period_timer.png",
+        "bytes": 79654,
+        "captured_at": "2026-09-14T11:41:54.139Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "period_trace_on",
+          "period_timer_on_running",
+          "play_50f"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/17_Lab_period_timer.png",
+        "bytes": 81237,
+        "captured_at": "2026-09-14T21:55:06.283246",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/17_Lab_period_timer_diff.png",
+        "mean_abs_diff": 30.506,
+        "pct_pixels_changed": 25.66,
+        "pct_pixels_delta_gt32": 15.44
+      }
+    },
+    {
+      "state": "18_Lab_reset",
+      "screen": "lab",
+      "original": {
+        "screenshot": "ORIGINAL/18_Lab_reset.png",
+        "bytes": 58794,
+        "captured_at": "2026-09-14T11:41:54.686Z",
+        "source": "phet.colorado.edu latest published build (local 1.1.0-dev.5 not runnable: unbuilt, deps missing)",
+        "actions": [
+          "play_20f",
+          "reset_all"
+        ]
+      },
+      "flutter": {
+        "screenshot": "FLUTTER/18_Lab_reset.png",
+        "bytes": 70482,
+        "captured_at": "2026-09-14T21:55:21.271191",
+        "source": "local-flutter-widget-test",
+        "actions": null
+      },
+      "diff": {
+        "png": "DIFF/18_Lab_reset_diff.png",
+        "mean_abs_diff": 26.081,
+        "pct_pixels_changed": 20.35,
+        "pct_pixels_delta_gt32": 12.47
+      }
+    }
+  ]
+}

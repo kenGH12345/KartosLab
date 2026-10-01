@@ -1,0 +1,7 @@
+state: 04_Capacitance_InvalidProbe
+viewport: 1280x800
+DPR: 1.0
+device resolution: 1280x800 @ 1.0
+design resolution: 1024.0x618.0
+actual screenshot path: requirements/req-capacitor-lab-basics/visual-qa/final/flutter/04_Capacitance_InvalidProbe.png
+captured_at: 2026-09-14T12:56:24.148130

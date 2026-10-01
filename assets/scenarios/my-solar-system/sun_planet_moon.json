@@ -1,0 +1,44 @@
+{
+  "scenarioId": "sun_planet_moon",
+  "name": "Sun, Planet, Moon",
+  "comboVisible": true,
+  "source": "OrbitalSystem.ts",
+  "bodies": [
+    {
+      "isActive": true,
+      "mass": 200,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 10,
+      "position": {
+        "x": 1.6,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 25.3467
+      }
+    },
+    {
+      "isActive": true,
+      "mass": 1e-06,
+      "position": {
+        "x": 1.4,
+        "y": 0
+      },
+      "velocity": {
+        "x": 0,
+        "y": 11.1948
+      }
+    }
+  ]
+}

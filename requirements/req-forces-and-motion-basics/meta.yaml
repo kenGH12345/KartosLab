@@ -1,0 +1,21 @@
+req_id: req-forces-and-motion-basics
+title: PhET Forces and Motion: Basics → Flutter Native Migration
+phase: close
+status: ready_candidate
+updated_at: 2026-09-24
+source: forces-and-motion-basics 2.7.0-dev.0
+final_status: READY CANDIDATE
+tests: 62 PASS (core 52 + scenario 7 + home_lifecycle 3)
+analyze: clean (info-only on active surface)
+p0: 0
+p1: 0
+p2: residual chrome / water fluid / a11y / legacy stubs
+android_runtime: NOT VERIFIED
+home_integration: PASS
+home_regression: PASS
+notes: |
+  Home Integration final regression complete. MODEL physics frozen.
+  ForcesHome wired at 物理 → 力学 → 力与运动. Lifecycle + sibling Friction PASS.
+  Visual/UX follow-up: toolbox homes, sit/hold, fill, Listener drag, tab overlay fade.
+  Android Runtime NOT VERIFIED → READY CANDIDATE (not READY).
+  Reports: FINAL_REGRESSION_REPORT.md + VISUAL_UX_FOLLOWUP_REPORT.md

@@ -1,0 +1,6 @@
+state: 18_Lab_dragged
+viewport: 1280x800
+DPR: 1
+actions: ["reset","cannon_height_5","cannon_angle_45"]
+source: phet.colorado.edu latest published build (local 1.1.0-dev.41 not runnable: unbuilt, deps missing)
+captured_at: 2026-09-14T15:04:42.576Z

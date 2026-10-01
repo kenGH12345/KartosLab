@@ -1,0 +1,6 @@
+state: 02_TwoAtoms_partial_charges
+viewport: 1280x800
+DPR: 1
+actions: ["click Partial Charges"]
+source: phet.colorado.edu latest (local unbuilt)
+captured_at: 2026-09-15T10:40:43.522Z

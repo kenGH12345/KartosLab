@@ -1,0 +1,48 @@
+req_id: req-gravity-force-lab-basics
+title: 迁移 PhET Gravity Force Lab: Basics 到 KARTOSLAB Flutter
+status: done
+phase: '3.close'
+created_at: '2026-09-05 22:16'
+updated_at: '2026-09-05 22:45'
+home:
+  discipline: 物理
+  subdomain: 力学
+  card_title: 'Gravity Force Lab: Basics'
+  note: '不新建 taxonomy；挂物理→力学；不与完整版 gravity-force-lab 混淆'
+repo_path: '.'
+
+source:
+  type: html5-javascript
+  repo: https://github.com/phetsims/gravity-force-lab-basics
+  version: 1.2.0-dev.0
+  dependencies_comment: '1.1.0-dev.41 Tue Aug 24 2021'
+  local_sha_in_dependencies_json: 244ba556b1b781a86ad34a58a1c0ab5eb4434b8a
+  local_path: 'd:\OneDrive\Desktop\KartosLab\KartosLab\phet sourses\gravity-force-lab-basics-main\gravity-force-lab-basics-main'
+  shared_libs_note: '本地无 ISLC/gravity-force-lab 克隆；算法取自本地 basics + GitHub raw；puller PNG 自 ISLC images 接入 assets'
+  url: https://phet.colorado.edu/sims/html/gravity-force-lab-basics/latest/gravity-force-lab-basics_all.html
+
+edd_template_version: v2.0
+
+design_constraints:
+  - MVC：Mass / GravityModel / ForceSolver / MathCoordinateTransform / RenderData / Painter / Widget 分离
+  - Painter 不计算 F；Widget 不计算 distance
+  - 禁止教材重写 G/半径/箭头缩放；移植 ISLC + GFLB 语义
+  - NineGrid 只负责页壳；sim 内部 768×464 + MVT scale 0.05
+  - 不修改其他 simulation / common API / Home taxonomy
+  - Robot 使用 PhET figurePull_*.png，禁止 Material Icon 冒充
+
+acceptance_criteria:
+  - AC-1: 单屏可从 Home 进入/返回/再进入
+  - AC-2: F=G m1 m2/r²；G=6.67430e-11；默认力 ≈33.4 N
+  - AC-3: Constant Size / Values / Distance 与源码默认一致
+  - AC-4: 拖球 snap 100 m；minSeparation 200 m；轨道 ±5000 m
+  - AC-5: 力箭头双段线性映射；牛顿第三定律
+  - AC-6: flutter analyze 0；专项物理/交互测试通过
+
+completion:
+  verdict: done
+  report: requirements/req-gravity-force-lab-basics/COMPLETION_REPORT.md
+  tests: 20 passed
+  analyze: 0 issues
+  assets: '31/31 figurePull PNG'
+  visual: '[待确认：缺原版 runtime 截图]; pullers [源码一致]'

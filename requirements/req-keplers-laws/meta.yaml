@@ -1,0 +1,34 @@
+req_id: req-keplers-laws
+title: 迁移 PhET Kepler's Laws 到 KARTOSLAB Flutter
+status: done
+phase: '12.close'
+created_at: '2026-09-01 09:42'
+updated_at: '2026-09-01 18:40'
+repo_path: '.'
+
+source:
+    type: html5-typescript
+    repo: https://github.com/phetsims/keplers-laws
+    version: 1.3.0-dev.0
+    local_path: 'd:\OneDrive\Desktop\phet sourses\keplers-laws-main\keplers-laws-main'
+    url: https://phet.colorado.edu/en/simulations/keplers-laws
+    depends_on:
+        - https://github.com/phetsims/solar-system-common
+        - https://github.com/phetsims/my-solar-system
+
+edd_template_version: v2.0
+
+design_constraints:
+    - MVC：State / Engine(Solver) / Controller / Render / Painter / Widget / Screen 职责分离
+    - NineGrid 只负责页面级布局；轨道画布保留局部坐标
+    - 不机械复制 Build a Nucleus 目录
+    - common 仅在语义真正通用时抽取（本 sim 为第 1 个天体力学用户）
+    - 原版源码优先于截图与物理常识
+    - 不修改其他已完成 simulation
+
+acceptance_criteria:
+    - AC-1: 四屏 First / Second / Third / All Laws 可进入、返回、再进入
+    - AC-2: 椭圆轨道引擎与原版公式一致（vis viva / e / Kepler 方程 / 面积分割）
+    - AC-3: 拖拽行星位置与速度、Always Circular、Target Orbit、Reset / Restart
+    - AC-4: 崩溃/逃逸 invalid 状态停表并警告
+    - AC-5: flutter analyze 0 issues；专项测试 + 回归通过

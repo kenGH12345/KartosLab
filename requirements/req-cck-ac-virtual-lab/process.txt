@@ -1,0 +1,16 @@
+[2026-09-02 14:27] phase 0.discovery: 开工。需求 req-cck-ac-virtual-lab。蓝本 PhET HTML5 circuit-construction-kit-ac-virtual-lab 1.1.0-dev.0。
+[2026-09-02 14:30] 读 80-kratos-sim-checklist / overview / shared-abstraction-plan / circuit-module / keplers PROJECT_DISCOVERY 范式。
+[2026-09-02 14:35] 确认本地 VL 包仅为薄封装；核心在 circuit-construction-kit-ac（LabScreen）+ circuit-construction-kit-common。
+[2026-09-02 14:40] 从 GitHub 取证 LabScreen / LabScreenView / CircuitConstructionKitModel / CCKCConstants / CCKCQueryParameters / CCKCColors / model.md。
+[2026-09-02 14:42] git clone --depth 1 circuit-construction-kit-common + circuit-construction-kit-ac 到 phet sourses/。
+[2026-09-02 14:45] 产出 PROJECT_DISCOVERY.md。无不可逆决策需用户拍板。自动进入 Phase 1。
+[2026-09-02 14:50] phase 0.discovery → 1.source-analysis: 开始解密 Circuit / LTA / MNA / 交互 / 时钟。
+[2026-09-02 15:20] 产出 SOURCE_ANALYSIS.md。无阻塞。自动进入 Phase 2 visual-baseline。
+[2026-09-02 15:32] 保存官网 600×394 营销图；缺少可运行视口截图。产出 visual-qa/BASELINE.md。
+[2026-09-02 15:35] phase 2 → 3.architecture。无不可逆决策。
+[2026-09-02 15:40] 产出 ARCHITECTURE_PLAN.md。独立目录 lib/cck_ac_virtual_lab/，不合并 lib/circuit。进入 Phase 4。
+[2026-09-02 17:20] phase 4.model-state：Circuit/LTA/MNA/Controller/RenderData + 单测。无架构拍板。
+[2026-09-02 17:50] phase 5–8：抽出 PNG、CircuitPainter、交互、电荷/zoom/火花、NineGrid Screen。
+[2026-09-02 18:20] phase 9–11：视觉分层记录为近似；Home 第二张卡；debug APK 成功。
+[2026-09-02 18:40] phase 12.close：无旧 CCK AC 可归档。status: done。COMPLETION_REPORT.md。
+[2026-09-02 19:40] 用户提供空 Lab 运行截图 visual-qa/phet-lab-empty.png。按 CCKCScreenView + 截图修正 chrome：垂直 carousel、右侧三面板、Advanced 收起绿+、圆形 Pause/Step/Reset。

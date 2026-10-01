@@ -1,0 +1,9 @@
+state: 04_Intro_hundredBalls
+viewport: 1280x800
+content: 1280x737
+layout: 1024.0x618.0
+mvt: scale=1.1926 origin=(29.4,0.0)
+DPR: 1
+actions: x100_partial
+source: local-flutter-widget-test
+captured_at: 2026-09-27T17:28:20.661952Z
