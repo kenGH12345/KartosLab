@@ -240,4 +240,45 @@ void main() {
       closeTo(m.pressure, m.pressure * 0.05 + 1e-6),
     );
   });
+
+  test('15. open lid: particle leaves through the notch and stays visible outside',
+      () {
+    final m = makeModel();
+    m.pause();
+    m.pump(1);
+    m.container.lidWidth = m.container.minLidWidth;
+    expect(m.container.isOpen, isTrue);
+
+    final p = m.particleSystem.heavyParticles.first;
+    final gapLeft = m.container.escapeOpeningLeft;
+    final gapRight = m.container.escapeOpeningRight;
+    p.x = (gapLeft + gapRight) / 2;
+    p.y = m.container.top + p.radius + 40;
+    p.setVelocity(0, 800);
+
+    m.particleSystem.escapeParticles();
+    expect(m.numberOfParticles, 0);
+    expect(m.particleSystem.heavyOutside, isNotEmpty);
+    expect(m.renderData.particles, isNotEmpty);
+
+    m.stepModelTime(GasesIntroConstants.modelTimeStepPs);
+    expect(m.particleSystem.heavyOutside.first.y, greaterThan(p.y - 1));
+  });
+
+  test('16. closed lid: particle at top bounces, does not escape', () {
+    final m = makeModel();
+    m.pause();
+    m.pump(1);
+    expect(m.container.isOpen, isFalse);
+    final p = m.particleSystem.heavyParticles.first;
+    p.x = -5000;
+    p.y = m.container.top - p.radius + 20;
+    p.setVelocity(0, 500);
+    m.collisionSolver.update();
+    expect(p.top, lessThanOrEqualTo(m.container.top + 1e-6));
+    expect(p.vy, lessThan(0));
+    m.particleSystem.escapeParticles();
+    expect(m.particleSystem.heavyOutside, isEmpty);
+    expect(m.numberOfParticles, 1);
+  });
 }

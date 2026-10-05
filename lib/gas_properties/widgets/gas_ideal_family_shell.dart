@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../common/widgets/kratos_phet_time_control.dart';
+import '../../common/widgets/kratos_reset_all_button.dart';
+import '../../gases_intro/painters/play_area_painter.dart';
+import '../../gases_intro/view/view_interaction_state.dart';
+import '../../gases_intro/widgets/instrument_controls.dart';
+import '../../gases_intro/widgets/instruments.dart';
 import '../controller/gas_simulation_controller.dart';
 import '../controller/throttled_listenable.dart';
 import '../gas_properties_colors.dart';
@@ -7,10 +14,11 @@ import '../gas_properties_constants.dart';
 import '../interaction/drag_state.dart';
 import '../interaction/scene_drag_layer.dart';
 import '../layout/ideal_layout_slots.dart';
+import '../model/hold_constant.dart';
 import '../model/ideal_gas_law_model.dart';
+import '../model/particle_type.dart';
 import '../painters/gas_play_area_painter.dart';
 import '../painters/histogram_painter.dart';
-import '../painters/ideal_instruments_painters.dart';
 import '../solver/hold_constant_solver.dart';
 import '../transform/gas_coordinate_transform.dart';
 import 'ideal_phet_controls.dart';
@@ -137,8 +145,15 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
                     final (resetRight, resetBottom) =
                         IdealLayoutSlots.resetAnchor();
 
+                    final containerLeft = _transform.modelToViewX(state.containerLeft);
+                    final containerRight = _transform.modelToViewX(state.containerRight);
+                    final containerBottom = _transform.modelToViewY(state.containerBottom);
+                    const widthArrowsH = 22.0;
+                    final widthArrowsTop = containerBottom + 8;
+                    const eraseW = 40.0;
+                    const eraseH = 40.0;
                     const thermW = 72.0;
-                    const thermH = 150.0;
+                    const thermH = 172.0;
                     const gaugeW = 100.0;
                     const gaugeH = 120.0;
                     const heaterW = 120.0;
@@ -156,18 +171,59 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
                       clipBehavior: Clip.none,
                       children: [
                         Positioned(
+                          left: containerLeft,
+                          top: widthArrowsTop,
+                          width: containerRight - containerLeft,
+                          height: widthArrowsH,
+                          child: IgnorePointer(
+                            child: CustomPaint(
+                              painter: ContainerWidthArrowsPainter(
+                                visible: state.widthVisible,
+                                widthNm: state.widthPm / 1000,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          left: containerRight - eraseW,
+                          top: widthArrowsTop + widthArrowsH + 5,
+                          width: eraseW,
+                          height: eraseH,
+                          child: Material(
+                            color: const Color(0xFFDCDCDC),
+                            borderRadius: BorderRadius.circular(4),
+                            elevation: 2,
+                            child: InkWell(
+                              onTap: c.model.numberOfParticles == 0
+                                  ? null
+                                  : c.eraseParticles,
+                              borderRadius: BorderRadius.circular(4),
+                              child: Opacity(
+                                opacity:
+                                    c.model.numberOfParticles == 0 ? 0.35 : 1,
+                                child: Center(
+                                  child: SvgPicture.asset(
+                                    'assets/gases_intro/eraser.svg',
+                                    width: 28,
+                                    height: 22,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Positioned(
                           left: thermCx - thermW / 2,
                           top: thermBottom - thermH,
                           width: thermW,
                           height: thermH,
-                          child: IgnorePointer(
-                            child: CustomPaint(
-                              painter: IdealThermometerPainter(
-                                fill01: state.temperatureK == null
-                                    ? 0
-                                    : (state.temperatureK! / 1000).clamp(0, 1),
-                                label: state.temperatureDisplay,
-                              ),
+                          child: ThermometerInstrument(
+                            temperatureK: state.temperatureK,
+                            units: c.temperatureUnitsKelvin
+                                ? TemperatureUnits.kelvin
+                                : TemperatureUnits.celsius,
+                            onUnitsChanged: (u) => c.setTemperatureUnitsKelvin(
+                              u == TemperatureUnits.kelvin,
                             ),
                           ),
                         ),
@@ -176,25 +232,17 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
                           top: gaugeCy - 46,
                           width: gaugeW,
                           height: gaugeH,
-                          child: IgnorePointer(
-                            child: CustomPaint(
-                              painter: IdealPressureGaugePainter(
-                                fraction: (state.displayedPressureKpa /
-                                        GasPropertiesConstants.maxPressureKpa)
-                                    .clamp(0.0, 1.0),
-                                label: state.pressureDisplay,
-                              ),
+                          child: PressureGaugeInstrument(
+                            displayedKpa: state.displayedPressureKpa,
+                            units: c.pressureUnitsAtm
+                                ? PressureUnits.atmospheres
+                                : PressureUnits.kilopascals,
+                            onUnitsChanged: (u) => c.setPressureUnitsAtm(
+                              u == PressureUnits.atmospheres,
                             ),
                           ),
                         ),
-                        Positioned.fill(
-                          child: SceneUnitSelectors(
-                            controller: c,
-                            transform: _transform,
-                          ),
-                        ),
-                        // Lid handle above instruments so it stays draggable
-                        // (PhET handle sits at the right end of the lid bar).
+                        // Lid handle above instruments (left edge of lid, like Gases Intro).
                         Positioned.fill(
                           child: SceneLidWallOverlay(
                             controller: c,
@@ -212,22 +260,23 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
                           height: heaterH,
                           child: Semantics(
                             label: 'Heat Cool',
-                            child: SceneHeaterDrag(
-                              controller: c,
-                              drag: _drag,
-                              onDragChanged: _onDragChanged,
-                              child: CustomPaint(
-                                painter: IdealHeaterCoolerPainter(
-                                  factor: _drag.kind == SceneDragKind.heater
-                                      ? _drag.heatFactor
-                                      : state.heatCoolFactor,
-                                ),
-                                child: const SizedBox.expand(),
-                              ),
+                            child: HeaterCoolerWidget(
+                              listenable: c,
+                              factorOf: () => c.model.heatCoolFactor,
+                              enabledOf: () =>
+                                  c.model.isPlaying &&
+                                  c.model.numberOfParticles > 0,
+                              hideOf: () =>
+                                  c.model.holdConstant ==
+                                      HoldConstant.temperature ||
+                                  c.model.holdConstant ==
+                                      HoldConstant.pressureT,
+                              onChanged: c.setHeatCool,
+                              onReleased: () => c.setHeatCool(0),
                             ),
                           ),
                         ),
-                        // Bottom-right cluster: pump + radios + eraser + tools + reset
+                        // Pump + particle radios + Reset All (tools live on the right rail).
                         ..._bottomRightCluster(
                           pumpLeft: pumpLeft,
                           pumpBottom: pumpBottom,
@@ -257,26 +306,11 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
                         ),
                         Positioned(
                           left: timeLeft,
-                          top: timeBottom - 56,
-                          child: Row(
-                            children: [
-                              IdealPhETCircleButton(
-                                size: 52,
-                                color: const Color(0xFF38BDF8),
-                                icon: c.model.isPlaying
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                                onTap: c.togglePlayPause,
-                              ),
-                              const SizedBox(width: 10),
-                              IdealPhETCircleButton(
-                                size: 40,
-                                color: const Color(0xFF38BDF8),
-                                icon: Icons.skip_next,
-                                onTap: c.stepOnce,
-                                iconSize: 22,
-                              ),
-                            ],
+                          top: timeBottom - 48,
+                          child: KratosPhetTimeControl(
+                            isPlaying: c.model.isPlaying,
+                            onPlayPause: c.togglePlayPause,
+                            onStep: c.stepOnce,
                           ),
                         ),
                         if (!state.lidIsOn)
@@ -323,89 +357,52 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
     );
   }
 
-  /// PhET bottom-right composition for Ideal / Explore / Energy:
-  /// ```
-  /// [hose][ Pump ][ Tools panel ]
-  /// [eraser][ Heavy Light ]
-  ///                    [ Reset ]
-  /// ```
+  /// Pump + Heavy/Light radios + Reset All.
+  /// Eraser and Width arrows sit on the container (same as Gases Intro).
   List<Widget> _bottomRightCluster({
     required double pumpLeft,
     required double pumpBottom,
     required double resetRight,
     required double resetBottom,
   }) {
-    const pumpW = 100.0;
-    const pumpH = 148.0;
-    const selectorH = 36.0;
-    // Pump sits above particle radios; radios sit just above bottom margin.
-    final pumpTop = pumpBottom - selectorH - pumpH;
+    const pumpW = 112.0;
+    const pumpH = 176.0;
+    const selectorH = 48.0;
+    const selectorW = 120.0;
+    final pumpTop = pumpBottom - selectorH - 15 - pumpH;
     return [
-      // Bicycle pump
       Positioned(
         left: pumpLeft,
         top: pumpTop,
         width: pumpW,
         height: pumpH,
-        child: Stack(
-          children: [
-            IgnorePointer(
-              child: CustomPaint(
-                painter: IdealBicyclePumpPainter(handleLift: _drag.pumpLift),
-                child: const SizedBox.expand(),
-              ),
-            ),
-            Positioned(
-              left: pumpW * 0.28,
-              top: 0,
-              width: pumpW * 0.55,
-              height: pumpH * 0.55,
-              child: ScenePumpHandle(
-                controller: c,
-                drag: _drag,
-                onDragChanged: _onDragChanged,
-                width: pumpW * 0.55,
-                height: pumpH * 0.55,
-              ),
-            ),
-          ],
+        child: BicyclePumpWidget(
+          listenable: c,
+          bodyColorOf: () => c.model.particleType == ParticleType.heavy
+              ? const Color(GasPropertiesColors.heavyParticle)
+              : const Color(GasPropertiesColors.lightParticle),
+          onPump: () => c.pump(),
+          width: pumpW,
+          height: pumpH,
         ),
       ),
-      // Particle type radios — under pump base
       Positioned(
-        left: pumpLeft + 18,
+        left: pumpLeft + pumpW * 0.68 - selectorW / 2,
         top: pumpBottom - selectorH,
-        child: IdealParticleTypeSelector(controller: c),
-      ),
-      // Eraser — left of pump base
-      Positioned(
-        left: pumpLeft - 42,
-        top: pumpBottom - selectorH - 40,
-        child: GestureDetector(
-          onTap: c.eraseParticles,
-          child: SizedBox(
-            width: 36,
-            height: 36,
-            child: CustomPaint(painter: IdealEraserPainter()),
-          ),
+        child: ParticleTypeRadioButtonGroup(
+          heavySelected: c.model.particleType == ParticleType.heavy,
+          onSelectHeavy: () => c.setParticleType(ParticleType.heavy),
+          onSelectLight: () => c.setParticleType(ParticleType.light),
         ),
       ),
-      // Tools panel — right of pump body (Width / Stopwatch / …)
-      Positioned(
-        left: pumpLeft + pumpW + 6,
-        top: pumpTop + 36,
-        width: 210,
-        child: IdealToolsPanel(controller: c),
-      ),
-      // Reset All — far bottom-right
       Positioned(
         left: resetRight - 56,
         top: resetBottom - 56,
-        child: IdealPhETCircleButton(
-          size: 52,
-          color: const Color(0xFFF97316),
-          icon: Icons.refresh,
-          onTap: _resetAll,
+        child: KratosResetAllButton(
+          key: const Key('reset_all_button'),
+          onPressed: _resetAll,
+          radius: 20.5,
+          tooltip: 'Reset All',
         ),
       ),
     ];
@@ -432,7 +429,7 @@ class _RightControlRail extends StatelessWidget {
           _InjectionPanel(controller: controller),
           const SizedBox(height: IdealLayoutSlots.panelsYSpacing),
         ],
-        // Tools panel lives in bottom-right cluster (next to pump), not here.
+        IdealToolsPanel(controller: controller),
       ],
     );
   }

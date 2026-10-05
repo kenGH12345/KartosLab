@@ -11,6 +11,7 @@ import 'package:kratos/chemistry/molecule_polarity/model/three_atoms_model.dart'
 import 'package:kratos/chemistry/molecule_polarity/model/triatomic_molecule.dart';
 import 'package:kratos/chemistry/molecule_polarity/model/two_atoms_model.dart';
 import 'package:kratos/chemistry/molecule_polarity/mp_constants.dart';
+import 'package:kratos/chemistry/molecule_polarity/painters/mp_scene_painters.dart';
 
 void main() {
   group('normalizeAngle', () {
@@ -154,6 +155,30 @@ void main() {
         pointer: const MpVector2(1, 0.01),
       );
       expect(a % (5 * math.pi / 180), closeTo(0, 1e-9));
+    });
+
+    test('lerpAngle damps toward target without wrapping jump', () {
+      final next = lerpAngle(0, math.pi / 2, 0.32);
+      expect(next, greaterThan(0));
+      expect(next, lessThan(math.pi / 2));
+    });
+  });
+
+  group('PlatesPainter layout', () {
+    test('right plate stays left of the View panel', () {
+      const panelLeft = MpConstants.layoutWidth -
+          MpConstants.horizontalMargin -
+          MpConstants.controlPanelWidth;
+      final twoRight = PlatesPainter.rightEdge(
+        moleculeX: MpConstants.twoAtomsMoleculeX,
+        spacing: MpConstants.platesSpacingTwoAtoms,
+      );
+      final threeRight = PlatesPainter.rightEdge(
+        moleculeX: MpConstants.threeAtomsMoleculeX,
+        spacing: MpConstants.platesSpacingThreeAtoms,
+      );
+      expect(twoRight, lessThan(panelLeft));
+      expect(threeRight, lessThan(panelLeft));
     });
   });
 }

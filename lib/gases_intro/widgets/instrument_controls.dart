@@ -14,14 +14,25 @@ export '../painters/thermometer_painter.dart';
 class ParticleTypeRadioButtonGroup extends StatelessWidget {
   const ParticleTypeRadioButtonGroup({
     super.key,
-    required this.model,
+    required this.heavySelected,
+    required this.onSelectHeavy,
+    required this.onSelectLight,
   });
 
-  final IdealGasLawModel model;
+  ParticleTypeRadioButtonGroup.forIntro({
+    super.key,
+    required IdealGasLawModel model,
+  })  : heavySelected = model.particleType == ParticleKind.heavy,
+        onSelectHeavy = (() => model.setParticleType(ParticleKind.heavy)),
+        onSelectLight = (() => model.setParticleType(ParticleKind.light));
 
-  static const Color _base = Color(0xFF6D6E70); // radioButtonGroupBaseColor
+  final bool heavySelected;
+  final VoidCallback onSelectHeavy;
+  final VoidCallback onSelectLight;
+
+  static const Color _base = Color(0xFF000000); // radioButtonGroupBaseColor
   static const Color _selected = Color(0xFF69C3E7); // selectedStroke
-  static const Color _deselected = Color(0xFFB0B0B0);
+  static const Color _deselected = Color(0xFFF0F0F0);
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +40,15 @@ class ParticleTypeRadioButtonGroup extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _typeButton(
-          kind: ParticleKind.heavy,
+          selected: heavySelected,
+          onTap: onSelectHeavy,
           color: const Color(GasesIntroConstants.heavyParticleColor),
           radiusPm: GasesIntroConstants.heavyRadius,
         ),
         const SizedBox(width: 8),
         _typeButton(
-          kind: ParticleKind.light,
+          selected: !heavySelected,
+          onTap: onSelectLight,
           color: const Color(GasesIntroConstants.lightParticleColor),
           radiusPm: GasesIntroConstants.lightRadius,
         ),
@@ -44,17 +57,17 @@ class ParticleTypeRadioButtonGroup extends StatelessWidget {
   }
 
   Widget _typeButton({
-    required ParticleKind kind,
+    required bool selected,
+    required VoidCallback onTap,
     required Color color,
     required double radiusPm,
   }) {
-    final selected = model.particleType == kind;
     final r = (radiusPm * GasesIntroConstants.mvtScale).clamp(6.0, 14.0);
     return Material(
       color: _base,
       borderRadius: BorderRadius.circular(4),
       child: InkWell(
-        onTap: () => model.setParticleType(kind),
+        onTap: onTap,
         borderRadius: BorderRadius.circular(4),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
@@ -167,27 +180,35 @@ class ThermometerInstrument extends StatelessWidget {
       label = '${(temperatureK! - 273.15).round()} °C';
     }
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _UnitsCombo<TemperatureUnits>(
-          value: units,
-          items: const [
-            (TemperatureUnits.kelvin, 'K'),
-            (TemperatureUnits.celsius, '°C'),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxH = constraints.maxHeight;
+        final tubeH = maxH.isFinite && maxH > 0
+            ? (maxH - 32).clamp(72.0, 140.0)
+            : 140.0;
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _UnitsCombo<TemperatureUnits>(
+              value: units,
+              items: const [
+                (TemperatureUnits.kelvin, 'K'),
+                (TemperatureUnits.celsius, '°C'),
+              ],
+              displayText: label,
+              onChanged: onUnitsChanged,
+            ),
+            const SizedBox(height: 2),
+            SizedBox(
+              width: 36,
+              height: tubeH,
+              child: CustomPaint(
+                painter: ThermometerPainter(temperatureK: temperatureK),
+              ),
+            ),
           ],
-          displayText: label,
-          onChanged: onUnitsChanged,
-        ),
-        const SizedBox(height: 4),
-        SizedBox(
-          width: 36,
-          height: 140,
-          child: CustomPaint(
-            painter: ThermometerPainter(temperatureK: temperatureK),
-          ),
-        ),
-      ],
+        );
+      },
     );
   }
 }

@@ -58,6 +58,19 @@ class NuclideChartPainter extends CustomPainter {
           )
           ..color = ChartIntroVisuals.cellBorder.withValues(alpha: c.opacity),
       );
+      if (render.showMagicNumbers &&
+          (ChartIntroVisuals.magicNumbers.contains(c.protonNumber) ||
+              ChartIntroVisuals.magicNumbers.contains(c.neutronNumber))) {
+        canvas.drawRect(
+          rect.deflate(0.5),
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2
+            ..color = ChartIntroVisuals.magicNumberBorder.withValues(
+              alpha: c.opacity,
+            ),
+        );
+      }
     }
 
     if (render.presentation == NuclideChartPresentation.focused) {

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common/widgets/kratos_tab_bar.dart';
 import '../keplers_laws_strings.dart';
+import '../keplers_motion.dart';
 import '../model/law_mode.dart';
 import 'keplers_laws_screen.dart';
 
@@ -22,6 +23,10 @@ class KeplersLawsHome extends StatelessWidget {
       title: title,
       accentColor: accentColor,
       initialIndex: 0,
+      switchDuration: KeplersMotion.duration,
+      switchCurve: KeplersMotion.curve,
+      switchBackdropColor: Colors.black,
+      switchIncomingScale: 0.988,
       tabs: [
         KratosTab(
           label: KeplersLawsStrings.firstLaw,

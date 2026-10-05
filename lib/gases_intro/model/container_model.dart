@@ -56,6 +56,21 @@ class ContainerModel {
   double get openingLeft => getOpeningLeft();
   double get openingRight => getOpeningRight();
 
+  /// Left edge of the drawn lid (model X). Matches [PlayAreaPainter].
+  double get lidLeft => positionX - lidWidth;
+
+  /// Horizontal span of the top gap. When the lid is on, that is the visible
+  /// notch left of the lid; when the lid is off, the full top is open.
+  double get escapeOpeningLeft => lidIsOn ? left : left + GasesIntroConstants.openingLeftInset;
+
+  double get escapeOpeningRight =>
+      lidIsOn ? lidLeft : positionX - GasesIntroConstants.openingRightInset;
+
+  bool isInEscapeOpening(double particleLeft, double particleRight) {
+    if (!isOpen) return false;
+    return particleLeft > escapeOpeningLeft && particleRight < escapeOpeningRight;
+  }
+
   void blowLidOff() {
     lidIsOn = false;
   }

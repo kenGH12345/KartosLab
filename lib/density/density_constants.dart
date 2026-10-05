@@ -33,6 +33,12 @@ class DensityConstants {
   static const double numberControlDelta = 0.01;
   static const double volumeSliderSnapLiters = 0.5;
 
+  /// Original PhET `singleCuboidIcon` / `doubleCuboidIcon` (density-buoyancy-common).
+  static const String singleCuboidAsset =
+      'assets/buoyancy/images/single_cuboid.png';
+  static const String doubleCuboidAsset =
+      'assets/buoyancy/images/double_cuboid.png';
+
   static const double poolWidth = 0.9;
   static const double poolDepth = 0.4;
   static const double poolGeometricVolume = 0.15;

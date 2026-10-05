@@ -5,6 +5,7 @@ import 'package:kratos/chemistry/isotopes_and_atomic_mass/model/interactivity_mo
 import 'package:kratos/chemistry/isotopes_and_atomic_mass/model/mix_particle.dart';
 import 'package:kratos/chemistry/isotopes_and_atomic_mass/model/mixtures_constants.dart';
 import 'package:kratos/chemistry/isotopes_and_atomic_mass/model/mixtures_model.dart';
+import 'package:kratos/chemistry/isotopes_and_atomic_mass/model/sphere_bucket_layout.dart';
 
 void main() {
   MixturesModel seeded() => MixturesModel(random: Random(42));
@@ -28,6 +29,49 @@ void main() {
         expect(m.bucketParticles[i].x, m2.bucketParticles[i].x);
         expect(m.bucketParticles[i].y, m2.bucketParticles[i].y);
       }
+    });
+
+    test('removing from bucket fills dangling upper seats', () {
+      final m = seeded();
+      final stacked = m.bucketParticles
+          .where((p) => p.massNumber == 1)
+          .toList()
+        ..sort((a, b) => b.destY.compareTo(a.destY));
+      expect(stacked, isNotEmpty);
+      final top = stacked.first;
+      final topY = top.destY;
+      m.beginDrag(top.id, 0, 0);
+      m.endDrag(); // into chamber
+      final remaining = m.bucketParticles.where((p) => p.massNumber == 1);
+      expect(remaining.length, 9);
+      // No particle left hanging at the old top seat without support.
+      expect(remaining.every((p) => p.destY <= topY + 1e-6), isTrue);
+      final bucketPos = m.bucketPositionForIndex(0);
+      final bottomY = bucketPos.y +
+          SphereBucketLayout.defaultVerticalOffset(kLargeIsotopeRadius);
+      for (final p in remaining) {
+        if (p.destY == bottomY) continue;
+        var support = 0;
+        for (final o in remaining) {
+          if (o.id == p.id) continue;
+          if (o.destY < p.destY &&
+              o.destination.distanceTo(p.destination) <
+                  kLargeIsotopeRadius * 3) {
+            support++;
+          }
+        }
+        expect(support, greaterThanOrEqualTo(2));
+      }
+    });
+
+    test('chamber drop keeps pointer position', () {
+      final m = seeded();
+      final id = m.bucketParticles.first.id;
+      m.beginDrag(id, 12, -8);
+      m.updateDrag(12, -8);
+      expect(m.endDrag(), isTrue);
+      expect(m.chamberParticles.single.x, closeTo(12, 1e-6));
+      expect(m.chamberParticles.single.y, closeTo(-8, 1e-6));
     });
 
     test('bucket → chamber preserves identity', () {

@@ -16,7 +16,7 @@ class BuoyancyCompareModel extends BuoyancyScreenModel with BuoyancyScaleHost {
   BuoyancyCompareModel({super.world}) {
     _buildAllBlockSets();
     _applyVisibility();
-    this.world.pool.computeFluidY(this.world.masses.where((m) => m.visible).toList());
+    world.pool.computeFluidY(world.masses.where((m) => m.visible).toList());
     lifecycle = ScreenModelLifecycle.idle;
   }
 

@@ -3,6 +3,8 @@ library;
 
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
+
 import '../gao_constants.dart';
 import 'body_state.dart';
 import 'body_type.dart';
@@ -78,6 +80,20 @@ class GaoBody {
 
   double get radius => diameter / 2;
   double get speed => velocity.magnitude;
+
+  /// `PathsCanvasNode.paintCanvas` — `context.strokeStyle = body.color.toCSS()`.
+  Color get pathColor {
+    switch (type) {
+      case GaoBodyType.star:
+        return GaoConstants.starPath;
+      case GaoBodyType.planet:
+        return GaoConstants.planetPath;
+      case GaoBodyType.moon:
+        return GaoConstants.moonPath;
+      case GaoBodyType.satellite:
+        return GaoConstants.satellitePath;
+    }
+  }
 
   void _computeMaxPathLength() {
     final dist = _initialPosition.magnitude;

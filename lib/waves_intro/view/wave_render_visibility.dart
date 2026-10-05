@@ -43,11 +43,11 @@ class WaveRenderVisibility {
   /// Center-line graph under wave area.
   bool get showGraph => model.showGraph && showTopLattice;
 
-  bool get showFaucet => kind == SceneKind.water && showTopLattice;
+  bool get showFaucet => kind == SceneKind.water && !isRotating;
 
-  bool get showSpeaker => kind == SceneKind.sound && showTopLattice;
+  bool get showSpeaker => kind == SceneKind.sound && !isRotating;
 
-  bool get showLaser => kind == SceneKind.light && showTopLattice;
+  bool get showLaser => kind == SceneKind.light && !isRotating;
 
   bool get showWaterDrops => kind == SceneKind.water;
 

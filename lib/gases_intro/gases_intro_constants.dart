@@ -59,5 +59,6 @@ class GasesIntroConstants {
   static const int lightParticleColor = 0xFFE84E20; // rgb(232,78,32)
   static const int lightParticleHighlight = 0xFFFFAAAA;
 
-  static const int playAreaBackground = 0xFF1E293B;
+  /// GasPropertiesColors.screenBackground
+  static const int playAreaBackground = 0xFF000000;
 }

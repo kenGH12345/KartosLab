@@ -9,11 +9,13 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../common/simulation_clock.dart';
+import '../../../common/widgets/kratos_reset_all_button.dart';
 import '../../../common/widgets/nine_grid_layout.dart';
 import '../controller/keplers_laws_controller.dart';
 import '../keplers_laws_colors.dart';
 import '../keplers_laws_constants.dart';
 import '../keplers_laws_strings.dart';
+import '../keplers_motion.dart';
 import '../model/law_mode.dart';
 import '../model/period_tracker.dart';
 import '../model/target_orbit.dart';
@@ -27,6 +29,7 @@ import '../painters/vectors_painter.dart';
 import '../render/keplers_mvt.dart';
 import '../render/orbit_render_data.dart';
 import '../widgets/distances_display.dart';
+import '../widgets/keplers_law_thumbs.dart';
 import '../widgets/keplers_overlays.dart';
 import '../widgets/keplers_panels.dart';
 import '../widgets/keplers_time_control.dart';
@@ -246,7 +249,30 @@ class _KeplersLawsScreenState extends State<KeplersLawsScreen>
                 ),
                 footer: ColoredBox(
                   color: KeplersLawsColors.background,
-                  child: KeplersTimeControl(controller: _controller),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        if (widget.isAllLaws)
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: KeplersLawsRadioRow(
+                              selected: _controller.selectedLaw,
+                              onSelect: _controller.selectLaw,
+                            ),
+                          ),
+                        KeplersTimeControl(controller: _controller),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: KratosResetAllButton(
+                            onPressed: _controller.reset,
+                            radius: 20.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               // Panels align to the ScreenView edges (AlignBox), not the
@@ -258,13 +284,16 @@ class _KeplersLawsScreenState extends State<KeplersLawsScreen>
                 bottom: footerH + 8,
                 width: 260,
                 child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FirstLawSidePanel(controller: _controller),
-                      SecondLawSidePanel(controller: _controller),
-                      ThirdLawSidePanel(controller: _controller),
-                    ],
+                  child: KeplersMotion.fadeSize(
+                    key: _controller.selectedLaw,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        FirstLawSidePanel(controller: _controller),
+                        SecondLawSidePanel(controller: _controller),
+                        ThirdLawSidePanel(controller: _controller),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -280,9 +309,9 @@ class _KeplersLawsScreenState extends State<KeplersLawsScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          _zoomChip(_controller, Icons.remove, 1),
+                          _zoomChip(_controller, zoomOut: true, level: 1),
                           const SizedBox(width: 4),
-                          _zoomChip(_controller, Icons.add, 2),
+                          _zoomChip(_controller, zoomOut: false, level: 2),
                         ],
                       ),
                       VisibilityPanel(controller: _controller),
@@ -290,28 +319,10 @@ class _KeplersLawsScreenState extends State<KeplersLawsScreen>
                   ),
                 ),
               ),
-              if (_controller.isAllLaws)
-                Positioned(
-                  left: 8,
-                  bottom: footerH + 8,
-                  child: _LawsRadio(controller: _controller),
-                ),
-              Positioned(
-                right: 8,
-                bottom: footerH + 8,
-                child: Material(
-                  color: KeplersLawsColors.resetOrange,
-                  shape: const CircleBorder(),
-                  child: InkWell(
-                    customBorder: const CircleBorder(),
-                    onTap: _controller.reset,
-                    child: const SizedBox(
-                      width: 48,
-                      height: 48,
-                      child: Icon(Icons.refresh, color: Colors.white),
-                    ),
-                  ),
-                ),
+              YearsStopwatchOverlay(
+                controller: _controller,
+                area: Size(page.maxWidth, page.maxHeight),
+                footerH: footerH,
               ),
             ],
           );
@@ -483,69 +494,70 @@ class _PlayArea extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
-        if (v.measuringTapeVisible)
-          Positioned.fill(
-            child: MeasuringTapeOverlay(controller: controller, mvt: data.mvt),
-          ),
-        if (controller.visible.periodVisible &&
-            controller.hasThirdLawFeatures)
-          PeriodTimerOverlay(controller: controller),
-        if (v.stopwatchVisible)
-          YearsStopwatchOverlay(controller: controller),
+        Positioned.fill(
+          child: MeasuringTapeOverlay(controller: controller, mvt: data.mvt),
+        ),
+        PeriodTimerOverlay(controller: controller),
       ],
     );
   }
 }
 
-Widget _zoomChip(KeplersLawsController controller, IconData icon, int level) {
+Widget _zoomChip(
+  KeplersLawsController controller, {
+  required bool zoomOut,
+  required int level,
+}) {
   final selected = controller.zoomLevel == level;
   return Material(
-    color: selected ? KeplersLawsColors.sun : Colors.white24,
-    borderRadius: BorderRadius.circular(4),
+    color: zoomOut ? KeplersLawsColors.sun : Colors.white,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(4),
+      side: BorderSide(
+        color: selected ? const Color(0xFF333333) : const Color(0xFF888888),
+        width: selected ? 2 : 1,
+      ),
+    ),
     child: InkWell(
       onTap: () => controller.setZoomLevel(level),
       child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: Icon(icon, size: 18, color: Colors.black87),
+        padding: const EdgeInsets.all(5),
+        child: CustomPaint(
+          size: const Size(22, 22),
+          painter: _MagnifierPainter(plus: !zoomOut),
+        ),
       ),
     ),
   );
 }
 
-class _LawsRadio extends StatelessWidget {
-  const _LawsRadio({required this.controller});
+class _MagnifierPainter extends CustomPainter {
+  _MagnifierPainter({required this.plus});
 
-  final KeplersLawsController controller;
+  final bool plus;
 
   @override
-  Widget build(BuildContext context) {
-    Widget chip(LawMode mode, String label) {
-      final selected = controller.selectedLaw == mode;
-      return Padding(
-        padding: const EdgeInsets.only(right: 6),
-        child: Material(
-          color: selected ? const Color(0xFF60A9DD) : Colors.white12,
-          borderRadius: BorderRadius.circular(4),
-          child: InkWell(
-            onTap: () => controller.selectLaw(mode),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Text(
-                label,
-                style: const TextStyle(color: Colors.white, fontSize: 12),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Row(
-      children: [
-        chip(LawMode.first, 'I'),
-        chip(LawMode.second, 'II'),
-        chip(LawMode.third, 'III'),
-      ],
+  void paint(Canvas canvas, Size size) {
+    final stroke = Paint()
+      ..color = const Color(0xFF222222)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.8
+      ..strokeCap = StrokeCap.round;
+    canvas.drawCircle(Offset(size.width * 0.42, size.height * 0.42), 6.5, stroke);
+    canvas.drawLine(
+      Offset(size.width * 0.62, size.height * 0.62),
+      Offset(size.width * 0.88, size.height * 0.88),
+      stroke,
     );
+    final cx = size.width * 0.42;
+    final cy = size.height * 0.42;
+    canvas.drawLine(Offset(cx - 3.2, cy), Offset(cx + 3.2, cy), stroke);
+    if (plus) {
+      canvas.drawLine(Offset(cx, cy - 3.2), Offset(cx, cy + 3.2), stroke);
+    }
   }
+
+  @override
+  bool shouldRepaint(covariant _MagnifierPainter oldDelegate) =>
+      oldDelegate.plus != plus;
 }

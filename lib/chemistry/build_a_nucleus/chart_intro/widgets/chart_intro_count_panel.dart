@@ -31,7 +31,7 @@ class ChartIntroCountPanel extends StatelessWidget {
             _row(
               key: 'chart_intro_proton_count',
               color: ChartIntroVisuals.proton,
-              label: '质子',
+              label: 'Protons',
               value: state.protonCount,
             ),
             const SizedBox(
@@ -41,7 +41,7 @@ class ChartIntroCountPanel extends StatelessWidget {
             _row(
               key: 'chart_intro_neutron_count',
               color: ChartIntroVisuals.neutron,
-              label: '中子',
+              label: 'Neutrons',
               value: state.neutronCount,
             ),
           ],

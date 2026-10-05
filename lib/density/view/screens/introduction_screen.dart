@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/controls/kratos_radio_group.dart';
+import '../../../common/widgets/kratos_reset_all_button.dart';
 import '../../../common/widgets/nine_grid_layout.dart';
 import '../../controller/density_controller.dart';
+import '../../density_constants.dart';
 import '../../density_strings.dart';
 import '../../model/density_block.dart';
 import '../canvas/density_canvas.dart';
@@ -63,25 +64,102 @@ class _IntroFooter extends StatelessWidget {
           ),
           Row(
             children: [
-              Expanded(
-                child: KratosRadioGroup<TwoBlockMode>(
-                  items: TwoBlockMode.values,
-                  itemLabels: const [
-                    DensityStrings.oneBlock,
-                    DensityStrings.twoBlocks,
-                  ],
-                  value: intro.mode,
-                  direction: Axis.horizontal,
-                  onChanged: controller.setIntroMode,
-                ),
+              _BlocksModeRadio(
+                value: intro.mode,
+                onChanged: controller.setIntroMode,
               ),
-              TextButton(
+              const Spacer(),
+              KratosResetAllButton(
                 onPressed: controller.resetIntro,
-                child: const Text(DensityStrings.resetAll),
+                radius: 20.5,
+                tooltip: DensityStrings.resetAll,
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// PhET `BlocksModeRadioButtonGroup` — original single/double cuboid icons.
+class _BlocksModeRadio extends StatelessWidget {
+  const _BlocksModeRadio({
+    required this.value,
+    required this.onChanged,
+  });
+
+  final TwoBlockMode value;
+  final ValueChanged<TwoBlockMode> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFFEEEEEE),
+      elevation: 2,
+      borderRadius: BorderRadius.circular(6),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _ModeButton(
+              selected: value == TwoBlockMode.oneBlock,
+              tooltip: DensityStrings.oneBlock,
+              onTap: () => onChanged(TwoBlockMode.oneBlock),
+              asset: DensityConstants.singleCuboidAsset,
+            ),
+            const SizedBox(width: 4),
+            _ModeButton(
+              selected: value == TwoBlockMode.twoBlocks,
+              tooltip: DensityStrings.twoBlocks,
+              onTap: () => onChanged(TwoBlockMode.twoBlocks),
+              asset: DensityConstants.doubleCuboidAsset,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ModeButton extends StatelessWidget {
+  const _ModeButton({
+    required this.selected,
+    required this.tooltip,
+    required this.onTap,
+    required this.asset,
+  });
+
+  final bool selected;
+  final String tooltip;
+  final VoidCallback onTap;
+  final String asset;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tooltip(
+      message: tooltip,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(4),
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: selected ? const Color(0xFFB3E5FC) : Colors.white,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(
+              color: selected ? const Color(0xFF0288D1) : const Color(0xFF9E9E9E),
+              width: selected ? 2 : 1,
+            ),
+          ),
+          child: Image.asset(
+            asset,
+            width: tooltip == DensityStrings.twoBlocks ? 40 : 36,
+            height: 28,
+            fit: BoxFit.contain,
+          ),
+        ),
       ),
     );
   }

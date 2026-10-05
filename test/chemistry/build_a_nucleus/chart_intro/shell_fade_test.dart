@@ -210,7 +210,7 @@ void main() {
       );
       expect(c2.state.isEmptyNucleus, isTrue);
       expect(c2.fades.hasActive, isFalse);
-      expect(find.text('质子: 0'), findsOneWidget);
+      expect(find.text('Protons: 0'), findsOneWidget);
       c2.dispose();
     });
   });

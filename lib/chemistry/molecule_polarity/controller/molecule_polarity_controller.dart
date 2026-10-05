@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 
@@ -8,6 +10,7 @@ import 'package:kratos/chemistry/molecule_polarity/model/mp_preferences.dart';
 import 'package:kratos/chemistry/molecule_polarity/model/mp_vector2.dart';
 import 'package:kratos/chemistry/molecule_polarity/model/three_atoms_model.dart';
 import 'package:kratos/chemistry/molecule_polarity/model/two_atoms_model.dart';
+import 'package:kratos/chemistry/molecule_polarity/mp_constants.dart';
 
 /// Shared preferences + Two/Three Atoms controllers.
 class MoleculePolarityController extends ChangeNotifier {
@@ -31,6 +34,10 @@ class MoleculePolarityController extends ChangeNotifier {
   final ThreeAtomsModel threeAtoms;
 
   SimulationClock? _clock;
+  double? _twoAngleTarget;
+  double? _threeAngleTarget;
+  double? _threeBondABTarget;
+  double? _threeBondBCTarget;
 
   void attachClock(TickerProvider vsync) {
     disposeClock();
@@ -38,7 +45,14 @@ class MoleculePolarityController extends ChangeNotifier {
     _clock!.onTick = (dt, _) {
       twoAtoms.step(dt);
       threeAtoms.step(dt);
-      if (twoAtoms.eFieldEnabled || threeAtoms.eFieldEnabled) {
+      final dragging =
+          twoAtoms.diatomic.isDragging || threeAtoms.triatomic.isDragging;
+      if (dragging) {
+        _smoothDrag(dt);
+      }
+      if (dragging ||
+          twoAtoms.eFieldEnabled ||
+          threeAtoms.eFieldEnabled) {
         notifyListeners();
       }
     };
@@ -91,15 +105,45 @@ class MoleculePolarityController extends ChangeNotifier {
     notifyListeners();
   }
 
+  double _follow(double from, double to, double dt) {
+    final t = 1 - math.exp(-MpConstants.angleDragLambda * dt);
+    return lerpAngle(from, to, t);
+  }
+
+  void _smoothDrag(double dt) {
+    if (_twoAngleTarget != null) {
+      twoAtoms.diatomic.angle =
+          _follow(twoAtoms.diatomic.angle, _twoAngleTarget!, dt);
+    }
+    final tri = threeAtoms.triatomic;
+    if (_threeAngleTarget != null) {
+      tri.angle = _follow(tri.angle, _threeAngleTarget!, dt);
+    }
+    if (_threeBondABTarget != null) {
+      tri.bondAngleAB = _follow(tri.bondAngleAB, _threeBondABTarget!, dt);
+    }
+    if (_threeBondBCTarget != null) {
+      tri.bondAngleBC = _follow(tri.bondAngleBC, _threeBondBCTarget!, dt);
+    }
+  }
+
   void rotateTwoAtomsTo(MpVector2 pointer) {
     final m = twoAtoms.diatomic;
     m.isDragging = true;
-    m.angle = angleFromPointer(center: m.position, pointer: pointer);
+    _twoAngleTarget = angleFromPointer(
+      center: m.position,
+      pointer: pointer,
+      snap: false,
+    );
+    m.angle = _follow(m.angle, _twoAngleTarget!, 1 / 60);
     notifyListeners();
   }
 
   void endTwoAtomsDrag() {
-    twoAtoms.diatomic.isDragging = false;
+    final m = twoAtoms.diatomic;
+    m.angle = snapAngleDegrees(m.angle);
+    m.isDragging = false;
+    _twoAngleTarget = null;
     notifyListeners();
   }
 
@@ -129,6 +173,7 @@ class MoleculePolarityController extends ChangeNotifier {
   }
 
   void resetTwoAtoms() {
+    _twoAngleTarget = null;
     twoAtoms.reset();
     notifyListeners();
   }
@@ -136,34 +181,56 @@ class MoleculePolarityController extends ChangeNotifier {
   void rotateThreeAtomsTo(MpVector2 pointer) {
     final m = threeAtoms.triatomic;
     m.isDragging = true;
-    m.angle = angleFromPointer(center: m.position, pointer: pointer);
+    _threeBondABTarget = null;
+    _threeBondBCTarget = null;
+    _threeAngleTarget = angleFromPointer(
+      center: m.position,
+      pointer: pointer,
+      snap: false,
+    );
+    m.angle = _follow(m.angle, _threeAngleTarget!, 1 / 60);
     notifyListeners();
   }
 
   void dragBondAngleAB(MpVector2 pointer) {
     final m = threeAtoms.triatomic;
     m.isDragging = true;
-    m.bondAngleAB = bondAngleFromPointer(
+    _threeAngleTarget = null;
+    _threeBondBCTarget = null;
+    _threeBondABTarget = bondAngleFromPointer(
       center: m.position,
       pointer: pointer,
       moleculeAngle: m.angle,
+      snap: false,
     );
+    m.bondAngleAB = _follow(m.bondAngleAB, _threeBondABTarget!, 1 / 60);
     notifyListeners();
   }
 
   void dragBondAngleBC(MpVector2 pointer) {
     final m = threeAtoms.triatomic;
     m.isDragging = true;
-    m.bondAngleBC = bondAngleFromPointer(
+    _threeAngleTarget = null;
+    _threeBondABTarget = null;
+    _threeBondBCTarget = bondAngleFromPointer(
       center: m.position,
       pointer: pointer,
       moleculeAngle: m.angle,
+      snap: false,
     );
+    m.bondAngleBC = _follow(m.bondAngleBC, _threeBondBCTarget!, 1 / 60);
     notifyListeners();
   }
 
   void endThreeAtomsDrag() {
-    threeAtoms.triatomic.isDragging = false;
+    final m = threeAtoms.triatomic;
+    m.angle = snapAngleDegrees(m.angle);
+    m.bondAngleAB = snapAngleDegrees(m.bondAngleAB);
+    m.bondAngleBC = snapAngleDegrees(m.bondAngleBC);
+    m.isDragging = false;
+    _threeAngleTarget = null;
+    _threeBondABTarget = null;
+    _threeBondBCTarget = null;
     notifyListeners();
   }
 
@@ -188,6 +255,9 @@ class MoleculePolarityController extends ChangeNotifier {
   }
 
   void resetThreeAtoms() {
+    _threeAngleTarget = null;
+    _threeBondABTarget = null;
+    _threeBondBCTarget = null;
     threeAtoms.reset();
     notifyListeners();
   }

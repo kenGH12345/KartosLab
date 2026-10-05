@@ -24,16 +24,16 @@ class BuoyancyApplicationsModel extends BuoyancyScreenModel
     bottle = _createBottle();
     block = _createBrick();
     boat = _createBoat();
-    this.world.addMass(bottle);
-    this.world.addMass(block);
-    this.world.addMass(boat);
+    world.addMass(bottle);
+    world.addMass(block);
+    world.addMass(boat);
     // Land scale −0.77 (`BuoyancyApplicationsModel.ts`).
     initScaleBodies(landX: -0.77);
-    this.world.beforeForcesHook = _updateFluidCoupling;
-    this.world.basinContextFor = _basinContextFor;
+    world.beforeForcesHook = _updateFluidCoupling;
+    world.basinContextFor = _basinContextFor;
     _applyModeVisibility();
-    this.world.pool.computeFluidY(
-      this.world.masses.where((m) => m.visible).toList(),
+    world.pool.computeFluidY(
+      world.masses.where((m) => m.visible).toList(),
     );
     lifecycle = ScreenModelLifecycle.idle;
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../chemistry/ph_scale/ph_scale_assets.dart';
 import '../model/scene_kind.dart';
 import '../model/waves_intro_model.dart';
 import '../waves_intro_constants.dart';
@@ -55,69 +56,87 @@ class WaveSourceButton extends StatelessWidget {
   }
 }
 
-/// Water faucet — geometric stand-in for scenery-phet FaucetNode (no PNG in WI images).
+/// Water faucet — scenery-phet `FaucetNode` sprites (no shooter: amplitude is
+/// the right-column slider). Green control is `WaveGeneratorNode`.
 class WaterFaucetSource extends StatelessWidget {
-  const WaterFaucetSource({super.key, required this.model});
+  const WaterFaucetSource({
+    super.key,
+    required this.model,
+    this.pipeWidth = 118,
+  });
 
   final WavesIntroModel model;
+  final double pipeWidth;
 
   @override
   Widget build(BuildContext context) {
+    final width = pipeWidth + 48;
     return SizedBox(
-      width: 72,
-      height: 56,
+      width: width,
+      height: 88,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Positioned(
             left: 0,
-            top: 18,
-            child: CustomPaint(
-              size: const Size(56, 28),
-              painter: _FaucetPainter(),
+            top: 28,
+            child: Image.asset(
+              PhScaleAssets.faucetHorizontalPipe,
+              height: 16,
+              width: pipeWidth,
+              fit: BoxFit.fill,
             ),
           ),
           Positioned(
-            left: 22,
-            top: 0,
-            child: WaveSourceButton(model: model, size: 26),
+            left: pipeWidth - 18,
+            top: 10,
+            child: Image.asset(
+              PhScaleAssets.faucetBody,
+              width: 52,
+              height: 42,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            left: pipeWidth + 4,
+            top: 40,
+            child: Image.asset(
+              PhScaleAssets.faucetSpout,
+              width: 30,
+              height: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Positioned(
+            left: 62,
+            top: 16,
+            child: IgnorePointer(
+              child: Container(
+                width: 36,
+                height: 36,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: RadialGradient(
+                    center: Alignment(-0.35, -0.45),
+                    colors: [
+                      Color(0xFFE8E8E8),
+                      Color(0xFFB1B1B1),
+                      Color(0xFF6A6A6A),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 66,
+            top: 20,
+            child: WaveSourceButton(model: model, size: 28),
           ),
         ],
       ),
     );
   }
-}
-
-class _FaucetPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final metal = Paint()..color = const Color(0xFFB0B0B0);
-    final dark = Paint()..color = const Color(0xFF707070);
-    // Horizontal pipe from left
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, size.height * 0.35, size.width * 0.7, 10),
-        const Radius.circular(2),
-      ),
-      metal,
-    );
-    // Spout down
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(size.width * 0.55, size.height * 0.35, 12, size.height * 0.55),
-        const Radius.circular(2),
-      ),
-      metal,
-    );
-    canvas.drawCircle(
-      Offset(size.width * 0.61, size.height * 0.9),
-      5,
-      dark,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// Sound speaker — PhET `images/speaker/speaker_MID.png` @ lock `31ebfd7`.
@@ -131,28 +150,28 @@ class SoundSpeakerSource extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 70,
-      height: 70,
+      width: 96,
+      height: 80,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            left: 8,
-            top: 8,
+            left: 18,
+            top: 4,
             child: Image.asset(
               asset,
-              width: 54,
-              height: 54,
+              width: 76,
+              height: 72,
               fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) => CustomPaint(
-                size: const Size(54, 54),
+                size: const Size(76, 72),
                 painter: _SpeakerFallbackPainter(),
               ),
             ),
           ),
           Positioned(
-            left: 0,
-            top: 22,
+            left: 22,
+            top: 26,
             child: WaveSourceButton(model: model, size: 24),
           ),
         ],
@@ -194,22 +213,28 @@ class LightLaserSource extends StatelessWidget {
     final wavelengthNm = model.scene.wavelength;
     final color = Color(WavesIntroConstants.wavelengthToArgb(wavelengthNm));
     return SizedBox(
-      width: 88,
-      height: 48,
+      width: 96,
+      height: 44,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            left: 18,
-            top: 8,
-            child: CustomPaint(
-              size: const Size(70, 32),
-              painter: _LaserPainter(accent: color),
+            left: 8,
+            top: 6,
+            child: Image.asset(
+              'assets/simulations/bending_light/laser.png',
+              width: 86,
+              height: 32,
+              fit: BoxFit.contain,
+              errorBuilder: (context, error, stackTrace) => CustomPaint(
+                size: const Size(86, 32),
+                painter: _LaserPainter(accent: color),
+              ),
             ),
           ),
           Positioned(
             left: 28,
-            top: 0,
+            top: 8,
             child: WaveSourceButton(model: model, size: 26),
           ),
         ],

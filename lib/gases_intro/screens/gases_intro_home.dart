@@ -30,7 +30,11 @@ class _GasesIntroHomeState extends State<GasesIntroHome>
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 2, vsync: this);
+    _tabs = TabController(
+      length: 2,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 400),
+    );
     introModel = IdealGasLawModel(hasHoldConstantControls: false);
     lawsModel = IdealGasLawModel(hasHoldConstantControls: true);
   }
@@ -55,6 +59,8 @@ class _GasesIntroHomeState extends State<GasesIntroHome>
           indicatorColor: Colors.white,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
+          splashFactory: NoSplash.splashFactory,
+          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           tabs: const [
             Tab(text: 'Intro'),
             Tab(text: 'Laws'),
@@ -62,9 +68,9 @@ class _GasesIntroHomeState extends State<GasesIntroHome>
         ),
       ),
       body: ColoredBox(
-        color: const Color(0xFF0F172A),
+        color: const Color(0xFF000000),
         child: NineGridLayout(
-          backgroundColor: const Color(0xFF0F172A),
+          backgroundColor: const Color(0xFF000000),
           center: LayoutBuilder(
             builder: (context, constraints) {
               final scale = GasesIntroLayoutPolicy.fitScale(
@@ -78,6 +84,10 @@ class _GasesIntroHomeState extends State<GasesIntroHome>
                   height: size.height,
                   child: KratosTabSwitcher(
                     controller: _tabs,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOutCubic,
+                    backdropColor: const Color(0xFF000000),
+                    incomingScale: 0.985,
                     children: [
                       GasesIntroShell(
                         model: introModel,

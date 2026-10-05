@@ -42,7 +42,7 @@ class PeriodicTablePainter extends CustomPainter {
       ),
       textDirection: TextDirection.ltr,
       maxLines: 1,
-    )..layout(maxWidth: ChartIntroVisuals.periodicTableSymbolMaxWidth);
+    )..layout(maxWidth: ChartIntroVisuals.periodicTableCellSize - 1);
     tp.paint(
       canvas,
       Offset(

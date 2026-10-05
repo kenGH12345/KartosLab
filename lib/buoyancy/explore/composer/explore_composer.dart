@@ -6,7 +6,6 @@ import '../../layout/buoyancy_global_layout_spec.dart';
 import '../../rendering/camera/buoyancy_camera_config.dart';
 import '../../rendering/primitives/composed_scene.dart';
 import '../../rendering/primitives/scene_from_world.dart';
-import '../../rendering/primitives/scene_scale_marker.dart';
 import '../../rendering/transform/bvec3.dart';
 import '../../rendering/transform/buoyancy_three_transform.dart';
 import '../../shared/display_properties.dart';

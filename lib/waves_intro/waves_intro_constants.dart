@@ -68,14 +68,44 @@ class WavesIntroConstants {
   static const double soundParticleGradientForceScale = 0.67;
   static const int soundParticleSeed = 42;
 
-  // —— Layout (PhET ScreenView-ish; sim area is primary) ——
-  /// Design canvas — enlarged so wave area dominates vs prior 768×464.
-  static const double layoutWidth = 960;
-  static const double layoutHeight = 560;
-  static const double waveAreaViewSize = 420;
-  static const double controlColumnWidth = 168;
+  // —— Layout (PhET ScreenView.DEFAULT 1024×618 + WavesScreenView.ts) ——
+  static const double layoutWidth = 1024;
+  static const double layoutHeight = 618;
+
+  /// [已确认] WaveInterferenceConstants.WAVE_AREA_WIDTH
+  static const double waveAreaViewSize = 500;
+
+  /// [已确认] WaveInterferenceConstants.PANEL_MAX_WIDTH
+  static const double panelMaxWidth = 200;
+  static const double controlColumnWidth = panelMaxWidth;
+
   static const double bottomBarHeight = 56;
+
+  /// [已确认] WaveInterferenceConstants.MARGIN
   static const double layoutMargin = 8;
+
+  /// [已确认] WavesScreenView.ts WAVE_MARGIN / SPACING
+  static const double waveMargin = 8;
+  static const double layoutSpacing = 6;
+
+  /// `waveAreaNode.top = MARGIN + WAVE_MARGIN + 15`
+  static const double waveAreaTop = layoutMargin + waveMargin + 15;
+
+  /// `waveAreaNode.centerX = layoutBounds.centerX - 142`
+  static const double waveAreaCenterX = layoutWidth / 2 - 142;
+
+  static const double waveAreaLeft = waveAreaCenterX - waveAreaViewSize / 2;
+  static const double waveAreaRight = waveAreaLeft + waveAreaViewSize;
+  static const double waveAreaBottom = waveAreaTop + waveAreaViewSize;
+  static const double waveAreaCenterY = waveAreaTop + waveAreaViewSize / 2;
+
+  /// [已确认] LatticeCanvasNode WATER_BLUE / WaveAreaNode sound fill
+  static const int waterLatticeBaseArgb = 0xFF58C0FA;
+  static const int soundWaveAreaFillArgb = 0xFF4C4C4C;
+
+  /// LatticeCanvasNode intensity mapping
+  static const double latticeCutoff = 0.4;
+  static const double latticeMinShade = 0.03;
   /// Wave meter chart — [已确认] WaveMeterNode SeismographNode
   static const double waveMeterChartWidth = 150;
   static const double waveMeterChartHeight = 110;

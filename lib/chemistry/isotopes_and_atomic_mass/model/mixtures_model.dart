@@ -387,6 +387,7 @@ class MixturesModel {
         );
         _addToChamber(p, clampInside: true);
       }
+      _adjustForOverlapLight();
     } else {
       final remove = current - target;
       for (var i = 0; i < remove; i++) {
@@ -415,6 +416,7 @@ class MixturesModel {
     final pos = _randomChamberPosition();
     pick.placeAt(pos.x, pos.y);
     _addToChamber(pick, clampInside: true);
+    _adjustForOverlapLight();
     _notify();
     return true;
   }
@@ -455,6 +457,46 @@ class MixturesModel {
     return true;
   }
 
+  /// Collapse unsupported upper-layer seats (Build an Atom / Make SphereBucket).
+  void _relayoutBucketMass(int massNumber) {
+    final idx = _isotopeIndex(massNumber);
+    if (idx < 0) return;
+    final bucketPos = bucketPositionForIndex(idx);
+    var moved = true;
+    while (moved) {
+      moved = false;
+      for (final p in List<MixParticle>.from(_bucketParticles)) {
+        if (p.massNumber != massNumber) continue;
+        final others = [
+          for (final o in _bucketParticles)
+            if (o.id != p.id && o.massNumber == massNumber) o.destination,
+        ];
+        final bottomY = bucketPos.y +
+            SphereBucketLayout.defaultVerticalOffset(kLargeIsotopeRadius);
+        if (p.destY == bottomY) continue;
+        var support = 0;
+        for (final o in others) {
+          if (o.y < p.destY &&
+              o.distanceTo(p.destination) < kLargeIsotopeRadius * 3) {
+            support++;
+          }
+        }
+        if (support >= 2) continue;
+        final dest = SphereBucketLayout.nearestOpenPosition(
+          preferred: p.destination,
+          bucketPosition: bucketPos,
+          bucketWidth: kMixBucketWidth,
+          sphereRadius: kLargeIsotopeRadius,
+          occupiedDestinations: others,
+        );
+        if (dest.x != p.destX || dest.y != p.destY) {
+          p.placeAt(dest.x, dest.y);
+          moved = true;
+        }
+      }
+    }
+  }
+
   bool updateDrag(double pointerX, double pointerY) {
     final p = _dragging;
     if (p == null) return false;
@@ -475,11 +517,8 @@ class MixturesModel {
 
     final captured = isParticleOverChamber(p);
     if (captured) {
+      // Keep drop position (top-layer free place); only clamp inside the box.
       _addToChamber(p, clampInside: true);
-      if (_interactivityMode == InteractivityMode.bucketsAndLargeAtoms &&
-          totalIsotopeCount <= 100) {
-        _adjustForOverlapLight();
-      }
     } else {
       if (_interactivityMode == InteractivityMode.bucketsAndLargeAtoms) {
         _addToBucketNearest(p);
@@ -572,8 +611,9 @@ class MixturesModel {
     final ok = _bucketParticles.remove(p);
     assert(ok);
     p.container = null;
-    // Dangling relayout skipped for Mix simplicity — fillBuckets rebuilds on
-    // mode/element; nearestOpen handles returns. (PhET relayouts on remove.)
+    if (relayout) {
+      _relayoutBucketMass(p.massNumber);
+    }
   }
 
   void _addToBucketNearest(MixParticle p) {

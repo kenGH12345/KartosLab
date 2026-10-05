@@ -65,9 +65,15 @@ class KeplersTimeControl extends StatelessWidget {
               size: 40,
             ),
             const SizedBox(width: 20),
-            _speed(TimeSpeed.fast, KeplersLawsStrings.fast),
-            _speed(TimeSpeed.normal, KeplersLawsStrings.normal),
-            _speed(TimeSpeed.slow, KeplersLawsStrings.slow),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _speed(TimeSpeed.fast, KeplersLawsStrings.fast),
+                _speed(TimeSpeed.normal, KeplersLawsStrings.normal),
+                _speed(TimeSpeed.slow, KeplersLawsStrings.slow),
+              ],
+            ),
           ],
         ),
       ),
@@ -77,17 +83,13 @@ class KeplersTimeControl extends StatelessWidget {
   Widget _speed(TimeSpeed speed, String label) {
     final selected = controller.timeSpeed == speed;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 6),
+      padding: const EdgeInsets.symmetric(vertical: 1),
       child: GestureDetector(
         onTap: () => controller.setTimeSpeed(speed),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              size: 16,
-              color: Colors.white,
-            ),
+            _PhetRadioDot(selected: selected),
             const SizedBox(width: 4),
             Text(
               label,
@@ -98,4 +100,44 @@ class KeplersTimeControl extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PhetRadioDot extends StatelessWidget {
+  const _PhetRadioDot({required this.selected});
+
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(16, 16),
+      painter: _RadioDotPainter(selected: selected),
+    );
+  }
+}
+
+class _RadioDotPainter extends CustomPainter {
+  _RadioDotPainter({required this.selected});
+
+  final bool selected;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    canvas.drawCircle(
+      c,
+      6.5,
+      Paint()
+        ..color = Colors.white
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.6,
+    );
+    if (selected) {
+      canvas.drawCircle(c, 3.6, Paint()..color = Colors.white);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _RadioDotPainter oldDelegate) =>
+      oldDelegate.selected != selected;
 }

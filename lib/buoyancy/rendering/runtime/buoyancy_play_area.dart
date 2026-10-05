@@ -9,7 +9,6 @@ import '../../shared/buoyancy_screen_model.dart';
 import '../interaction/buoyancy_pointer_adapter.dart';
 import '../primitives/buoyancy_scene_painter.dart';
 import '../primitives/composed_scene.dart';
-import '../primitives/scene_scale_marker.dart';
 import '../texture/buoyancy_texture_cache.dart';
 import '../transform/buoyancy_three_transform.dart';
 

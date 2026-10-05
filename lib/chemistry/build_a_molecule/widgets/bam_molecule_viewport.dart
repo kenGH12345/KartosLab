@@ -9,23 +9,35 @@ import 'bam_molecule_3d_dialog.dart';
 
 /// Central molecule construction viewport (play area only — no kit overlay).
 class BamMoleculeViewport extends StatefulWidget {
-  const BamMoleculeViewport({super.key, required this.controller});
+  const BamMoleculeViewport({
+    super.key,
+    required this.controller,
+  });
 
   final BamController controller;
 
   @override
-  State<BamMoleculeViewport> createState() => _BamMoleculeViewportState();
+  State<BamMoleculeViewport> createState() => BamMoleculeViewportState();
 }
 
-class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
+class BamMoleculeViewportState extends State<BamMoleculeViewport> {
   Size _viewSize = Size.zero;
+
+  double get viewScale {
+    final play =
+        widget.controller.model.collectionLayout.availablePlayAreaBounds;
+    if (_viewSize.width <= 0 || _viewSize.height <= 0 || play.width <= 0) {
+      return 0.3;
+    }
+    final sx = _viewSize.width / play.width;
+    final sy = _viewSize.height / play.height;
+    return sx < sy ? sx : sy;
+  }
 
   Offset _toView(Offset model) {
     final play =
         widget.controller.model.collectionLayout.availablePlayAreaBounds;
-    final sx = _viewSize.width / play.width;
-    final sy = _viewSize.height / play.height;
-    final s = sx < sy ? sx : sy;
+    final s = viewScale;
     final ox = _viewSize.width / 2 - play.center.dx * s;
     final oy = _viewSize.height / 2 + play.center.dy * s;
     return Offset(ox + model.dx * s, oy - model.dy * s);
@@ -34,12 +46,26 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
   Offset _toModel(Offset view) {
     final play =
         widget.controller.model.collectionLayout.availablePlayAreaBounds;
-    final sx = _viewSize.width / play.width;
-    final sy = _viewSize.height / play.height;
-    final s = sx < sy ? sx : sy;
+    final s = viewScale;
     final ox = _viewSize.width / 2 - play.center.dx * s;
     final oy = _viewSize.height / 2 + play.center.dy * s;
     return Offset((view.dx - ox) / s, (oy - view.dy) / s);
+  }
+
+  Offset globalToModel(Offset global) {
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return Offset.zero;
+    return _toModel(box.globalToLocal(global));
+  }
+
+  bool containsGlobal(Offset global) {
+    final box = context.findRenderObject() as RenderBox?;
+    if (box == null || !box.hasSize) return false;
+    final local = box.globalToLocal(global);
+    return local.dx >= 0 &&
+        local.dy >= 0 &&
+        local.dx <= box.size.width &&
+        local.dy <= box.size.height;
   }
 
   @override
@@ -68,8 +94,7 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
                       on3d: complete.has3d || complete.has2d
                           ? () => BamMolecule3dDialog.show(context, complete)
                           : null,
-                      onBreak: () =>
-                          widget.controller.breakMolecule(m),
+                      onBreak: () => widget.controller.breakMolecule(m),
                     ),
                   );
                 }
@@ -80,16 +105,15 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
               color: BamConstants.playAreaBackgroundColor,
               child: Stack(
                 children: [
-                  // Interaction + paint layer
                   Positioned.fill(
                     child: Listener(
                       behavior: HitTestBehavior.opaque,
                       onPointerDown: (e) {
                         if (kit == null) return;
+                        if (widget.controller.draggingAtom != null) return;
                         final world = _toModel(e.localPosition);
                         if (e.buttons == 2) {
-                          final bond =
-                              widget.controller.hitTestBond(world);
+                          final bond = widget.controller.hitTestBond(world);
                           if (bond != null) {
                             widget.controller.breakBond(bond.a, bond.b);
                           }
@@ -98,27 +122,8 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
                         final playHit =
                             widget.controller.hitTestPlayAtom(world);
                         if (playHit != null) {
-                          widget.controller.startDragAtom(playHit);
-                        }
-                      },
-                      onPointerMove: (e) {
-                        if (widget.controller.draggingAtom != null) {
                           widget.controller
-                              .updateDrag(_toModel(e.localPosition));
-                        }
-                      },
-                      onPointerUp: (e) {
-                        if (widget.controller.draggingAtom != null) {
-                          // Kit area is no longer in this viewport —
-                          // drop stays in play / collection hit-test.
-                          widget.controller
-                              .endDrag(_toModel(e.localPosition));
-                        }
-                      },
-                      onPointerCancel: (_) {
-                        final atom = widget.controller.draggingAtom;
-                        if (atom != null) {
-                          widget.controller.endDrag(atom.position);
+                              .startDragAtom(playHit, pointer: world);
                         }
                       },
                       child: GestureDetector(
@@ -143,11 +148,12 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
                       ),
                     ),
                   ),
-                  // Floating molecule name + 3D / break
                   for (final label in matched)
                     Positioned(
-                      left: label.viewOffset.dx.clamp(4.0, _viewSize.width - 160),
-                      top: label.viewOffset.dy.clamp(4.0, _viewSize.height - 40),
+                      left: label.viewOffset.dx
+                          .clamp(4.0, _viewSize.width - 160),
+                      top: label.viewOffset.dy
+                          .clamp(4.0, _viewSize.height - 40),
                       child: Material(
                         color: Colors.white.withValues(alpha: 0.9),
                         borderRadius: BorderRadius.circular(4),
@@ -196,8 +202,6 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
                                   'assets/images/build_a_molecule/scissors.png',
                                   width: 16,
                                   height: 16,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const Icon(Icons.content_cut, size: 16),
                                 ),
                               ),
                             ],
@@ -205,7 +209,6 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
                         ),
                       ),
                     ),
-                  // Refill (put back) — left above inventory
                   Positioned(
                     left: 12,
                     bottom: 12,
@@ -215,25 +218,13 @@ class _BamMoleculeViewportState extends State<BamMoleculeViewport> {
                         borderRadius: BorderRadius.circular(6),
                         side: const BorderSide(color: Colors.black87),
                       ),
-                      child: IconButton(
-                        tooltip: '填充',
-                        onPressed: widget.controller.refill,
-                        icon: const Icon(Icons.inventory_2_outlined),
-                      ),
-                    ),
-                  ),
-                  // Reset All — lower right of workspace
-                  Positioned(
-                    right: 12,
-                    bottom: 12,
-                    child: Material(
-                      color: Colors.orange,
-                      shape: const CircleBorder(),
-                      elevation: 2,
-                      child: IconButton(
-                        tooltip: '重置',
-                        onPressed: widget.controller.reset,
-                        icon: const Icon(Icons.refresh, color: Colors.black87),
+                      child: InkWell(
+                        onTap: widget.controller.refill,
+                        child: const SizedBox(
+                          width: 40,
+                          height: 40,
+                          child: CustomPaint(painter: _RefillArrowPainter()),
+                        ),
                       ),
                     ),
                   ),
@@ -261,4 +252,34 @@ class _FloatingLabel {
   final BamMolecule molecule;
   final VoidCallback? on3d;
   final VoidCallback onBreak;
+}
+
+/// Yellow refill / put-back glyph (PhET ResetBucketButton, not Material).
+class _RefillArrowPainter extends CustomPainter {
+  const _RefillArrowPainter();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final c = Offset(size.width / 2, size.height / 2);
+    final paint = Paint()
+      ..color = Colors.black87
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.4
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+    final r = 9.0;
+    final arc = Path()
+      ..addArc(Rect.fromCircle(center: c, radius: r), 0.9, 4.4);
+    canvas.drawPath(arc, paint);
+    final tip = Offset(c.dx + r * 0.15, c.dy - r);
+    final path = Path()
+      ..moveTo(tip.dx - 4, tip.dy + 1)
+      ..lineTo(tip.dx + 5, tip.dy)
+      ..lineTo(tip.dx - 1, tip.dy + 6)
+      ..close();
+    canvas.drawPath(path, Paint()..color = Colors.black87);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

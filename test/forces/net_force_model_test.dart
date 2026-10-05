@@ -86,6 +86,7 @@ void main() {
       expect(m.cartVelocity, 0);
       expect(p.knotIndex, 2);
       expect(m.isCompleted, isFalse);
+      expect(m.hasStarted, isFalse);
     });
 
     test('resetAll clears pullers', () {
@@ -104,6 +105,29 @@ void main() {
       m.step(1);
       expect(m.cartVelocity, closeTo(150 * 0.003, 1e-9));
       expect(m.cartPosition, closeTo(150 * 0.003 * 60, 1e-6));
+    });
+
+    test('PhET puller knot offsets match original constructor', () {
+      final m = NetForceModel();
+      final largeLeft = m.pullers.firstWhere((p) => p.id == 'largeLeft');
+      final largeRight = m.pullers.firstWhere((p) => p.id == 'largeRight');
+      expect(largeLeft.standOffsetX, -18);
+      expect(largeLeft.dragOffsetX, 70);
+      expect(largeRight.standOffsetX, 0);
+      expect(largeRight.dragOffsetX, 30);
+    });
+
+    test('targetKnot skips occupied knots and far drops', () {
+      final m = NetForceModel();
+      final a = m.pullers.firstWhere((p) => p.id == 'largeLeft');
+      final b = m.pullers.firstWhere((p) => p.id == 'mediumLeft');
+      m.attachPuller(a, 0);
+      final occupiedX = m.knotX(PullerTeam.left, 0);
+      expect(
+        m.targetKnot(b, occupiedX, NetForceConstants.knotY),
+        isNot(0),
+      );
+      expect(m.targetKnot(b, occupiedX, 500), isNull);
     });
 
     test('pause stops motion', () {

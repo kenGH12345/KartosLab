@@ -9,7 +9,6 @@ import 'package:kratos/astronomy/keplers_laws/model/law_mode.dart';
 import 'package:kratos/astronomy/keplers_laws/model/orbit_body.dart';
 import 'package:kratos/astronomy/keplers_laws/model/orbit_types.dart';
 import 'package:kratos/astronomy/keplers_laws/model/period_tracker.dart';
-import 'package:kratos/astronomy/keplers_laws/painters/swept_area_painter.dart';
 
 void main() {
   OrbitBody sun() => OrbitBody(
@@ -78,13 +77,15 @@ void main() {
     );
   });
 
-  test('crash when periapsis inside sun radius', () {
-    final s = sun();
-    // Very close, low speed → small periapsis
-    final p = planet(p: const KlVec(0.05, 0), v: const KlVec(0, 1));
-    final e = engineOf(s, p);
+  test('crash orbit still has a drawable ellipse for dashed stroke', () {
+    final e = engineOf(
+      sun(),
+      planet(p: const KlVec(0.05, 0), v: const KlVec(0, 1)),
+    );
     expect(e.orbitType, OrbitType.crash);
     expect(e.allowedOrbit, isFalse);
+    expect(e.a.isFinite && e.a > 0, isTrue);
+    expect(e.e.isFinite && e.e < 1, isTrue);
   });
 
   test('escape when speed at/above escape · ε', () {
@@ -229,14 +230,23 @@ void main() {
     expect(c.zoomScale, KeplersLawsConstants.zoomScaleMin);
   });
 
-  test('area sweep is always clockwise (kite anticlockwise=false)', () {
-    const tau = 2 * math.pi;
-    expect(SweptAreaPainter.clockwiseSweep(0, 0.5), closeTo(0.5, 1e-12));
-    expect(SweptAreaPainter.clockwiseSweep(0.5, 0.1), closeTo(tau - 0.4, 1e-12));
-    expect(SweptAreaPainter.clockwiseSweep(0, 0), closeTo(0, 1e-12));
-    expect(
-      SweptAreaPainter.clockwiseSweep(0, -0.1),
-      closeTo(tau - 0.1, 1e-12),
+  test('planet position lies on polar ellipse (a,e,ν,ω)', () {
+    final e = engineOf(sun(), planet());
+    final predicted =
+        EllipticalOrbitEngine.staticCreatePolar(e.a, e.e, e.nu, e.w);
+    expect(e.planet.position.x, closeTo(predicted.x, 1e-6));
+    expect(e.planet.position.y, closeTo(predicted.y, 1e-6));
+  });
+
+  test('tilted r,v still keeps planet on polar ellipse', () {
+    final e = engineOf(
+      sun(),
+      planet(p: const KlVec(1.5, 0.8), v: const KlVec(-8, 14)),
     );
+    expect(e.allowedOrbit, isTrue);
+    final predicted =
+        EllipticalOrbitEngine.staticCreatePolar(e.a, e.e, e.nu, e.w);
+    expect(e.planet.position.x, closeTo(predicted.x, 1e-5));
+    expect(e.planet.position.y, closeTo(predicted.y, 1e-5));
   });
 }

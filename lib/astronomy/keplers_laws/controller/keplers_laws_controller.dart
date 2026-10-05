@@ -75,6 +75,7 @@ class KeplersLawsController extends ChangeNotifier {
   double timeYears = 0;
   bool stopwatchRunning = false;
   double stopwatchTime = 0;
+  Offset stopwatchOffset = Offset.zero;
   int zoomLevel = KeplersLawsConstants.zoomLevelDefault;
   double zoomScale = KeplersLawsConstants.zoomScaleMax;
   double gravityForceScalePower = KeplersLawsConstants.gravityScalePowerDefault;
@@ -235,6 +236,12 @@ class KeplersLawsController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void nudgeTape(Offset viewDelta, Offset Function(KlVec) toView, KlVec Function(Offset) toModel) {
+    tapeBase = toModel(toView(tapeBase) + viewDelta);
+    tapeTip = toModel(toView(tapeTip) + viewDelta);
+    notifyListeners();
+  }
+
   double get gravityArrowScale =>
       math.pow(
             10,
@@ -265,6 +272,17 @@ class KeplersLawsController extends ChangeNotifier {
 
   void setStopwatchRunning(bool running) {
     stopwatchRunning = running;
+    notifyListeners();
+  }
+
+  void nudgeStopwatch(Offset delta) {
+    stopwatchOffset += delta;
+    notifyListeners();
+  }
+
+  void resetStopwatchTime() {
+    stopwatchTime = 0;
+    stopwatchRunning = false;
     notifyListeners();
   }
 
@@ -456,6 +474,7 @@ class KeplersLawsController extends ChangeNotifier {
     targetOrbit = TargetOrbit.none;
     stopwatchRunning = false;
     stopwatchTime = 0;
+    stopwatchOffset = Offset.zero;
     userHasInteracted = false;
     visible.hardReset();
     sun.mass = KeplersLawsConstants.massOfOurSun;

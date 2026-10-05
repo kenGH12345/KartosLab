@@ -117,8 +117,8 @@ void main() {
         tester.widget<Text>(find.byKey(const ValueKey('ban_element_name'))).data,
         '',
       );
-      expect(find.text('质子: 0'), findsOneWidget);
-      expect(find.text('中子: 0'), findsOneWidget);
+      expect(find.text('Protons: 0'), findsOneWidget);
+      expect(find.text('Neutrons: 0'), findsOneWidget);
       expect(find.text('Stable'), findsNothing);
       expect(find.text('Half-life:'), findsOneWidget);
       expect(find.text('Unknown'), findsNothing);
@@ -145,8 +145,8 @@ void main() {
       expect(find.text('Stable'), findsOneWidget);
       expect(find.text('∞'), findsOneWidget);
       expect(find.text('Unknown'), findsNothing);
-      expect(find.text('质子: 1'), findsOneWidget);
-      expect(find.text('中子: 0'), findsOneWidget);
+      expect(find.text('Protons: 1'), findsOneWidget);
+      expect(find.text('Neutrons: 0'), findsOneWidget);
       expect(
         tester.widget<Text>(find.byKey(const ValueKey('ban_element_symbol'))).data,
         'H',
@@ -212,12 +212,12 @@ void main() {
       for (var i = 0; i < 400 && c.state.hasIncomingParticles; i++) {
         await tester.pump();
       }
-      expect(find.text('质子: 1'), findsOneWidget);
+      expect(find.text('Protons: 1'), findsOneWidget);
       c.addNeutron();
       for (var i = 0; i < 400 && c.state.hasIncomingParticles; i++) {
         await tester.pump();
       }
-      expect(find.text('中子: 1'), findsOneWidget);
+      expect(find.text('Neutrons: 1'), findsOneWidget);
       expect(find.text('Hydrogen - 2'), findsOneWidget);
     });
 
@@ -230,8 +230,8 @@ void main() {
         tester.widget<Text>(find.byKey(const ValueKey('ban_element_name'))).data,
         '',
       );
-      expect(find.text('质子: 0'), findsOneWidget);
-      expect(find.text('中子: 0'), findsOneWidget);
+      expect(find.text('Protons: 0'), findsOneWidget);
+      expect(find.text('Neutrons: 0'), findsOneWidget);
       expect(find.text('Stable'), findsNothing);
       expect(find.text('Half-life:'), findsOneWidget);
     });

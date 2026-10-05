@@ -1,12 +1,11 @@
-/// Chart Intro 质子 / 中子加减箭头。
-///
-/// 视觉对齐 Decay footer 的静态箭头列，但不做生成器拖拽、不做双箭头。
-/// [已确认] NucleonCreatorsNode：上/下箭头；enable 来自 State。
+/// Chart Intro 质子 / 中子生成器。对标 `NucleonCreatorsNode` 两行。
 library;
 
 import 'package:flutter/material.dart';
 
 import '../../ban_constants.dart';
+import '../../model/nucleon.dart';
+import '../../widgets/nucleon_arrow_column.dart';
 import '../controller/chart_intro_controller.dart';
 
 class ChartIntroNucleonControls extends StatelessWidget {
@@ -17,67 +16,133 @@ class ChartIntroNucleonControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = controller.state;
-    return Row(
-      mainAxisSize: MainAxisSize.min,
+    const proton = Color(BanConstants.protonColorValue);
+    const neutron = Color(BanConstants.neutronColorValue);
+    return Table(
+      key: const ValueKey('chart_intro_nucleon_creators'),
+      defaultColumnWidth: const IntrinsicColumnWidth(),
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       children: [
-        _ArrowColumn(
-          upKey: const ValueKey('chart_intro_add_proton'),
-          downKey: const ValueKey('chart_intro_remove_proton'),
-          color: const Color(BanConstants.protonColorValue),
-          onUp: s.canAddProton ? controller.addProton : null,
-          onDown: s.canRemoveProton ? controller.removeProton : null,
+        TableRow(
+          children: [
+            NucleonArrowButton(
+              buttonKey: const ValueKey('chart_intro_add_proton'),
+              up: true,
+              color: proton,
+              onPressed: s.canAddProton ? controller.addProton : null,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: _Ball(
+                color: proton,
+                ballKey: const ValueKey('chart_intro_proton_ball'),
+                enabled: s.canAddProton,
+                onDragStart: () =>
+                    controller.beginCreatorDrag(NucleonType.proton),
+              ),
+            ),
+            NucleonArrowButton(
+              buttonKey: const ValueKey('chart_intro_add_pair'),
+              up: true,
+              color: Colors.black87,
+              doubled: true,
+              onPressed: s.canAddPair ? controller.addPair : null,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 6),
+              child: _Ball(
+                color: neutron,
+                ballKey: const ValueKey('chart_intro_neutron_ball'),
+                enabled: s.canAddNeutron,
+                onDragStart: () =>
+                    controller.beginCreatorDrag(NucleonType.neutron),
+              ),
+            ),
+            NucleonArrowButton(
+              buttonKey: const ValueKey('chart_intro_add_neutron'),
+              up: true,
+              color: neutron,
+              onPressed: s.canAddNeutron ? controller.addNeutron : null,
+            ),
+          ],
         ),
-        const SizedBox(width: 16),
-        _ArrowColumn(
-          upKey: const ValueKey('chart_intro_add_neutron'),
-          downKey: const ValueKey('chart_intro_remove_neutron'),
-          color: const Color(BanConstants.neutronColorValue),
-          onUp: s.canAddNeutron ? controller.addNeutron : null,
-          onDown: s.canRemoveNeutron ? controller.removeNeutron : null,
+        TableRow(
+          children: [
+            NucleonArrowButton(
+              buttonKey: const ValueKey('chart_intro_remove_proton'),
+              up: false,
+              color: proton,
+              onPressed: s.canRemoveProton ? controller.removeProton : null,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: Text(
+                'Protons',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            NucleonArrowButton(
+              buttonKey: const ValueKey('chart_intro_remove_pair'),
+              up: false,
+              color: Colors.black87,
+              doubled: true,
+              onPressed: s.canRemovePair ? controller.removePair : null,
+            ),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: Text(
+                'Neutrons',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            NucleonArrowButton(
+              buttonKey: const ValueKey('chart_intro_remove_neutron'),
+              up: false,
+              color: neutron,
+              onPressed: s.canRemoveNeutron ? controller.removeNeutron : null,
+            ),
+          ],
         ),
       ],
     );
   }
 }
 
-class _ArrowColumn extends StatelessWidget {
-  const _ArrowColumn({
-    required this.upKey,
-    required this.downKey,
+class _Ball extends StatelessWidget {
+  const _Ball({
     required this.color,
-    required this.onUp,
-    required this.onDown,
+    required this.ballKey,
+    required this.enabled,
+    required this.onDragStart,
   });
 
-  final Key upKey;
-  final Key downKey;
   final Color color;
-  final VoidCallback? onUp;
-  final VoidCallback? onDown;
+  final Key ballKey;
+  final bool enabled;
+  final VoidCallback onDragStart;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          key: upKey,
-          visualDensity: VisualDensity.compact,
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(minWidth: 32, minHeight: 28),
-          icon: Icon(Icons.arrow_drop_up, color: color),
-          onPressed: onUp,
+    return Listener(
+      onPointerDown: enabled ? (_) => onDragStart() : null,
+      child: Center(
+        child: Container(
+          key: ballKey,
+          width: BanConstants.nucleonRadius * 2,
+          height: BanConstants.nucleonRadius * 2,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: color),
+            gradient: RadialGradient(
+              center: const Alignment(-0.4, -0.4),
+              radius: 1.6,
+              colors: [Colors.white, color],
+            ),
+          ),
         ),
-        const SizedBox(height: 7),
-        IconButton(
-          key: downKey,
-          visualDensity: VisualDensity.compact,
-          padding: EdgeInsets.zero,
-          constraints: const BoxConstraints(minWidth: 32, minHeight: 28),
-          icon: Icon(Icons.arrow_drop_down, color: color),
-          onPressed: onDown,
-        ),
-      ],
+      ),
     );
   }
 }

@@ -147,14 +147,14 @@ class NucleonCountReadout extends StatelessWidget {
               key: 'ban_proton_count',
               color: const Color(BanConstants.protonColorValue),
               // 生成器已用中文「质子」；面板与之一致。[推测：中文本地化仍待确认]
-              label: '质子',
+              label: 'Protons',
               value: state.protonCount,
             ),
             const SizedBox(height: 4),
             _countRow(
               key: 'ban_neutron_count',
               color: const Color(BanConstants.neutronColorValue),
-              label: '中子',
+              label: 'Neutrons',
               value: state.neutronCount,
             ),
           ],
@@ -238,7 +238,8 @@ class NuclideSymbolReadout extends StatelessWidget {
     final symbol = state.protonCount > 0 ? state.elementSymbol : '-';
     return Padding(
       padding: const EdgeInsets.all(4),
-      child: FittedBox(
+      child:               FittedBox(
+        fit: BoxFit.scaleDown,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

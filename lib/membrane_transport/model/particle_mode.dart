@@ -147,7 +147,7 @@ class RandomWalkMode extends ParticleMode {
       return _handleCotransporter(particle, slot, protein, model);
     }
     if (protein is SodiumPotassiumPump) {
-      return _handlePump(particle, slot, protein as SodiumPotassiumPump, model);
+      return _handlePump(particle, slot, protein, model);
     }
     return false;
   }

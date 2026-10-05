@@ -7,7 +7,6 @@ import '../../compare/model/buoyancy_compare_model.dart';
 import '../../rendering/camera/buoyancy_camera_config.dart';
 import '../../rendering/primitives/composed_scene.dart';
 import '../../rendering/primitives/scene_from_world.dart';
-import '../../rendering/primitives/scene_scale_marker.dart';
 import '../../rendering/transform/bvec3.dart';
 import '../../rendering/transform/buoyancy_three_transform.dart';
 import '../../shared/compare_block_set.dart';

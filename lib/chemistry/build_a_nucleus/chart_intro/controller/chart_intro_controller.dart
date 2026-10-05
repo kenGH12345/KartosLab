@@ -50,6 +50,9 @@ class ChartIntroController extends ChangeNotifier {
 
   bool get canUndoDecay => _undoProton != null;
 
+  NucleonType? _creatorDragType;
+  NucleonType? get creatorDragType => _creatorDragType;
+
   /// Render 验证：复用 1s fade，不是原版 0.6s fly-in。
   void addProton() {
     final added = state.addProton();
@@ -64,6 +67,64 @@ class ChartIntroController extends ChangeNotifier {
     if (added != null) fades.beginIn(added.id);
     _hideUndo();
     _report(added);
+  }
+
+  /// 生成器球按下：进入拖拽，计数仍等松手入座。
+  /// 箭头在拖拽中禁用。[已确认] userControlled 期间 shouldEnableCreators=false
+  bool beginCreatorDrag(NucleonType type) {
+    if (state.isDisposed || _creatorDragType != null) return false;
+    final can = type == NucleonType.proton
+        ? state.canAddProton
+        : state.canAddNeutron;
+    if (!can) return false;
+    _creatorDragType = type;
+    state.draggingFromCreator = true;
+    _notify();
+    return true;
+  }
+
+  /// 松手：能级矩形内才入座，否则取消。[已确认] dragEnded 捕获区
+  void endCreatorDrag({required bool inShell}) {
+    final type = _creatorDragType;
+    _creatorDragType = null;
+    state.draggingFromCreator = false;
+    if (type != null && inShell) {
+      if (type == NucleonType.proton) {
+        addProton();
+      } else {
+        addNeutron();
+      }
+      return;
+    }
+    _notify();
+  }
+
+  void addPair() {
+    if (state.isDisposed || !state.canAddPair) return;
+    state.addPair();
+    final p = state.shell.getLastInShell(NucleonType.proton);
+    final n = state.shell.getLastInShell(NucleonType.neutron);
+    if (p != null) fades.beginIn(p.id);
+    if (n != null) fades.beginIn(n.id);
+    _hideUndo();
+    _notify();
+  }
+
+  void removePair() {
+    if (state.isDisposed || !state.canRemovePair) return;
+    final lastP = state.shell.getLastInShell(NucleonType.proton);
+    final lastN = state.shell.getLastInShell(NucleonType.neutron);
+    final seatP = lastP == null ? null : _seatOf(lastP);
+    final seatN = lastN == null ? null : _seatOf(lastN);
+    if (!state.removePair()) return;
+    if (lastP != null && seatP != null) {
+      fades.beginOut(id: lastP.id, type: NucleonType.proton, center: seatP);
+    }
+    if (lastN != null && seatN != null) {
+      fades.beginOut(id: lastN.id, type: NucleonType.neutron, center: seatN);
+    }
+    _hideUndo();
+    _notify();
   }
 
   /// Render 验证：复用 1s fade，不是原版 300 px/s return。
@@ -226,10 +287,17 @@ class ChartIntroController extends ChangeNotifier {
   /// [已确认] `particleAnimations` 用于 Reset 取消，不是 ChartIntroModel.step 内容。
   bool tick(double dt) {
     if (state.isDisposed) return false;
-    if (!fades.hasActive) return false;
-    fades.step(dt);
-    _notify();
-    return fades.hasActive;
+    var dirty = false;
+    if (fades.hasActive) {
+      fades.step(dt);
+      dirty = true;
+    }
+    if (state.stepInvalidNuclideRollback(dt)) {
+      fades.clear();
+      dirty = true;
+    }
+    if (dirty) _notify();
+    return fades.hasActive || state.isShowingInvalidNuclide;
   }
 
   @override
@@ -255,6 +323,9 @@ class ChartIntroController extends ChangeNotifier {
   void _notify() {
     if (state.isDisposed) return;
     _syncFocus();
+    if (state.nuclideExists || state.isEmptyNucleus) {
+      state.markCurrentAsValid();
+    }
     notifyListeners();
   }
 

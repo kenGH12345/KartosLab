@@ -92,22 +92,15 @@ class _SceneLidWallOverlayState extends State<SceneLidWallOverlay> {
     if (drag.kind != SceneDragKind.idle && drag.kind != SceneDragKind.lid) {
       return;
     }
-    final box = context.findRenderObject() as RenderBox?;
-    if (box == null) return;
-    final local = box.globalToLocal(d.globalPosition);
-    final mx = t.viewToModelX(local.dx);
     drag.kind = SceneDragKind.lid;
-    drag.modelOffsetX = state.openingLeft - mx;
     widget.onDragChanged();
   }
 
   void _updateLid(DragUpdateDetails d) {
     if (drag.kind != SceneDragKind.lid) return;
-    final box = context.findRenderObject() as RenderBox?;
-    if (box == null) return;
-    final local = box.globalToLocal(d.globalPosition);
-    final mx = t.viewToModelX(local.dx) + drag.modelOffsetX;
-    c.setLidWidthFromOpeningLeft(mx);
+    // Handle follows the finger: drag right → lid left edge moves right
+    // → lidWidth shrinks (opening grows). Same as Gases Intro.
+    c.nudgeLidWidth(-d.delta.dx / t.scale);
   }
 
   void _endLid() {

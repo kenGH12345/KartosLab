@@ -32,7 +32,7 @@ class FambAssets {
   static const pusherFallen = '$pushPull/pusher_fall_down.png';
 
   /// Puller PNG: color BLUE|RED|PURPLE|ORANGE, size '', '_lrg_', '_small_',
-  /// pose 0=leaning, 3=standing.
+  /// pose 0=standing, 3=leaning (hands on knot).
   static String puller({
     required String color,
     required String size, // '' medium, 'lrg', 'small'

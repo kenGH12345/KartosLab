@@ -22,10 +22,13 @@ class BamController extends ChangeNotifier {
 
   BamPlayAtom? _draggingAtom;
   BamMolecule? _draggingMolecule;
+  Offset _grabOffset = Offset.zero;
+  bool _fromBucket = false;
 
   BamKitCollection get collection => model.currentCollection;
   BamKit? get kit => model.currentKit;
   BamPlayAtom? get draggingAtom => _draggingAtom;
+  bool get draggingFromBucket => _fromBucket;
   BamCollectionFeedbackDriver get feedbackDriver => _feedbackDriver;
 
   void _wireCurrentCollection() {
@@ -44,42 +47,57 @@ class BamController extends ChangeNotifier {
   }
 
   /// Start dragging an atom already in the play area (moves whole molecule).
-  void startDragAtom(BamPlayAtom atom) {
+  void startDragAtom(BamPlayAtom atom, {Offset? pointer}) {
     final k = kit;
     if (k == null) return;
     _draggingAtom = atom;
     atom.dragging = true;
     _draggingMolecule = k.getMolecule(atom);
     k.selectedAtom = atom;
+    _grabOffset = Offset.zero;
+    if (pointer != null) {
+      if (_draggingMolecule != null && _draggingMolecule!.atoms.length > 1) {
+        _draggingMolecule!.shiftPositionAndDestination(pointer - atom.position);
+      } else {
+        atom.setPositionAndDestination(pointer);
+      }
+    }
     notifyListeners();
   }
 
-  /// Grab atom from a bucket into play at [worldPosition].
+  /// Lift an atom from a kit bowl. It stays out of play until dropped on the
+  /// canvas (PhET drag-from-bucket, not tap-to-spawn).
   void startDragFromBucket(BamPlayAtom atom, Offset worldPosition) {
     final k = kit;
     if (k == null) return;
     if (k.isContainedInBucket(atom)) {
-      atom.setPositionAndDestination(worldPosition);
-      k.addAtomToPlay(atom);
+      k.getBucketForElement(atom.element).removeParticle(atom);
     }
-    startDragAtom(atom);
+    _fromBucket = true;
+    _draggingAtom = atom;
+    atom.dragging = true;
+    atom.setPositionAndDestination(worldPosition);
+    k.selectedAtom = atom;
+    _grabOffset = Offset.zero;
+    notifyListeners();
   }
 
   void updateDrag(Offset worldPosition) {
     final atom = _draggingAtom;
     final molecule = _draggingMolecule;
     if (atom == null) return;
+    final target = worldPosition - _grabOffset;
 
     if (molecule != null && molecule.atoms.length > 1) {
-      final delta = worldPosition - atom.position;
+      final delta = target - atom.position;
       molecule.shiftPositionAndDestination(delta);
     } else {
-      atom.setPositionAndDestination(worldPosition);
+      atom.setPositionAndDestination(target);
     }
     notifyListeners();
   }
 
-  void endDrag(Offset worldPosition) {
+  void endDrag(Offset worldPosition, {bool? droppedOnPlay}) {
     final atom = _draggingAtom;
     final k = kit;
     if (atom == null || k == null) {
@@ -89,14 +107,47 @@ class BamController extends ChangeNotifier {
     }
     atom.dragging = false;
 
+    final onPlay = droppedOnPlay ??
+        !model.collectionLayout.isInKitArea(worldPosition);
+
+    if (_fromBucket && !onPlay) {
+      k.recycleAtomIntoBuckets(atom, animate: false);
+      _clearDrag();
+      notifyListeners();
+      return;
+    }
+
+    if (_fromBucket) {
+      k.addAtomToPlay(atom);
+    }
+
     if (collection.tryDropIntoCollectionBox(atom)) {
       _clearDrag();
       notifyListeners();
       return;
     }
 
-    final inKit = model.collectionLayout.isInKitArea(worldPosition);
-    k.atomDropped(atom, droppedInKitArea: inKit);
+    k.atomDropped(atom, droppedInKitArea: !onPlay);
+    _clearDrag();
+    notifyListeners();
+  }
+
+  /// Pointer released without leaving the kit (tap). Atom goes back in the bowl.
+  void cancelDragToBucket() {
+    final atom = _draggingAtom;
+    final k = kit;
+    if (atom == null || k == null) {
+      _clearDrag();
+      notifyListeners();
+      return;
+    }
+    atom.dragging = false;
+    final molecule = k.getMolecule(atom);
+    if (molecule != null) {
+      k.recycleMoleculeIntoBuckets(molecule);
+    } else {
+      k.recycleAtomIntoBuckets(atom);
+    }
     _clearDrag();
     notifyListeners();
   }
@@ -104,6 +155,8 @@ class BamController extends ChangeNotifier {
   void _clearDrag() {
     _draggingAtom = null;
     _draggingMolecule = null;
+    _grabOffset = Offset.zero;
+    _fromBucket = false;
     kit?.selectedAtom = null;
   }
 
@@ -194,9 +247,11 @@ class BamController extends ChangeNotifier {
     for (final atom in k.atomsInPlayArea) {
       if (!atom.visible) continue;
       final d = (atom.position - world).distance;
-      if (d <= atom.covalentRadius && atom.covalentRadius > bestR) {
+      // Visual atoms are ~0.62 px/pm; MVT is ~0.3, so hit ball is larger than covalent.
+      final hitR = atom.covalentRadius * 2.2;
+      if (d <= hitR && hitR > bestR) {
         best = atom;
-        bestR = atom.covalentRadius;
+        bestR = hitR;
       }
     }
     return best;

@@ -12,6 +12,8 @@ class Puller {
     required this.id,
     required this.size,
     required this.team,
+    required this.dragOffsetX,
+    this.standOffsetX = 0,
     this.knotIndex,
   });
 
@@ -19,8 +21,17 @@ class Puller {
   final PullerSize size;
   final PullerTeam team;
 
+  /// PhET `Puller.standOffsetX` — horizontal shift while standing on a knot.
+  final double standOffsetX;
+
+  /// PhET `Puller.dragOffsetX` — used as `-dragOffsetX` while pulling a knot.
+  final double dragOffsetX;
+
   /// Attached knot index 0..3 on that team's side; null = in toolbox.
   int? knotIndex;
+
+  /// PhET `lastPlacementProperty`: last drop was a knot (tighter detach threshold).
+  bool lastOnKnot = false;
 
   double get force {
     switch (size) {
@@ -67,14 +78,56 @@ class NetForceModel {
     pullers.clear();
     // Left (blue): large, medium, small, small — PhET order
     pullers.addAll([
-      Puller(id: 'largeLeft', size: PullerSize.large, team: PullerTeam.left),
-      Puller(id: 'mediumLeft', size: PullerSize.medium, team: PullerTeam.left),
-      Puller(id: 'smallLeft1', size: PullerSize.small, team: PullerTeam.left),
-      Puller(id: 'smallLeft2', size: PullerSize.small, team: PullerTeam.left),
-      Puller(id: 'smallRight1', size: PullerSize.small, team: PullerTeam.right),
-      Puller(id: 'smallRight2', size: PullerSize.small, team: PullerTeam.right),
-      Puller(id: 'mediumRight', size: PullerSize.medium, team: PullerTeam.right),
-      Puller(id: 'largeRight', size: PullerSize.large, team: PullerTeam.right),
+      Puller(
+        id: 'largeLeft',
+        size: PullerSize.large,
+        team: PullerTeam.left,
+        dragOffsetX: 70,
+        standOffsetX: -18,
+      ),
+      Puller(
+        id: 'mediumLeft',
+        size: PullerSize.medium,
+        team: PullerTeam.left,
+        dragOffsetX: 50,
+        standOffsetX: -5,
+      ),
+      Puller(
+        id: 'smallLeft1',
+        size: PullerSize.small,
+        team: PullerTeam.left,
+        dragOffsetX: 10,
+      ),
+      Puller(
+        id: 'smallLeft2',
+        size: PullerSize.small,
+        team: PullerTeam.left,
+        dragOffsetX: 10,
+      ),
+      Puller(
+        id: 'smallRight1',
+        size: PullerSize.small,
+        team: PullerTeam.right,
+        dragOffsetX: 10,
+      ),
+      Puller(
+        id: 'smallRight2',
+        size: PullerSize.small,
+        team: PullerTeam.right,
+        dragOffsetX: 10,
+      ),
+      Puller(
+        id: 'mediumRight',
+        size: PullerSize.medium,
+        team: PullerTeam.right,
+        dragOffsetX: 20,
+      ),
+      Puller(
+        id: 'largeRight',
+        size: PullerSize.large,
+        team: PullerTeam.right,
+        dragOffsetX: 30,
+      ),
     ]);
   }
 
@@ -110,19 +163,48 @@ class NetForceModel {
   double knotX(PullerTeam team, int index) =>
       knotInitX(team, index) + cartPosition;
 
-  /// Attach puller to knot; clears any other puller on that knot.
+  /// Attach puller to knot; same-team occupant on that knot is sent home.
   void attachPuller(Puller puller, int knotIndex) {
     assert(knotIndex >= 0 && knotIndex < NetForceConstants.knotsPerSide);
     for (final p in pullers) {
-      if (p.team == puller.team && p.knotIndex == knotIndex) {
+      if (p != puller && p.team == puller.team && p.knotIndex == knotIndex) {
         p.knotIndex = null;
+        p.lastOnKnot = false;
       }
     }
     puller.knotIndex = knotIndex;
+    puller.lastOnKnot = true;
   }
 
   void detachPuller(Puller puller) {
     puller.knotIndex = null;
+  }
+
+  /// PhET `NetForceModel.getTargetKnot` — nearest open same-team knot, or null.
+  int? targetKnot(Puller puller, double pullerX, double pullerY) {
+    final dx = puller.team == PullerTeam.right ? 0.0 : -40.0;
+    final yThreshold = puller.lastOnKnot ? 300.0 : 370.0;
+    if (pullerY >= yThreshold) return null;
+
+    int? best;
+    var bestDist = double.infinity;
+    for (var i = 0; i < NetForceConstants.knotsPerSide; i++) {
+      final occupied = pullers.any(
+        (p) => p != puller && p.team == puller.team && p.knotIndex == i,
+      );
+      if (occupied) continue;
+      final kx = knotX(puller.team, i);
+      final dy = NetForceConstants.knotY - pullerY;
+      final d2 = (kx - pullerX + dx) * (kx - pullerX + dx) + dy * dy;
+      if (d2 < bestDist) {
+        bestDist = d2;
+        best = i;
+      }
+    }
+    if (best == null) return null;
+    const maxDist = 220.0;
+    if (bestDist >= maxDist * maxDist) return null;
+    return best;
   }
 
   void go() {
@@ -137,6 +219,7 @@ class NetForceModel {
   }
 
   /// Return cart to center; keep pullers attached (PhET ReturnButton).
+  /// PhET also clears `hasStarted` so attached pullers stand on the knot again.
   void returnCart() {
     cartPosition = 0;
     cartVelocity = 0;
@@ -145,9 +228,7 @@ class NetForceModel {
     isRunning = false;
     isCompleted = false;
     winner = null;
-    // hasStarted stays true in PhET until Reset — actually Return sets hasStarted?
-    // PhET: hasStartedProperty stays; Return enabled via hasStarted.
-    // After return, user can Go again.
+    hasStarted = false;
   }
 
   void resetAll() {
@@ -159,6 +240,7 @@ class NetForceModel {
     showSpeed = false;
     for (final p in pullers) {
       p.knotIndex = null;
+      p.lastOnKnot = false;
     }
   }
 

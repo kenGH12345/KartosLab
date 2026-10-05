@@ -24,6 +24,8 @@ abstract final class PmConstants {
   // ── 参数范围（Constants:61-72）──────────────────────────────────────
   static const double cannonHeightMin = 0;
   static const double cannonHeightMax = 15;
+  /// Drag-follow is continuous; pointer-up snaps to this step (meters).
+  static const double cannonHeightSnap = 0.1;
   static const double cannonAngleMin = -90;
   static const double cannonAngleMax = 90;
   static const double launchVelocityMin = 0;

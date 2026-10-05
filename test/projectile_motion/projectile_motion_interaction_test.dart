@@ -86,7 +86,7 @@ void main() {
       expect(c.model.cannonAngle, 20.0);
     });
 
-    testWidgets('DRAG-2 炮座拖拽改变高度并吸附整数（CannonNode:506-524）',
+    testWidgets('DRAG-2 炮座拖拽改变高度（连续跟手，松手 0.1 m 吸附）',
         (tester) async {
       final c = _makeController();
       addTearDown(c.dispose);
@@ -102,6 +102,22 @@ void main() {
       await tester.dragFrom(s, e - s);
       await tester.pump();
       expect(c.model.cannonHeight, 12.0);
+    });
+
+    testWidgets('DRAG-2c 小幅拖高连续跟手，不再整米跳动', (tester) async {
+      final c = _makeController();
+      addTearDown(c.dispose);
+      await tester.pumpWidget(_wrap(c));
+      await tester.pump();
+
+      final pivot = Offset(origin.dx, origin.dy - m2v * 10);
+      final start = pivot + const Offset(0, 50);
+      final s = sceneToScreen(tester, start);
+      // 12 view px → +0.4 m；旧逻辑 round 后仍为 10
+      final e = sceneToScreen(tester, start - const Offset(0, 12));
+      await tester.dragFrom(s, e - s);
+      await tester.pump();
+      expect(c.model.cannonHeight, closeTo(10.4, 1e-6));
     });
 
     testWidgets('DRAG-2b 枢轴黑色十字上下拖改高度（全屏通用）', (tester) async {

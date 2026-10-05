@@ -138,14 +138,14 @@ void main() {
       await tester.tap(find.byKey(const ValueKey('ban_add_proton')));
       await tester.pump();
       // 飞行中：读数不变
-      expect(find.text('质子: 0'), findsOneWidget);
+      expect(find.text('Protons: 0'), findsOneWidget);
       expect(c.state.hasIncomingParticles, isTrue);
 
       // 泵帧直到到达
       for (var i = 0; i < 400 && c.state.hasIncomingParticles; i++) {
         await tester.pump();
       }
-      expect(find.text('质子: 1'), findsOneWidget);
+      expect(find.text('Protons: 1'), findsOneWidget);
       expect(find.text('Hydrogen - 1'), findsOneWidget);
     });
   });

@@ -39,7 +39,11 @@ class _GasPropertiesHomeState extends State<GasPropertiesHome>
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 4, vsync: this);
+    _tabs = TabController(
+      length: 4,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 480),
+    );
     ideal = GasSimulationController(profile: IdealGasProfile.ideal);
     explore = GasSimulationController(profile: IdealGasProfile.explore);
     energy = GasSimulationController(profile: IdealGasProfile.energy);
@@ -73,6 +77,8 @@ class _GasPropertiesHomeState extends State<GasPropertiesHome>
           indicatorColor: Colors.white,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
+          splashFactory: NoSplash.splashFactory,
+          overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           tabs: const [
             Tab(text: 'Ideal'),
             Tab(text: 'Explore'),
@@ -98,6 +104,11 @@ class _GasPropertiesHomeState extends State<GasPropertiesHome>
                   height: size.height,
                   child: KratosTabSwitcher(
                     controller: _tabs,
+                    duration: const Duration(milliseconds: 480),
+                    curve: Curves.easeInOutCubic,
+                    backdropColor:
+                        const Color(GasPropertiesColors.screenBackground),
+                    fadeThrough: true,
                     children: [
                       GasIdealFamilyShell(controller: ideal, layoutScale: scale),
                       GasIdealFamilyShell(

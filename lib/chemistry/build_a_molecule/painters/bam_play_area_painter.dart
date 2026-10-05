@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../bam_constants.dart';
 import '../model/bam_atom.dart';
 import '../model/bam_kit.dart';
+import 'bam_atom_sphere_painter.dart';
 
 /// Draws bonds as lines and atoms as colored circles with optional symbols.
 class BamPlayAreaPainter extends CustomPainter {
@@ -33,37 +33,24 @@ class BamPlayAreaPainter extends CustomPainter {
     }
 
     for (final atom in kit.atomsInPlayArea) {
-      if (!atom.visible) continue;
+      if (!atom.visible || atom.dragging) continue;
       _paintAtom(canvas, atom);
     }
   }
 
   void _paintAtom(Canvas canvas, BamPlayAtom atom) {
     final center = modelToView(atom.position);
-    // Scale radius: covalentRadius is picometers (~37–118); map to view px.
-    final r = (atom.covalentRadius * 0.35).clamp(10.0, 36.0);
-    final fill = Paint()..color = atom.element.color;
-    final stroke = Paint()
-      ..color = Colors.black54
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    canvas.drawCircle(center, r, fill);
-    canvas.drawCircle(center, r, stroke);
-
-    if (showSymbols) {
-      final tp = TextPainter(
-        text: TextSpan(
-          text: atom.symbol,
-          style: TextStyle(
-            color: BamConstants.atomTextColor(atom.element.color),
-            fontSize: r * 0.9,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      tp.paint(canvas, center - Offset(tp.width / 2, tp.height / 2));
-    }
+    final origin = modelToView(Offset.zero);
+    final unit = modelToView(const Offset(1, 0));
+    final scale = (unit.dx - origin.dx).abs();
+    final r = BamAtomSpherePainter.viewRadius(atom.covalentRadius, scale);
+    BamAtomSpherePainter.paint(
+      canvas,
+      center,
+      r,
+      atom.element.color,
+      symbol: showSymbols ? atom.symbol : null,
+    );
   }
 
   @override

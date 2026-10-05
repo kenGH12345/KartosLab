@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 
 import '../keplers_laws_colors.dart';
 import '../keplers_laws_constants.dart';
+import '../keplers_laws_strings.dart';
 import '../model/kl_vec.dart';
 import '../render/orbit_render_data.dart';
+import '../render/orbit_view.dart';
 
-/// Ellipse, axes, foci, strings, peri/apo.
+/// Orbit ellipse + first-law overlays.
 ///
-/// Geometry from [已确认] `EllipticalOrbitNode.ts` `updatedOrbit`.
+/// Ellipse is sampled in true anomaly and mapped through the MVT so the
+/// planet (same polar formula) always sits on the stroke. Canvas-rotate of
+/// an axis-aligned oval around unrotated `(-c,0)` left the path behind the
+/// planet whenever ω ≠ 0.
 class OrbitPainter extends CustomPainter {
   OrbitPainter({
     required this.data,
@@ -42,145 +47,187 @@ class OrbitPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final mvt = data.mvt;
-    final scale = mvt.scale;
-    final a = data.a;
-    final b = data.b;
-    final c = data.c;
-    final e = data.e;
-
-    final radiusX = scale * a;
-    final radiusY = scale * b;
-    final radiusC = scale * c;
-
-    // Ellipse is translated to geometric center (-c, 0) then rotated by -w.
-    final geoCenterModel = KlVec(-c, 0);
-    final geoCenterView = mvt.toView(geoCenterModel);
-
-    canvas.save();
-    canvas.translate(geoCenterView.dx, geoCenterView.dy);
-    canvas.rotate(-data.w);
-
+    final sunView = mvt.toView(data.sunPos);
     final orbitPaint = Paint()
       ..color = KeplersLawsColors.orbit
       ..style = PaintingStyle.stroke
-      ..strokeWidth = KeplersLawsConstants.orbitLineWidth;
-    if (!data.allowed) {
-      orbitPaint.strokeCap = StrokeCap.round;
-    }
-    final path = Path()
-      ..addOval(Rect.fromCenter(
-        center: Offset.zero,
-        width: radiusX * 2,
-        height: radiusY * 2,
-      ));
-    if (!data.allowed) {
-      _drawDashed(canvas, path, orbitPaint);
-    } else {
+      ..strokeWidth = isThirdLaw
+          ? 2
+          : KeplersLawsConstants.orbitLineWidth
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    if (_canDrawEllipse) {
+      var path = orbitEllipsePath(data);
+      if (!data.allowed) {
+        path = dashPath(
+          path,
+          dashArray: const [
+            KeplersLawsConstants.orbitInvalidDash,
+            KeplersLawsConstants.orbitInvalidDash,
+          ],
+        );
+      }
       canvas.drawPath(path, orbitPaint);
-    }
-
-    final axisVisible = showAxes || (showSemiMajor && isThirdLaw);
-    if (axisVisible) {
-      final p = Paint()
-        ..color = KeplersLawsColors.foreground
-        ..strokeWidth = 2;
-      canvas.drawLine(Offset(-radiusX, 0), Offset(radiusX, 0), p);
-      canvas.drawLine(Offset(0, -radiusY), Offset(0, radiusY), p);
-    }
-
-    final semiMajorVisible =
-        (isThirdLaw && showSemiMajor) || showSemiaxes || showEccentricity;
-    if (semiMajorVisible) {
-      canvas.drawLine(
-        Offset.zero,
-        Offset(-radiusX, 0),
-        Paint()
-          ..color = KeplersLawsColors.semiMajorAxis
-          ..strokeWidth = 3,
-      );
-    }
-
-    if (isFirstLaw && showSemiaxes) {
-      canvas.drawLine(
-        Offset.zero,
-        Offset(0, radiusY),
-        Paint()
-          ..color = KeplersLawsColors.semiMinorAxis
-          ..strokeWidth = 3,
-      );
-    }
-
-    if (isFirstLaw && showEccentricity) {
-      canvas.drawLine(
-        Offset.zero,
-        Offset(e * radiusX, 0),
-        Paint()
-          ..color = KeplersLawsColors.focalDistance
-          ..strokeWidth = 3,
-      );
-    }
-
-    if (isFirstLaw && showString) {
-      final body = _createPolar(-data.nu, a, e).times(scale);
-      final string = Path()
-        ..moveTo(-radiusC, 0)
-        ..lineTo(body.x + radiusC, -body.y)
-        ..lineTo(radiusC, 0);
+    } else if (!data.allowed) {
+      // Degenerate / hyperbolic: still connect planet to sun, dashed.
       canvas.drawPath(
-        string,
-        Paint()
-          ..color = KeplersLawsColors.distances
-          ..strokeWidth = 3
-          ..style = PaintingStyle.stroke,
+        dashPath(
+          Path()
+            ..moveTo(sunView.dx, sunView.dy)
+            ..lineTo(
+              mvt.toView(data.planetPos).dx,
+              mvt.toView(data.planetPos).dy,
+            ),
+          dashArray: const [
+            KeplersLawsConstants.orbitInvalidDash,
+            KeplersLawsConstants.orbitInvalidDash,
+          ],
+        ),
+        orbitPaint,
       );
     }
 
-    if (isFirstLaw && showFoci) {
-      _drawX(canvas, Offset(-radiusC, 0), KeplersLawsColors.foci);
-      _drawX(canvas, Offset(radiusC, 0), KeplersLawsColors.foci);
+    if (!data.allowed) return;
+
+    final b = data.b;
+    final c = data.c;
+    final w = data.w;
+
+    final periView = orbitViewPoint(data, 0);
+    final apoView = orbitViewPoint(data, math.pi);
+    final geoView = mvt.toView(orbitGeoCenter(data));
+    final otherFocus = mvt.toView(KlVec(-2 * c, 0).rotated(w));
+    final minorDir = KlVec(0, b).rotated(w);
+    final minorPos = mvt.toView(orbitGeoCenter(data) + minorDir);
+    final minorNeg = mvt.toView(orbitGeoCenter(data) - minorDir);
+
+    if (showAxes) {
+      final axis = Paint()
+        ..color = KeplersLawsColors.semiMajorAxis
+        ..strokeWidth = 2;
+      canvas.drawLine(apoView, periView, axis);
+      canvas.drawLine(minorNeg, minorPos, axis);
     }
 
-    if (semiMajorVisible) {
-      _label(canvas, 'a', Offset(-radiusX / 2, -15), KeplersLawsColors.semiMajorAxis);
-    }
-    if (isFirstLaw && showSemiaxes) {
-      _label(canvas, 'b', Offset(-15, radiusY / 2), KeplersLawsColors.semiMinorAxis);
-    }
-    if (isFirstLaw && showEccentricity) {
+    if (showSemiaxes) {
+      final p = Paint()
+        ..color = KeplersLawsColors.semiMajorAxis
+        ..strokeWidth = 3;
+      canvas.drawLine(geoView, periView, p);
+      canvas.drawLine(geoView, minorPos, p);
       _label(
         canvas,
-        'c',
-        Offset(e * radiusX / 2, 15),
-        KeplersLawsColors.focalDistance,
+        KeplersLawsStrings.symbolA,
+        Offset.lerp(geoView, periView, 0.5)!,
+      );
+      _label(
+        canvas,
+        KeplersLawsStrings.symbolB,
+        Offset.lerp(geoView, minorPos, 0.5)!,
       );
     }
 
-    if (isSecondLaw && showPeriapsis && e > 0) {
-      _drawX(
-        canvas,
-        Offset(scale * (a * (1 - e) + c), 0),
-        KeplersLawsColors.periapsis,
+    if (showFoci) {
+      canvas.drawCircle(sunView, 5, Paint()..color = Colors.white);
+      canvas.drawCircle(otherFocus, 5, Paint()..color = Colors.white);
+      canvas.drawCircle(
+        sunView,
+        5,
+        Paint()
+          ..color = KeplersLawsColors.foci
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
       );
-    }
-    if (isSecondLaw && showApoapsis && e > 0) {
-      _drawX(
-        canvas,
-        Offset(-scale * (a * (1 + e) - c), 0),
-        KeplersLawsColors.apoapsis,
+      canvas.drawCircle(
+        otherFocus,
+        5,
+        Paint()
+          ..color = KeplersLawsColors.foci
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
       );
     }
 
-    canvas.restore();
+    if (showString) {
+      final planetView = mvt.toView(data.planetPos);
+      final p = Paint()
+        ..color = Colors.white
+        ..strokeWidth = 1;
+      canvas.drawLine(sunView, planetView, p);
+      canvas.drawLine(otherFocus, planetView, p);
+    }
+
+    if (isFirstLaw && showEccentricity) {
+      _dashed(canvas, sunView, otherFocus, KeplersLawsColors.focalDistance);
+      _label(
+        canvas,
+        KeplersLawsStrings.symbolC,
+        Offset.lerp(sunView, otherFocus, 0.5)!,
+      );
+      _dashed(canvas, geoView, periView, KeplersLawsColors.semiMajorAxis);
+      _label(
+        canvas,
+        KeplersLawsStrings.symbolA,
+        Offset.lerp(geoView, periView, 0.5)!,
+      );
+    }
+
+    if (isFirstLaw && showSemiMajor) {
+      _dashed(canvas, geoView, periView, KeplersLawsColors.semiMajorAxis);
+      _label(
+        canvas,
+        KeplersLawsStrings.symbolA,
+        Offset.lerp(geoView, periView, 0.5)!,
+      );
+    }
+
+    if (isFirstLaw && showPeriapsis) {
+      _dashed(canvas, sunView, periView, KeplersLawsColors.periapsis);
+      _label(
+        canvas,
+        '${KeplersLawsStrings.symbolR}p',
+        Offset.lerp(sunView, periView, 0.5)!,
+      );
+    }
+
+    if (isFirstLaw && showApoapsis) {
+      _dashed(canvas, sunView, apoView, KeplersLawsColors.apoapsis);
+      _label(
+        canvas,
+        '${KeplersLawsStrings.symbolR}a',
+        Offset.lerp(sunView, apoView, 0.5)!,
+      );
+    }
   }
 
-  void _label(Canvas canvas, String text, Offset at, Color color) {
+  void _dashed(Canvas canvas, Offset a, Offset b, Color color) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke;
+    final path = Path()
+      ..moveTo(a.dx, a.dy)
+      ..lineTo(b.dx, b.dy);
+    canvas.drawPath(
+      Path()
+        ..addPath(
+          dashPath(path, dashArray: <double>[6, 4]),
+          Offset.zero,
+        ),
+      paint,
+    );
+  }
+
+  void _label(Canvas canvas, String text, Offset at) {
     final tp = TextPainter(
       text: TextSpan(
         text: text,
-        style: TextStyle(
-          color: color,
-          fontSize: KeplersLawsConstants.axisLabelFontSize,
-          fontWeight: FontWeight.bold,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontStyle: FontStyle.italic,
+          fontWeight: FontWeight.w600,
         ),
       ),
       textDirection: TextDirection.ltr,
@@ -188,43 +235,31 @@ class OrbitPainter extends CustomPainter {
     tp.paint(canvas, at - Offset(tp.width / 2, tp.height / 2));
   }
 
-  KlVec _createPolar(double nu, double a, double e) {
-    final r = a * (1 - e * e) / (1 + e * math.cos(nu));
-    return KlVec.polar(r, nu);
-  }
+  bool get _canDrawEllipse =>
+      data.a.isFinite &&
+      data.a > 0 &&
+      data.b.isFinite &&
+      data.b >= 0 &&
+      data.e.isFinite &&
+      data.e < 1;
 
-  void _drawX(Canvas canvas, Offset c, Color color) {
-    const s = 7.0;
-    final p = Paint()
-      ..color = color
-      ..strokeWidth = 2.5
-      ..strokeCap = StrokeCap.round;
-    canvas.save();
-    canvas.translate(c.dx, c.dy);
-    canvas.rotate(math.pi / 4);
-    canvas.drawLine(const Offset(-s, 0), const Offset(s, 0), p);
-    canvas.drawLine(const Offset(0, -s), const Offset(0, s), p);
-    canvas.restore();
-  }
-
-  void _drawDashed(Canvas canvas, Path path, Paint paint) {
-    // [已确认] EllipticalOrbitNode lineDash = allowed ? [0] : [5]
-    final dashed = Paint()
-      ..color = paint.color
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = paint.strokeWidth;
-    for (final metric in path.computeMetrics()) {
-      var d = 0.0;
+  Path dashPath(Path source, {required List<double> dashArray}) {
+    final dest = Path();
+    for (final metric in source.computeMetrics()) {
+      var dist = 0.0;
       var draw = true;
-      while (d < metric.length) {
-        final next = math.min(d + 5, metric.length);
+      var i = 0;
+      while (dist < metric.length) {
+        final len = dashArray[i % dashArray.length];
         if (draw) {
-          canvas.drawPath(metric.extractPath(d, next), dashed);
+          dest.addPath(metric.extractPath(dist, dist + len), Offset.zero);
         }
-        d = next;
+        dist += len;
         draw = !draw;
+        i++;
       }
     }
+    return dest;
   }
 
   @override

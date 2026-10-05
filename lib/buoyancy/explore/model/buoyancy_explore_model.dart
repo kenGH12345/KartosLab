@@ -12,7 +12,7 @@ import '../../shared/two_block_mode.dart';
 ///
 /// Source snapshot: LOCAL density-buoyancy-common HEAD `0c835c64`.
 class BuoyancyExploreModel extends BuoyancyScreenModel with BuoyancyScaleHost {
-  BuoyancyExploreModel({BuoyancyPhysicsWorld? world}) : super(world: world) {
+  BuoyancyExploreModel({super.world}) {
     blockA = BuoyancyMass(
       id: 'explore.blockA',
       material: BuoyancyMaterial.wood,

@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../gases_intro_constants.dart';
@@ -8,16 +6,31 @@ import '../model/ideal_gas_law_model.dart';
 import '../model/particle.dart';
 
 /// Bicycle pump with Path proportions from scenery-phet [BicyclePumpNode].
-/// Height 230 (GasPropertiesBicyclePumpNode). Drag handle → [model.pump] (+50).
+/// Shared by Gases Intro and Gas Properties.
 class BicyclePumpWidget extends StatefulWidget {
   const BicyclePumpWidget({
     super.key,
-    required this.model,
+    required this.listenable,
+    required this.bodyColorOf,
+    required this.onPump,
     this.height = 230,
     this.width = 120,
   });
 
-  final IdealGasLawModel model;
+  BicyclePumpWidget.forIntro({
+    super.key,
+    required IdealGasLawModel model,
+    this.height = 230,
+    this.width = 120,
+  })  : listenable = model,
+        bodyColorOf = (() => model.particleType == ParticleKind.heavy
+            ? const Color(GasesIntroConstants.heavyParticleColor)
+            : const Color(GasesIntroConstants.lightParticleColor)),
+        onPump = model.pump;
+
+  final Listenable listenable;
+  final Color Function() bodyColorOf;
+  final VoidCallback onPump;
   final double height;
   final double width;
 
@@ -30,16 +43,10 @@ class _BicyclePumpWidgetState extends State<BicyclePumpWidget> {
   double _handleT = 0;
   double _accum = 0;
 
-  IdealGasLawModel get model => widget.model;
-
-  Color get _bodyColor => model.particleType == ParticleKind.heavy
-      ? const Color(GasesIntroConstants.heavyParticleColor)
-      : const Color(GasesIntroConstants.lightParticleColor);
-
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: model,
+      listenable: widget.listenable,
       builder: (context, _) {
         return SizedBox(
           width: widget.width,
@@ -50,15 +57,16 @@ class _BicyclePumpWidgetState extends State<BicyclePumpWidget> {
               return GestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onVerticalDragUpdate: (d) {
-                  final travel = size.height * 0.45;
-                  setState(() {
-                    _handleT =
-                        (_handleT + d.delta.dy / travel).clamp(0.0, 1.0);
-                  });
-                  _accum += d.delta.dy.abs();
-                  if (_accum > travel * 0.4) {
-                    _accum = 0;
-                    model.pump();
+                  final travel = size.height * 0.28;
+                  final next =
+                      (_handleT + d.delta.dy / travel).clamp(0.0, 1.0);
+                  setState(() => _handleT = next);
+                  if (d.delta.dy > 0) {
+                    _accum += d.delta.dy;
+                    if (_accum > travel * 0.45) {
+                      _accum = 0;
+                      widget.onPump();
+                    }
                   }
                 },
                 onVerticalDragEnd: (_) {
@@ -68,7 +76,7 @@ class _BicyclePumpWidgetState extends State<BicyclePumpWidget> {
                 child: CustomPaint(
                   size: size,
                   painter: BicyclePumpPainter(
-                    bodyColor: _bodyColor,
+                    bodyColor: widget.bodyColorOf(),
                     handleT: _handleT,
                     hoseToLeft: true,
                   ),
@@ -94,244 +102,194 @@ class BicyclePumpPainter extends CustomPainter {
   final double handleT;
   final bool hoseToLeft;
 
-  // BicyclePumpNode proportions
-  static const double baseW = 0.35;
-  static const double baseH = 0.075;
-  static const double bodyH = 0.7;
-  static const double bodyW = 0.07;
-  static const double shaftW = bodyW * 0.25;
-  static const double shaftH = bodyH;
-  static const double handleH = 0.05;
-  static const double coneH = 0.09;
-  static const double hoseConnH = 0.04;
-  static const double hoseConnW = 0.05;
-
   @override
   void paint(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
-    final cx = w * 0.62;
+    final cx = w * 0.68;
+    final cylW = (w * 0.20).clamp(18.0, 28.0);
+    final shaftW = 5.0;
+    final handleH = 12.0;
+    final handleHalfW = 18.0;
 
-    final pumpBodyW = w * bodyW * 2.2; // readable at widget width
-    final pumpBodyH = h * bodyH * 0.85;
-    final coneHeight = h * coneH;
-    final baseWidth = w * baseW;
-    final baseHeight = h * baseH;
-    final shaftWidth = w * shaftW * 2.2;
-    final handleHeight = h * handleH * 1.4;
-
-    final baseTop = h - baseHeight;
-    final coneTop = baseTop - coneHeight + 8;
-    final bodyBottom = coneTop + 18;
-    final bodyTop = bodyBottom - pumpBodyH;
-
-    // Hose (cubic) to the left toward container
-    final hoseAttach = Offset(cx - pumpBodyW, bodyBottom - 26);
-    final hoseEnd = Offset(4, hoseAttach.dy - 8);
-    final hosePath = Path()
-      ..moveTo(hoseAttach.dx, hoseAttach.dy)
-      ..cubicTo(
-        hoseAttach.dx - 40 * 0.75,
-        hoseAttach.dy,
-        hoseEnd.dx + 20,
-        hoseEnd.dy,
-        hoseEnd.dx + 8,
-        hoseEnd.dy,
-      );
-    canvas.drawPath(
-      hosePath,
-      Paint()
-        ..color = const Color(0xFFB3B3B3)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 4
-        ..strokeCap = StrokeCap.round,
+    final baseH = h * 0.08;
+    final baseTop = h - baseH;
+    final bodyBottom = baseTop - h * 0.04;
+    // Cylinder starts below the fully-pulled T-handle + visible shaft.
+    final pulledTop = 4.0;
+    final bodyTop = pulledTop + handleH + h * 0.16;
+    final bodyRect = Rect.fromLTRB(
+      cx - cylW / 2,
+      bodyTop,
+      cx + cylW / 2,
+      bodyBottom,
     );
 
-    // Hose connectors
-    final connW = w * hoseConnW;
-    final connH = h * hoseConnH;
-    _hoseConnector(canvas, Rect.fromCenter(center: hoseEnd, width: connW, height: connH));
+    // T-handle stays above the rim — never sinks into the barrel.
+    final pressedTop = bodyTop - 5 - handleH;
+    final handleTop = pulledTop + handleT * (pressedTop - pulledTop);
+    final handleCy = handleTop + handleH / 2;
+    final pistonY = bodyTop + 10 + handleT * (bodyRect.height * 0.55);
+
+    // Hose to container (left).
+    final hoseAttach = Offset(bodyRect.left, bodyTop + bodyRect.height * 0.58);
+    final hoseEnd = Offset(2, hoseAttach.dy - 2);
+    canvas.drawPath(
+      Path()
+        ..moveTo(hoseAttach.dx, hoseAttach.dy)
+        ..cubicTo(
+          hoseAttach.dx - w * 0.18,
+          hoseAttach.dy,
+          hoseEnd.dx + w * 0.22,
+          hoseEnd.dy + 6,
+          hoseEnd.dx + 5,
+          hoseEnd.dy,
+        ),
+      Paint()
+        ..color = const Color(0xFFB0B0B0)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 6
+        ..strokeCap = StrokeCap.round,
+    );
     _hoseConnector(
       canvas,
-      Rect.fromCenter(center: hoseAttach, width: connW, height: connH),
+      Rect.fromCenter(center: hoseEnd, width: 12, height: 8),
+    );
+    _hoseConnector(
+      canvas,
+      Rect.fromCenter(center: hoseAttach, width: 10, height: 8),
     );
 
     // Base
     final baseRect = RRect.fromRectAndRadius(
       Rect.fromCenter(
-        center: Offset(cx, baseTop + baseHeight * 0.35),
-        width: baseWidth,
-        height: baseHeight * 0.7,
+        center: Offset(cx, baseTop + baseH * 0.38),
+        width: cylW * 2.0,
+        height: baseH * 0.65,
       ),
-      const Radius.circular(8),
+      const Radius.circular(5),
     );
-    canvas.drawRRect(
-      baseRect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            _shade(const Color(0xFFAAAAAA), 0.05),
-            const Color(0xFFAAAAAA),
-            _shade(const Color(0xFFAAAAAA), -0.2),
-          ],
-        ).createShader(baseRect.outerRect),
-    );
+    canvas.drawRRect(baseRect, Paint()..color = const Color(0xFFA3A3A3));
 
-    // Cone
-    final conePath = Path()
-      ..moveTo(cx - pumpBodyW * 0.6, coneTop)
-      ..lineTo(cx + pumpBodyW * 0.6, coneTop)
-      ..lineTo(cx + pumpBodyW, coneTop + coneHeight)
-      ..lineTo(cx - pumpBodyW, coneTop + coneHeight)
+    final cone = Path()
+      ..moveTo(cx - cylW * 0.36, bodyBottom - 4)
+      ..lineTo(cx + cylW * 0.36, bodyBottom - 4)
+      ..lineTo(cx + cylW * 0.68, baseTop)
+      ..lineTo(cx - cylW * 0.68, baseTop)
       ..close();
-    canvas.drawPath(
-      conePath,
+    canvas.drawPath(cone, Paint()..color = const Color(0xFFB8B8B8));
+
+    // Shaft above the rim (pulled out of the barrel).
+    final shaftPaint = Paint()..color = const Color(0xFFD8D8D8);
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTRB(cx - shaftW / 2, handleTop + handleH, cx + shaftW / 2, bodyTop + 1),
+        const Radius.circular(1),
+      ),
+      shaftPaint,
+    );
+
+    // T-handle (always outside).
+    _paintHandle(canvas, Offset(cx, handleCy), handleH, handleHalfW);
+
+    // Barrel
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(bodyRect, const Radius.circular(3)),
       Paint()
         ..shader = LinearGradient(
           begin: Alignment.centerLeft,
           end: Alignment.centerRight,
           colors: [
-            _shade(const Color(0xFFAAAAAA), -0.4),
-            const Color(0xFFAAAAAA),
-            _shade(const Color(0xFFAAAAAA), 0.1),
-            _shade(const Color(0xFFAAAAAA), -0.5),
-          ],
-          stops: const [0.0, 0.3, 0.45, 1.0],
-        ).createShader(conePath.getBounds()),
-    );
-
-    // Shaft + handle (move with handleT)
-    final restHandleBottom = bodyTop - 18;
-    final maxTravel = pumpBodyH * 0.55;
-    final handleBottom = restHandleBottom + handleT * maxTravel;
-    final handleTop = handleBottom - handleHeight;
-    final shaftTop = handleBottom;
-    final shaftBottom = math.min(bodyBottom - 8, shaftTop + h * shaftH * 0.5);
-
-    canvas.drawRect(
-      Rect.fromCenter(
-        center: Offset(cx, (shaftTop + shaftBottom) / 2),
-        width: shaftWidth,
-        height: (shaftBottom - shaftTop).abs(),
-      ),
-      Paint()
-        ..color = const Color(0xFFCACACA)
-        ..style = PaintingStyle.fill,
-    );
-    canvas.drawRect(
-      Rect.fromCenter(
-        center: Offset(cx, (shaftTop + shaftBottom) / 2),
-        width: shaftWidth,
-        height: (shaftBottom - shaftTop).abs(),
-      ),
-      Paint()
-        ..color = _shade(const Color(0xFFCACACA), -0.38)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1,
-    );
-
-    // Handle with grip bumps
-    _paintHandle(canvas, Offset(cx, (handleTop + handleBottom) / 2), handleHeight);
-
-    // Body (over shaft)
-    final bodyRect = Rect.fromCenter(
-      center: Offset(cx, (bodyTop + bodyBottom) / 2),
-      width: pumpBodyW,
-      height: pumpBodyH,
-    );
-    canvas.drawRect(
-      bodyRect,
-      Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            _shade(bodyColor, 0.2),
+            _shade(bodyColor, 0.28),
             bodyColor,
-            _shade(bodyColor, -0.2),
+            _shade(bodyColor, -0.28),
           ],
-          stops: const [0.0, 0.4, 0.7],
+          stops: const [0.0, 0.45, 1.0],
         ).createShader(bodyRect),
     );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(bodyRect, const Radius.circular(3)),
+      Paint()
+        ..color = _shade(bodyColor, -0.45)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.1,
+    );
 
-    // Body top opening (ellipse hint)
+    final tickPaint = Paint()
+      ..color = const Color(0x99FFFFFF)
+      ..strokeWidth = 1;
+    for (var i = 1; i <= 7; i++) {
+      final y = bodyRect.top + 10 + (bodyRect.height - 20) * (i / 8);
+      canvas.drawLine(
+        Offset(cx + 3, y),
+        Offset(cx + cylW / 2 - 2, y),
+        tickPaint,
+      );
+    }
+
+    // Interior: shaft + piston clipped to the barrel (enters through the opening).
+    canvas.save();
+    canvas.clipRect(bodyRect.deflate(1));
+    canvas.drawRect(
+      Rect.fromLTRB(cx - shaftW / 2 + 0.5, bodyTop, cx + shaftW / 2 - 0.5, pistonY),
+      Paint()..color = const Color(0xFFC5C5C5),
+    );
+    final piston = Rect.fromCenter(
+      center: Offset(cx, pistonY),
+      width: cylW - 4,
+      height: 6,
+    );
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(piston, const Radius.circular(1)),
+      Paint()..color = const Color(0xFFE8E8E8),
+    );
+    canvas.restore();
+
+    // Rim opening — shaft comes out of this hole only.
     canvas.drawOval(
-      Rect.fromCenter(
-        center: Offset(cx, bodyTop),
-        width: pumpBodyW * 1.05,
-        height: 6,
-      ),
-      Paint()..color = Colors.white,
+      Rect.fromCenter(center: Offset(cx, bodyTop), width: cylW * 1.02, height: 6),
+      Paint()..color = const Color(0xFFE8E8E8),
     );
     canvas.drawOval(
-      Rect.fromCenter(
-        center: Offset(cx, bodyTop),
-        width: pumpBodyW * 1.05,
-        height: 6,
-      ),
+      Rect.fromCenter(center: Offset(cx, bodyTop), width: cylW * 1.02, height: 6),
       Paint()
-        ..color = _shade(Colors.white, -0.3)
+        ..color = _shade(bodyColor, -0.4)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1,
     );
   }
 
-  void _paintHandle(Canvas canvas, Offset center, double height) {
-    final halfW = 28.0;
+  void _paintHandle(
+    Canvas canvas,
+    Offset center,
+    double height,
+    double halfW,
+  ) {
     final path = Path()
-      ..moveTo(center.dx - 8, center.dy + height / 2)
-      ..lineTo(center.dx + 8, center.dy + height / 2)
-      ..quadraticBezierTo(
-        center.dx + 18,
-        center.dy + height / 2,
-        center.dx + halfW,
-        center.dy,
-      )
-      ..quadraticBezierTo(
-        center.dx + 18,
-        center.dy - height / 2,
-        center.dx + 8,
-        center.dy - height / 2,
-      )
-      ..lineTo(center.dx - 8, center.dy - height / 2)
-      ..quadraticBezierTo(
-        center.dx - 18,
-        center.dy - height / 2,
-        center.dx - halfW,
-        center.dy,
-      )
-      ..quadraticBezierTo(
-        center.dx - 18,
-        center.dy + height / 2,
-        center.dx - 8,
-        center.dy + height / 2,
-      )
-      ..close();
-
-    // Grip bumps left/right
-    for (final sign in [-1.0, 1.0]) {
-      for (var i = 0; i < 4; i++) {
-        final y = center.dy - height * 0.28 + i * (height * 0.18);
-        path.addOval(
-          Rect.fromCenter(
-            center: Offset(center.dx + sign * (halfW + 4), y),
-            width: 10,
-            height: 8,
-          ),
-        );
-      }
-    }
-
-    canvas.drawPath(path, Paint()..color = const Color(0xFFADAFB1));
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromCenter(center: center, width: halfW * 2, height: height),
+          const Radius.circular(3),
+        ),
+      );
+    canvas.drawPath(path, Paint()..color = const Color(0xFFC8C8C8));
     canvas.drawPath(
       path,
       Paint()
         ..color = const Color(0xFF6B6D70)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.2,
+        ..strokeWidth = 1.1,
     );
+    final ridge = Paint()
+      ..color = const Color(0xFF7A7A7A)
+      ..strokeWidth = 1;
+    for (final dx in [-10.0, 0.0, 10.0]) {
+      canvas.drawLine(
+        Offset(center.dx + dx, center.dy - height * 0.28),
+        Offset(center.dx + dx, center.dy + height * 0.28),
+        ridge,
+      );
+    }
   }
 
   void _hoseConnector(Canvas canvas, Rect r) {
@@ -371,9 +329,34 @@ class BicyclePumpPainter extends CustomPainter {
 /// gets an explicit length so RotatedBox never yields a zero-width Material
 /// Slider (clamp assertion / hit-test collapse).
 class HeaterCoolerWidget extends StatelessWidget {
-  const HeaterCoolerWidget({super.key, required this.model});
+  const HeaterCoolerWidget({
+    super.key,
+    required this.listenable,
+    required this.factorOf,
+    required this.enabledOf,
+    required this.hideOf,
+    required this.onChanged,
+    required this.onReleased,
+  });
 
-  final IdealGasLawModel model;
+  HeaterCoolerWidget.forIntro({
+    super.key,
+    required IdealGasLawModel model,
+  })  : listenable = model,
+        factorOf = (() => model.heatCoolFactor),
+        enabledOf = (() => model.isPlaying && model.numberOfParticles > 0),
+        hideOf = (() =>
+            model.holdConstant == HoldConstant.temperature ||
+            model.holdConstant == HoldConstant.pressureT),
+        onChanged = model.setHeatCool,
+        onReleased = (() => model.setHeatCool(0));
+
+  final Listenable listenable;
+  final double Function() factorOf;
+  final bool Function() enabledOf;
+  final bool Function() hideOf;
+  final ValueChanged<double> onChanged;
+  final VoidCallback onReleased;
 
   /// Logical design size (scale=1); matches IdealScreenAnchors heaterW/H.
   static const double designWidth = 168;
@@ -382,140 +365,197 @@ class HeaterCoolerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableBuilder(
-      listenable: model,
+        return ListenableBuilder(
+      listenable: listenable,
       builder: (context, _) {
-        final hide = model.holdConstant == HoldConstant.temperature ||
-            model.holdConstant == HoldConstant.pressureT;
-        if (hide) {
+        if (hideOf()) {
           return const SizedBox.expand();
         }
-        final enabled = model.isPlaying && model.numberOfParticles > 0;
-        final factor = model.heatCoolFactor;
+        final enabled = enabledOf();
+        final factor = factorOf();
 
-        return LayoutBuilder(
+        return Material(
+          type: MaterialType.transparency,
+          child: LayoutBuilder(
           builder: (context, constraints) {
             final s = constraints.maxHeight.isFinite && constraints.maxHeight > 0
                 ? (constraints.maxHeight / designHeight).clamp(0.55, 1.0)
                 : 1.0;
             final stoveW = stoveWidthLogical * s;
             final stoveH = 140 * s;
-            final sliderColW = 40 * s;
-            // Labels stay 10px — do not shrink fonts to dodge overflow.
             const labelStyle = TextStyle(color: Colors.white54, fontSize: 10);
 
             return Opacity(
               opacity: enabled ? 1 : 0.45,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: stoveW,
-                    height: stoveH,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      alignment: Alignment.topCenter,
-                      children: [
-                        if (factor > 0)
-                          Positioned(
-                            top: -factor * 55 * s,
-                            left: 10 * s,
-                            right: 10 * s,
-                            child: Image.asset(
-                              'assets/gases_intro/flame.png',
-                              height: 70 * s,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        if (factor < 0)
-                          Positioned(
-                            top: factor.abs() * -40 * s,
-                            left: 16 * s,
-                            right: 16 * s,
-                            child: Image.asset(
-                              'assets/gases_intro/iceCubeStack.png',
-                              height: 55 * s,
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        CustomPaint(
-                          size: Size(stoveW, 100 * s),
-                          painter: _StovePainter(
-                            baseColor: const Color(0xFF9FB6CD),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      if (factor > 0)
+                        Positioned(
+                          top: -factor * 40 * s,
+                          left: 18 * s,
+                          right: 18 * s,
+                          child: Image.asset(
+                            'assets/gases_intro/flame.png',
+                            height: 64 * s,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    width: sliderColW,
-                    height: 110 * s,
-                    child: Column(
-                      children: [
-                        const Text('Heat', style: labelStyle),
-                        Expanded(
-                          child: LayoutBuilder(
-                            builder: (context, c) {
-                              final trackLen = c.maxHeight;
-                              if (trackLen < 32) {
-                                return const SizedBox.shrink();
-                              }
-                              return RotatedBox(
-                                quarterTurns: 3,
-                                child: SizedBox(
-                                  width: trackLen,
-                                  height: sliderColW,
-                                  child: SliderTheme(
-                                    data: SliderTheme.of(context).copyWith(
-                                      trackHeight: (10 * s).clamp(6.0, 10.0),
-                                      thumbShape: RoundSliderThumbShape(
-                                        enabledThumbRadius:
-                                            (9 * s).clamp(6.0, 9.0),
+                      if (factor < 0)
+                        Positioned(
+                          top: factor.abs() * -28 * s,
+                          left: 24 * s,
+                          right: 24 * s,
+                          child: Image.asset(
+                            'assets/gases_intro/iceCubeStack.png',
+                            height: 50 * s,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: CustomPaint(
+                          size: Size(stoveW, stoveH * 0.78),
+                          painter: const _StovePainter(
+                            baseColor: Color(0xFFB8B8B8),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: stoveW * 0.32,
+                        right: stoveW * 0.32,
+                        top: stoveH * 0.28,
+                        bottom: stoveH * 0.12,
+                        child: IgnorePointer(
+                          ignoring: !enabled,
+                          child: Column(
+                            children: [
+                              const Text('Heat', style: labelStyle),
+                              Expanded(
+                                child: LayoutBuilder(
+                                  builder: (context, c) {
+                                    final trackLen = c.maxHeight;
+                                    if (trackLen < 32) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return RotatedBox(
+                                      quarterTurns: 3,
+                                      child: SizedBox(
+                                        width: trackLen,
+                                        height: 28 * s,
+                                        child: SliderTheme(
+                                          data: SliderTheme.of(context)
+                                              .copyWith(
+                                            trackHeight:
+                                                (10 * s).clamp(6.0, 10.0),
+                                            trackShape:
+                                                const _HeatCoolGradientTrack(),
+                                            thumbShape: RoundSliderThumbShape(
+                                              enabledThumbRadius:
+                                                  (8 * s).clamp(6.0, 8.0),
+                                            ),
+                                            overlayShape:
+                                                RoundSliderOverlayShape(
+                                              overlayRadius:
+                                                  (12 * s).clamp(8.0, 12.0),
+                                            ),
+                                            thumbColor:
+                                                const Color(0xFF71EDFF),
+                                          ),
+                                          child: Slider(
+                                            value: factor.clamp(-1.0, 1.0),
+                                            min: -1,
+                                            max: 1,
+                                            onChanged: enabled
+                                                ? onChanged
+                                                : null,
+                                            onChangeEnd: enabled
+                                                ? (_) => onReleased()
+                                                : null,
+                                          ),
+                                        ),
                                       ),
-                                      overlayShape: RoundSliderOverlayShape(
-                                        overlayRadius:
-                                            (16 * s).clamp(10.0, 16.0),
-                                      ),
-                                      activeTrackColor:
-                                          const Color(0xFFEF000F),
-                                      inactiveTrackColor:
-                                          const Color(0xFF0A00F0),
-                                      thumbColor: const Color(0xFF71EDFF),
-                                    ),
-                                    child: Slider(
-                                      value: factor.clamp(-1.0, 1.0),
-                                      min: -1,
-                                      max: 1,
-                                      onChanged: enabled
-                                          ? (v) => model.setHeatCool(v)
-                                          : null,
-                                      onChangeEnd: enabled
-                                          ? (_) => model.setHeatCool(0)
-                                          : null,
-                                    ),
-                                  ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              ),
+                              const Text('Cool', style: labelStyle),
+                            ],
                           ),
                         ),
-                        const Text('Cool', style: labelStyle),
-                      ],
-                    ),
-                  ),
-                ],
+                      ),
+                    ],
+                  );
+                },
               ),
             );
           },
+        ),
         );
       },
     );
   }
 }
 
+/// Horizontal slider is rotated 270° (quarterTurns: 3): left=bottom, right=top.
+/// Paint cool `#0A00F0` at min (bottom) → heat `#EF000F` at max (top).
+class _HeatCoolGradientTrack extends SliderTrackShape {
+  const _HeatCoolGradientTrack();
+
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final height = sliderTheme.trackHeight ?? 8;
+    final top = offset.dy + (parentBox.size.height - height) / 2;
+    return Rect.fromLTWH(offset.dx, top, parentBox.size.width, height);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required Offset thumbCenter,
+    Offset? secondaryOffset,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+    required TextDirection textDirection,
+  }) {
+    final rect = getPreferredRect(
+      parentBox: parentBox,
+      offset: offset,
+      sliderTheme: sliderTheme,
+      isEnabled: isEnabled,
+      isDiscrete: isDiscrete,
+    );
+    final rrect =
+        RRect.fromRectAndRadius(rect, Radius.circular(rect.height / 2));
+    context.canvas.drawRRect(
+      rrect,
+      Paint()
+        ..shader = const LinearGradient(
+          colors: [
+            Color(0xFF0A00F0),
+            Color(0xFFEF000F),
+          ],
+        ).createShader(rect),
+    );
+  }
+}
+
 /// Stove bowl / body geometry from HeaterCoolerBack + HeaterCoolerFront.
 class _StovePainter extends CustomPainter {
-  _StovePainter({required this.baseColor});
+  const _StovePainter({required this.baseColor});
   final Color baseColor;
 
   static const double openingScale = 0.1;

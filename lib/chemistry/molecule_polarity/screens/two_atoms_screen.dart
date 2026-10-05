@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+
 import '../controller/molecule_polarity_controller.dart';
 import '../model/bond_character.dart';
 import '../model/diatomic_molecule.dart';
@@ -10,7 +12,6 @@ import '../mp_constants.dart';
 import '../mp_strings.dart';
 import '../painters/mp_scene_painters.dart';
 import '../widgets/mp_controls.dart';
-import '../widgets/mp_reset_all_button.dart';
 import '../widgets/mp_simulation_shell.dart';
 
 class TwoAtomsScreenBody extends StatefulWidget {
@@ -54,11 +55,16 @@ class _TwoAtomsScreenBodyState extends State<TwoAtomsScreenBody> {
         children: [
           // Scene
           Positioned.fill(
-            child: GestureDetector(
+            child: Listener(
               behavior: HitTestBehavior.opaque,
-              onPanStart: (d) => _rotate(d.localPosition, mol),
-              onPanUpdate: (d) => _rotate(d.localPosition, mol),
-              onPanEnd: (_) => c.endTwoAtomsDrag(),
+              onPointerDown: (e) => _rotate(e.localPosition, mol),
+              onPointerMove: (e) {
+                if (c.twoAtoms.diatomic.isDragging) {
+                  _rotate(e.localPosition, mol);
+                }
+              },
+              onPointerUp: (_) => c.endTwoAtomsDrag(),
+              onPointerCancel: (_) => c.endTwoAtomsDrag(),
               child: CustomPaint(
                 painter: _TwoAtomsScenePainter(
                   molecule: mol,
@@ -78,7 +84,7 @@ class _TwoAtomsScreenBodyState extends State<TwoAtomsScreenBody> {
             top: MpConstants.controlPanelTop,
             right: MpConstants.horizontalMargin,
             child: MpPanel(
-              width: 260,
+              width: MpConstants.controlPanelWidth,
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -170,7 +176,10 @@ class _TwoAtomsScreenBodyState extends State<TwoAtomsScreenBody> {
           Positioned(
             right: MpConstants.horizontalMargin,
             bottom: MpConstants.verticalMargin,
-            child: MpResetAllButton(onPressed: c.resetTwoAtoms),
+            child: KratosResetAllButton(
+              onPressed: c.resetTwoAtoms,
+              radius: 20.5,
+            ),
           ),
         ],
       ),
@@ -292,7 +301,7 @@ class _TwoAtomsScenePainter extends CustomPainter {
     if (eField) {
       PlatesPainter.paint(
         canvas,
-        layoutSize: size,
+        moleculeCenter: Offset(molecule.position.x, molecule.position.y),
         spacing: MpConstants.platesSpacingTwoAtoms,
       );
     }

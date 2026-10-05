@@ -1,6 +1,8 @@
 /// InteractiveIsotopeNode — cloud, nucleons, bucket, labels, neutron drag.
 library;
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
 import '../controller/make_isotopes_controller.dart';
@@ -46,10 +48,12 @@ class MakeIsotopePlayArea extends StatelessWidget {
     };
     final nameDy = nameOffset[z] ?? 50;
     final stableDy = stableOffset[z] ?? 50;
+    final nameMaxW = _chordWidth(cloudR, nameDy);
+    final stableMaxW = _chordWidth(cloudR, stableDy);
 
-    final isotopeLabel = '${m.selectedElement.name}-${m.massNumber}';
+    final isotopeLabel = z > 0 ? '${m.selectedElement.name}-${m.massNumber}' : '';
     final stability =
-        m.protonCount > 0 ? (m.isStable ? 'Stable' : 'Unstable') : '';
+        z > 0 ? (m.isStable ? 'Stable' : 'Unstable') : '';
 
     // Collect drawable nucleons sorted by zLayer (higher = further back).
     final nucleons = <NucleonParticle>[
@@ -62,52 +66,16 @@ class MakeIsotopePlayArea extends StatelessWidget {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        // My Isotope label
+        // Electron cloud (behind nucleons)
         Positioned(
-          left: atomView.dx - 50,
-          top: atomView.dy - cloudR - 28,
-          width: 100,
-          child: const Text(
-            'My Isotope',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        // Electron cloud
-        Positioned(
-          left: atomView.dx - cloudR,
-          top: atomView.dy - cloudR,
-          width: cloudR * 2,
-          height: cloudR * 2,
+          left: atomView.dx - (cloudR > 0 ? cloudR : 1),
+          top: atomView.dy - (cloudR > 0 ? cloudR : 1),
+          width: (cloudR > 0 ? cloudR : 1) * 2,
+          height: (cloudR > 0 ? cloudR : 1) * 2,
           child: IgnorePointer(
             child: CustomPaint(
               painter: ElectronCloudPainter(radius: cloudR),
             ),
-          ),
-        ),
-
-        // Element name
-        Positioned(
-          left: atomView.dx - 40,
-          top: atomView.dy - nameDy - 8,
-          width: 80,
-          child: Text(
-            isotopeLabel,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        ),
-
-        // Stable / Unstable
-        Positioned(
-          left: atomView.dx - 40,
-          top: atomView.dy + stableDy - 6,
-          width: 80,
-          child: Text(
-            stability,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         ),
 
@@ -173,9 +141,90 @@ class MakeIsotopePlayArea extends StatelessWidget {
             ),
           ),
         ),
+
+        // Labels: InteractiveIsotopeNode (My Isotope 5px above cloud).
+        Positioned(
+          left: atomView.dx - 50,
+          top: atomView.dy - cloudR - 21,
+          width: 100,
+          height: 16,
+          child: const IgnorePointer(
+            child: Text(
+              'My Isotope',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                height: 1,
+                color: Colors.black,
+                shadows: [
+                  Shadow(color: Colors.white, blurRadius: 3),
+                  Shadow(color: Colors.white, blurRadius: 6),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (isotopeLabel.isNotEmpty)
+          Positioned(
+            left: atomView.dx - nameMaxW / 2,
+            top: atomView.dy - nameDy - 8,
+            width: nameMaxW,
+            height: 16,
+            child: IgnorePointer(
+              child: Text(
+                isotopeLabel,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  height: 1,
+                  color: Colors.black,
+                  shadows: [
+                    Shadow(color: Colors.white, blurRadius: 3),
+                    Shadow(color: Colors.white, blurRadius: 6),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        if (stability.isNotEmpty)
+          Positioned(
+            left: atomView.dx - stableMaxW / 2,
+            top: atomView.dy + stableDy - 6,
+            width: stableMaxW,
+            height: 12,
+            child: IgnorePointer(
+              child: Text(
+                stability,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  height: 1,
+                  color: Colors.black,
+                  shadows: [
+                    Shadow(color: Colors.white, blurRadius: 3),
+                    Shadow(color: Colors.white, blurRadius: 6),
+                  ],
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
+}
+
+double _chordWidth(double radius, double dy) {
+  if (radius > dy.abs()) {
+    return 2 * math.sqrt(radius * radius - dy * dy);
+  }
+  return 30;
 }
 
 class _SingleNucleonPainter extends CustomPainter {

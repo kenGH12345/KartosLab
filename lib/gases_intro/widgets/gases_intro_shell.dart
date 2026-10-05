@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../common/widgets/kratos_phet_time_control.dart';
+import '../../common/widgets/kratos_reset_all_button.dart';
 import '../gases_intro_constants.dart';
 import '../model/hold_constant.dart';
 import '../model/ideal_gas_law_model.dart';
@@ -148,7 +150,7 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                 ),
                 Positioned(
                   left: a.gaugeLeft,
-                  top: a.gaugeTop - 28 * scale,
+                  top: a.gaugeTop,
                   width: a.gaugeW,
                   child: PressureGaugeInstrument(
                     displayedKpa: data.displayedPressureKpa,
@@ -157,8 +159,8 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                   ),
                 ),
                 Positioned(
-                  left: a.thermometerLeft - 20 * scale,
-                  top: a.thermometerTop - 36 * scale,
+                  left: a.thermometerLeft,
+                  top: a.thermometerTop,
                   child: ThermometerInstrument(
                     temperatureK: data.temperatureK,
                     units: viewState.temperatureUnits,
@@ -166,20 +168,43 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                   ),
                 ),
                 Positioned(
+                  left: a.layout.vx(data.containerLeft),
+                  top: a.widthArrowsTop,
+                  width: a.containerNodeRight - a.layout.vx(data.containerLeft),
+                  height: a.widthArrowsH,
+                  child: IgnorePointer(
+                    child: CustomPaint(
+                      painter: ContainerWidthArrowsPainter(
+                        visible: data.widthVisible,
+                        widthNm: data.widthPm / 1000,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
                   left: a.eraseLeft,
                   top: a.eraseTop,
                   width: a.eraseW,
                   height: a.eraseH,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    tooltip: 'Erase particles',
-                    onPressed: model.numberOfParticles == 0
-                        ? null
-                        : model.eraseParticles,
-                    icon: SvgPicture.asset(
-                      'assets/gases_intro/eraser.svg',
-                      width: 28 * scale.clamp(0.7, 1.0),
-                      height: 28 * scale.clamp(0.7, 1.0),
+                  child: Material(
+                    color: const Color(0xFFDCDCDC),
+                    borderRadius: BorderRadius.circular(4),
+                    elevation: 2,
+                    child: InkWell(
+                      onTap: model.numberOfParticles == 0
+                          ? null
+                          : model.eraseParticles,
+                      borderRadius: BorderRadius.circular(4),
+                      child: Opacity(
+                        opacity: model.numberOfParticles == 0 ? 0.35 : 1,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            'assets/gases_intro/eraser.svg',
+                            width: 28 * scale.clamp(0.7, 1.0),
+                            height: 22 * scale.clamp(0.7, 1.0),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -199,7 +224,7 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                   top: a.pumpTop,
                   width: a.pumpW,
                   height: a.pumpBodyH,
-                  child: BicyclePumpWidget(
+                  child: BicyclePumpWidget.forIntro(
                     model: model,
                     width: a.pumpW,
                     height: a.pumpBodyH,
@@ -208,21 +233,23 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                 Positioned(
                   left: a.particleTypeLeft,
                   top: a.particleTypeTop,
-                  child: ParticleTypeRadioButtonGroup(model: model),
+                  child: ParticleTypeRadioButtonGroup.forIntro(model: model),
                 ),
                 Positioned(
                   left: a.heaterLeft,
                   top: a.heaterTop,
                   width: a.heaterW,
                   height: a.heaterH,
-                  child: HeaterCoolerWidget(model: model),
+                  child: HeaterCoolerWidget.forIntro(model: model),
                 ),
                 Positioned(
                   left: a.timeLeft,
                   top: a.timeTop,
-                  width: a.timeW,
-                  height: a.timeH,
-                  child: _TimeControl(model: model),
+                  child: KratosPhetTimeControl(
+                    isPlaying: model.isPlaying,
+                    onPlayPause: () => model.setPlaying(!model.isPlaying),
+                    onStep: model.stepOnce,
+                  ),
                 ),
                 Positioned(
                   left: a.panelLeft,
@@ -233,16 +260,16 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        IdealControlPanel(
-                          model: model,
-                          showHoldConstant: widget.showHoldConstant,
-                          viewState: viewState,
-                        ),
-                        SizedBox(height: 15 * scale),
                         ParticlesAccordionBox(
                           model: model,
                           viewState: viewState,
                           layoutScale: scale,
+                        ),
+                        SizedBox(height: 15 * scale),
+                        IdealControlPanel(
+                          model: model,
+                          showHoldConstant: widget.showHoldConstant,
+                          viewState: viewState,
                         ),
                       ],
                     ),
@@ -252,16 +279,11 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                 Positioned(
                   left: a.resetLeft,
                   top: a.resetTop,
-                  width: a.resetW,
-                  height: a.resetH,
-                  child: IconButton(
-                    tooltip: 'Reset All',
+                  child: KratosResetAllButton(
+                    key: const Key('reset_all_button'),
                     onPressed: _resetAll,
-                    icon: Image.asset(
-                      'assets/gases_intro/resetArrow.png',
-                      width: 28 * scale.clamp(0.7, 1.0),
-                      height: 28 * scale.clamp(0.7, 1.0),
-                    ),
+                    radius: 20.5,
+                    tooltip: 'Reset All',
                   ),
                 ),
                 if (viewState.pendingOopsMessage != null)
@@ -326,13 +348,10 @@ class _PlayCanvas extends StatelessWidget {
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
               onHorizontalDragUpdate: (d) {
-                final openingLeftView =
-                    layout.vx(model.container.getOpeningLeft()) + d.delta.dx;
-                viewState.setLidWidthFromOpeningLeft(
-                  model,
-                  layout.mx(openingLeftView),
-                );
-              },
+              // Handle follows the finger: drag right → lid's left edge moves right
+              // → lidWidth shrinks (opening grows).
+              viewState.nudgeLidWidth(model, -d.delta.dx / layout.scale);
+            },
             ),
           ),
       ],
@@ -345,36 +364,6 @@ class _PlayCanvas extends StatelessWidget {
     // Grip near left edge of lid (HandleNode on LidNode).
     return Rect.fromLTRB(lidLeft - 8 * layout.layoutScale, top - 22 * layout.layoutScale,
         lidLeft + 36 * layout.layoutScale, top + 14 * layout.layoutScale);
-  }
-}
-
-class _TimeControl extends StatelessWidget {
-  const _TimeControl({required this.model});
-  final IdealGasLawModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: const Color(0xFF0F172A),
-      borderRadius: BorderRadius.circular(4),
-      child: Row(
-        children: [
-          IconButton(
-            tooltip: model.isPlaying ? 'Pause' : 'Play',
-            onPressed: () => model.setPlaying(!model.isPlaying),
-            icon: Icon(
-              model.isPlaying ? Icons.pause : Icons.play_arrow,
-              color: Colors.white,
-            ),
-          ),
-          IconButton(
-            tooltip: 'Step',
-            onPressed: model.stepOnce,
-            icon: const Icon(Icons.skip_next, color: Colors.white),
-          ),
-        ],
-      ),
-    );
   }
 }
 
@@ -396,10 +385,10 @@ class IdealControlPanel extends StatelessWidget {
     // Material owns the panel fill so CheckboxListTile ink is not masked
     // by an intermediate DecoratedBox (Flutter framework assertion).
     return Material(
-      color: const Color(0xFF0F172A),
+      color: const Color(0xFF282828),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6),
-        side: const BorderSide(color: Color(0xFF334155)),
+        borderRadius: BorderRadius.circular(5),
+        side: const BorderSide(color: Color(0xFF373737)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
@@ -437,6 +426,8 @@ class IdealControlPanel extends StatelessWidget {
                         Expanded(
                           child: Text(
                             _holdLabel(mode),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Colors.white70,
                               fontSize: 14,
@@ -449,37 +440,63 @@ class IdealControlPanel extends StatelessWidget {
                 ),
               const Divider(color: Color(0xFF334155), height: 24),
             ],
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text(
-                'Width',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
-              ),
+            _toolCheckbox(
+              label: 'Width',
               value: model.widthVisible,
-              activeColor: GasesIntroShell.accent,
-              onChanged: (v) => model.setWidthVisible(v ?? false),
+              onChanged: model.setWidthVisible,
+              icon: const _WidthPreviewIcon(),
             ),
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text(
-                'Stopwatch',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
-              ),
+            _toolCheckbox(
+              label: 'Stopwatch',
               value: model.stopwatchVisible,
-              activeColor: GasesIntroShell.accent,
-              onChanged: (v) => model.setStopwatchVisible(v ?? false),
+              onChanged: model.setStopwatchVisible,
+              icon: const _StopwatchPreviewIcon(),
             ),
-            CheckboxListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text(
-                'Collision Counter',
-                style: TextStyle(color: Colors.white70, fontSize: 14),
-              ),
+            _toolCheckbox(
+              label: 'Collision Counter',
               value: model.collisionCounterVisible,
-              activeColor: GasesIntroShell.accent,
-              onChanged: (v) =>
-                  model.setCollisionCounterVisible(v ?? false),
+              onChanged: model.setCollisionCounterVisible,
+              icon: const _CollisionPreviewIcon(),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _toolCheckbox({
+    required String label,
+    required bool value,
+    required void Function(bool) onChanged,
+    required Widget icon,
+  }) {
+    return InkWell(
+      onTap: () => onChanged(!value),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 22,
+              height: 22,
+              child: Checkbox(
+                value: value,
+                activeColor: GasesIntroShell.accent,
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                visualDensity: VisualDensity.compact,
+                onChanged: (v) => onChanged(v ?? false),
+              ),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(color: Colors.white, fontSize: 13),
+              ),
+            ),
+            icon,
           ],
         ),
       ),
@@ -521,45 +538,53 @@ class ParticlesAccordionBox extends StatelessWidget {
     final expanded = viewState.particlesExpanded;
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: const Color(0xFF0F172A),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: const Color(0xFF334155)),
+        color: const Color(0xFF282828),
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: const Color(0xFF373737)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Row(
-              children: [
-                // expandCollapseButtonOptions.sideLength: 20
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    iconSize: 18,
-                    onPressed: () =>
-                        viewState.setParticlesExpanded(!expanded),
-                    icon: Icon(
-                      expanded ? Icons.expand_less : Icons.expand_more,
-                      color: Colors.white70,
+          Material(
+            color: const Color(0xFFE8A441),
+            borderRadius: expanded
+                ? const BorderRadius.vertical(top: Radius.circular(4))
+                : BorderRadius.circular(4),
+            child: InkWell(
+              onTap: () => viewState.setParticlesExpanded(!expanded),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD4892E),
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Icon(
+                        expanded ? Icons.remove : Icons.add,
+                        size: 16,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(width: 10), // titleXSpacing
-                const Expanded(
-                  child: Text(
-                    'Particles',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                    const SizedBox(width: 10),
+                    const Expanded(
+                      child: Text(
+                        'Particles',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
           if (expanded)
@@ -614,9 +639,8 @@ class NumberOfParticlesControl extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = layoutScale <= 0 ? 1.0 : layoutScale;
     // Uniform with shell scale; floor keeps hit target usable (≥28).
-    final btn = (40 * s).clamp(28.0, 40.0);
-    final iconSize = (22 * s).clamp(16.0, 22.0);
-    final valueW = (40 * s).clamp(28.0, 40.0);
+    final btn = (28 * s).clamp(18.0, 32.0);
+    final valueW = (36 * s).clamp(22.0, 40.0);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -635,41 +659,176 @@ class NumberOfParticlesControl extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            _spinBtn(Icons.remove, -1, btn, iconSize),
-            _spinBtn(Icons.keyboard_double_arrow_down, -50, btn, iconSize),
-            SizedBox(
-              width: valueW,
-              child: Text(
-                '$value',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Row(
+            children: [
+              _spinBtn(_ArrowKind.singleLeft, -1, btn),
+              _spinBtn(_ArrowKind.doubleLeft, -50, btn),
+              SizedBox(
+                width: valueW,
+                child: Text(
+                  '$value',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
-            ),
-            _spinBtn(Icons.keyboard_double_arrow_up, 50, btn, iconSize),
-            _spinBtn(Icons.add, 1, btn, iconSize),
-          ],
+              _spinBtn(_ArrowKind.doubleRight, 50, btn),
+              _spinBtn(_ArrowKind.singleRight, 1, btn),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Widget _spinBtn(IconData icon, int delta, double btn, double iconSize) {
-    return SizedBox(
-      width: btn,
-      height: btn,
-      child: IconButton(
-        padding: EdgeInsets.zero,
-        iconSize: iconSize,
-        onPressed: () => onSet(
-          (value + delta).clamp(0, GasesIntroConstants.particleMax),
+  Widget _spinBtn(_ArrowKind kind, int delta, double btn) {
+    return Padding(
+      padding: EdgeInsets.zero,
+      child: Material(
+        color: const Color(0xFF4A4A4A),
+        borderRadius: BorderRadius.circular(3),
+        child: InkWell(
+          onTap: () => onSet(
+            (value + delta).clamp(0, GasesIntroConstants.particleMax),
+          ),
+          child: SizedBox(
+            width: btn,
+            height: btn,
+            child: CustomPaint(painter: _SpinnerArrowPainter(kind)),
+          ),
         ),
-        icon: Icon(icon, color: Colors.white70),
+      ),
+    );
+  }
+}
+
+enum _ArrowKind { singleLeft, doubleLeft, singleRight, doubleRight }
+
+class _SpinnerArrowPainter extends CustomPainter {
+  _SpinnerArrowPainter(this.kind);
+  final _ArrowKind kind;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()..color = Colors.white;
+    void triangle(double cx, bool right) {
+      final path = Path();
+      final y = size.height / 2;
+      final h = size.height * 0.28;
+      if (right) {
+        path
+          ..moveTo(cx - 4, y - h)
+          ..lineTo(cx + 5, y)
+          ..lineTo(cx - 4, y + h)
+          ..close();
+      } else {
+        path
+          ..moveTo(cx + 4, y - h)
+          ..lineTo(cx - 5, y)
+          ..lineTo(cx + 4, y + h)
+          ..close();
+      }
+      canvas.drawPath(path, paint);
+    }
+
+    switch (kind) {
+      case _ArrowKind.singleLeft:
+        triangle(size.width * 0.5, false);
+      case _ArrowKind.doubleLeft:
+        triangle(size.width * 0.38, false);
+        triangle(size.width * 0.62, false);
+      case _ArrowKind.singleRight:
+        triangle(size.width * 0.5, true);
+      case _ArrowKind.doubleRight:
+        triangle(size.width * 0.38, true);
+        triangle(size.width * 0.62, true);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _SpinnerArrowPainter oldDelegate) =>
+      oldDelegate.kind != kind;
+}
+
+class _WidthPreviewIcon extends StatelessWidget {
+  const _WidthPreviewIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 36,
+      height: 16,
+      child: CustomPaint(
+        painter: _ChevronPairPainter(color: Colors.white70),
+      ),
+    );
+  }
+}
+
+class _ChevronPairPainter extends CustomPainter {
+  _ChevronPairPainter({required this.color});
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = color
+      ..strokeWidth = 1.6
+      ..style = PaintingStyle.stroke
+      ..strokeJoin = StrokeJoin.round;
+    final y = size.height / 2;
+    final left = Path()
+      ..moveTo(10, 2)
+      ..lineTo(2, y)
+      ..lineTo(10, size.height - 2);
+    final right = Path()
+      ..moveTo(size.width - 10, 2)
+      ..lineTo(size.width - 2, y)
+      ..lineTo(size.width - 10, size.height - 2);
+    canvas.drawPath(left, p);
+    canvas.drawPath(right, p);
+    canvas.drawLine(Offset(12, y), Offset(size.width - 12, y), p);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _StopwatchPreviewIcon extends StatelessWidget {
+  const _StopwatchPreviewIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 18,
+      decoration: BoxDecoration(
+        color: const Color(0xFF5082E6),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(color: Colors.white24),
+      ),
+    );
+  }
+}
+
+class _CollisionPreviewIcon extends StatelessWidget {
+  const _CollisionPreviewIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 28,
+      height: 18,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFED483),
+        borderRadius: BorderRadius.circular(3),
+        border: Border.all(color: const Color(0xFF8A6A20)),
       ),
     );
   }

@@ -39,7 +39,7 @@ class ShowElectronCloudCheckbox extends StatelessWidget {
         // 图标半径原版 = 文字高度 × 0.82。[已确认]
         // 文字字号与 REGULAR_FONT(20) 未逐像素对齐 → [视觉待确认]
         CustomPaint(
-          size: const Size(16, 16),
+          size: const Size(22, 22),
           painter: _ElectronCloudIconPainter(electron),
         ),
       ],

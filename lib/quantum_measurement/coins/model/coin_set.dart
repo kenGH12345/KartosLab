@@ -199,16 +199,13 @@ class Coin extends CoinSet {
   Coin({
     required super.coinType,
     required String initialState,
-    required double initialBias,
-    QmRandom? random,
-    bool classicalStartHidden = false,
+    required super.initialBias,
+    super.random,
+    super.classicalStartHidden,
   }) : super(
           maxNumberOfActiveCoins: 1,
           initialNumberOfActiveCoins: 1,
           initialFaceState: initialState,
-          initialBias: initialBias,
-          random: random,
-          classicalStartHidden: classicalStartHidden,
         );
 
   String get measuredValue => measuredValues[0];

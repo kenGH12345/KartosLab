@@ -31,7 +31,7 @@ class PlayAreaPainter extends CustomPainter {
     // Walls — open top (lid drawn separately). Shape like IdealGasLawContainerNode:
     // left / bottom / right; top open between opening insets when lid off.
     final wallPaint = Paint()
-      ..color = const Color(0xFFD0D0D0)
+      ..color = const Color(0xFFFFFFFF)
       ..style = PaintingStyle.stroke
       ..strokeWidth = wall
       ..strokeCap = StrokeCap.square
@@ -46,6 +46,7 @@ class PlayAreaPainter extends CustomPainter {
 
     // Lid
     if (data.lidIsOn) {
+      // Lid HandleNode (horizontal grip on lid, scenery HandleNode).
       final lidLeftModel = data.containerRight - data.lidWidth;
       final lidLeft = l.vx(lidLeftModel);
       canvas.drawLine(
@@ -55,12 +56,7 @@ class PlayAreaPainter extends CustomPainter {
           ..color = const Color(0xFFB0B0B0)
           ..strokeWidth = wall + 2,
       );
-      // Lid grip nub
-      canvas.drawCircle(
-        Offset((lidLeft + right) / 2, top - 6),
-        5,
-        Paint()..color = const Color(0xFF9CA3AF),
-      );
+      _paintLidHandle(canvas, lidLeft + 18, top);
     }
 
     // Left-wall HandleNode (rotated −π/2, scale ~0.4) — NOT a piston.
@@ -77,16 +73,7 @@ class PlayAreaPainter extends CustomPainter {
       );
     }
 
-    if (data.widthVisible) {
-      final tp = TextPainter(
-        text: TextSpan(
-          text: '${(data.widthPm / 1000).toStringAsFixed(1)} nm',
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
-        ),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      tp.paint(canvas, Offset((left + right) / 2 - tp.width / 2, bottom + 6));
-    }
+    // Width arrows live in ContainerWidthArrowsPainter (below the container).
 
     // Hose attachment marker (right wall)
     canvas.drawCircle(
@@ -173,6 +160,113 @@ class PlayAreaPainter extends CustomPainter {
     );
   }
 
+  void _paintLidHandle(Canvas canvas, double x, double lidY) {
+    final rect = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: Offset(x, lidY - 10), width: 28, height: 14),
+      const Radius.circular(3),
+    );
+    canvas.drawRRect(
+      rect,
+      Paint()
+        ..shader = const LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromRGBO(245, 245, 245, 1),
+            Color.fromRGBO(160, 160, 160, 1),
+          ],
+        ).createShader(rect.outerRect),
+    );
+    canvas.drawRRect(
+      rect,
+      Paint()
+        ..color = Colors.black
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2,
+    );
+    final indent = Paint()
+      ..color = const Color(0x66000000)
+      ..strokeWidth = 1;
+    for (var i = 0; i < 4; i++) {
+      final dx = rect.outerRect.left + 6 + i * 5.0;
+      canvas.drawLine(
+        Offset(dx, rect.outerRect.top + 3),
+        Offset(dx, rect.outerRect.bottom - 3),
+        indent,
+      );
+    }
+  }
+
   @override
   bool shouldRepaint(covariant PlayAreaPainter oldDelegate) => true;
+}
+
+/// PhET ContainerWidthNode — dimensional arrows + nm readout below the container.
+class ContainerWidthArrowsPainter extends CustomPainter {
+  ContainerWidthArrowsPainter({
+    required this.visible,
+    required this.widthNm,
+  });
+
+  final bool visible;
+  final double widthNm;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (!visible || size.width <= 0) return;
+    final y = size.height / 2;
+    final p = Paint()
+      ..color = Colors.white
+      ..strokeWidth = 1.5
+      ..strokeCap = StrokeCap.square;
+    canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
+    _arrow(canvas, Offset(0, y), pointingLeft: true);
+    _arrow(canvas, Offset(size.width, y), pointingLeft: false);
+
+    final tp = TextPainter(
+      text: TextSpan(
+        text: '${widthNm.toStringAsFixed(1)} nm',
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    final box = RRect.fromRectAndRadius(
+      Rect.fromCenter(
+        center: Offset(size.width - 28 - tp.width / 2, y),
+        width: tp.width + 10,
+        height: tp.height + 6,
+      ),
+      const Radius.circular(3),
+    );
+    canvas.drawRRect(box, Paint()..color = Colors.white);
+    canvas.drawRRect(
+      box,
+      Paint()
+        ..color = Colors.black
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.5,
+    );
+    tp.paint(
+      canvas,
+      Offset(box.left + 5, y - tp.height / 2),
+    );
+  }
+
+  void _arrow(Canvas canvas, Offset tip, {required bool pointingLeft}) {
+    final dir = pointingLeft ? -1.0 : 1.0;
+    final path = Path()
+      ..moveTo(tip.dx, tip.dy)
+      ..lineTo(tip.dx - dir * 8, tip.dy - 4)
+      ..lineTo(tip.dx - dir * 8, tip.dy + 4)
+      ..close();
+    canvas.drawPath(path, Paint()..color = Colors.white);
+  }
+
+  @override
+  bool shouldRepaint(covariant ContainerWidthArrowsPainter old) =>
+      old.visible != visible || old.widthNm != widthNm;
 }

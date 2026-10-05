@@ -134,7 +134,7 @@ void main() {
       final atNucleus = nucleusOnScreen(tester, canvas);
 
       final gesture =
-          await tester.startGesture(tester.getCenter(find.text('中子')));
+          await tester.startGesture(tester.getCenter(find.text('Neutrons')));
       await tester.pump();
       // 按下即创建：拖拽中 1 个，核内 0 个（[已确认] startSyntheticDrag）
       expect(c.state.draggedNucleons, hasLength(1));
@@ -152,8 +152,8 @@ void main() {
       expect(c.state.neutronCount, 1);
       expect(c.state.draggedNucleons, isEmpty);
       expect(find.text('Cluster'), findsNothing); // 占位文案不含英文
-      expect(find.text('质子: 0'), findsOneWidget);
-      expect(find.text('中子: 1'), findsOneWidget);
+      expect(find.text('Protons: 0'), findsOneWidget);
+      expect(find.text('Neutrons: 1'), findsOneWidget);
     });
 
     testWidgets('捕获区外松手 → 归位动画 → 到达后消失', (tester) async {
@@ -161,7 +161,7 @@ void main() {
       final (_, canvas) = await pumpShell(tester, c);
 
       final gesture =
-          await tester.startGesture(tester.getCenter(find.text('质子')));
+          await tester.startGesture(tester.getCenter(find.text('Protons')));
       await gesture.moveTo(Offset(canvas.left + 8, canvas.top + 8));
       await gesture.up();
       await tester.pump();
@@ -182,8 +182,8 @@ void main() {
       final c = newController();
       final (_, canvas) = await pumpShell(tester, c);
 
-      final g1 = await tester.startGesture(tester.getCenter(find.text('质子')));
-      final g2 = await tester.startGesture(tester.getCenter(find.text('中子')));
+      final g1 = await tester.startGesture(tester.getCenter(find.text('Protons')));
+      final g2 = await tester.startGesture(tester.getCenter(find.text('Neutrons')));
       await tester.pump();
       expect(c.state.draggedNucleons, hasLength(2));
 
@@ -203,7 +203,7 @@ void main() {
       final (_, canvas) = await pumpShell(tester, c);
 
       final gesture =
-          await tester.startGesture(tester.getCenter(find.text('质子')));
+          await tester.startGesture(tester.getCenter(find.text('Protons')));
       await gesture.moveTo(nucleusOnScreen(tester, canvas));
       await gesture.cancel();
       await tester.pump();

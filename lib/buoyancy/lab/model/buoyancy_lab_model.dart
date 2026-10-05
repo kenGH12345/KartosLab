@@ -19,10 +19,10 @@ class BuoyancyLabModel extends BuoyancyScreenModel with BuoyancyScaleHost {
       geometry: ShapeGeometry.cubeFromVolume(2 / BuoyancyMaterial.wood.density),
       position: const BVec2(-0.2, 0.2),
     );
-    this.world.addMass(block);
+    world.addMass(block);
     // Land scale −0.65, canMove:false (`BuoyancyLabModel.ts`).
     initScaleBodies(landX: -0.65, landCanMove: false);
-    this.world.pool.computeFluidY([block]);
+    world.pool.computeFluidY([block]);
     lifecycle = ScreenModelLifecycle.idle;
   }
 

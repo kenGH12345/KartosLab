@@ -139,6 +139,19 @@ class ChartIntroVisuals {
   /// 手风琴标题。[已确认] `partialNuclideChart`
   static const String partialNuclideChartTitle = 'Partial Nuclide Chart';
 
+  /// [已确认] `NuclearShellModelText`
+  static const String nuclearShellModelLabel = 'Nuclear Shell Model';
+
+  /// [已确认] Nuclear Shell 高亮底 rgb(189,255,255)
+  static const Color nuclearShellModelFill = Color(0xFFBDFFFF);
+
+  static const String energyAxisLabel = 'Energy';
+
+  static const String magicNumbersLabel = 'Magic Numbers';
+
+  /// 图例标题。[已确认] `mostLikelyDecayType`
+  static const String legendTitle = mostLikelyDecayType;
+
   /// 手风琴底。[已确认] `chartAccordionBoxBackgroundColorProperty` WHITE
   static const Color chartAccordionFill = Color(0xFFFFFFFF);
 

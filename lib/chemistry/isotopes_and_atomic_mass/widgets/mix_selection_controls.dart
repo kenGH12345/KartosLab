@@ -2,6 +2,7 @@
 library;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../controller/mixtures_controller.dart';
 import '../model/interactivity_mode.dart';
@@ -172,61 +173,72 @@ class _AquaPainter extends CustomPainter {
       oldDelegate.selected != selected;
 }
 
-/// EraserButton stand-in — yellow panel + eraser glyph (no Material Icons.refresh).
+/// PhET scenery-phet EraserButton: yellow RectangularPushButton + eraser.svg.
 class MixEraserButton extends StatelessWidget {
   const MixEraserButton({super.key, required this.onPressed});
 
   final VoidCallback onPressed;
 
+  /// scenery-phet `PhetColorScheme.BUTTON_YELLOW`
+  static const Color _baseYellow = Color(0xFFEEF422);
+
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: const Color(0xFFFEFF99), // DISPLAY_PANEL
-      elevation: 2,
-      borderRadius: BorderRadius.circular(4),
+      color: Colors.transparent,
       child: InkWell(
         onTap: onPressed,
-        borderRadius: BorderRadius.circular(4),
-        child: SizedBox(
-          width: 40,
-          height: 40,
-          child: CustomPaint(painter: _EraserGlyphPainter()),
+        borderRadius: BorderRadius.circular(5),
+        child: CustomPaint(
+          painter: const _YellowPushButtonPainter(_baseYellow),
+          child: SizedBox(
+            width: 42,
+            height: 36,
+            child: Center(
+              child: SvgPicture.asset(
+                'assets/phet/vector_addition/scenery_phet/eraser.svg',
+                width: 24,
+                height: 19,
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-class _EraserGlyphPainter extends CustomPainter {
+class _YellowPushButtonPainter extends CustomPainter {
+  const _YellowPushButtonPainter(this.base);
+
+  final Color base;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final cx = size.width / 2;
-    final cy = size.height / 2;
-    final path = Path()
-      ..moveTo(cx - 8, cy + 6)
-      ..lineTo(cx + 4, cy - 8)
-      ..lineTo(cx + 8, cy - 4)
-      ..lineTo(cx - 4, cy + 10)
-      ..close();
-    canvas.drawPath(path, Paint()..color = const Color(0xFFE91E63));
-    canvas.drawPath(
-      path,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..color = Colors.black87
-        ..strokeWidth = 1,
+    final r = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      const Radius.circular(5),
     );
-    canvas.drawLine(
-      Offset(cx - 6, cy + 8),
-      Offset(cx + 6, cy + 8),
+    canvas.drawRRect(r, Paint()..color = const Color(0xFF505050));
+    final inner = r.deflate(1);
+    canvas.drawRRect(
+      inner,
       Paint()
-        ..color = Colors.black54
-        ..strokeWidth = 2,
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.lerp(base, Colors.white, 0.45)!,
+            base,
+            Color.lerp(base, Colors.black, 0.18)!,
+          ],
+        ).createShader(inner.outerRect),
     );
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _YellowPushButtonPainter oldDelegate) =>
+      oldDelegate.base != base;
 }
 
 class _MiniBucketIconPainter extends CustomPainter {

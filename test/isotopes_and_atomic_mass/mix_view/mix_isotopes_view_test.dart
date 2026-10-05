@@ -64,6 +64,45 @@ void main() {
       expect(c.model.totalIsotopeCount, 1);
     });
 
+    testWidgets('pointer drag on a bucket ball moves it into the chamber',
+        (tester) async {
+      final c = buildController();
+      tester.view.physicalSize = const Size(1536, 928);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MixIsotopesScreen(
+            controller: c,
+            embedded: true,
+            tickOnClock: false,
+          ),
+        ),
+      );
+      await tester.pump();
+
+      final id = c.model.bucketParticles
+          .firstWhere((p) => p.massNumber == 1)
+          .id;
+      final ball = find.byKey(ValueKey('mix_particle_$id'));
+      expect(ball, findsOneWidget);
+
+      final start = tester.getCenter(ball);
+      final gesture = await tester.startGesture(start);
+      await tester.pump();
+      expect(c.model.isDragging, isTrue);
+      await gesture.moveBy(const Offset(0, -160));
+      await tester.pump();
+      await gesture.up();
+      await tester.pump();
+
+      expect(c.model.isDragging, isFalse);
+      expect(c.model.getIsotopeCount(1), 1);
+      expect(c.model.getBucketCount(1), 9);
+    });
+
     testWidgets('invalid drop returns to bucket', (tester) async {
       final c = buildController();
       final id = c.model.bucketParticles.first.id;

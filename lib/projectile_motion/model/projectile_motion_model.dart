@@ -103,17 +103,22 @@ class ProjectileMotionModel extends ChangeNotifier {
 
   // ── Setters（带语义）─────────────────────────────────────────────────
 
-  void setCannonHeight(double v) {
-    cannonHeight = v.clamp(
+  void setCannonHeight(double v, {bool notify = true}) {
+    final next = v.clamp(
         PmConstants.cannonHeightMin, PmConstants.cannonHeightMax);
+    var changed = (next - cannonHeight).abs() >= 1e-9;
+    cannonHeight = next;
     // CannonNode.ts:414-416 — height<4 时抬高角度下限
     if (cannonHeight < 4) {
-      final minAngle = PmConstants.angleRangeMins[cannonHeight.floor()];
+      final idx =
+          cannonHeight.floor().clamp(0, PmConstants.angleRangeMins.length - 1);
+      final minAngle = PmConstants.angleRangeMins[idx];
       if (cannonAngle < minAngle) {
         cannonAngle = minAngle.toDouble();
+        changed = true;
       }
     }
-    notifyListeners();
+    if (changed && notify) notifyListeners();
   }
 
   void setCannonAngle(double v) {

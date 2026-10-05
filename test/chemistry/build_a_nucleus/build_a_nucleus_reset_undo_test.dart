@@ -261,7 +261,7 @@ void main() {
       final canvas = tester.getRect(find.byKey(const ValueKey('ban_canvas')));
 
       final gesture =
-          await tester.startGesture(tester.getCenter(find.text('质子')));
+          await tester.startGesture(tester.getCenter(find.text('Protons')));
       await gesture.moveTo(canvas.center);
       await tester.pump();
       expect(c.state.draggedNucleons, hasLength(1));

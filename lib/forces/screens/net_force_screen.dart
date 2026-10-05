@@ -111,24 +111,41 @@ class _NetForceScreenState extends State<NetForceScreen>
     return homes[p.id] ?? const Offset(100, 450);
   }
 
+  static const double _pullerScale = 0.86;
+
+  /// Intrinsic PNG size × PhET PullerNode scale 0.86.
+  /// Leaning sprites are wider so hands reach the knot (pose 3).
   Size _pullerDisplaySize(Puller p) {
-    // PhET PullerNode scale 0.86 ? intrinsic PNG size.
+    final leaning = _pose(p) == 3;
     switch (p.size) {
       case PullerSize.large:
-        return const Size(86 * 0.86, 233 * 0.86); // ~74?200
+        return leaning
+            ? const Size(180 * _pullerScale, 160 * _pullerScale)
+            : const Size(86 * _pullerScale, 233 * _pullerScale);
       case PullerSize.medium:
-        return const Size(70 * 0.86, 195 * 0.86); // ~60?168
+        return leaning
+            ? const Size(153 * _pullerScale, 136 * _pullerScale)
+            : const Size(70 * _pullerScale, 195 * _pullerScale);
       case PullerSize.small:
-        return const Size(61 * 0.86, 141 * 0.86); // ~52?121
+        return leaning
+            ? const Size(91 * _pullerScale, 117 * _pullerScale)
+            : const Size(61 * _pullerScale, 141 * _pullerScale);
     }
   }
 
   Offset _attachedPos(Puller p) {
     final knotX = model.knotX(p.team, p.knotIndex!);
     final sz = _pullerDisplaySize(p);
-    // PhET: x = knot.x + offset + (blue?-50:0); y = knot.y - height + 90
-    final dx = p.team == PullerTeam.left ? -50.0 : 0.0;
-    return Offset(knotX + dx - sz.width / 2, NetForceConstants.knotY - sz.height + 90);
+    // PhET PullerNode.setKnotTranslation:
+    // x = knot.x + (pulling ? -dragOffsetX : standOffsetX) + (blue ? -50 : 0)
+    // y = knot.y - height + 90
+    final pulling = _pose(p) == 3;
+    final offset = pulling ? -p.dragOffsetX : p.standOffsetX;
+    final teamOffset = p.team == PullerTeam.left ? -50.0 : 0.0;
+    return Offset(
+      knotX + offset + teamOffset,
+      NetForceConstants.knotY - sz.height + 90,
+    );
   }
 
   Offset _pullerPos(Puller p) {
@@ -154,19 +171,8 @@ class _NetForceScreenState extends State<NetForceScreen>
   }
 
   int? _nearestKnot(Puller p, Offset local) {
-    final cy = local.dy + _pullerDisplaySize(p).height / 2;
-    if (cy > 370) return null; // too low ??home
-    int? best;
-    var bestDist = 220.0;
-    for (var i = 0; i < NetForceConstants.knotsPerSide; i++) {
-      final kx = model.knotX(p.team, i);
-      final d = (local.dx + _pullerDisplaySize(p).width / 2 - kx).abs();
-      if (d < bestDist) {
-        bestDist = d;
-        best = i;
-      }
-    }
-    return best;
+    // PhET uses the node translation (top-left), not the sprite center.
+    return model.targetKnot(p, local.dx, local.dy);
   }
 
   void _onDragEnd() {
@@ -176,6 +182,8 @@ class _NetForceScreenState extends State<NetForceScreen>
     setState(() {
       if (knot != null) {
         model.attachPuller(p, knot);
+      } else {
+        p.lastOnKnot = false;
       }
       dragging = null;
       dragPos = null;
@@ -468,7 +476,9 @@ class _NetForceScreenState extends State<NetForceScreen>
           transform: Matrix4.diagonal3Values(mirror ? -1.0 : 1.0, 1, 1),
           child: Image.asset(
             _pullerAsset(p),
-            fit: BoxFit.contain,
+            width: sz.width,
+            height: sz.height,
+            fit: BoxFit.fill,
             filterQuality: FilterQuality.medium,
             gaplessPlayback: true,
             errorBuilder: (_, _, _) => ColoredBox(

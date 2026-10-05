@@ -173,6 +173,13 @@ class GasSimulationController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void nudgeLidWidth(double dWidth) {
+    final c = model.container;
+    if (!c.lidIsOn) return;
+    c.setLidWidth(c.lidWidth + dWidth);
+    notifyListeners();
+  }
+
   /// LidHandleDragListener — sets lid width from model X of opening left edge.
   void setLidWidthFromOpeningLeft(double openingLeftPm) {
     final c = model.container;

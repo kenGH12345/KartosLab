@@ -56,6 +56,21 @@ class ChartIntroState {
   bool _disposed = false;
   bool get isDisposed => _disposed;
 
+  /// 与 Decay 共用 BANScreenView：不存在核素展示 1 秒后回到上一有效计数。
+  bool correctingNonexistentNuclide = true;
+  double _invalidNuclideElapsed = 0;
+  int _previousValidProtonCount = 0;
+  int _previousValidNeutronCount = 0;
+  bool draggingFromCreator = false;
+
+  void markCurrentAsValid() {
+    if (_disposed) return;
+    if (!nuclideExists && !isEmptyNucleus) return;
+    _previousValidProtonCount = protonCount;
+    _previousValidNeutronCount = neutronCount;
+    _invalidNuclideElapsed = 0;
+  }
+
   /// 无 Property listener。dispose 只作门闩，避免 issue #220 式重入更新。
   void dispose() {
     _disposed = true;
@@ -213,6 +228,33 @@ class ChartIntroState {
     if (_disposed) return;
     shell.clear();
     selectedChart = ChartIntroChartType.partial;
+    correctingNonexistentNuclide = true;
+    _invalidNuclideElapsed = 0;
+    _previousValidProtonCount = 0;
+    _previousValidNeutronCount = 0;
+    draggingFromCreator = false;
+  }
+
+  /// [已确认] `BANScreenView.step`：`timeToShowDoesNotExist` 后回退。
+  bool stepInvalidNuclideRollback(double dt) {
+    if (_disposed) return false;
+    if (!nuclideExists && !isEmptyNucleus && correctingNonexistentNuclide) {
+      _invalidNuclideElapsed += dt;
+    } else {
+      _invalidNuclideElapsed = 0;
+      _previousValidProtonCount = protonCount;
+      _previousValidNeutronCount = neutronCount;
+    }
+    if (_invalidNuclideElapsed >= BanConstants.timeToShowDoesNotExist &&
+        !draggingFromCreator) {
+      _invalidNuclideElapsed = 0;
+      restoreNucleonCounts(
+        _previousValidProtonCount,
+        _previousValidNeutronCount,
+      );
+      return true;
+    }
+    return false;
   }
 
   /// 对标 NucleonCreatorsNode.createArrowEnabledProperty，范围改为 Chart 上限。
@@ -222,6 +264,7 @@ class ChartIntroState {
     required bool proton,
     bool both = false,
   }) {
+    if (draggingFromCreator) return false;
     final p = protonCount;
     final n = neutronCount;
 

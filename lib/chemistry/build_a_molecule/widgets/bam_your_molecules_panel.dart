@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../bam_constants.dart';
 import '../controller/bam_controller.dart';
@@ -35,6 +36,11 @@ class BamYourMoleculesPanel extends StatelessWidget {
         return Material(
           color: BamConstants.moleculeCollectionBackground,
           elevation: 2,
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: Color(0xFFBDBDBD)),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -110,22 +116,10 @@ class BamYourMoleculesPanel extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 0, 8, 10),
                 child: Center(
-                  child: Material(
-                    color: hasAnyCollected
-                        ? Colors.orange
-                        : Colors.orange.shade200,
-                    borderRadius: BorderRadius.circular(6),
-                    child: InkWell(
-                      onTap: hasAnyCollected
-                          ? controller.resetCollection
-                          : null,
-                      borderRadius: BorderRadius.circular(6),
-                      child: const Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 18, vertical: 8),
-                        child: Icon(Icons.refresh, size: 22),
-                      ),
-                    ),
+                  child: _BamCollectionRefreshButton(
+                    onPressed: hasAnyCollected
+                        ? controller.resetCollection
+                        : null,
                   ),
                 ),
               ),
@@ -338,4 +332,110 @@ class _CueArrowPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+/// scenery-phet `RefreshButton` as used by BAM `CollectionAreaNode`:
+/// `iconHeight: 20`, `xMargin: 15`, `yMargin: 5`, `baseColor: Color.ORANGE`,
+/// content = sun `syncShape` (not Material `Icons.refresh`).
+class _BamCollectionRefreshButton extends StatefulWidget {
+  const _BamCollectionRefreshButton({this.onPressed});
+
+  final VoidCallback? onPressed;
+
+  /// scenery `Color.ORANGE` (`#FFA500`).
+  static const Color _base = Color(0xFFFFA500);
+
+  /// sun `js/shapes/syncShape.ts`.
+  static const String _syncPath =
+      'M23.82,4.64C21.27,1.74,17.57,0,13.52,0,6.84,0,1.18,4.8.01,11.29c-.08.45.26.87.71.87h2.21c.36,0,.65-.26.72-.62.85-4.74,4.96-7.89,9.87-7.89,3.05,0,5.84,1.34,7.71,3.58l-2.51,2.51c-.71.71-.21,1.93.8,1.93h7.37c.63,0,1.13-.51,1.13-1.13V3.17c0-1.01-1.22-1.52-1.93-.8l-2.28,2.28Z M4.21,24.52c2.55,2.91,6.25,4.64,10.3,4.64,6.68,0,12.34-4.8,13.51-11.29.08-.45-.26-.87-.71-.87h-2.21c-.36,0-.65.26-.72.62-.85,4.74-4.96,7.89-9.87,7.89-3.05,0-5.84-1.34-7.71-3.58l2.51-2.51c.71-.71.21-1.93-.8-1.93H1.13c-.63,0-1.13.51-1.13,1.13v7.37c0,1.01,1.22,1.52,1.93.8l2.28-2.28Z';
+
+  static const String _syncSvg =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28.03 29.16">'
+      '<path fill="#000000" d="$_syncPath"/></svg>';
+
+  @override
+  State<_BamCollectionRefreshButton> createState() =>
+      _BamCollectionRefreshButtonState();
+}
+
+class _BamCollectionRefreshButtonState
+    extends State<_BamCollectionRefreshButton> {
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = widget.onPressed != null;
+    return Opacity(
+      opacity: enabled ? 1 : 0.45,
+      child: GestureDetector(
+        onTapDown: enabled ? (_) => setState(() => _pressed = true) : null,
+        onTapCancel: () => setState(() => _pressed = false),
+        onTapUp: enabled
+            ? (_) {
+                setState(() => _pressed = false);
+                widget.onPressed?.call();
+              }
+            : null,
+        child: Transform.scale(
+          scale: _pressed ? 0.96 : 1,
+          child: CustomPaint(
+            painter: const _Rect3DPushPainter(_BamCollectionRefreshButton._base),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+              child: SizedBox(
+                height: 20,
+                width: 20 * (28.03 / 29.16),
+                child: SvgPicture.string(
+                  _BamCollectionRefreshButton._syncSvg,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// sun `RectangularButton.ThreeDAppearanceStrategy` (light from upper-left).
+class _Rect3DPushPainter extends CustomPainter {
+  const _Rect3DPushPainter(this.base);
+
+  final Color base;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      const Radius.circular(4),
+    );
+    final stroke = Color.lerp(base, Colors.black, 0.4)!;
+    canvas.drawRRect(
+      r,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 0.5
+        ..color = stroke,
+    );
+    canvas.drawRRect(
+      r,
+      Paint()
+        ..shader = LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.lerp(base, Colors.white, 0.55)!,
+            Color.lerp(base, Colors.white, 0.2)!,
+            base,
+            Color.lerp(base, Colors.black, 0.22)!,
+          ],
+          stops: const [0.0, 0.22, 0.72, 1.0],
+        ).createShader(r.outerRect),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _Rect3DPushPainter oldDelegate) =>
+      oldDelegate.base != base;
 }

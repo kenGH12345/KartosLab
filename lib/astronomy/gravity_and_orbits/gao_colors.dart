@@ -17,6 +17,10 @@ class GaoColors {
   static const Color velocity = GaoConstants.velocity;
   static const Color vectorOutline = GaoConstants.vectorOutline;
   static const Color returnObjectsBg = GaoConstants.returnObjectsBg;
+  static const Color starPath = GaoConstants.starPath;
+  static const Color planetPath = GaoConstants.planetPath;
+  static const Color moonPath = GaoConstants.moonPath;
+  static const Color satellitePath = GaoConstants.satellitePath;
 
   /// PhET time-control round button fill.
   static const Color playBlue = Color(0xFF6DCEF8);

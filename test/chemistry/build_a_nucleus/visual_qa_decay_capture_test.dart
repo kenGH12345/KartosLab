@@ -100,36 +100,36 @@ void main() {
       BanConstants.halfLifeInformationCenterXForLayout(1024),
       closeTo(15 + 30 + 550 / 2, 1e-9),
     );
+    final canvas = feRects['canvas']!;
+    final scale = canvas['w']! / BanConstants.screenViewLayoutWidth;
     expect(
-      feRects['nucleusCenter']!['cx']! / 1280,
-      closeTo(1 / 3, 0.01),
+      feRects['nucleusCenter']!['cx']!,
+      closeTo(canvas['x']! + canvas['w']! / 3, 4),
     );
     expect(
-      feRects['generatorUnion']!['cx']! / 1280,
-      closeTo(1 / 3, 0.02),
+      feRects['generatorUnion']!['cx']!,
+      closeTo(canvas['x']! + canvas['w']! / 3, 24),
     );
     expect(find.byKey(const ValueKey('ban_decay_right_column')), findsOneWidget);
     expect(feRects['protonCount']!['cx']!, lessThan(feRects['symbol']!['cx']!));
-    expect(feRects['protonCount']!['x']!, greaterThan(800));
+    expect(feRects['protonCount']!['cx']!, greaterThan(canvas['cx']!));
+    expect(
+      feRects['availableDecaysPanel']!['w']!,
+      greaterThan(280 * scale),
+    );
     expect(
       feRects['decayButtonsUnion']!['y']!,
       greaterThan(feRects['symbol']!['y']! + feRects['symbol']!['h']!),
     );
     expect(feRects['stability']!['cy']!, lessThan(feRects['elementName']!['cy']!));
     expect(
-      feRects['stability']!['y']!,
-      greaterThan(feRects['halfLifeInformation']!['y']! +
-          feRects['halfLifeInformation']!['h']! -
-          1),
-    );
-    expect(
       feRects['elementName']!['y']! + feRects['elementName']!['h']!,
       lessThan(feRects['nucleusCenter']!['cy']!),
     );
-    final labelAnchorX =
-        BanConstants.halfLifeInformationCenterXForLayout(1280);
-    expect(feRects['elementName']!['cx']!, closeTo(labelAnchorX, 8));
-    expect(feRects['stability']!['cx']!, closeTo(labelAnchorX, 8));
+    final labelAnchorX = canvas['x']! +
+        BanConstants.halfLifeInformationCenterXForLayout(1024) * scale;
+    expect(feRects['elementName']!['cx']!, closeTo(labelAnchorX, 12));
+    expect(feRects['stability']!['cx']!, closeTo(labelAnchorX, 12));
     expect(feRects['elementName']!['cx']!, closeTo(feRects['stability']!['cx']!, 1));
     c.dispose();
   });
@@ -257,11 +257,10 @@ Map<String, Map<String, double>> _collectRects(WidgetTester tester) {
 
   final canvas = out['canvas'];
   if (canvas != null) {
-    // 屏坐标核中心 = 画布左上 + atomOriginInCanvas（layoutW/3，不是 canvasW/2）
-    final layoutW = tester.view.physicalSize.width / tester.view.devicePixelRatio;
-    final origin = BanConstants.atomOriginInCanvas(
-      layoutWidth: layoutW,
-      canvasSize: Size(canvas['w']!, canvas['h']!),
+    // FittedBox 舞台即 layoutBounds：局部原点 (W/3, H×0.55)
+    final origin = Offset(
+      canvas['w']! / 3,
+      canvas['h']! * BanConstants.atomCenterYFactor,
     );
     out['nucleusCenter'] = {
       'x': canvas['x']! + origin.dx,

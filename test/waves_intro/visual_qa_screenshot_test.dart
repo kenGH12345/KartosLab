@@ -43,17 +43,20 @@ void main() {
     final canvas = Canvas(recorder);
     canvas.drawRect(
       const Rect.fromLTWH(0, 0, layoutW, layoutH),
-      Paint()..color = const Color(0xFFE8E8E8),
+      Paint()..color = const Color(0xFFFFFFFF),
     );
 
-    final waveOrigin = const Offset(48, pad);
+    final waveOrigin = const Offset(
+      WavesIntroConstants.waveAreaLeft,
+      WavesIntroConstants.waveAreaTop,
+    );
     Color bg;
     if (vis.kind == SceneKind.light) {
       bg = Colors.black;
     } else if (vis.kind == SceneKind.sound) {
       bg = const Color(0xFF4A4A4A);
     } else {
-      bg = const Color(0xFFB8DFF5);
+      bg = const Color(WavesIntroConstants.waterLatticeBaseArgb);
     }
     canvas.drawRect(
       Rect.fromLTWH(waveOrigin.dx, waveOrigin.dy, wave, wave),

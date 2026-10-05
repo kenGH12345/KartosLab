@@ -50,6 +50,7 @@ void main() {
       }
       expect(vis.showWaterSideView, isTrue);
       expect(vis.showWaves, isFalse);
+      expect(vis.showFaucet, isTrue);
     });
   });
 

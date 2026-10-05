@@ -62,6 +62,7 @@ void main() {
     String name,
     Widget child, {
     Future<void> Function(WidgetTester)? prepare,
+    Future<void> Function(WidgetTester)? interact,
   }) async {
     Directory(outDir).createSync(recursive: true);
     tester.view.physicalSize = viewport;
@@ -90,6 +91,9 @@ void main() {
     for (var i = 0; i < 20; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
+    if (interact != null) {
+      await interact(tester);
+    }
 
     await tester.runAsync(() async {
       final boundary =
@@ -109,6 +113,24 @@ void main() {
       'NF_default',
       const NetForceScreen(),
       prepare: precacheNetForce,
+    );
+  }, timeout: const Timeout(Duration(seconds: 90)));
+
+  testWidgets('NF_pulling', (tester) async {
+    await capture(
+      tester,
+      'NF_pulling',
+      const NetForceScreen(),
+      prepare: precacheNetForce,
+      interact: (t) async {
+        await t.dragFrom(const Offset(70, 480), const Offset(-8, -195));
+        await t.pump();
+        await t.dragFrom(const Offset(900, 480), const Offset(20, -180));
+        await t.pump();
+        await t.tapAt(const Offset(490.5, 450));
+        await t.pump();
+        await t.pump(const Duration(milliseconds: 400));
+      },
     );
   }, timeout: const Timeout(Duration(seconds: 90)));
 

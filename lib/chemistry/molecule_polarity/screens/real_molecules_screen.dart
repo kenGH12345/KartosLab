@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+
 import '../controller/molecule_polarity_controller.dart';
 import '../model/mp_preferences.dart';
 import '../model/mp_vector2.dart';
@@ -12,7 +14,6 @@ import '../mp_strings.dart';
 import '../painters/mp_scene_painters.dart';
 import '../painters/real_molecule_mesh_painter.dart';
 import '../widgets/mp_controls.dart';
-import '../widgets/mp_reset_all_button.dart';
 import '../widgets/mp_simulation_shell.dart';
 
 class RealMoleculesScreenBody extends StatefulWidget {
@@ -35,6 +36,8 @@ class RealMoleculesScreenBody extends StatefulWidget {
 class _RealMoleculesScreenBodyState extends State<RealMoleculesScreenBody> {
   RealMoleculesModel? _model;
   String? _error;
+  int? _grabAtom;
+  Offset? _dragPrev;
 
   @override
   void initState() {
@@ -77,14 +80,40 @@ class _RealMoleculesScreenBodyState extends State<RealMoleculesScreenBody> {
       child: Stack(
         children: [
           Positioned.fill(
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onPanUpdate: (d) {
-                setState(() => model.applyDrag(d.delta.dx, d.delta.dy));
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final center = Offset(
+                  constraints.maxWidth / 2,
+                  constraints.maxHeight / 2 - 20,
+                );
+                return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onPanStart: (d) {
+                    _grabAtom = model.hitTestAtom(d.localPosition, center);
+                    _dragPrev = d.localPosition;
+                  },
+                  onPanUpdate: (d) {
+                    if (_grabAtom == null) return;
+                    final prev = _dragPrev ?? d.localPosition;
+                    _dragPrev = d.localPosition;
+                    setState(
+                      () => model.applyArcball(prev, d.localPosition, center),
+                    );
+                  },
+                  onPanEnd: (_) {
+                    _grabAtom = null;
+                    _dragPrev = null;
+                  },
+                  onPanCancel: () {
+                    _grabAtom = null;
+                    _dragPrev = null;
+                  },
+                  child: CustomPaint(
+                    painter:
+                        _RealMoleculePainter(model: model, flipDipole: flip),
+                  ),
+                );
               },
-              child: CustomPaint(
-                painter: _RealMoleculePainter(model: model, flipDipole: flip),
-              ),
             ),
           ),
           Positioned(
@@ -211,8 +240,9 @@ class _RealMoleculesScreenBodyState extends State<RealMoleculesScreenBody> {
           Positioned(
             right: MpConstants.horizontalMargin,
             bottom: MpConstants.verticalMargin,
-            child: MpResetAllButton(
+            child: KratosResetAllButton(
               onPressed: () => setState(model.reset),
+              radius: 20.5,
             ),
           ),
           const Positioned(
@@ -274,7 +304,14 @@ class _RealMoleculePainter extends CustomPainter {
       final bond = mol.bonds[i];
       final p0 = projected[bond.indexA];
       final p1 = projected[bond.indexB];
-      BondPainter.paint(canvas, a: p0, b: p1, width: 10);
+      BondPainter.paintCylinder(
+        canvas,
+        a: p0,
+        b: p1,
+        radiusA: atomDisplayRadius(mol.atoms[bond.indexA].symbol) * scale,
+        radiusB: atomDisplayRadius(mol.atoms[bond.indexB].symbol) * scale,
+        cylinderRadius: 7.5,
+      );
       if (model.viewProperties.bondDipolesVisible &&
           bond.dipoleMagnitude > 1e-6) {
         final mid = Offset((p0.dx + p1.dx) / 2, (p0.dy + p1.dy) / 2);

@@ -30,6 +30,8 @@ class BuoyancyWorld {
   static const double startDragOffset = 0.0001;
   static const double viscosity = 8.0;
   static const double slip = 0.01;
+  /// Block-block contact; pool walls keep [slip].
+  static const double contactSlop = 1e-4;
   static const double restitution = 0;
 
   static const double scaleWidth = 0.15;
@@ -66,6 +68,9 @@ class BuoyancyWorld {
       );
     }
 
+    // Floor first, then stacks: colliding before the floor lets the support
+    // sink, then the floor shoves it back into the cube above (visible bounce).
+    _applyBoundaries(next, grabbedId);
     _resolveBlockCollisions(next, grabbedId);
     _applyBoundaries(next, grabbedId);
 
@@ -223,76 +228,107 @@ class BuoyancyWorld {
     }
   }
 
+  static double _half(DensityBlock block) =>
+      DensityRelation.cubeSideLength(block.volume) / 2;
+
+  static double _groundY(DensityBlock block) {
+    final x = block.position.x;
+    final inPoolX = x > DensityMvt.poolMinX && x < DensityMvt.poolMaxX;
+    return inPoolX ? DensityMvt.poolMinY : 0.0;
+  }
+
+  static double _overlapX(DensityBlock a, double halfA, DensityBlock b, double halfB) {
+    return math.min(a.position.x + halfA, b.position.x + halfB) -
+        math.max(a.position.x - halfA, b.position.x - halfB);
+  }
+
+  static double _overlapY(DensityBlock a, double halfA, DensityBlock b, double halfB) {
+    return math.min(a.position.y + halfA, b.position.y + halfB) -
+        math.max(a.position.y - halfA, b.position.y - halfB);
+  }
+
   static void _resolveBlockCollisions(List<DensityBlock> blocks, String? grabbedId) {
-    final passes = grabbedId == null ? 3 : 1;
-    for (var pass = 0; pass < passes; pass++) {
-      for (var i = 0; i < blocks.length; i++) {
-        for (var j = i + 1; j < blocks.length; j++) {
-          var a = blocks[i];
-          var b = blocks[j];
-          if (!a.visible || !b.visible) continue;
+    _snapVerticalStacks(blocks, grabbedId);
+    _separateSideBySide(blocks, grabbedId);
+  }
 
-          final sideA = DensityRelation.cubeSideLength(a.volume);
-          final sideB = DensityRelation.cubeSideLength(b.volume);
-          final halfA = sideA / 2;
-          final halfB = sideB / 2;
+  /// Lowest cubes first; each ungrabbed cube rests on the highest support under it.
+  static void _snapVerticalStacks(List<DensityBlock> blocks, String? grabbedId) {
+    final order = [for (var i = 0; i < blocks.length; i++) i]
+      ..sort((i, j) => blocks[i].position.y.compareTo(blocks[j].position.y));
+    for (final i in order) {
+      final block = blocks[i];
+      if (!block.visible || block.id == grabbedId) continue;
+      final half = _half(block);
+      var supportTop = _groundY(block);
+      for (final j in order) {
+        if (j == i) break;
+        final other = blocks[j];
+        if (!other.visible) continue;
+        final halfO = _half(other);
+        if (_overlapX(block, half, other, halfO) <= 0) continue;
+        supportTop = math.max(supportTop, other.position.y + halfO);
+      }
+      final bottom = block.position.y - half;
+      if (bottom < supportTop) {
+        blocks[i] = block.copyWith(
+          position: DensityVec(block.position.x, supportTop + half),
+          velocity: DensityVec(block.velocity.x * 0.8, 0),
+        );
+      }
+    }
+  }
 
-          final overlapX = math.min(a.position.x + halfA, b.position.x + halfB) -
-              math.max(a.position.x - halfA, b.position.x - halfB);
-          final overlapY = math.min(a.position.y + halfA, b.position.y + halfB) -
-              math.max(a.position.y - halfA, b.position.y - halfB);
+  static void _separateSideBySide(List<DensityBlock> blocks, String? grabbedId) {
+    for (var i = 0; i < blocks.length; i++) {
+      for (var j = i + 1; j < blocks.length; j++) {
+        var a = blocks[i];
+        var b = blocks[j];
+        if (!a.visible || !b.visible) continue;
+        final halfA = _half(a);
+        final halfB = _half(b);
+        final overlapX = _overlapX(a, halfA, b, halfB);
+        final overlapY = _overlapY(a, halfA, b, halfB);
+        if (overlapX <= contactSlop || overlapY <= contactSlop) continue;
 
-          // AABB overlap requires positive extent on both axes. Stacked blocks
-          // touching only in Y have overlapY≈0 and must not trigger separation
-          // (was pushing the support block sideways every frame → oscillation).
-          if (overlapX <= slip || overlapY <= slip) continue;
+        final stacked =
+            (a.position.y - b.position.y).abs() >= (halfA + halfB) * 0.45;
+        if (stacked) continue;
 
-          final aGrabbed = a.id == grabbedId;
-          final bGrabbed = b.id == grabbedId;
-          if (aGrabbed && bGrabbed) continue;
+        final aGrabbed = a.id == grabbedId;
+        final bGrabbed = b.id == grabbedId;
+        if (aGrabbed && bGrabbed) continue;
 
-          if (aGrabbed || bGrabbed) {
-            final grabbed = aGrabbed ? a : b;
-            final other = aGrabbed ? b : a;
-            final resolved = _separateUngrabbedFromGrabbed(
-              grabbed: grabbed,
-              other: other,
-              overlapX: overlapX,
-              overlapY: overlapY,
-            );
-            if (aGrabbed) {
-              a = resolved.$1;
-              b = resolved.$2;
-            } else {
-              a = resolved.$2;
-              b = resolved.$1;
-            }
-          } else if (overlapX > slip && overlapY > slip) {
-            if (overlapX < overlapY) {
-              final push = math.max(overlapX - slip, 0.0);
-              if (push > 0) {
-                final sign = a.position.x >= b.position.x ? 1 : -1;
-                a = _shiftBlock(a, push / 2 * sign, 0);
-                b = _shiftBlock(b, push / 2 * -sign, 0);
-                a = _dampVelocity(a, vxFactor: 0.5);
-                b = _dampVelocity(b, vxFactor: 0.5);
-              }
-            } else {
-              // Stacked face contact: only lift the upper block; pushing the
-              // support block down fights the floor and causes Y oscillation.
-              final push = math.max(overlapY - slip, 0.0);
-              if (push > 0) {
-                if (a.position.y >= b.position.y) {
-                  a = _shiftBlockWithAxisDamping(a, 0, push, dampVy: true);
-                } else {
-                  b = _shiftBlockWithAxisDamping(b, 0, push, dampVy: true);
-                }
-              }
-            }
+        if (aGrabbed || bGrabbed) {
+          final grabbed = aGrabbed ? a : b;
+          final other = aGrabbed ? b : a;
+          final resolved = _separateUngrabbedFromGrabbed(
+            grabbed: grabbed,
+            other: other,
+            overlapX: overlapX,
+            overlapY: overlapY,
+            halfGrabbed: aGrabbed ? halfA : halfB,
+            halfOther: aGrabbed ? halfB : halfA,
+          );
+          if (aGrabbed) {
+            a = resolved.$1;
+            b = resolved.$2;
+          } else {
+            a = resolved.$2;
+            b = resolved.$1;
           }
-          blocks[i] = a;
-          blocks[j] = b;
+        } else {
+          final push = math.max(overlapX - contactSlop, 0.0);
+          if (push > 0) {
+            final sign = a.position.x >= b.position.x ? 1 : -1;
+            a = _shiftBlock(a, push / 2 * sign, 0);
+            b = _shiftBlock(b, push / 2 * -sign, 0);
+            a = _dampVelocity(a, vxFactor: 0.5);
+            b = _dampVelocity(b, vxFactor: 0.5);
+          }
         }
+        blocks[i] = a;
+        blocks[j] = b;
       }
     }
   }
@@ -307,20 +343,33 @@ class BuoyancyWorld {
     required DensityBlock other,
     required double overlapX,
     required double overlapY,
+    required double halfGrabbed,
+    required double halfOther,
   }) {
+    final grabbedAbove = grabbed.position.y > other.position.y &&
+        (grabbed.position.y - other.position.y) >=
+            (halfGrabbed + halfOther) * 0.45;
+    // Resting on / dropping onto a support: do not kick the lower cube sideways.
+    if (grabbedAbove) {
+      final push = math.max(overlapY - contactSlop, 0.0);
+      if (push <= 0) return (grabbed, other);
+      return (
+        _shiftBlockWithAxisDamping(grabbed, 0, push, dampVy: true),
+        other,
+      );
+    }
     final useX = overlapX <= overlapY;
     if (useX) {
       final away = grabbed.position.x >= other.position.x ? -1.0 : 1.0;
-      final push = math.max(overlapX - slip, 0.0);
+      final push = math.max(overlapX - contactSlop, 0.0);
       if (push <= 0) return (grabbed, other);
       return (
         grabbed,
         _shiftBlockWithAxisDamping(other, push * away, 0, dampVx: true),
       );
     }
-    final push = math.max(overlapY - slip, 0.0);
+    final push = math.max(overlapY - contactSlop, 0.0);
     if (push <= 0) return (grabbed, other);
-    // Support below grabbed: lift grabbed instead of pushing floor block down.
     if (other.position.y < grabbed.position.y) {
       return (
         _shiftBlockWithAxisDamping(grabbed, 0, push, dampVy: true),

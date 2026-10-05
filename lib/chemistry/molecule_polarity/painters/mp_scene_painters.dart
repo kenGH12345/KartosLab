@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 
@@ -211,29 +212,26 @@ class AtomPainter {
   }) {
     final rect = Rect.fromCircle(center: center, radius: radius);
     if (lambert) {
-      // Approximate MeshLambert: ambient ~0.45 + diffuse from upper-left sun.
-      final highlight = Color.lerp(Colors.white, color, 0.08)!;
-      final mid = color;
-      final shade = Color.lerp(color, const Color(0xFF333333), 0.45)!;
-      final gradient = RadialGradient(
-        center: const Alignment(-0.45, -0.55),
-        radius: 1.05,
-        colors: [highlight, mid, shade],
-        stops: const [0.0, 0.45, 1.0],
+      // Three.js MeshPhong on Real Molecules: tight specular, no flat stroke.
+      final highlight = Offset(
+        center.dx - radius * 0.32,
+        center.dy - radius * 0.40,
       );
-      canvas.drawCircle(
-        center,
-        radius,
-        Paint()..shader = gradient.createShader(rect),
-      );
-      // Soft rim (no heavy black stroke — Three.js spheres have no flat stroke).
       canvas.drawCircle(
         center,
         radius,
         Paint()
-          ..color = Colors.black.withValues(alpha: 0.18)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 1,
+          ..shader = ui.Gradient.radial(
+            highlight,
+            radius * 1.4,
+            [
+              Colors.white,
+              Color.lerp(Colors.white, color, 0.22)!,
+              color,
+              Color.lerp(color, const Color(0xFF1A1A1A), 0.42)!,
+            ],
+            const [0.0, 0.16, 0.52, 1.0],
+          ),
       );
     } else {
       final gradient = RadialGradient(
@@ -300,6 +298,52 @@ class BondPainter {
         ..color = MpColors.bond
         ..strokeWidth = width
         ..strokeCap = StrokeCap.round,
+    );
+  }
+
+  /// Jmol / Three.js cylinder between two spheres (Real Molecules).
+  static void paintCylinder(
+    Canvas canvas, {
+    required Offset a,
+    required Offset b,
+    required double radiusA,
+    required double radiusB,
+    double cylinderRadius = 8,
+  }) {
+    final dx = b.dx - a.dx;
+    final dy = b.dy - a.dy;
+    final len = math.sqrt(dx * dx + dy * dy);
+    if (len < 1) return;
+    final ux = dx / len;
+    final uy = dy / len;
+    final insetA = radiusA * 0.62;
+    final insetB = radiusB * 0.62;
+    if (len <= insetA + insetB) return;
+    final p0 = Offset(a.dx + ux * insetA, a.dy + uy * insetA);
+    final p1 = Offset(b.dx - ux * insetB, b.dy - uy * insetB);
+    final mx = (p0.dx + p1.dx) / 2;
+    final my = (p0.dy + p1.dy) / 2;
+    // Lighting across the tube (perpendicular to bond).
+    final px = -uy * cylinderRadius;
+    final py = ux * cylinderRadius;
+    canvas.drawLine(
+      p0,
+      p1,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset(mx - px, my - py),
+          Offset(mx + px, my + py),
+          const [
+            Color(0xFFFFFFFF),
+            Color(0xFFE4E4E4),
+            Color(0xFF9A9A9A),
+            Color(0xFF6E6E6E),
+          ],
+          const [0.0, 0.28, 0.72, 1.0],
+        )
+        ..strokeWidth = cylinderRadius * 2
+        ..strokeCap = StrokeCap.butt
+        ..style = PaintingStyle.stroke,
     );
   }
 }
@@ -410,48 +454,107 @@ class Surface2dPainter {
 }
 
 class PlatesPainter {
+  /// HBox width of `PlatesNode`: two `PlateNode`s plus [spacing].
+  static double hboxWidth(double spacing) =>
+      (MpConstants.plateWidth + MpConstants.plateThickness) * 2 + spacing;
+
+  /// Right edge of the positive plate (outer thickness).
+  static double rightEdge({
+    required double moleculeX,
+    required double spacing,
+  }) =>
+      moleculeX + hboxWidth(spacing) / 2;
+
   static void paint(
     Canvas canvas, {
-    required Size layoutSize,
+    required Offset moleculeCenter,
     required double spacing,
   }) {
-    const plateW = 40.0;
-    const plateH = 280.0;
-    final cy = layoutSize.height / 2;
-    final left = Offset(layoutSize.width / 2 - spacing / 2, cy);
-    final right = Offset(layoutSize.width / 2 + spacing / 2, cy);
-    final paint = Paint()..color = MpColors.plate;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromCenter(center: left, width: plateW, height: plateH),
-        const Radius.circular(4),
-      ),
-      paint,
+    const w = MpConstants.plateWidth;
+    const h = MpConstants.plateHeight;
+    const t = MpConstants.plateThickness;
+    const yOff = MpConstants.platePerspectiveYOffset;
+    final nodeW = w + t;
+    final total = nodeW * 2 + spacing;
+    final left = moleculeCenter.dx - total / 2;
+    final top = moleculeCenter.dy - h / 2;
+
+    // Negative plate: `PlateNode` scale(-1, 1) so thickness faces outward.
+    canvas.save();
+    canvas.translate(left + nodeW, top);
+    canvas.scale(-1, 1);
+    _positivePlateGeom(canvas);
+    canvas.restore();
+    _polarityIndicator(
+      canvas,
+      Offset(left + nodeW / 2, top + yOff / 2 - 40),
+      positive: false,
     );
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromCenter(center: right, width: plateW, height: plateH),
-        const Radius.circular(4),
-      ),
-      paint,
+
+    canvas.save();
+    canvas.translate(left + nodeW + spacing, top);
+    _positivePlateGeom(canvas);
+    canvas.restore();
+    _polarityIndicator(
+      canvas,
+      Offset(left + nodeW + spacing + nodeW / 2, top + yOff / 2 - 40),
+      positive: true,
     );
-    // Polarity indicators + / −
-    _polarity(canvas, left, '+');
-    _polarity(canvas, right, '−');
   }
 
-  static void _polarity(Canvas canvas, Offset center, String s) {
-    final tp = TextPainter(
-      text: TextSpan(
-        text: s,
-        style: const TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    )..layout();
-    tp.paint(canvas, Offset(center.dx - tp.width / 2, center.dy - tp.height / 2));
+  /// Face + edge of a positive plate, origin at local (0,0). `PlateNode.ts`.
+  static void _positivePlateGeom(Canvas canvas) {
+    const w = MpConstants.plateWidth;
+    const h = MpConstants.plateHeight;
+    const t = MpConstants.plateThickness;
+    const yOff = MpConstants.platePerspectiveYOffset;
+    final face = Path()
+      ..moveTo(0, yOff)
+      ..lineTo(w, 0)
+      ..lineTo(w, h)
+      ..lineTo(0, yOff + (h - 2 * yOff))
+      ..close();
+    final edge = Rect.fromLTWH(w, 0, t, h);
+    final fill = Paint()..color = MpColors.plate;
+    final stroke = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+    canvas.drawRect(edge, fill);
+    canvas.drawRect(edge, stroke);
+    canvas.drawPath(face, fill);
+    canvas.drawPath(face, stroke);
+  }
+
+  /// `PolarityIndicator.ts` — hollow circle, +/− bars, stem. No text glyphs.
+  static void _polarityIndicator(
+    Canvas canvas,
+    Offset center, {
+    required bool positive,
+  }) {
+    const r = MpConstants.polarityIndicatorRadius;
+    final stroke = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round;
+    canvas.drawCircle(center, r, stroke);
+    canvas.drawLine(
+      Offset(center.dx - r * 0.5, center.dy),
+      Offset(center.dx + r * 0.5, center.dy),
+      stroke,
+    );
+    if (positive) {
+      canvas.drawLine(
+        Offset(center.dx, center.dy - r * 0.5),
+        Offset(center.dx, center.dy + r * 0.5),
+        stroke,
+      );
+    }
+    canvas.drawLine(
+      Offset(center.dx, center.dy + r),
+      Offset(center.dx, center.dy + 2 * r),
+      stroke,
+    );
   }
 }

@@ -22,9 +22,11 @@ class IaamConstants {
   static double get mixMvtViewY => (layoutHeight * 0.33).roundToDouble();
 
   static const double scaleImageWidth = 275;
-  /// Empirically lifted vs PhET `layoutBounds.bottom - 13` so atom/scale
-  /// sit higher in the play area (less empty space above "My Isotope").
-  static const double scaleBottomOffset = 36;
+  /// `scale.png` is 351×132; display width 275 → height 275×132/351.
+  static const double scaleImageHeight = 275.0 * 132 / 351;
+  /// PhET `scaleNode.setCenterBottom(..., layoutBounds.bottom - 13)`.
+  static const double scaleBottomOffset = 13;
+  /// `bottomOfAtomPosition.y = scaleNode.top + 15`.
   static const double atomBottomOnScaleOffset = 15;
 
   static const double periodicTableScale = 0.65;

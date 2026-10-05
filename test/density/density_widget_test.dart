@@ -21,6 +21,27 @@ void main() {
     await DensityTextureCache.load();
   });
 
+  test('Intro named materials decode original PhET JPEGs', () {
+    expect(
+      DensityTextureCache.imageFor(DensityMaterialId.wood),
+      isNotNull,
+    );
+    expect(
+      DensityTextureCache.imageForBlock(
+        materialId: DensityMaterialId.aluminum,
+        colorArgb: null,
+      ),
+      isNotNull,
+    );
+    expect(
+      DensityTextureCache.imageForBlock(
+        materialId: DensityMaterialId.custom,
+        colorArgb: 0xFFFF0000,
+      ),
+      isNull,
+    );
+  });
+
   Future<void> setPad(WidgetTester tester) async {
     tester.view.physicalSize = const Size(1024, 768);
     tester.view.devicePixelRatio = 1;
@@ -119,11 +140,11 @@ void main() {
     await tester.pump();
     expect(find.text('Wood'), findsWidgets);
 
-    await tester.tap(find.text(DensityStrings.twoBlocks));
+    await tester.tap(find.byTooltip(DensityStrings.twoBlocks));
     await tester.pump();
     expect(find.text('${DensityStrings.mass} B'), findsOneWidget);
 
-    await tester.tap(find.text(DensityStrings.resetAll));
+    await tester.tap(find.byTooltip(DensityStrings.resetAll));
     await tester.pump();
     expect(find.text('${DensityStrings.mass} B'), findsNothing);
   });

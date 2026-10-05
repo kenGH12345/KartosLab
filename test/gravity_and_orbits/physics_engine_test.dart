@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kratos/astronomy/gravity_and_orbits/gao_constants.dart';
 import 'package:kratos/astronomy/gravity_and_orbits/model/body_type.dart';
@@ -145,6 +146,23 @@ void main() {
       final model = GaoModel(isModelScreen: true);
       model.selectSceneById(GaoSceneId.starPlanetMoon);
       expect(model.scene.engine.adjustMoonOrbit, isTrue);
+    });
+  });
+
+  group('Path colors from SceneFactory Body.color', () {
+    test('moon trail is magenta; planet/star/satellite match source', () {
+      final model = GaoModel(isModelScreen: true);
+      model.selectSceneById(GaoSceneId.starPlanetMoon);
+      Color colorOf(GaoBodyType type) =>
+          model.scene.bodies.firstWhere((b) => b.type == type).pathColor;
+
+      expect(colorOf(GaoBodyType.moon), GaoConstants.moonPath);
+      expect(GaoConstants.moonPath, const Color(0xFFFF00FF));
+      expect(colorOf(GaoBodyType.star), GaoConstants.starPath);
+      expect(colorOf(GaoBodyType.planet), GaoConstants.planetPath);
+
+      model.selectSceneById(GaoSceneId.planetSatellite);
+      expect(colorOf(GaoBodyType.satellite), GaoConstants.satellitePath);
     });
   });
 }

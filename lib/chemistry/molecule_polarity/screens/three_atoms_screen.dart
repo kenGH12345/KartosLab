@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+
 import '../controller/molecule_polarity_controller.dart';
 import '../model/mp_preferences.dart';
 import '../model/mp_vector2.dart';
@@ -8,7 +10,6 @@ import '../mp_constants.dart';
 import '../mp_strings.dart';
 import '../painters/mp_scene_painters.dart';
 import '../widgets/mp_controls.dart';
-import '../widgets/mp_reset_all_button.dart';
 import '../widgets/mp_simulation_shell.dart';
 
 class ThreeAtomsScreenBody extends StatefulWidget {
@@ -53,11 +54,19 @@ class _ThreeAtomsScreenBodyState extends State<ThreeAtomsScreenBody> {
       child: Stack(
         children: [
           Positioned.fill(
-            child: GestureDetector(
+            child: Listener(
               behavior: HitTestBehavior.opaque,
-              onPanStart: (d) => _onStart(d.localPosition, mol),
-              onPanUpdate: (d) => _onUpdate(d.localPosition, mol),
-              onPanEnd: (_) {
+              onPointerDown: (e) => _onStart(e.localPosition, mol),
+              onPointerMove: (e) {
+                if (c.threeAtoms.triatomic.isDragging) {
+                  _onUpdate(e.localPosition, mol);
+                }
+              },
+              onPointerUp: (_) {
+                _dragTarget = null;
+                c.endThreeAtomsDrag();
+              },
+              onPointerCancel: (_) {
                 _dragTarget = null;
                 c.endThreeAtomsDrag();
               },
@@ -77,7 +86,7 @@ class _ThreeAtomsScreenBodyState extends State<ThreeAtomsScreenBody> {
             top: MpConstants.controlPanelTop,
             right: MpConstants.horizontalMargin,
             child: MpPanel(
-              width: 260,
+              width: MpConstants.controlPanelWidth,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
@@ -137,7 +146,10 @@ class _ThreeAtomsScreenBodyState extends State<ThreeAtomsScreenBody> {
           Positioned(
             right: MpConstants.horizontalMargin,
             bottom: MpConstants.verticalMargin,
-            child: MpResetAllButton(onPressed: c.resetThreeAtoms),
+            child: KratosResetAllButton(
+              onPressed: c.resetThreeAtoms,
+              radius: 20.5,
+            ),
           ),
         ],
       ),
@@ -192,7 +204,7 @@ class _ThreeAtomsScenePainter extends CustomPainter {
     if (eField) {
       PlatesPainter.paint(
         canvas,
-        layoutSize: size,
+        moleculeCenter: Offset(molecule.position.x, molecule.position.y),
         spacing: MpConstants.platesSpacingThreeAtoms,
       );
     }

@@ -22,7 +22,11 @@ class _WavesIntroHomeState extends State<WavesIntroHome>
   @override
   void initState() {
     super.initState();
-    _tabs = TabController(length: 3, vsync: this);
+    _tabs = TabController(
+      length: 3,
+      vsync: this,
+      animationDuration: const Duration(milliseconds: 320),
+    );
   }
 
   @override
@@ -61,6 +65,9 @@ class _WavesIntroHomeState extends State<WavesIntroHome>
       ),
       body: KratosTabSwitcher(
         controller: _tabs,
+        duration: const Duration(milliseconds: 320),
+        curve: Curves.easeInOutCubic,
+        backdropColor: Colors.white,
         children: const [
           WavesIntroMediumScreen(kind: SceneKind.water, embedded: true),
           WavesIntroMediumScreen(kind: SceneKind.sound, embedded: true),

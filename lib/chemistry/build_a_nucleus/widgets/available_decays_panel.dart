@@ -1,8 +1,7 @@
-/// Decay 右栏 Available Decays 内部密度。
+/// Decay 右栏 Available Decays。
 ///
-/// [已确认] 原版无独立 DecayTypeListNode / DecayButton 类。
-/// 结构在 `AvailableDecaysPanel.ts`：Panel > VBox(标题行, 五键 VBox, 分隔, 图例)。
-/// 本组件只复刻标题 + 五键内部关系；图例 / info / 322 宽属 [有意差异：NineGrid]。
+/// [已确认] `AvailableDecaysPanel.ts`：标题、五键全名 + IconFactory 图、
+/// 分隔、图例；Undo 在面板外左侧。
 library;
 
 import 'package:flutter/material.dart';
@@ -10,19 +9,21 @@ import 'package:flutter/material.dart';
 import '../ban_constants.dart';
 import '../controller/build_a_nucleus_controller.dart';
 import '../data/decay_type.dart';
+import 'ban_undo_button.dart';
+import 'decay_type_icon.dart';
 
 class AvailableDecaysPanel extends StatelessWidget {
   const AvailableDecaysPanel({super.key, required this.controller});
 
   final BuildANucleusController controller;
 
-  /// [已确认] `BANDecayType.decaySymbol`。β± 用 +/- 区分（原版按钮写全名）。
+  /// 原版按钮写全名；符号只出现在旁侧示意图。
   static const labels = {
-    NucleusDecayType.alphaDecay: 'α',
-    NucleusDecayType.betaMinusDecay: 'β-',
-    NucleusDecayType.betaPlusDecay: 'β+',
-    NucleusDecayType.protonEmission: 'p',
-    NucleusDecayType.neutronEmission: 'n',
+    NucleusDecayType.alphaDecay: 'α decay',
+    NucleusDecayType.betaMinusDecay: 'β- decay',
+    NucleusDecayType.betaPlusDecay: 'β+ decay',
+    NucleusDecayType.protonEmission: 'Proton Emission',
+    NucleusDecayType.neutronEmission: 'Neutron Emission',
   };
 
   static const _tooltips = {
@@ -39,26 +40,27 @@ class AvailableDecaysPanel extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxW =
-            constraints.maxWidth.isFinite ? constraints.maxWidth : 80.0;
+            constraints.maxWidth.isFinite ? constraints.maxWidth : 322.0;
         final maxH =
             constraints.maxHeight.isFinite ? constraints.maxHeight : 400.0;
-        final pad = maxW < 72 ? 4.0 : 6.0;
+        final pad = maxW < 72 ? 4.0 : 15.0;
         final innerW = (maxW - 2 * pad).clamp(32.0, 10000.0);
         final innerH = (maxH - 2 * pad).clamp(48.0, 10000.0);
 
-        // [已确认] AvailableDecaysPanel TITLE_FONT = PhetFont(24)
         const titleH = 24.0;
-        final extra = s.canUndoDecay ? 1 : 0;
-        final rows = 5 + extra;
-        // title→第一键 + 键与键（含 Undo）之间
-        final gaps = rows;
+        const legendH = 36.0;
+        const sepH = 8.0;
+        final extra = s.canUndoDecay ? 0 : 0;
+        const rows = 5;
+        final gaps = rows + extra;
         var spacing = BanConstants.availableDecaysSpacing;
         var buttonH = BanConstants.availableDecaysButtonHeight;
         var scroll = false;
-        final needed = titleH + rows * buttonH + gaps * spacing;
+        final needed =
+            titleH + rows * buttonH + gaps * spacing + sepH + legendH;
         if (needed > innerH) {
           spacing = (spacing * innerH / needed).clamp(2.0, spacing);
-          final leftover = innerH - titleH - gaps * spacing;
+          final leftover = innerH - titleH - gaps * spacing - sepH - legendH;
           final rawH = leftover / rows;
           if (rawH < BanConstants.availableDecaysButtonMinHeight) {
             buttonH = BanConstants.availableDecaysButtonMinHeight;
@@ -70,12 +72,8 @@ class AvailableDecaysPanel extends StatelessWidget {
             );
           }
         }
-        final symbolSize = (buttonH * 0.55).clamp(12.0, 20.0);
-        // 边格 < 原版 BUTTON_CONTENT_WIDTH 145，拉满 innerW。
-        final buttonW = innerW.clamp(
-          32.0,
-          BanConstants.availableDecaysButtonContentWidth,
-        );
+        final fontSize = (buttonH * 0.5).clamp(11.0, 18.0);
+        final buttonW = innerW.clamp(32.0, 10000.0);
 
         final column = Column(
           mainAxisSize: MainAxisSize.min,
@@ -104,7 +102,7 @@ class AvailableDecaysPanel extends StatelessWidget {
                 type: NucleusDecayType.values[i],
                 width: buttonW,
                 height: buttonH,
-                symbolSize: symbolSize,
+                fontSize: fontSize,
                 enabled: s.isDecayEnabled(NucleusDecayType.values[i]),
                 tooltip: _tooltips[NucleusDecayType.values[i]]!,
                 onPressed: s.isDecayEnabled(NucleusDecayType.values[i])
@@ -112,31 +110,12 @@ class AvailableDecaysPanel extends StatelessWidget {
                     : null,
               ),
             ],
-            if (s.canUndoDecay) ...[
-              SizedBox(height: spacing),
-              SizedBox(
-                width: buttonW,
-                height: buttonH,
-                child: IconButton(
-                  key: const ValueKey('ban_undo_decay'),
-                  tooltip: '撤销衰变',
-                  onPressed: controller.undoDecay,
-                  visualDensity: VisualDensity.compact,
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints.tightFor(
-                    width: buttonW,
-                    height: buttonH,
-                  ),
-                  icon: Icon(Icons.undo, size: (buttonH * 0.55).clamp(14.0, 18.0)),
-                ),
-              ),
-            ],
+            SizedBox(height: spacing),
+            const Divider(height: 8, thickness: 1, color: Color(0xFFCACACA)),
+            const _DecayParticleLegend(),
           ],
         );
 
-        // LayoutBuilder 在 Expanded 里是紧约束；Align 松开高度，面板按内容收缩。
-        // [已确认] 原版 Panel 随内容增高（另含图例）；不整板 FittedBox 缩小。
-        // 矮视口：定高 + 内部滚动，避免负尺寸 / overflow。
         final panel = DecoratedBox(
           key: const ValueKey('ban_available_decays_panel'),
           decoration: BoxDecoration(
@@ -152,10 +131,24 @@ class AvailableDecaysPanel extends StatelessWidget {
             child: scroll ? SingleChildScrollView(child: column) : column,
           ),
         );
+
+        final body = Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (s.canUndoDecay) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: 36, right: 8),
+                child: BanUndoButton(onPressed: controller.undoDecay),
+              ),
+            ],
+            Expanded(child: panel),
+          ],
+        );
+
         if (scroll) {
-          return SizedBox(width: maxW, height: maxH, child: panel);
+          return SizedBox(width: maxW, height: maxH, child: body);
         }
-        return Align(alignment: Alignment.topCenter, child: panel);
+        return Align(alignment: Alignment.topCenter, child: body);
       },
     );
   }
@@ -166,7 +159,7 @@ class _DecayTypeButton extends StatelessWidget {
     required this.type,
     required this.width,
     required this.height,
-    required this.symbolSize,
+    required this.fontSize,
     required this.enabled,
     required this.tooltip,
     required this.onPressed,
@@ -175,7 +168,7 @@ class _DecayTypeButton extends StatelessWidget {
   final NucleusDecayType type;
   final double width;
   final double height;
-  final double symbolSize;
+  final double fontSize;
   final bool enabled;
   final String tooltip;
   final VoidCallback? onPressed;
@@ -186,35 +179,98 @@ class _DecayTypeButton extends StatelessWidget {
     return SizedBox(
       width: width,
       height: height,
-      child: IconButton(
-        key: ValueKey('ban_decay_${type.name}'),
-        tooltip: tooltip,
-        onPressed: onPressed,
-        padding: EdgeInsets.zero,
-        visualDensity: VisualDensity.compact,
-        constraints: BoxConstraints.tightFor(width: width, height: height),
-        style: IconButton.styleFrom(
-          backgroundColor: enabled ? orange : orange.withValues(alpha: 0.35),
-          disabledBackgroundColor: orange.withValues(alpha: 0.35),
-          foregroundColor: enabled ? Colors.black : Colors.black54,
-          disabledForegroundColor: Colors.black54,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(3),
+      child: Tooltip(
+        message: tooltip,
+        child: TextButton(
+          key: ValueKey('ban_decay_${type.name}'),
+          onPressed: onPressed,
+          style: TextButton.styleFrom(
+            backgroundColor: enabled ? orange : orange.withValues(alpha: 0.35),
+            disabledBackgroundColor: orange.withValues(alpha: 0.35),
+            foregroundColor: enabled ? Colors.black : Colors.black54,
+            disabledForegroundColor: Colors.black54,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            ),
+            minimumSize: Size(width, height),
+            maximumSize: Size(width, height),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
           ),
-          minimumSize: Size(width, height),
-          maximumSize: Size(width, height),
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          padding: EdgeInsets.zero,
-        ),
-        icon: Text(
-          AvailableDecaysPanel.labels[type]!,
-          style: TextStyle(
-            fontSize: symbolSize,
-            fontWeight: FontWeight.w700,
-            height: 1,
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  AvailableDecaysPanel.labels[type]!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w600,
+                    height: 1,
+                  ),
+                ),
+              ),
+              DecayTypeIcon(type: type, height: (height * 0.78).clamp(16, 30)),
+            ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DecayParticleLegend extends StatelessWidget {
+  const _DecayParticleLegend();
+
+  @override
+  Widget build(BuildContext context) {
+    return const FittedBox(
+      fit: BoxFit.scaleDown,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        key: ValueKey('ban_decay_legend'),
+        children: [
+          _LegendDot(color: Color(BanConstants.protonColorValue), label: 'Proton'),
+          SizedBox(width: 10),
+          _LegendDot(color: Color(BanConstants.neutronColorValue), label: 'Neutron'),
+          SizedBox(width: 10),
+          _LegendDot(color: Color(BanConstants.electronColorValue), label: 'Electron'),
+          SizedBox(width: 10),
+          _LegendDot(color: Color(0xFF35B64A), label: 'Positron'),
+        ],
+      ),
+    );
+  }
+}
+
+class _LegendDot extends StatelessWidget {
+  const _LegendDot({required this.color, required this.label});
+
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              center: const Alignment(-0.4, -0.4),
+              radius: 1.6,
+              colors: [Colors.white, color],
+            ),
+            border: Border.all(color: color, width: 0.5),
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(label, style: const TextStyle(fontSize: 12)),
+      ],
     );
   }
 }

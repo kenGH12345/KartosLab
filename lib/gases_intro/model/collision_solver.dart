@@ -60,6 +60,9 @@ class CollisionSolver {
         bottom: container.bottom,
         top: container.top,
         leftWallVelocityX: container.leftWallVelocityX,
+        skipTopIfInOpening: container.isOpen
+            ? container.isInEscapeOpening
+            : null,
       );
     }
     return numberOfParticleContainerCollisions;
@@ -72,6 +75,7 @@ class CollisionSolver {
     required double bottom,
     required double top,
     double leftWallVelocityX = 0,
+    bool Function(double particleLeft, double particleRight)? skipTopIfInOpening,
   }) {
     var count = 0;
     for (final particle in particles) {
@@ -86,9 +90,13 @@ class CollisionSolver {
         collided = true;
       }
       if (particle.top >= top) {
-        particle.top = top;
-        particle.setVelocity(particle.vx, -particle.vy);
-        collided = true;
+        final throughOpening =
+            skipTopIfInOpening?.call(particle.left, particle.right) ?? false;
+        if (!throughOpening) {
+          particle.top = top;
+          particle.setVelocity(particle.vx, -particle.vy);
+          collided = true;
+        }
       } else if (particle.bottom <= bottom) {
         particle.bottom = bottom;
         particle.setVelocity(particle.vx, -particle.vy);

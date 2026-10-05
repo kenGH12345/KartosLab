@@ -1,7 +1,6 @@
 import 'dart:ui' show Offset, Rect;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kratos/membrane_transport/layout/membrane_transport_layout.dart';
 import 'package:kratos/membrane_transport/membrane_transport_constants.dart';
 import 'package:kratos/membrane_transport/membrane_transport_feature_set.dart';
 import 'package:kratos/membrane_transport/model/membrane_transport_model.dart';

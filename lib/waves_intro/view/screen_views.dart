@@ -26,127 +26,182 @@ class WaveSimulationCanvas extends StatelessWidget {
 
     Color bg;
     if (vis.showWaterSideView) {
-      bg = const Color(0xFFE0E0E0);
+      bg = const Color(0xFFE2E3E5);
     } else if (vis.kind == SceneKind.light) {
       bg = Colors.black;
     } else if (vis.kind == SceneKind.sound) {
-      bg = const Color(0xFF4A4A4A);
+      bg = const Color(WavesIntroConstants.soundWaveAreaFillArgb);
     } else {
-      bg = const Color(0xFF58C0FA).withValues(alpha: 0.35);
+      bg = const Color(WavesIntroConstants.waterLatticeBaseArgb);
     }
 
     return SizedBox(
       width: size,
       height: size,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: bg,
-          border: Border.all(color: Colors.black38, width: 1.5),
-        ),
-        child: ClipRect(
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              if (vis.showWaves)
-                CustomPaint(
-                  painter: LatticePainter(
-                    lattice: scene.lattice,
-                    kind: scene.config.kind,
-                    wavelengthNm: scene.config.kind == SceneKind.light
-                        ? scene.wavelength
-                        : null,
-                  ),
-                ),
-              if (vis.showParticles)
-                CustomPaint(
-                  painter: SoundParticlesPainter(
-                    particles: scene.soundParticles,
-                    waveAreaWidth: scene.config.waveAreaWidth,
-                  ),
-                ),
-              if (vis.showWaterSideView)
-                CustomPaint(
-                  painter: WaterSideViewPainter(lattice: scene.lattice),
-                ),
-              if (vis.isRotating)
-                ColoredBox(
-                  color: Colors.black.withValues(alpha: 0.18),
-                  child: const Center(
-                    child: Text('…', style: TextStyle(fontSize: 28, color: Colors.white70)),
-                  ),
-                ),
-              // Scale indicator
-              Positioned(
-                left: 8,
-                top: 6,
-                child: Text(
-                  _scaleLabel(scene.config),
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: vis.kind == SceneKind.light ? Colors.white : Colors.black87,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Positioned.fill(
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: bg,
+                border: Border.all(color: const Color(0xFF333333), width: 1),
               ),
-              if (vis.showFaucet)
-                Positioned(
-                  left: -8,
-                  top: size * 0.5 - 40,
-                  child: WaterFaucetSource(model: model),
-                ),
-              if (vis.showSpeaker)
-                Positioned(
-                  left: -12,
-                  top: size * 0.5 - 35,
-                  child: SoundSpeakerSource(model: model),
-                ),
-              if (vis.showLaser)
-                Positioned(
-                  left: -20,
-                  top: size * 0.5 - 24,
-                  child: LightLaserSource(model: model),
-                ),
-              if (vis.showWaterDrops)
-                ...scene.waterDrops.map((d) {
-                  final xFrac = (WavesIntroConstants.pointSourceHorizontal -
-                          scene.lattice.dampX) /
-                      (scene.lattice.width - 2 * scene.lattice.dampX);
-                  return Positioned(
-                    left: xFrac * size - 6,
-                    top: WaterDropLayout.yToTop(d.y).clamp(0, size - 12),
-                    child: Image.asset(
-                      'assets/phet/waves_intro/water_drop.png',
-                      width: 12 + d.amplitude * 0.4,
-                      height: 12 + d.amplitude * 0.4,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: 12,
-                        height: 12,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF58C0FA),
-                          shape: BoxShape.circle,
+              child: ClipRect(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    if (vis.showWaves)
+                      RepaintBoundary(
+                        child: CustomPaint(
+                          painter: LatticePainter(
+                            lattice: scene.lattice,
+                            kind: scene.config.kind,
+                            wavelengthNm: scene.config.kind == SceneKind.light
+                                ? scene.wavelength
+                                : null,
+                          ),
                         ),
                       ),
-                    ),
-                  );
-                }),
-              WavesIntroToolsOverlay(model: model),
-            ],
+                    if (vis.showParticles)
+                      CustomPaint(
+                        painter: SoundParticlesPainter(
+                          particles: scene.soundParticles,
+                          waveAreaWidth: scene.config.waveAreaWidth,
+                        ),
+                      ),
+                    if (vis.showWaterSideView)
+                      CustomPaint(
+                        painter: WaterSideViewPainter(lattice: scene.lattice),
+                      ),
+                    if (vis.isRotating)
+                      ColoredBox(
+                        color: Colors.black.withValues(alpha: 0.18),
+                      ),
+                    if (vis.showWaterDrops)
+                      ...scene.waterDrops.map((d) {
+                        final xFrac = (WavesIntroConstants.pointSourceHorizontal -
+                                scene.lattice.dampX) /
+                            (scene.lattice.width - 2 * scene.lattice.dampX);
+                        return Positioned(
+                          left: xFrac * size - 6,
+                          top: WaterDropLayout.yToTop(d.y).clamp(0, size - 12),
+                          child: Image.asset(
+                            'assets/phet/waves_intro/water_drop.png',
+                            width: 12 + d.amplitude * 0.4,
+                            height: 12 + d.amplitude * 0.4,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                              width: 12,
+                              height: 12,
+                              decoration: const BoxDecoration(
+                                color: Color(0xFF58C0FA),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    if (vis.showGraph)
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: size * 0.75 - 45,
+                        height: 90,
+                        child: WaveGraphStrip(model: model),
+                      ),
+                    WavesIntroToolsOverlay(model: model),
+                  ],
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
+    );
+  }
+}
+
+/// PhET LengthScaleIndicatorNode — above the wave area, left-aligned.
+class LengthScaleIndicator extends StatelessWidget {
+  const LengthScaleIndicator({super.key, required this.model});
+
+  final WavesIntroModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    final vis = WaveRenderVisibility(model);
+    return _ScaleBar(
+      label: _scaleLabel(model.scene.config),
+      light: vis.kind == SceneKind.light,
     );
   }
 
   static String _scaleLabel(SceneConfig config) {
     switch (config.kind) {
       case SceneKind.water:
-        return '↔ 1 cm';
+        return '1 cm';
       case SceneKind.sound:
-        return '↔ 50 cm';
+        return '50 cm';
       case SceneKind.light:
-        return '↔ 500 nm';
+        return '500 nm';
     }
   }
+}
+
+class _ScaleBar extends StatelessWidget {
+  const _ScaleBar({required this.label, required this.light});
+
+  final String label;
+  final bool light;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = light ? Colors.white : Colors.black87;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CustomPaint(
+          size: const Size(36, 10),
+          painter: _ScaleArrowPainter(color: color),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ScaleArrowPainter extends CustomPainter {
+  _ScaleArrowPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = color
+      ..strokeWidth = 1.6
+      ..strokeCap = StrokeCap.square;
+    final y = size.height / 2;
+    canvas.drawLine(Offset(0, y), Offset(size.width, y), p);
+    canvas.drawLine(const Offset(0, 1), Offset(0, size.height - 1), p);
+    canvas.drawLine(
+      Offset(size.width, 1),
+      Offset(size.width, size.height - 1),
+      p,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _ScaleArrowPainter old) => old.color != color;
 }
 
 /// Water screen-specific view hierarchy.
@@ -176,29 +231,37 @@ class LightScreenView extends StatelessWidget {
   Widget build(BuildContext context) {
     final vis = WaveRenderVisibility(model);
     final scene = model.scene;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        WaveSimulationCanvas(model: model),
-        if (vis.showLightScreen) ...[
-          const SizedBox(width: 6),
-          SizedBox(
-            width: LightScreenPainter.canvasWidth.toDouble(),
-            height: WavesIntroConstants.waveAreaViewSize,
-            child: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.identity()..setEntry(1, 0, -0.15),
-              child: CustomPaint(
-                painter: LightScreenPainter(
-                  lattice: scene.lattice,
-                  intensitySample: scene.intensitySample!,
-                  baseColor: lightBaseColorFromWavelengthNm(scene.wavelength),
+    return SizedBox(
+      width: vis.showLightScreen
+          ? WavesIntroConstants.waveAreaViewSize +
+              5 +
+              LightScreenPainter.canvasWidth.toDouble()
+          : WavesIntroConstants.waveAreaViewSize,
+      height: WavesIntroConstants.waveAreaViewSize,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          WaveSimulationCanvas(model: model),
+          if (vis.showLightScreen)
+            Positioned(
+              left: WavesIntroConstants.waveAreaViewSize + 5,
+              top: 0,
+              width: LightScreenPainter.canvasWidth.toDouble(),
+              height: WavesIntroConstants.waveAreaViewSize,
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.identity()..setEntry(1, 0, -0.15),
+                child: CustomPaint(
+                  painter: LightScreenPainter(
+                    lattice: scene.lattice,
+                    intensitySample: scene.intensitySample!,
+                    baseColor: lightBaseColorFromWavelengthNm(scene.wavelength),
+                  ),
                 ),
               ),
             ),
-          ),
         ],
-      ],
+      ),
     );
   }
 }
@@ -213,18 +276,8 @@ class WaveGraphStrip extends StatelessWidget {
     if (!WaveRenderVisibility(model).showGraph) {
       return const SizedBox.shrink();
     }
-    return SizedBox(
-      width: WavesIntroConstants.waveAreaViewSize,
-      height: 64,
-      child: DecoratedBox(
-        decoration: BoxDecoration(
-          color: const Color(0xFF2A2A2A),
-          border: Border.all(color: Colors.black26),
-        ),
-        child: CustomPaint(
-          painter: CenterLineGraphPainter(lattice: model.scene.lattice),
-        ),
-      ),
+    return CustomPaint(
+      painter: CenterLineGraphPainter(lattice: model.scene.lattice),
     );
   }
 }

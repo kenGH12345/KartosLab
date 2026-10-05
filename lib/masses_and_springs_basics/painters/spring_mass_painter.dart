@@ -276,47 +276,68 @@ class SpringMassPainter extends CustomPainter {
     final cylH = transform.modelToViewDeltaY(-mass.cylinderHeight).abs();
     final hookH = transform.modelToViewDeltaY(-MasbConstants.hookHeight).abs();
 
-    canvas.drawLine(
-      top,
-      Offset(top.dx, top.dy + hookH),
+    // PhET MassNode hook: 3/4-circle + stem (Shape.arc + lineTo).
+    final hookR = hookH / 4;
+    final hookCenter = Offset(top.dx, top.dy + hookH / 2);
+    final hookPath = Path()
+      ..moveTo(hookCenter.dx - hookR, hookCenter.dy)
+      ..arcToPoint(
+        Offset(hookCenter.dx, hookCenter.dy + hookR),
+        radius: Radius.circular(hookR),
+        clockwise: true,
+      )
+      ..lineTo(top.dx, top.dy + hookH);
+    canvas.drawPath(
+      hookPath,
       Paint()
-        ..color = const Color(0xFF374151)
+        ..color = Colors.black
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
+        ..strokeWidth = 1.5
+        ..strokeCap = StrokeCap.round
+        ..isAntiAlias = true,
     );
 
     final bodyTop = top.dy + hookH;
-    final rect = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(top.dx, bodyTop + cylH / 2),
-        width: radiusPx * 2,
-        height: cylH,
-      ),
-      const Radius.circular(4),
+    final rect = Rect.fromCenter(
+      center: Offset(top.dx, bodyTop + cylH / 2),
+      width: radiusPx * 2,
+      height: cylH,
     );
     final fill = Color(mass.colorArgb);
-    canvas.drawRRect(rect, Paint()..color = fill);
-    canvas.drawRRect(
+    // MassNode LinearGradient: brighter(0.3), brighter(0.8), base.
+    final shader = LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [
+        Color.lerp(fill, Colors.white, 0.3)!,
+        Color.lerp(fill, Colors.white, 0.8)!,
+        fill,
+      ],
+      stops: const [0.0, 0.2, 0.7],
+    ).createShader(rect);
+    canvas.drawRect(rect, Paint()..shader = shader);
+    canvas.drawRect(
       rect,
       Paint()
-        ..color = Color.lerp(fill, Colors.black, 0.35)!
+        ..color = Colors.black
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5,
+        ..strokeWidth = 0.5,
     );
 
     final labelText =
-        mass.mysteryLabel ? '?' : '${(mass.massKg * 1000).round()}';
+        mass.mysteryLabel ? '?' : '${(mass.massKg * 1000).round()} g';
     final label = TextPainter(
       text: TextSpan(
         text: labelText,
         style: TextStyle(
-          color: Colors.white,
-          fontSize: mass.mysteryLabel ? 14 : 10,
+          color: Colors.black,
+          fontSize: mass.adjustable ? 10 : 12,
           fontWeight: FontWeight.w700,
         ),
       ),
       textDirection: ui.TextDirection.ltr,
-    )..layout();
+      maxLines: 1,
+    )..layout(maxWidth: mass.adjustable ? 30 : rect.width);
     label.paint(
       canvas,
       Offset(top.dx - label.width / 2, bodyTop + cylH / 2 - label.height / 2),

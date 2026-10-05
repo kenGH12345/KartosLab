@@ -113,11 +113,11 @@ class BuoyancyShapesModel extends BuoyancyScreenModel with BuoyancyScaleHost {
       material: BuoyancyMaterial.wood,
       initiallyVisible: false,
     );
-    this.world.addMass(objectA.mass);
-    this.world.addMass(objectB.mass);
+    world.addMass(objectA.mass);
+    world.addMass(objectB.mass);
     // Land scale −0.7 (`BuoyancyShapesModel.ts`).
     initScaleBodies(landX: -0.7);
-    this.world.pool.computeFluidY([objectA.mass]);
+    world.pool.computeFluidY([objectA.mass]);
     lifecycle = ScreenModelLifecycle.idle;
   }
 

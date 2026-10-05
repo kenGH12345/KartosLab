@@ -382,19 +382,20 @@ class PmSceneState extends State<PmScene> {
           model.setCannonAngle(minAngle.toDouble());
         }
       case PmDragTarget.cannonHeight:
-        // CannonNode:506-524
+        // Follow the pointer continuously (integer-meter snap caused hitching).
         final heightChange = pos.dy - _startPointerY;
         final unbounded =
             t.viewToModel(Offset(0, _startHeightViewY + heightChange)).dy;
         if (unbounded >= PmConstants.cannonHeightMin &&
             unbounded <= PmConstants.cannonHeightMax) {
-          model.setCannonHeight(unbounded.roundToDouble());
+          model.setCannonHeight(unbounded, notify: false);
         } else if (PmConstants.cannonHeightMax + PmConstants.cannonHeightMin <
             2 * model.cannonHeight) {
-          model.setCannonHeight(PmConstants.cannonHeightMax);
+          model.setCannonHeight(PmConstants.cannonHeightMax, notify: false);
         } else {
-          model.setCannonHeight(PmConstants.cannonHeightMin);
+          model.setCannonHeight(PmConstants.cannonHeightMin, notify: false);
         }
+        setState(() {});
       case PmDragTarget.target:
         // TargetNode:112-133：仅水平，snap 0.1，clamp 到视窗
         final dx = t.viewToModelDeltaX(pos.dx - _startPointerX);
@@ -432,7 +433,9 @@ class PmSceneState extends State<PmScene> {
       final box = widget.toolboxBoundsInScene?.call();
       if (box != null) _maybeReturnTool(box);
     } else if (_dragging == PmDragTarget.cannonHeight) {
-      widget.controller.model.refresh();
+      final h = widget.controller.model.cannonHeight;
+      final snap = PmConstants.cannonHeightSnap;
+      widget.controller.model.setCannonHeight((h / snap).round() * snap);
     }
     setState(() => _dragging = PmDragTarget.none);
   }

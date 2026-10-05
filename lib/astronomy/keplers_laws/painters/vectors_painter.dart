@@ -43,17 +43,22 @@ class VectorsPainter extends CustomPainter {
         canvas.drawCircle(
           end,
           grabRadius,
+          Paint()..color = const Color(0xFFB8B8B8),
+        );
+        canvas.drawCircle(
+          end,
+          grabRadius,
           Paint()
-            ..color = const Color(0xFFD3D3D3)
+            ..color = const Color(0xFF404040)
             ..style = PaintingStyle.stroke
-            ..strokeWidth = 3,
+            ..strokeWidth = 2,
         );
         final tp = TextPainter(
           text: const TextSpan(
             text: KeplersLawsStrings.symbolV,
             style: TextStyle(
-              color: Color(0xFF808080),
-              fontSize: 22,
+              color: Color(0xFFF5F5F5),
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -94,27 +99,35 @@ class VectorsPainter extends CustomPainter {
     }
     final viewDelta = data.mvt.toView(tip) - data.mvt.toView(KlVec.zero);
     final end = origin + viewDelta;
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = 5
-      ..strokeCap = StrokeCap.round;
-    final outline = Paint()
-      ..color = const Color(0xFF404040)
-      ..strokeWidth = 7
-      ..strokeCap = StrokeCap.round;
-    canvas.drawLine(origin, end, outline);
-    canvas.drawLine(origin, end, paint);
-    final ang = math.atan2(end.dy - origin.dy, end.dx - origin.dx);
-    const head = 15.0;
-    canvas.drawLine(
-      end,
-      end + Offset(math.cos(ang + 2.6) * head, math.sin(ang + 2.6) * head),
-      paint,
-    );
-    canvas.drawLine(
-      end,
-      end + Offset(math.cos(ang - 2.6) * head, math.sin(ang - 2.6) * head),
-      paint,
+    final dx = end.dx - origin.dx;
+    final dy = end.dy - origin.dy;
+    final len = math.sqrt(dx * dx + dy * dy);
+    if (len < 1) return origin;
+    const tailW = 5.0;
+    const headW = 15.0;
+    const headH = 15.0;
+    final ux = dx / len;
+    final uy = dy / len;
+    final px = -uy;
+    final py = ux;
+    final base = Offset(end.dx - ux * headH, end.dy - uy * headH);
+    final path = Path()
+      ..moveTo(origin.dx + px * tailW / 2, origin.dy + py * tailW / 2)
+      ..lineTo(base.dx + px * tailW / 2, base.dy + py * tailW / 2)
+      ..lineTo(base.dx + px * headW / 2, base.dy + py * headW / 2)
+      ..lineTo(end.dx, end.dy)
+      ..lineTo(base.dx - px * headW / 2, base.dy - py * headW / 2)
+      ..lineTo(base.dx - px * tailW / 2, base.dy - py * tailW / 2)
+      ..lineTo(origin.dx - px * tailW / 2, origin.dy - py * tailW / 2)
+      ..close();
+    canvas.drawPath(path, Paint()..color = color);
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = const Color(0xFF404040)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2
+        ..strokeJoin = StrokeJoin.round,
     );
     return end;
   }

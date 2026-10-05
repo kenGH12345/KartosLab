@@ -23,6 +23,23 @@ void main() {
       expect(m.masses.every((e) => e.onShelf), isTrue);
     });
 
+    test('Bounce hanging masses use PhET basics colors', () {
+      final m = MasbModel();
+      final labeled = m.masses.where((e) => !e.mysteryLabel);
+      expect(
+        labeled.every((e) => e.colorArgb == MasbConstants.labeledMassArgb),
+        isTrue,
+      );
+      expect(
+        m.masses.firstWhere((e) => e.massKg == 0.200).colorArgb,
+        MasbConstants.largeMysteryMassArgb,
+      );
+      expect(
+        m.masses.firstWhere((e) => e.massKg == 0.075).colorArgb,
+        MasbConstants.smallMysteryMassArgb,
+      );
+    });
+
     test('drag 250g onto spring updates equilibrium for that mass', () {
       final m = MasbModel(damping: 0.7);
       final heavy = m.masses.firstWhere((e) => e.massKg == 0.250);

@@ -78,6 +78,9 @@ class KeplersLawsConstants {
   /// [已确认] orbit Path lineWidth 3
   static const double orbitLineWidth = 3;
 
+  /// [已确认] EllipticalOrbitNode 非法轨道 lineDash=[5]
+  static const double orbitInvalidDash = 5;
+
   /// [已确认] Body.massToRadius
   static const double minBodyRadius = 0.03;
   static const double massToRadiusCoeff = 0.023;

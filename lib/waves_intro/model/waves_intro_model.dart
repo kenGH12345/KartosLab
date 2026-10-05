@@ -20,9 +20,10 @@ class WavesIntroModel extends ChangeNotifier {
   WavesIntroModel({
     required SceneKind kind,
     bool autoTick = true,
+    TickerProvider? vsync,
   })  : scene = WaveScene(config: SceneConfig.forKind(kind)),
         audio = WavesIntroAudio(kind: kind) {
-    _ticker = Ticker(_onTick);
+    _ticker = (vsync?.createTicker(_onTick) ?? Ticker(_onTick));
     if (autoTick) {
       _ticker.start();
     }
@@ -37,6 +38,7 @@ class WavesIntroModel extends ChangeNotifier {
   final WavesIntroAudio audio;
 
   late final Ticker _ticker;
+  final ValueNotifier<int> latticeEpoch = ValueNotifier<int>(0);
   Duration _lastElapsed = Duration.zero;
   double _eventAccumulator = 0;
 
@@ -82,7 +84,9 @@ class WavesIntroModel extends ChangeNotifier {
 
     if (!isRunning) {
       _syncAudio();
-      notifyListeners();
+      if (isRotating) {
+        latticeEpoch.value++;
+      }
       return;
     }
     _eventAccumulator += wallDt;
@@ -95,7 +99,7 @@ class WavesIntroModel extends ChangeNotifier {
     }
     scene.lattice.interpolationRatio =
         (_eventAccumulator / period).clamp(0.0, 1.0);
-    notifyListeners();
+    latticeEpoch.value++;
   }
 
   void _updateRotation(double wallDt) {
@@ -364,6 +368,7 @@ class WavesIntroModel extends ChangeNotifier {
   @override
   void dispose() {
     _ticker.dispose();
+    latticeEpoch.dispose();
     audio.dispose();
     super.dispose();
   }

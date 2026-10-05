@@ -235,11 +235,11 @@ void main() {
       final origin = tester.getTopLeft(find.byType(GasIdealFamilyShell));
       await tester.timedDragFrom(
         origin + lid.center,
-        const Offset(-30, 0),
+        const Offset(40, 0),
         const Duration(milliseconds: 200),
       );
       await tester.pump();
-      expect(c.model.container.lidWidth, isNot(before));
+      expect(c.model.container.lidWidth, lessThan(before));
     });
 
     testWidgets('Ideal shell: Hold Constant / Particles / Pause via UI',

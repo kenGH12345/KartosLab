@@ -2,8 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kratos/density/model/density_block.dart';
 import 'package:kratos/density/model/density_material.dart';
 import 'package:kratos/density/model/density_vec.dart';
+import 'package:kratos/density/data/mystery_sets.dart';
+import 'package:kratos/density/render/density_mvt.dart';
 import 'package:kratos/density/solver/buoyancy_world.dart';
 import 'package:kratos/density/solver/density_relation.dart';
+import 'package:kratos/density/solver/mass_layout.dart';
 
 /// Loop 9: stacked-block drag must not lock against pointer spring.
 void main() {
@@ -288,6 +291,45 @@ void main() {
         xs.add(blocks.firstWhere((b) => b.id == top.id).position.x);
       }
       expect(directionChanges(xs), lessThan(2));
+    });
+
+    test('Mystery Set 1 unequal stacks rest without bounce or lateral kick', () {
+      var blocks = MassLayout.mysteryPositions(
+        MysteryBlockSet.set1,
+        MysterySets.set1(),
+      );
+      final startX = {for (final b in blocks) b.id: b.position.x};
+      for (var i = 0; i < 180; i++) {
+        blocks = BuoyancyWorld.step(blocks: blocks, dt: dt).blocks;
+      }
+      for (final b in blocks) {
+        expect(b.position.x, closeTo(startX[b.id]!, 0.02));
+        expect(b.velocity.y.abs(), lessThan(0.05));
+      }
+      double yOf(String tag) =>
+          blocks.firstWhere((b) => b.tag == tag).position.y;
+      expect(yOf('1B'), greaterThan(yOf('1A')));
+      expect(yOf('1C'), greaterThan(yOf('1D')));
+      expect(yOf('1D'), greaterThan(yOf('1E')));
+    });
+
+    test('drop onto a stack settles without rebound', () {
+      final h = half();
+      final x = DensityMvt.poolMaxX + 0.2;
+      final bottom = cube(id: 'bottom', tag: 'B', x: x, y: h);
+      final top = cube(id: 'top', tag: 'A', x: x, y: h * 3 + 0.25);
+      var blocks = [top, bottom];
+      final ys = <double>[];
+      for (var i = 0; i < 180; i++) {
+        blocks = BuoyancyWorld.step(blocks: blocks, dt: dt).blocks;
+        ys.add(blocks.firstWhere((b) => b.id == top.id).position.y);
+      }
+      expect(ys.last, closeTo(h * 3, 0.01));
+      expect(blocks.firstWhere((b) => b.id == top.id).velocity.y.abs(), lessThan(1e-6));
+      final tail = ys.sublist(90);
+      for (var i = 1; i < tail.length; i++) {
+        expect((tail[i] - tail[i - 1]).abs(), lessThan(1e-6));
+      }
     });
   });
 }

@@ -40,6 +40,8 @@ class KratosTabSwitcher extends StatefulWidget {
     this.duration = const Duration(milliseconds: 280),
     this.curve = Curves.easeInOut,
     this.backdropColor = const Color(0xFFF5F5F5),
+    this.incomingScale = 1.0,
+    this.fadeThrough = false,
   });
 
   final TabController controller;
@@ -48,6 +50,14 @@ class KratosTabSwitcher extends StatefulWidget {
   final Curve curve;
   /// Shown under crossfading pages so the scaffold never flashes through.
   final Color backdropColor;
+
+  /// Incoming page starts at this scale (1.0 = no scale). Use ~0.985 for a
+  /// soft ease-in without a noticeable zoom.
+  final double incomingScale;
+
+  /// If true, the outgoing page fades fully out before the incoming page
+  /// fades in (through [backdropColor]). Avoids morphing two different layouts.
+  final bool fadeThrough;
 
   @override
   State<KratosTabSwitcher> createState() => _KratosTabSwitcherState();
@@ -143,12 +153,18 @@ class _KratosTabSwitcherState extends State<KratosTabSwitcher>
                   child: IgnorePointer(
                     ignoring: i != active,
                     child: Opacity(
-                      opacity: i == active
-                          ? (i == _index ? t : 1.0)
-                          : (i == _outgoing ? (1.0 - t) : 0.0),
-                      child: TickerMode(
-                        enabled: i == active || i == _outgoing,
-                        child: widget.children[i],
+                      opacity: _opacityFor(i, t, active),
+                      child: Transform.scale(
+                        scale: i == active &&
+                                widget.incomingScale != 1.0 &&
+                                !widget.fadeThrough
+                            ? widget.incomingScale +
+                                (1.0 - widget.incomingScale) * t
+                            : 1.0,
+                        child: TickerMode(
+                          enabled: i == active || i == _outgoing,
+                          child: widget.children[i],
+                        ),
                       ),
                     ),
                   ),
@@ -158,6 +174,22 @@ class _KratosTabSwitcherState extends State<KratosTabSwitcher>
         },
       ),
     );
+  }
+
+  double _opacityFor(int i, double t, int active) {
+    if (!widget.fadeThrough) {
+      if (i == active) return i == _index ? t : 1.0;
+      if (i == _outgoing) return 1.0 - t;
+      return 0.0;
+    }
+    // Out by ~45%, in from ~40% — brief black rest, no layout morph.
+    if (i == _outgoing) {
+      return (1.0 - t / 0.45).clamp(0.0, 1.0);
+    }
+    if (i == _index) {
+      return ((t - 0.40) / 0.60).clamp(0.0, 1.0);
+    }
+    return i == active ? 1.0 : 0.0;
   }
 }
 
@@ -173,6 +205,10 @@ class KratosTabbedScreen extends StatefulWidget {
     this.tabBarPadding,
     this.appBarActions,
     this.tabBarIsScrollable = false,
+    this.switchDuration,
+    this.switchCurve,
+    this.switchBackdropColor,
+    this.switchIncomingScale = 1.0,
   });
 
   final List<KratosTab> tabs;
@@ -185,6 +221,12 @@ class KratosTabbedScreen extends StatefulWidget {
 
   /// When true, TabBar scrolls horizontally (long labels / many tabs).
   final bool tabBarIsScrollable;
+
+  /// Content crossfade. Defaults match [KratosTabSwitcher].
+  final Duration? switchDuration;
+  final Curve? switchCurve;
+  final Color? switchBackdropColor;
+  final double switchIncomingScale;
 
   @override
   State<KratosTabbedScreen> createState() => _KratosTabbedScreenState();
@@ -201,6 +243,8 @@ class _KratosTabbedScreenState extends State<KratosTabbedScreen>
       length: widget.tabs.length,
       initialIndex: widget.initialIndex,
       vsync: this,
+      animationDuration: widget.switchDuration ??
+          const Duration(milliseconds: 300),
     );
     _controller.addListener(_handleTabChange);
   }
@@ -271,6 +315,12 @@ class _KratosTabbedScreenState extends State<KratosTabbedScreen>
           Expanded(
             child: KratosTabSwitcher(
               controller: _controller,
+              duration: widget.switchDuration ??
+                  const Duration(milliseconds: 280),
+              curve: widget.switchCurve ?? Curves.easeInOut,
+              backdropColor:
+                  widget.switchBackdropColor ?? const Color(0xFFF5F5F5),
+              incomingScale: widget.switchIncomingScale,
               children: widget.tabs.map((t) => t.child).toList(),
             ),
           ),

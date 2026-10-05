@@ -51,4 +51,14 @@ class MasbConstants {
 
   /// PhET-like cream simulation background (not gray card / not scaffold white).
   static const int simBackgroundArgb = 0xFFFFF8EE;
+
+  /// MassesAndSpringsColors basics profile.
+  static const int labeledMassArgb = 0xFF999999; // rgb(153,153,153)
+  static const int smallMysteryMassArgb = 0xFFB90026; // rgb(185,0,38)
+  static const int mediumMysteryMassArgb = 0xFF006BA1; // rgb(0,107,161)
+  static const int largeMysteryMassArgb = 0xFF006837; // rgb(0,104,55)
+  static const int adjustableMassArgb = 0xFFF79722; // rgb(247,151,34)
+  static const int labLargeMysteryArgb = 0xFFC33373; // rgb(195,51,115)
+  static const int labMediumMysteryArgb = 0xFF0913AE; // rgb(9,19,174)
+  static const int labSmallMysteryArgb = 0xFF0AC69D; // rgb(10,198,157)
 }

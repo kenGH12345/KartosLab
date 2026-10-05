@@ -157,8 +157,8 @@ void main() {
       // 拖动中：核素读数立即更新（[已确认] userControlled 移出 particleAtom）
       await gesture.moveBy(const Offset(30, 0));
       await tester.pump();
-      expect(find.text('质子: 2'), findsOneWidget);
-      expect(find.text('中子: 1'), findsOneWidget);
+      expect(find.text('Protons: 2'), findsOneWidget);
+      expect(find.text('Neutrons: 1'), findsOneWidget);
       expect(find.text('Helium - 3'), findsOneWidget);
 
       await gesture.moveTo(toScreen(tester, canvas, 400, 0));

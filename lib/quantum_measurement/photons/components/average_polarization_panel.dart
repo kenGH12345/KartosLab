@@ -156,7 +156,7 @@ class _AveragePolarizationPanelState extends State<AveragePolarizationPanel> {
               ),
             ),
             Expanded(child: Text(label, style: const TextStyle(fontSize: 11))),
-            if (trailing != null) trailing,
+            ?trailing,
           ],
         ),
       ),

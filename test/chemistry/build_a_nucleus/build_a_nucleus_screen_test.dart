@@ -48,10 +48,10 @@ void main() {
   testWidgets('初始渲染：空核 + 五个衰变按钮均禁用', (tester) async {
     final c = await pumpShell(tester);
     expect(tester.widget<Text>(find.byKey(const ValueKey('ban_element_name'))).data, '');
-    expect(find.text('质子: 0'), findsOneWidget);
-    expect(find.text('中子: 0'), findsOneWidget);
+    expect(find.text('Protons: 0'), findsOneWidget);
+    expect(find.text('Neutrons: 0'), findsOneWidget);
     for (final type in NucleusDecayType.values) {
-      final btn = tester.widget<IconButton>(
+      final btn = tester.widget<ButtonStyleButton>(
         find.byKey(ValueKey('ban_decay_${type.name}')),
       );
       expect(btn.onPressed, isNull, reason: type.name);
@@ -65,9 +65,9 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('ban_add_proton')));
     await tester.pump();
     // [已确认] 飞入动画中未计数（到达才入核）
-    expect(find.text('质子: 0'), findsOneWidget);
+    expect(find.text('Protons: 0'), findsOneWidget);
     await pumpFlight(tester, c);
-    expect(find.text('质子: 1'), findsOneWidget);
+    expect(find.text('Protons: 1'), findsOneWidget);
     expect(find.text('Hydrogen - 1'), findsOneWidget);
     expect(find.text('Stable'), findsOneWidget);
 
@@ -76,16 +76,16 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('ban_add_neutron')));
     await tester.pump();
     await pumpFlight(tester, c);
-    expect(find.text('质子: 1'), findsOneWidget);
-    expect(find.text('中子: 2'), findsOneWidget);
+    expect(find.text('Protons: 1'), findsOneWidget);
+    expect(find.text('Neutrons: 2'), findsOneWidget);
     expect(find.text('Hydrogen - 3'), findsOneWidget);
     expect(find.text('Unstable'), findsOneWidget);
     expect(c.state.isDecayEnabled(NucleusDecayType.betaMinusDecay), isTrue);
 
     await tester.tap(find.byKey(const ValueKey('ban_remove_neutron')));
     await tester.pump();
-    expect(find.text('质子: 1'), findsOneWidget);
-    expect(find.text('中子: 1'), findsOneWidget);
+    expect(find.text('Protons: 1'), findsOneWidget);
+    expect(find.text('Neutrons: 1'), findsOneWidget);
   });
 
   testWidgets('拖拽：从托盘拖中子到核中心 → 入核计数', (tester) async {
@@ -98,7 +98,7 @@ void main() {
       canvasSize: canvas.size,
     );
     final nucleus = Offset(canvas.left + origin.dx, canvas.top + origin.dy);
-    final trayItem = tester.getCenter(find.text('中子'));
+    final trayItem = tester.getCenter(find.text('Neutrons'));
     await tester.timedDragFrom(
       trayItem,
       nucleus - trayItem,
@@ -107,8 +107,8 @@ void main() {
     await tester.pump();
 
     expect(c.state.neutronCount, 1);
-    expect(find.text('质子: 0'), findsOneWidget);
-    expect(find.text('中子: 1'), findsOneWidget);
+    expect(find.text('Protons: 0'), findsOneWidget);
+    expect(find.text('Neutrons: 1'), findsOneWidget);
   });
 
   testWidgets('拖拽：落点在捕获区外 → 不计数', (tester) async {
@@ -116,7 +116,7 @@ void main() {
 
     final canvas = find.byKey(const ValueKey('ban_canvas'));
     final canvasTopLeft = tester.getTopLeft(canvas);
-    final trayItem = tester.getCenter(find.text('质子'));
+    final trayItem = tester.getCenter(find.text('Protons'));
     // 拖到画布左上角（世界坐标远<-100, <-100，在捕获半径外）
     await tester.timedDragFrom(
       trayItem,
@@ -126,8 +126,8 @@ void main() {
     await tester.pump();
 
     expect(c.state.protonCount, 0);
-    expect(find.text('质子: 0'), findsOneWidget);
-    expect(find.text('中子: 0'), findsOneWidget);
+    expect(find.text('Protons: 0'), findsOneWidget);
+    expect(find.text('Neutrons: 0'), findsOneWidget);
   });
 
   testWidgets('衰变按钮：H-3 触发 β- 后可撤销，重置恢复空核', (tester) async {
@@ -153,8 +153,8 @@ void main() {
 
     await tester.tap(find.byKey(const ValueKey('ban_reset')));
     await tester.pump();
-    expect(find.text('质子: 0'), findsOneWidget);
-    expect(find.text('中子: 0'), findsOneWidget);
+    expect(find.text('Protons: 0'), findsOneWidget);
+    expect(find.text('Neutrons: 0'), findsOneWidget);
     expect(c.state.isEmptyNucleus, isTrue);
   });
 }

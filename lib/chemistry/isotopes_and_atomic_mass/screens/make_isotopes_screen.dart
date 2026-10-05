@@ -7,6 +7,7 @@ import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
 import '../controller/make_isotopes_controller.dart';
 import '../iaam_constants.dart';
 import '../transform/iaam_transform.dart';
+import '../painters/electron_cloud_painter.dart';
 import '../widgets/atom_scale_widget.dart';
 import '../widgets/expanded_periodic_table.dart';
 import '../widgets/iaam_page_shell.dart';
@@ -40,7 +41,7 @@ class _MakeIsotopesScreenState extends State<MakeIsotopesScreen>
   late final bool _tickOnClock;
   final GlobalKey _simKey = GlobalKey();
   final IaamTransform _transform = IaamTransform.makeScreen();
-  bool _atomPlaced = false;
+  int _placedForElectrons = -1;
 
   /// ExpandedPeriodicTable intrinsic for Make Z≤10 (2 rows).
   static const double _ptUnscaledW = 9 * 50.0; // 450
@@ -55,22 +56,28 @@ class _MakeIsotopesScreenState extends State<MakeIsotopesScreen>
     if (_tickOnClock) {
       _controller.attach(this);
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) => _placeAtomOnScale());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _syncAtomOnScale());
   }
 
-  void _placeAtomOnScale() {
-    if (!mounted || _atomPlaced) return;
-    const scaleH = 118.0;
+  /// Keep the cloud sitting on the pan so nucleons/cloud do not cover
+  /// Mass Number / Atomic Mass (PhET live electron-cloud bounds).
+  void _syncAtomOnScale() {
+    if (!mounted) return;
+    final electrons = _controller.model.electronCount;
     final scaleBottom =
         IaamConstants.layoutHeight - IaamConstants.scaleBottomOffset;
-    final scaleTop = scaleBottom - scaleH;
+    final scaleTop = scaleBottom - IaamConstants.scaleImageHeight;
     final bottomOfAtomY = scaleTop + IaamConstants.atomBottomOnScaleOffset;
-    const cloudR = 40.0;
+    final cloudR = electronCloudRadiusFor(electrons);
     final atomViewY = bottomOfAtomY - cloudR;
-    final atomViewX = IaamConstants.mvtViewX;
-    final model = _transform.viewToModel(atomViewX, atomViewY);
+    final model = _transform.viewToModel(IaamConstants.mvtViewX, atomViewY);
+    if (_placedForElectrons == electrons &&
+        (model.dx - _controller.model.atomX).abs() < 0.5 &&
+        (model.dy - _controller.model.atomY).abs() < 0.5) {
+      return;
+    }
+    _placedForElectrons = electrons;
     _controller.setAtomPosition(model.dx, model.dy);
-    _atomPlaced = true;
   }
 
   @override
@@ -92,6 +99,10 @@ class _MakeIsotopesScreenState extends State<MakeIsotopesScreen>
         child: ListenableBuilder(
           listenable: _controller,
           builder: (context, _) {
+            if (_placedForElectrons != _controller.model.electronCount) {
+              WidgetsBinding.instance
+                  .addPostFrameCallback((_) => _syncAtomOnScale());
+            }
             // PhET: PT scale 0.65; symbolBox.top = PT.bottom + 10
             const scale = IaamConstants.periodicTableScale;
             final panelW = _ptUnscaledW * scale;
@@ -110,12 +121,26 @@ class _MakeIsotopesScreenState extends State<MakeIsotopesScreen>
                       left: IaamConstants.mvtViewX -
                           IaamConstants.scaleImageWidth / 2,
                       bottom: IaamConstants.scaleBottomOffset,
-                      child: AtomScaleWidget(controller: _controller),
+                      child: AtomScaleWidget(
+                        controller: _controller,
+                        showImage: true,
+                        showReadout: false,
+                      ),
                     ),
                     Positioned.fill(
                       child: MakeIsotopePlayArea(
                         controller: _controller,
                         transform: _transform,
+                      ),
+                    ),
+                    Positioned(
+                      left: IaamConstants.mvtViewX -
+                          IaamConstants.scaleImageWidth / 2,
+                      bottom: IaamConstants.scaleBottomOffset,
+                      child: AtomScaleWidget(
+                        controller: _controller,
+                        showImage: false,
+                        showReadout: true,
                       ),
                     ),
                     Positioned(

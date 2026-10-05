@@ -21,7 +21,7 @@ class WavesIntroToolbox extends StatelessWidget {
           color: const Color(0xFFF1F1F2),
           borderRadius: BorderRadius.circular(6),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9.55),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -40,7 +40,7 @@ class WavesIntroToolbox extends StatelessWidget {
                     painter: _TapeIconPainter(),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 _ToolIcon(
                   label: 'Timer',
                   selected: t.isStopwatchVisible,
@@ -56,7 +56,7 @@ class WavesIntroToolbox extends StatelessWidget {
                     painter: _TimerIconPainter(),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: 10),
                 _ToolIcon(
                   label: 'Meter',
                   selected: t.isWaveMeterInPlayArea,
@@ -96,14 +96,12 @@ class _ToolIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Opacity(opacity: selected ? 0.35 : 1, child: child),
-          Text(label, style: const TextStyle(fontSize: 10)),
-        ],
+    return Semantics(
+      button: true,
+      label: label,
+      child: InkWell(
+        onTap: onTap,
+        child: Opacity(opacity: selected ? 0.35 : 1, child: child),
       ),
     );
   }

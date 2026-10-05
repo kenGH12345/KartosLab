@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../../ban_constants.dart';
+import '../../widgets/ban_undo_button.dart';
 import '../chart_intro_visuals.dart';
 import '../controller/chart_intro_controller.dart';
 
@@ -18,11 +19,10 @@ class ChartIntroDecayControls extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         if (controller.canUndoDecay)
-          IconButton(
+          BanUndoButton(
             key: const ValueKey('chart_intro_undo_decay'),
-            visualDensity: VisualDensity.compact,
-            icon: const Icon(Icons.undo, size: 18),
             onPressed: controller.undoDecay,
+            radius: 16,
           ),
         const SizedBox(width: 5),
         FilledButton(

@@ -96,15 +96,8 @@ class _MixIsotopesScreenState extends State<MixIsotopesScreen>
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    Positioned.fill(
-                      child: MixPlayArea(
-                        controller: _controller,
-                        transform: _transform,
-                      ),
-                    ),
-
-                    // Right column — fixed tops from expanded heights (PhET).
-                    // Collapse only shrinks that box; panels below stay put.
+                    // Right column first so Mix play (with drag Listener) sits
+                    // on top of the left/bottom, like Build an Atom.
                     Positioned(
                       right: IaamConstants.periodicTableRightInset,
                       top: IaamConstants.periodicTableTop,
@@ -185,6 +178,17 @@ class _MixIsotopesScreenState extends State<MixIsotopesScreen>
                             ),
                           ),
                         ],
+                      ),
+                    ),
+
+                    Positioned(
+                      left: 0,
+                      top: 0,
+                      right: panelW + IaamConstants.periodicTableRightInset,
+                      bottom: 0,
+                      child: MixPlayArea(
+                        controller: _controller,
+                        transform: _transform,
                       ),
                     ),
 

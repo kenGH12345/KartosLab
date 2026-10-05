@@ -30,7 +30,7 @@ class GaoPathPainter extends CustomPainter {
         final b = mvt.modelToView(body.path[i]);
         final t = i <= fadeCount ? i / fadeCount : 1.0;
         final paint = Paint()
-          ..color = Colors.white.withValues(alpha: t.clamp(0.05, 1.0))
+          ..color = body.pathColor.withValues(alpha: t.clamp(0.05, 1.0))
           ..style = PaintingStyle.stroke
           ..strokeWidth = GaoConstants.pathStrokeWidth
           ..strokeCap = StrokeCap.round

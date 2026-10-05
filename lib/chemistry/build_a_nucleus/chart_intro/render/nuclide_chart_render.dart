@@ -58,6 +58,7 @@ class NuclideChartRender {
     required this.cellSize,
     this.presentation = NuclideChartPresentation.partial,
     this.viewport,
+    this.showMagicNumbers = false,
   });
 
   factory NuclideChartRender.from(
@@ -66,6 +67,7 @@ class NuclideChartRender {
     double? cellSize,
     NuclideChartPresentation presentation = NuclideChartPresentation.partial,
     ChartFocusMemory? focus,
+    bool showMagicNumbers = false,
   }) {
     final resolvedSize = cellSize ?? _cellSizeFor(presentation);
     final p = state.protonCount;
@@ -113,6 +115,7 @@ class NuclideChartRender {
       cellSize: resolvedSize,
       presentation: presentation,
       viewport: viewport,
+      showMagicNumbers: showMagicNumbers,
     );
   }
 
@@ -125,6 +128,7 @@ class NuclideChartRender {
   final double cellSize;
   final NuclideChartPresentation presentation;
   final ChartViewport? viewport;
+  final bool showMagicNumbers;
 
   bool get showAxes => presentation == NuclideChartPresentation.partial;
 

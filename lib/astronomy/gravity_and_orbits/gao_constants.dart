@@ -77,6 +77,13 @@ class GaoConstants {
   static const Color vectorOutline = Color.fromARGB(255, 64, 64, 64);
   static const Color returnObjectsBg = Color.fromARGB(255, 255, 250, 125);
 
+  /// Path stroke = `Body.color` in `SceneFactory.ts` / `PathsCanvasNode.ts`.
+  /// Star yellow, planet/satellite CSS gray, moon `Color.magenta`.
+  static const Color starPath = Color(0xFFFFFF00);
+  static const Color planetPath = Color(0xFF808080);
+  static const Color moonPath = Color(0xFFFF00FF);
+  static const Color satellitePath = Color(0xFF808080);
+
   static const String assetRoot = 'assets/astronomy/gravity_and_orbits';
   static const String sunAsset = '$assetRoot/sun.png';
   static const String earthAsset = '$assetRoot/earth.png';

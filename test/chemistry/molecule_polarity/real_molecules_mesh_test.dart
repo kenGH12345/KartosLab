@@ -82,6 +82,31 @@ void main() {
       expect(math.sqrt(dx * dx + dy * dy), greaterThan(0.5));
     });
 
+    test('empty space is not a grab; grabbed H follows pointer', () async {
+      final catalog = await RealMoleculeCatalog.load();
+      final model = RealMoleculesModel(catalog: catalog);
+      const center = Offset(400, 300);
+      expect(model.hitTestAtom(const Offset(10, 10), center), isNull);
+
+      final hIndex =
+          model.molecule.atoms.indexWhere((a) => a.symbol == 'H');
+      expect(hIndex, greaterThanOrEqualTo(0));
+      final h = model.molecule.atoms[hIndex];
+      Offset hScreen() {
+        final r = model.quaternion.rotate(h.x, h.y, h.z);
+        return Offset(
+          center.dx + r[0] * RealMoleculesModel.viewScale,
+          center.dy - r[1] * RealMoleculesModel.viewScale,
+        );
+      }
+
+      expect(model.hitTestAtom(hScreen(), center), hIndex);
+      final p0 = hScreen();
+      model.applyArcball(p0, p0 + const Offset(0, 50), center);
+      final p1 = hScreen();
+      expect(p1.dy, greaterThan(p0.dy));
+    });
+
     test('surface colorizers return opaque colors', () {
       final rwb = RealMoleculeSurfaceColors.colorizeElectrostaticPotentialRwb(0.1);
       expect(rwb.a, 1.0);

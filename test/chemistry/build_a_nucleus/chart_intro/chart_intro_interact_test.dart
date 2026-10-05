@@ -44,12 +44,12 @@ void main() {
 
   testWidgets('点质子 +：读数 / 元素 / 壳层 / 图 / mini-atom 同步', (tester) async {
     final c = await pumpView(tester);
-    expect(find.text('质子: 0'), findsOneWidget);
+    expect(find.text('Protons: 0'), findsOneWidget);
     expect(find.byKey(const ValueKey('chart_intro_element')), findsNothing);
 
     await tapKey(tester, const ValueKey('chart_intro_add_proton'));
 
-    expect(find.text('质子: 1'), findsOneWidget);
+    expect(find.text('Protons: 1'), findsOneWidget);
     expect(find.text('Hydrogen - 1'), findsOneWidget);
     expect(c.state.protonCount, 1);
     expect(c.state.currentCell!.y, 1);
@@ -79,7 +79,7 @@ void main() {
     );
 
     await tapKey(tester, const ValueKey('chart_intro_add_neutron'));
-    expect(find.text('中子: 1'), findsOneWidget);
+    expect(find.text('Neutrons: 1'), findsOneWidget);
     expect(
       tester.widget<IconButton>(
         find.byKey(const ValueKey('chart_intro_remove_neutron')),
@@ -88,7 +88,7 @@ void main() {
     );
 
     await tapKey(tester, const ValueKey('chart_intro_remove_neutron'));
-    expect(find.text('中子: 0'), findsOneWidget);
+    expect(find.text('Neutrons: 0'), findsOneWidget);
     c.dispose();
   });
 
@@ -109,11 +109,11 @@ void main() {
     final c = await pumpView(tester);
     await tapKey(tester, const ValueKey('chart_intro_add_proton'));
     await tapKey(tester, const ValueKey('chart_intro_add_neutron'));
-    expect(find.text('质子: 1'), findsOneWidget);
+    expect(find.text('Protons: 1'), findsOneWidget);
 
     await tapKey(tester, const ValueKey('chart_intro_reset'));
-    expect(find.text('质子: 0'), findsOneWidget);
-    expect(find.text('中子: 0'), findsOneWidget);
+    expect(find.text('Protons: 0'), findsOneWidget);
+    expect(find.text('Neutrons: 0'), findsOneWidget);
     expect(find.byKey(const ValueKey('chart_intro_element')), findsNothing);
     expect(c.state.isEmptyNucleus, isTrue);
     expect(MiniAtomRender.from(c.state, repo).showEmptyCircle, isTrue);

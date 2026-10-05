@@ -11,9 +11,16 @@ class AtomScaleWidget extends StatelessWidget {
   const AtomScaleWidget({
     super.key,
     required this.controller,
+    this.showImage = true,
+    this.showReadout = true,
   });
 
   final MakeIsotopesController controller;
+
+  /// Scale art sits behind the atom; readout sits in front so nucleons
+  /// cannot cover Mass Number / Atomic Mass (PhET AtomScaleNode layering).
+  final bool showImage;
+  final bool showReadout;
 
   @override
   Widget build(BuildContext context) {
@@ -29,56 +36,63 @@ class AtomScaleWidget extends StatelessWidget {
 
     return SizedBox(
       width: IaamConstants.scaleImageWidth,
+      height: IaamConstants.scaleImageHeight,
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          Image.asset(
-            IaamConstants.scaleAsset,
-            width: IaamConstants.scaleImageWidth,
-            fit: BoxFit.fitWidth,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 88,
-                  height: 35,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(3),
-                    border: Border.all(width: 2, color: Colors.black87),
-                  ),
-                  child: Text(
-                    readout,
-                    style: const TextStyle(fontSize: 19, color: Colors.black),
-                  ),
+          if (showImage)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Image.asset(
+                  IaamConstants.scaleAsset,
+                  width: IaamConstants.scaleImageWidth,
+                  fit: BoxFit.fitWidth,
                 ),
-                const SizedBox(width: 10),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _RadioRow(
-                      label: 'Mass Number',
-                      selected: mode == ScaleDisplayMode.massNumber,
-                      onTap: () => controller
-                          .setDisplayMode(ScaleDisplayMode.massNumber),
-                    ),
-                    const SizedBox(height: 8),
-                    _RadioRow(
-                      label: 'Atomic Mass',
-                      selected: mode == ScaleDisplayMode.atomicMass,
-                      onTap: () => controller
-                          .setDisplayMode(ScaleDisplayMode.atomicMass),
-                    ),
-                  ],
-                ),
-              ],
+              ),
             ),
-          ),
+          if (showReadout)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 88,
+                    height: 35,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(3),
+                      border: Border.all(width: 2, color: Colors.black87),
+                    ),
+                    child: Text(
+                      readout,
+                      style: const TextStyle(fontSize: 19, color: Colors.black),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _RadioRow(
+                        label: 'Mass Number',
+                        selected: mode == ScaleDisplayMode.massNumber,
+                        onTap: () => controller
+                            .setDisplayMode(ScaleDisplayMode.massNumber),
+                      ),
+                      const SizedBox(height: 8),
+                      _RadioRow(
+                        label: 'Atomic Mass',
+                        selected: mode == ScaleDisplayMode.atomicMass,
+                        onTap: () => controller
+                            .setDisplayMode(ScaleDisplayMode.atomicMass),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

@@ -222,16 +222,18 @@ class _StepPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-/// Light-blue Restart — scenery-phet `RestartUndoButton` / `RectangularPushButton`.
-///
-/// Rounded rectangle + FontAwesome-style black undo glyph (not a round white-arrow button).
+/// Light-blue Restart — scenery-phet `RestartUndoButton` chrome
+/// (`ColorConstants.LIGHT_BLUE` + 3D rounded rect) with ResetShape-style
+/// black circular arrow, matching the published WOAS control.
 class WoasRestartButton extends StatelessWidget {
   const WoasRestartButton({super.key, required this.onPressed});
 
   final VoidCallback onPressed;
 
-  /// Approximate content + `xMargin:6` / `yMargin:5` from RestartUndoButton.
-  static const Size buttonSize = Size(42, 36);
+  static const Size buttonSize = Size(40, 40);
+
+  /// `sun/js/ColorConstants.ts` LIGHT_BLUE
+  static const Color lightBlue = Color.fromARGB(255, 153, 206, 255);
 
   @override
   Widget build(BuildContext context) {
@@ -243,97 +245,115 @@ class WoasRestartButton extends StatelessWidget {
         onTap: onPressed,
         child: CustomPaint(
           size: buttonSize,
-          painter: _RestartUndoPainter(),
+          painter: const _RestartUndoPainter(),
         ),
       ),
     );
   }
 }
 
-/// `ColorConstants.LIGHT_BLUE` base + ThreeD-ish bevel + black undo icon.
 class _RestartUndoPainter extends CustomPainter {
-  // sun ColorConstants.LIGHT_BLUE ≈ sky blue used by RestartUndoButton
-  static const Color _base = Color(0xFF6CC4E8);
-  static const Color _light = Color(0xFFB8E6F6);
-  static const Color _dark = Color(0xFF3A9BC4);
-  static const Color _icon = Color(0xFF222222);
+  const _RestartUndoPainter();
 
   @override
   void paint(Canvas canvas, Size size) {
     final rrect = RRect.fromRectAndRadius(
-      Offset.zero & size,
-      Radius.circular(size.shortestSide * 0.22),
+      Rect.fromLTWH(0.5, 0.5, size.width - 1, size.height - 1),
+      const Radius.circular(8),
     );
 
-    // Raised rectangular body (lighter top-left, darker bottom-right).
-    final body = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [_light, _base, _dark],
-        stops: [0.0, 0.45, 1.0],
-      ).createShader(Offset.zero & size);
-    canvas.drawRRect(rrect, body);
+    canvas.drawRRect(
+      rrect.shift(const Offset(0, 1.2)),
+      Paint()
+        ..color = const Color.fromRGBO(0, 0, 0, 0.22)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.6),
+    );
 
-    // Soft outer outline
     canvas.drawRRect(
       rrect,
       Paint()
-        ..color = const Color(0xFF2A5A70).withValues(alpha: 0.45)
+        ..shader = RadialGradient(
+          center: const Alignment(-0.42, -0.55),
+          radius: 1.05,
+          colors: [
+            const Color(0xFFE8F7FF),
+            WoasRestartButton.lightBlue,
+            Color.lerp(WoasRestartButton.lightBlue, const Color(0xFF3A7FB8), 0.45)!,
+          ],
+          stops: const [0.0, 0.42, 1.0],
+        ).createShader(Offset.zero & size),
+    );
+
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..shader = const RadialGradient(
+          center: Alignment(-0.35, -0.5),
+          radius: 0.55,
+          colors: [
+            Color.fromRGBO(255, 255, 255, 0.62),
+            Color(0x00FFFFFF),
+          ],
+        ).createShader(Offset.zero & size),
+    );
+
+    canvas.drawRRect(
+      rrect,
+      Paint()
+        ..color = const Color.fromRGBO(40, 90, 130, 0.35)
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1,
     );
 
-    // Top highlight edge
-    final highlight = RRect.fromRectAndRadius(
-      Rect.fromLTWH(1.5, 1.5, size.width - 3, size.height * 0.42),
-      Radius.circular(size.shortestSide * 0.18),
-    );
-    canvas.drawRRect(
-      highlight,
-      Paint()..color = Colors.white.withValues(alpha: 0.28),
-    );
-
-    _paintUndoIcon(canvas, size);
+    canvas.save();
+    canvas.translate(size.width / 2, size.height / 2 + 0.5);
+    canvas.drawPath(_circularUndoPath(size.shortestSide * 0.32), Paint()..color = Colors.black);
+    canvas.restore();
   }
 
-  /// FontAwesome `undoSolid` silhouette: CCW arc, arrowhead pointing left.
-  void _paintUndoIcon(Canvas canvas, Size size) {
-    final cx = size.width / 2;
-    final cy = size.height / 2;
-    final r = size.shortestSide * 0.28;
-    final stroke = size.shortestSide * 0.125;
-
-    final arcPaint = Paint()
-      ..color = _icon
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = stroke
-      ..strokeCap = StrokeCap.butt;
-
-    // Gap near top-right; sweep CCW ending on the left (arrow points ←).
-    // Canvas: 0=east, positive=CW → negative sweep = CCW.
-    const arcStart = math.pi * 0.15;
-    const arcSweep = -math.pi * 1.55;
-    canvas.drawArc(
-      Rect.fromCircle(center: Offset(cx, cy), radius: r),
-      arcStart,
-      arcSweep,
-      false,
-      arcPaint,
-    );
-
-    final endAngle = arcStart + arcSweep;
-    final tip = Offset(
-      cx + r * math.cos(endAngle),
-      cy + r * math.sin(endAngle),
-    );
-    final hw = size.shortestSide * 0.20;
+  /// Filled CCW circular arrow (same family as scenery-phet `ResetShape`),
+  /// gap at upper-right, head pointing left — matches the WOAS screenshot.
+  static Path _circularUndoPath(double radius) {
+    const adj = 0.35;
+    final innerR = radius * 0.62 - adj;
+    final outerR = radius * 1.05 + adj;
+    final headWidth = 2.05 * (outerR - innerR);
+    const startAngle = -math.pi * 0.28;
+    const endToNeck = -2 * math.pi * 0.78;
+    const arrowHeadSpan = -math.pi * 0.20;
+    final neckAngle = startAngle + endToNeck;
+    final extrusion = (headWidth - (outerR - innerR)) / 2;
     final path = Path()
-      ..moveTo(tip.dx - hw * 0.35, tip.dy)
-      ..lineTo(tip.dx + hw * 0.65, tip.dy - hw * 0.7)
-      ..lineTo(tip.dx + hw * 0.65, tip.dy + hw * 0.7)
-      ..close();
-    canvas.drawPath(path, Paint()..color = _icon);
+      ..moveTo(innerR * math.cos(startAngle), innerR * math.sin(startAngle))
+      ..lineTo(outerR * math.cos(startAngle), outerR * math.sin(startAngle));
+    path.arcTo(
+      Rect.fromCircle(center: Offset.zero, radius: outerR),
+      startAngle,
+      endToNeck,
+      false,
+    );
+    path
+      ..lineTo(
+        (outerR + extrusion) * math.cos(neckAngle),
+        (outerR + extrusion) * math.sin(neckAngle),
+      )
+      ..lineTo(
+        ((outerR + innerR) * 0.52) * math.cos(neckAngle + arrowHeadSpan),
+        ((outerR + innerR) * 0.52) * math.sin(neckAngle + arrowHeadSpan),
+      )
+      ..lineTo(
+        (innerR - extrusion) * math.cos(neckAngle),
+        (innerR - extrusion) * math.sin(neckAngle),
+      )
+      ..lineTo(innerR * math.cos(neckAngle), innerR * math.sin(neckAngle));
+    path.arcTo(
+      Rect.fromCircle(center: Offset.zero, radius: innerR),
+      neckAngle,
+      -endToNeck,
+      false,
+    );
+    path.close();
+    return path;
   }
 
   @override

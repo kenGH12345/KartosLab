@@ -10,6 +10,7 @@ import 'package:kratos/chemistry/build_a_nucleus/chart_intro/render/shell_nucleu
 import 'package:kratos/chemistry/build_a_nucleus/chart_intro/widgets/chart_intro_status_text.dart';
 import 'package:kratos/chemistry/build_a_nucleus/data/nuclide_repository.dart';
 import 'package:kratos/chemistry/build_a_nucleus/data/nuclide_table.dart';
+import 'package:kratos/chemistry/build_a_nucleus/model/nucleon.dart';
 
 void main() {
   late final NuclideRepository repo;
@@ -117,6 +118,33 @@ void main() {
     expect(c.state.neutronCount, 0);
     expect(c.state.currentCell, isNull);
     expect(MiniAtomRender.from(c.state, repo).showEmptyCircle, isTrue);
+    c.dispose();
+  });
+
+  test('不存在核素 1 秒后回到上一有效计数', () {
+    final c = newController();
+    c.addNeutron();
+    expect(c.state.neutronCount, 1);
+    c.addNeutron();
+    expect(c.state.isShowingInvalidNuclide, isTrue);
+    c.tick(0.5);
+    expect(c.state.neutronCount, 2);
+    c.tick(0.5);
+    expect(c.state.neutronCount, 1);
+    expect(c.state.isShowingInvalidNuclide, isFalse);
+    c.dispose();
+  });
+
+  test('生成器拖到能级外不入座；拖进能级才计数', () {
+    final c = newController();
+    expect(c.beginCreatorDrag(NucleonType.proton), isTrue);
+    expect(c.state.protonCount, 0);
+    expect(c.state.canAddProton, isFalse);
+    c.endCreatorDrag(inShell: false);
+    expect(c.state.protonCount, 0);
+    expect(c.beginCreatorDrag(NucleonType.proton), isTrue);
+    c.endCreatorDrag(inShell: true);
+    expect(c.state.protonCount, 1);
     c.dispose();
   });
 

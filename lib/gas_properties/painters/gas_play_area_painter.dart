@@ -49,27 +49,15 @@ class GasPlayAreaPainter extends CustomPainter {
     if (state.lidIsOn) {
       final lidLeftModel = state.containerRight - state.lidWidth;
       final lidLeft = t.modelToViewX(lidLeftModel);
-      final lidRight = right;
-      final lidTop = top - 5;
-      final lidH = wall + 6;
-
-      // Thick gray lid bar (PhET LidNode base) — anchored to container right.
-      final lidRect = RRect.fromRectAndRadius(
-        Rect.fromLTRB(lidLeft, lidTop, lidRight, lidTop + lidH),
-        const Radius.circular(1),
-      );
-      canvas.drawRRect(
-        lidRect,
+      canvas.drawLine(
+        Offset(lidLeft, top),
+        Offset(right, top),
         Paint()
-          ..shader = const LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFD4D4D4), Color(0xFF9A9A9A), Color(0xFF7A7A7A)],
-          ).createShader(lidRect.outerRect),
+          ..color = const Color(0xFFB0B0B0)
+          ..strokeWidth = wall + 2,
       );
-
-      // Handle at RIGHT end of lid (PhET LidNode: handle.right = base.right − inset).
-      _paintLidHandle(canvas, Offset(lidRight - 10, lidTop));
+      // Handle on the LEFT edge of the lid — same as Gases Intro.
+      _paintLidHandle(canvas, lidLeft + 18, top);
     }
 
     // Resize handle on left wall
@@ -85,17 +73,6 @@ class GasPlayAreaPainter extends CustomPainter {
         mainColor: p.color.withValues(alpha: opacity),
         highlightColor: p.highlight.withValues(alpha: opacity),
       );
-    }
-
-    if (state.widthVisible) {
-      final tp = TextPainter(
-        text: TextSpan(
-          text: '${(state.widthPm / 1000).toStringAsFixed(1)} nm',
-          style: const TextStyle(color: Colors.white70, fontSize: 12),
-        ),
-        textDirection: TextDirection.ltr,
-      )..layout();
-      tp.paint(canvas, Offset((left + right) / 2 - tp.width / 2, bottom + 6));
     }
 
     if (state.wallVelocityVisible && state.leftWallVelocityX.abs() > 1e-6) {
@@ -118,62 +95,38 @@ class GasPlayAreaPainter extends CustomPainter {
     );
   }
 
-  void _paintLidHandle(Canvas canvas, Offset anchor) {
-    // L-bracket attachment under the grip (PhET HandleNode, right attachment).
-    final bracket = Path()
-      ..moveTo(anchor.dx - 2, anchor.dy + 2)
-      ..lineTo(anchor.dx - 2, anchor.dy - 10)
-      ..lineTo(anchor.dx + 6, anchor.dy - 10);
-    canvas.drawPath(
-      bracket,
-      Paint()
-        ..color = const Color(0xFF8A8A8A)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3
-        ..strokeJoin = StrokeJoin.round
-        ..strokeCap = StrokeCap.round,
-    );
-
-    // Horizontal ribbed grip above the lid (scale ~0.4 of HandleNode).
-    final grip = RRect.fromRectAndRadius(
-      Rect.fromCenter(
-        center: Offset(anchor.dx + 2, anchor.dy - 18),
-        width: 36,
-        height: 16,
-      ),
+  void _paintLidHandle(Canvas canvas, double x, double lidY) {
+    final rect = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: Offset(x, lidY - 10), width: 28, height: 14),
       const Radius.circular(3),
     );
     canvas.drawRRect(
-      grip,
+      rect,
       Paint()
         ..shader = const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xFFE8E8E8), Color(0xFFA0A0A0), Color(0xFF707070)],
-        ).createShader(grip.outerRect),
+          colors: [
+            Color.fromRGBO(245, 245, 245, 1),
+            Color.fromRGBO(160, 160, 160, 1),
+          ],
+        ).createShader(rect.outerRect),
     );
     canvas.drawRRect(
-      grip,
+      rect,
       Paint()
-        ..color = const Color(0xFF555555)
+        ..color = Colors.black
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1,
+        ..strokeWidth = 1.2,
     );
-    // Finger indents
     final indent = Paint()
-      ..color = const Color(0xFF5A5A5A)
-      ..strokeWidth = 1.2
-      ..style = PaintingStyle.stroke;
-    for (final dx in [-10.0, -3.0, 4.0, 11.0]) {
-      canvas.drawArc(
-        Rect.fromCenter(
-          center: Offset(anchor.dx + 2 + dx, anchor.dy - 18),
-          width: 6,
-          height: 10,
-        ),
-        -2.4,
-        1.6,
-        false,
+      ..color = const Color(0x66000000)
+      ..strokeWidth = 1;
+    for (var i = 0; i < 4; i++) {
+      final dx = rect.outerRect.left + 6 + i * 5.0;
+      canvas.drawLine(
+        Offset(dx, rect.outerRect.top + 3),
+        Offset(dx, rect.outerRect.bottom - 3),
         indent,
       );
     }

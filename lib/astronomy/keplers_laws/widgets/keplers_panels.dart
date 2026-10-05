@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../controller/keplers_laws_controller.dart';
 import '../keplers_laws_colors.dart';
 import '../keplers_laws_strings.dart';
+import '../keplers_motion.dart';
 import '../model/orbit_types.dart';
 import '../model/target_orbit.dart';
 import 'first_law_graph.dart';
@@ -47,6 +48,8 @@ class VisibilityPanel extends StatelessWidget {
             height: 22,
             child: Checkbox(
               value: value,
+              visualDensity: VisualDensity.compact,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onChanged: (x) {
                 onChanged(x ?? false);
                 controller.bump();
@@ -59,19 +62,24 @@ class VisibilityPanel extends StatelessWidget {
               ),
             ),
           ),
-          if (icon != null) ...[icon, const SizedBox(width: 4)],
+          const SizedBox(width: 4),
           Flexible(
             child: Text(
               label,
               style: const TextStyle(color: Colors.white, fontSize: 14),
             ),
           ),
+          if (icon != null) ...[const SizedBox(width: 4), icon],
         ],
       );
     }
 
     return KeplersPanel(
-      child: ConstrainedBox(
+      child: AnimatedSize(
+        duration: KeplersMotion.duration,
+        curve: KeplersMotion.curve,
+        alignment: Alignment.topLeft,
+        child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 220),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -112,6 +120,7 @@ class VisibilityPanel extends StatelessWidget {
                 value: v.fociVisible,
                 label: KeplersLawsStrings.foci,
                 onChanged: (x) => v.fociVisible = x,
+                icon: const _FociLegendIcon(),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20),
@@ -119,12 +128,14 @@ class VisibilityPanel extends StatelessWidget {
                   value: v.stringChecked,
                   label: KeplersLawsStrings.string,
                   onChanged: (x) => v.stringChecked = x,
+                  icon: const _DashedLineIcon(color: KeplersLawsColors.foci),
                 ),
               ),
               box(
                 value: v.axesVisible,
                 label: KeplersLawsStrings.axes,
                 onChanged: (x) => v.axesVisible = x,
+                icon: const _AxisLegendIcon(),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20),
@@ -138,6 +149,7 @@ class VisibilityPanel extends StatelessWidget {
                 value: v.eccentricityVisible,
                 label: KeplersLawsStrings.eccentricity,
                 onChanged: (x) => v.eccentricityVisible = x,
+                icon: const _EccLegendIcon(),
               ),
             ],
             if (controller.isSecondLaw) ...[
@@ -182,13 +194,13 @@ class VisibilityPanel extends StatelessWidget {
               value: v.velocityVisible,
               label: KeplersLawsStrings.velocity,
               onChanged: (x) => v.velocityVisible = x,
-              icon: const Icon(Icons.arrow_right_alt,
-                  color: Color(0xFF00CC00), size: 16),
+              icon: const _VectorLegendIcon(color: KeplersLawsColors.velocity),
             ),
             box(
               value: v.gravityVisible,
               label: KeplersLawsStrings.gravityForce,
               onChanged: (x) => v.gravityVisible = x,
+              icon: const _VectorLegendIcon(color: KeplersLawsColors.gravity),
             ),
             if (v.gravityVisible)
               SliderTheme(
@@ -209,11 +221,13 @@ class VisibilityPanel extends StatelessWidget {
               value: v.gridVisible,
               label: KeplersLawsStrings.grid,
               onChanged: (x) => v.gridVisible = x,
+              icon: const _GridLegendIcon(),
             ),
             box(
               value: v.measuringTapeVisible,
               label: KeplersLawsStrings.measuringTape,
               onChanged: (x) => v.measuringTapeVisible = x,
+              icon: const _TapeLegendIcon(),
             ),
             box(
               value: v.stopwatchVisible,
@@ -225,9 +239,11 @@ class VisibilityPanel extends StatelessWidget {
                   controller.stopwatchTime = 0;
                 }
               },
+              icon: const _StopwatchLegendIcon(),
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -242,45 +258,94 @@ class FirstLawSidePanel extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!controller.isFirstLaw) return const SizedBox.shrink();
     final e = controller.engine;
-    return KeplersPanel(
+    final show = controller.visible.eccentricityVisible;
+    return AnimatedSize(
+      duration: KeplersMotion.duration,
+      curve: KeplersMotion.curve,
+      alignment: Alignment.topLeft,
+      child: show
+          ? KeplersPanel(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            '${KeplersLawsStrings.eccentricity} = c / a',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+          Text.rich(
+            TextSpan(
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              children: [
+                const TextSpan(text: 'Eccentricity = '),
+                TextSpan(
+                  text: 'c',
+                  style: TextStyle(color: KeplersLawsColors.focalDistance),
+                ),
+                const TextSpan(text: ' / '),
+                TextSpan(
+                  text: 'a',
+                  style: TextStyle(color: KeplersLawsColors.semiMajorAxis),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            e.eccentricityDisplay.toStringAsFixed(2),
-            style: const TextStyle(color: Color(0xFFFF00FF), fontSize: 20),
-          ),
+          FirstLawGraph(controller: controller),
           const SizedBox(height: 8),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: FirstLawGraph(controller: controller),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'a = ${e.a.toStringAsFixed(2)} AU',
-            style: const TextStyle(color: Color(0xFFFF9500), fontSize: 14),
-          ),
-          Text(
-            'b = ${e.b.toStringAsFixed(2)} AU',
-            style: const TextStyle(color: Color(0xFFB0EE86), fontSize: 14),
-          ),
-          Text(
-            'c = ${e.c.toStringAsFixed(2)} AU',
-            style: const TextStyle(color: Color(0xFFE6C7FF), fontSize: 14),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            decoration: BoxDecoration(
+              color: const Color(0xFF2A2A2A),
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: KeplersLawsColors.panelStroke),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text.rich(
+                  TextSpan(
+                    style: const TextStyle(fontSize: 14, height: 1.3),
+                    children: [
+                      TextSpan(
+                        text: 'a',
+                        style: TextStyle(
+                          color: KeplersLawsColors.semiMajorAxis,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' = ${e.a.toStringAsFixed(2)} AU',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                Text.rich(
+                  TextSpan(
+                    style: const TextStyle(fontSize: 14, height: 1.3),
+                    children: [
+                      TextSpan(
+                        text: 'c',
+                        style: TextStyle(
+                          color: KeplersLawsColors.focalDistance,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: ' = ${e.c.toStringAsFixed(2)} AU',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),
+    )
+          : const SizedBox(width: double.infinity),
     );
   }
 }
@@ -310,21 +375,22 @@ class SecondLawSidePanel extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(
-                visualDensity: VisualDensity.compact,
+              _SpinnerButton(
+                label: '−',
                 onPressed: () => controller
                     .setPeriodDivisions(controller.periodDivisions - 1),
-                icon: const Icon(Icons.chevron_left, color: Colors.white),
               ),
-              Text(
-                '${controller.periodDivisions}',
-                style: const TextStyle(color: Colors.white, fontSize: 18),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Text(
+                  '${controller.periodDivisions}',
+                  style: const TextStyle(color: Colors.white, fontSize: 18),
+                ),
               ),
-              IconButton(
-                visualDensity: VisualDensity.compact,
+              _SpinnerButton(
+                label: '+',
                 onPressed: () => controller
                     .setPeriodDivisions(controller.periodDivisions + 1),
-                icon: const Icon(Icons.chevron_right, color: Colors.white),
               ),
             ],
           ),
@@ -494,6 +560,294 @@ class OrbitalWarningBanner extends StatelessWidget {
         fontSize: 18,
       ),
       textAlign: TextAlign.center,
+    );
+  }
+}
+
+class _SpinnerButton extends StatelessWidget {
+  const _SpinnerButton({required this.label, required this.onPressed});
+
+  final String label;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFF5A5A5A),
+      borderRadius: BorderRadius.circular(4),
+      child: InkWell(
+        onTap: onPressed,
+        borderRadius: BorderRadius.circular(4),
+        child: SizedBox(
+          width: 28,
+          height: 28,
+          child: Center(
+            child: Text(
+              label,
+              style: const TextStyle(color: Colors.white, fontSize: 18),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _VectorLegendIcon extends StatelessWidget {
+  const _VectorLegendIcon({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(22, 10),
+      painter: _ArrowPainter(color),
+    );
+  }
+}
+
+class _ArrowPainter extends CustomPainter {
+  _ArrowPainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = color
+      ..strokeWidth = 2
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+    canvas.drawLine(
+      Offset(0, size.height / 2),
+      Offset(size.width - 5, size.height / 2),
+      p,
+    );
+    final tip = Path()
+      ..moveTo(size.width - 7, 1)
+      ..lineTo(size.width, size.height / 2)
+      ..lineTo(size.width - 7, size.height - 1)
+      ..close();
+    canvas.drawPath(tip, Paint()..color = color);
+  }
+
+  @override
+  bool shouldRepaint(covariant _ArrowPainter oldDelegate) =>
+      oldDelegate.color != color;
+}
+
+class _FociLegendIcon extends StatelessWidget {
+  const _FociLegendIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(20, 12),
+      painter: _FociPainter(),
+    );
+  }
+}
+
+class _FociPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = KeplersLawsColors.foci
+      ..strokeWidth = 1.8
+      ..strokeCap = StrokeCap.round;
+    void xMark(Offset c) {
+      canvas.drawLine(c + const Offset(-4, -4), c + const Offset(4, 4), paint);
+      canvas.drawLine(c + const Offset(-4, 4), c + const Offset(4, -4), paint);
+    }
+
+    xMark(Offset(size.width * 0.28, size.height / 2));
+    xMark(Offset(size.width * 0.72, size.height / 2));
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _DashedLineIcon extends StatelessWidget {
+  const _DashedLineIcon({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(18, 8),
+      painter: _DashedPainter(color),
+    );
+  }
+}
+
+class _DashedPainter extends CustomPainter {
+  _DashedPainter(this.color);
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = color
+      ..strokeWidth = 1.6;
+    const dash = 3.0;
+    var x = 0.0;
+    final y = size.height / 2;
+    while (x < size.width) {
+      canvas.drawLine(Offset(x, y), Offset((x + dash).clamp(0, size.width), y), p);
+      x += dash * 1.8;
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _DashedPainter oldDelegate) =>
+      oldDelegate.color != color;
+}
+
+class _AxisLegendIcon extends StatelessWidget {
+  const _AxisLegendIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(22, 12),
+      painter: _AxisPainter(),
+    );
+  }
+}
+
+class _AxisPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final major = Paint()
+      ..color = KeplersLawsColors.semiMajorAxis
+      ..strokeWidth = 2;
+    final minor = Paint()
+      ..color = KeplersLawsColors.semiMinorAxis
+      ..strokeWidth = 2;
+    canvas.drawLine(
+      Offset(1, size.height / 2),
+      Offset(size.width - 1, size.height / 2),
+      major,
+    );
+    canvas.drawLine(
+      Offset(size.width / 2, 1),
+      Offset(size.width / 2, size.height - 1),
+      minor,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _GridLegendIcon extends StatelessWidget {
+  const _GridLegendIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(size: const Size(18, 14), painter: _GridPainter());
+  }
+}
+
+class _GridPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final p = Paint()
+      ..color = const Color(0xFFB0B0B0)
+      ..strokeWidth = 1;
+    for (var i = 0; i < 3; i++) {
+      final t = i / 2;
+      canvas.drawLine(Offset(0, size.height * t), Offset(size.width, size.height * t), p);
+      canvas.drawLine(Offset(size.width * t, 0), Offset(size.width * t, size.height), p);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _TapeLegendIcon extends StatelessWidget {
+  const _TapeLegendIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(size: const Size(22, 16), painter: _TapeIconPainter());
+  }
+}
+
+class _TapeIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final body = RRect.fromRectAndRadius(
+      Rect.fromLTWH(0, size.height * 0.15, size.width * 0.62, size.height * 0.7),
+      const Radius.circular(3),
+    );
+    canvas.drawRRect(body, Paint()..color = const Color(0xFFF5E000));
+    canvas.drawCircle(
+      Offset(size.width * 0.31, size.height * 0.5),
+      size.height * 0.22,
+      Paint()..color = const Color(0xFF4AA3E0),
+    );
+    canvas.drawLine(
+      Offset(size.width * 0.62, size.height * 0.5),
+      Offset(size.width, size.height * 0.5),
+      Paint()
+        ..color = const Color(0xFFCCCCCC)
+        ..strokeWidth = 3,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _StopwatchLegendIcon extends StatelessWidget {
+  const _StopwatchLegendIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: const Size(28, 16),
+      painter: _StopwatchIconPainter(),
+    );
+  }
+}
+
+class _StopwatchIconPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final r = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      Radius.circular(size.height * 0.2),
+    );
+    canvas.drawRRect(r, Paint()..color = const Color(0xFF5082E6));
+    canvas.drawRRect(
+      r.deflate(2),
+      Paint()..color = Colors.white,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _EccLegendIcon extends StatelessWidget {
+  const _EccLegendIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Text(
+      'e',
+      style: TextStyle(
+        color: KeplersLawsColors.orbit,
+        fontSize: 14,
+        fontStyle: FontStyle.italic,
+        fontWeight: FontWeight.bold,
+      ),
     );
   }
 }

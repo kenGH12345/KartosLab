@@ -68,20 +68,64 @@ class MasbModel with MasbDragLogic {
     )..forcesOrientation = 1;
     springs = [firstSpring, secondSpring!];
 
-    const labeled = 0xFF3B82F6;
-    const mysteryL = 0xFF7C3AED;
-    const mysteryM = 0xFFDB2777;
-    const mysteryS = 0xFFEA580C;
     masses = [
-      MasbMass(massKg: 0.250, xPosition: 0.12, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.250, xPosition: 0.16, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.100, xPosition: 0.30, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.100, xPosition: 0.33, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.050, xPosition: 0.425, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.050, xPosition: 0.445, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.200, xPosition: 0.76, gravityGetter: () => gravity, mysteryLabel: true, colorArgb: mysteryL),
-      MasbMass(massKg: 0.100, xPosition: 0.69, gravityGetter: () => gravity, mysteryLabel: true, colorArgb: mysteryM),
-      MasbMass(massKg: 0.075, xPosition: 0.62, gravityGetter: () => gravity, mysteryLabel: true, colorArgb: mysteryS),
+      MasbMass(
+        massKg: 0.250,
+        xPosition: 0.12,
+        gravityGetter: () => gravity,
+        colorArgb: MasbConstants.labeledMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.250,
+        xPosition: 0.16,
+        gravityGetter: () => gravity,
+        colorArgb: MasbConstants.labeledMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.100,
+        xPosition: 0.30,
+        gravityGetter: () => gravity,
+        colorArgb: MasbConstants.labeledMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.100,
+        xPosition: 0.33,
+        gravityGetter: () => gravity,
+        colorArgb: MasbConstants.labeledMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.050,
+        xPosition: 0.425,
+        gravityGetter: () => gravity,
+        colorArgb: MasbConstants.labeledMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.050,
+        xPosition: 0.445,
+        gravityGetter: () => gravity,
+        colorArgb: MasbConstants.labeledMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.200,
+        xPosition: 0.76,
+        gravityGetter: () => gravity,
+        mysteryLabel: true,
+        colorArgb: MasbConstants.largeMysteryMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.100,
+        xPosition: 0.69,
+        gravityGetter: () => gravity,
+        mysteryLabel: true,
+        colorArgb: MasbConstants.mediumMysteryMassArgb,
+      ),
+      MasbMass(
+        massKg: 0.075,
+        xPosition: 0.62,
+        gravityGetter: () => gravity,
+        mysteryLabel: true,
+        colorArgb: MasbConstants.smallMysteryMassArgb,
+      ),
     ];
   }
 
@@ -98,19 +142,37 @@ class MasbModel with MasbDragLogic {
     springs = [firstSpring];
     firstSpring.periodTrace = PeriodTrace(firstSpring);
 
-    const labeled = 0xFF3B82F6;
-    const mystery = 0xFF7C3AED;
+    const massX = 0.13;
+    const massOffset = 0.15;
     masses = [
       MasbMass(
         massKg: 0.100,
-        xPosition: 0.18,
+        xPosition: massX,
         gravityGetter: () => gravity,
-        colorArgb: labeled,
+        colorArgb: MasbConstants.adjustableMassArgb,
         adjustable: true,
       ),
-      MasbMass(massKg: 0.150, xPosition: 0.28, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.200, xPosition: 0.38, gravityGetter: () => gravity, colorArgb: labeled),
-      MasbMass(massKg: 0.120, xPosition: 0.55, gravityGetter: () => gravity, mysteryLabel: true, colorArgb: mystery),
+      MasbMass(
+        massKg: 0.060,
+        xPosition: massX + massOffset,
+        gravityGetter: () => gravity,
+        mysteryLabel: true,
+        colorArgb: MasbConstants.labSmallMysteryArgb,
+      ),
+      MasbMass(
+        massKg: 0.120,
+        xPosition: massX + massOffset * 1.5,
+        gravityGetter: () => gravity,
+        mysteryLabel: true,
+        colorArgb: MasbConstants.labMediumMysteryArgb,
+      ),
+      MasbMass(
+        massKg: 0.180,
+        xPosition: massX + massOffset * 2,
+        gravityGetter: () => gravity,
+        mysteryLabel: true,
+        colorArgb: MasbConstants.labLargeMysteryArgb,
+      ),
     ];
   }
 

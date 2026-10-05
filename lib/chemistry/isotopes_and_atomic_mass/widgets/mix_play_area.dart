@@ -17,7 +17,7 @@ import '../transform/iaam_transform.dart';
 import 'control_isotope.dart';
 import 'sim_coord_scope.dart';
 
-class MixPlayArea extends StatelessWidget {
+class MixPlayArea extends StatefulWidget {
   const MixPlayArea({
     super.key,
     required this.controller,
@@ -26,6 +26,95 @@ class MixPlayArea extends StatelessWidget {
 
   final MixturesController controller;
   final IaamTransform transform;
+
+  @override
+  State<MixPlayArea> createState() => _MixPlayAreaState();
+}
+
+class _MixPlayAreaState extends State<MixPlayArea> {
+  int? _activePointer;
+
+  MixturesController get controller => widget.controller;
+  IaamTransform get transform => widget.transform;
+
+  Offset _toModel(Offset global) {
+    final box = context.findRenderObject() as RenderBox?;
+    if (box != null) {
+      final local = box.globalToLocal(global);
+      return transform.viewToModel(local.dx, local.dy);
+    }
+    final scope = context.findAncestorStateOfType<SimCoordScopeState>();
+    final sim = scope == null ? global : scope.globalToSim(global);
+    return transform.viewToModel(sim.dx, sim.dy);
+  }
+
+  MixParticle? _hitParticle(double mx, double my) {
+    final m = controller.model;
+    bool hits(MixParticle p) {
+      final dx = p.x - mx;
+      final dy = p.y - my;
+      final r = p.radius * 2.2;
+      return dx * dx + dy * dy <= r * r;
+    }
+
+    final dragging = m.draggingParticle;
+    if (dragging != null && hits(dragging)) return dragging;
+    for (final p in m.chamberParticles.reversed) {
+      if (hits(p)) return p;
+    }
+    final inBucket = List<MixParticle>.of(m.bucketParticles)
+      ..sort((a, b) => b.destY.compareTo(a.destY));
+    for (final p in inBucket) {
+      if (hits(p)) return p;
+    }
+    return null;
+  }
+
+  MixParticle? _hitBucket(double mx, double my) {
+    final m = controller.model;
+    final isotopes = m.possibleIsotopes;
+    for (var i = 0; i < isotopes.length; i++) {
+      final pos = m.bucketPositionForIndex(i);
+      final halfW = kMixBucketWidth / 2;
+      final top = pos.y - 8;
+      final bottom = pos.y + kMixBucketHeight;
+      if (mx < pos.x - halfW || mx > pos.x + halfW) continue;
+      if (my < top || my > bottom) continue;
+      MixParticle? pick;
+      for (final p in m.bucketParticles) {
+        if (p.massNumber != isotopes[i].massNumber) continue;
+        if (pick == null || p.destY > pick.destY) pick = p;
+      }
+      return pick;
+    }
+    return null;
+  }
+
+  void _onPointerDown(PointerDownEvent e) {
+    if (_activePointer != null) return;
+    final m = controller.model;
+    if (m.showingNaturesMix ||
+        m.interactivityMode != InteractivityMode.bucketsAndLargeAtoms) {
+      return;
+    }
+    final model = _toModel(e.position);
+    final hit = _hitParticle(model.dx, model.dy) ?? _hitBucket(model.dx, model.dy);
+    if (hit == null) return;
+    if (!controller.beginDrag(hit.id, model.dx, model.dy)) return;
+    _activePointer = e.pointer;
+  }
+
+  void _onPointerMove(PointerMoveEvent e) {
+    if (e.pointer != _activePointer) return;
+    final model = _toModel(e.position);
+    controller.updateDrag(model.dx, model.dy);
+  }
+
+  void _onPointerEnd(PointerEvent e) {
+    if (e.pointer != _activePointer) return;
+    _activePointer = null;
+    controller.endDrag();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +137,34 @@ class MixPlayArea extends StatelessWidget {
     final canvasParticles =
         useCanvas ? m.chamberParticles : const <MixParticle>[];
 
-    final largeParticles = <MixParticle>[
-      if (bucketMode) ...m.bucketParticles,
-      if (bucketMode) ...m.chamberParticles,
-      if (bucketMode && m.draggingParticle != null) m.draggingParticle!,
-    ];
+    final bucketSorted = List<MixParticle>.of(m.bucketParticles)
+      ..sort((a, b) => a.destY.compareTo(b.destY));
 
-    return Stack(
+    Widget ball(MixParticle p) {
+      final v = transform.modelToView(p.x, p.y);
+      final r = transform.modelToViewDelta(p.radius);
+      final color = getIsotopeColorForMass(
+        atomicNumber: m.selectedAtomicNumber,
+        massNumber: p.massNumber,
+      );
+      return Positioned(
+        left: v.dx - r,
+        top: v.dy - r,
+        width: r * 2,
+        height: r * 2,
+        child: IgnorePointer(
+          key: ValueKey('mix_particle_${p.id}'),
+          child: CustomPaint(
+            painter: _IsoSpherePainter(
+              color: color,
+              massNumber: p.massNumber,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final stack = Stack(
       clipBehavior: Clip.none,
       children: [
         Positioned(
@@ -89,31 +199,23 @@ class MixPlayArea extends StatelessWidget {
               ),
             ),
           ),
-        if (bucketMode)
-          ...largeParticles.map((p) {
-            final v = transform.modelToView(p.x, p.y);
-            final r = transform.modelToViewDelta(p.radius);
-            final color = getIsotopeColorForMass(
-              atomicNumber: m.selectedAtomicNumber,
-              massNumber: p.massNumber,
-            );
-            return Positioned(
-              left: v.dx - r,
-              top: v.dy - r,
-              width: r * 2,
-              height: r * 2,
-              child: _DraggableMixParticle(
-                particleId: p.id,
-                massNumber: p.massNumber,
-                controller: controller,
-                transform: transform,
-                color: color,
-              ),
-            );
-          }),
+        if (bucketMode) ...bucketSorted.map(ball),
         if (bucketMode || m.showingNaturesMix)
           ..._bucketLayers(m, front: true),
+        if (bucketMode) ...m.chamberParticles.map(ball),
+        if (bucketMode && m.draggingParticle != null)
+          ball(m.draggingParticle!),
       ],
+    );
+
+    if (!bucketMode) return stack;
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: _onPointerDown,
+      onPointerMove: _onPointerMove,
+      onPointerUp: _onPointerEnd,
+      onPointerCancel: _onPointerEnd,
+      child: stack,
     );
   }
 
@@ -281,50 +383,6 @@ class _ColoredBucketPainter extends CustomPainter {
       oldDelegate.baseColor != baseColor ||
       oldDelegate.label != label ||
       oldDelegate.layer != layer;
-}
-
-class _DraggableMixParticle extends StatelessWidget {
-  const _DraggableMixParticle({
-    required this.particleId,
-    required this.massNumber,
-    required this.controller,
-    required this.transform,
-    required this.color,
-  });
-
-  final int particleId;
-  final int massNumber;
-  final MixturesController controller;
-  final IaamTransform transform;
-  final Color color;
-
-  Offset _viewInSim(BuildContext context, Offset global) {
-    final scope = context.findAncestorStateOfType<SimCoordScopeState>();
-    if (scope == null) return global;
-    return scope.globalToSim(global);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onPanStart: (details) {
-        final viewPos = _viewInSim(context, details.globalPosition);
-        final model = transform.viewToModel(viewPos.dx, viewPos.dy);
-        controller.beginDrag(particleId, model.dx, model.dy);
-      },
-      onPanUpdate: (details) {
-        final viewPos = _viewInSim(context, details.globalPosition);
-        final model = transform.viewToModel(viewPos.dx, viewPos.dy);
-        controller.updateDrag(model.dx, model.dy);
-      },
-      onPanEnd: (_) => controller.endDrag(),
-      onPanCancel: () => controller.endDrag(),
-      child: CustomPaint(
-        painter: _IsoSpherePainter(color: color, massNumber: massNumber),
-      ),
-    );
-  }
 }
 
 class _IsoSpherePainter extends CustomPainter {

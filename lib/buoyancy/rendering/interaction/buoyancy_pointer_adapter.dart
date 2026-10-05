@@ -5,7 +5,6 @@ import '../../domain/world/vec2.dart';
 import '../../shared/buoyancy_scale_host.dart';
 import '../../shared/buoyancy_screen_model.dart';
 import '../primitives/composed_scene.dart';
-import '../primitives/scene_scale_marker.dart';
 import '../transform/bvec3.dart';
 import '../transform/buoyancy_three_transform.dart';
 

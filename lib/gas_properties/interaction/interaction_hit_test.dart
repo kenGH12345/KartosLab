@@ -11,17 +11,12 @@ class InteractionHitTest {
 
   final GasCoordinateTransform transform;
 
-  /// Lid handle — PhET places HandleNode at the **right** end of the lid base.
+  /// Lid handle — left edge of the lid bar (same as Gases Intro).
   Rect lidHit(GasRenderState state) {
     if (!state.lidIsOn) return Rect.zero;
-    final right = transform.modelToViewX(state.containerRight);
+    final lidLeft = transform.modelToViewX(state.containerRight - state.lidWidth);
     final y = transform.modelToViewY(state.containerTop);
-    // Grip sits just left of the right wall, above the lid bar.
-    return Rect.fromCenter(
-      center: Offset(right - 8, y - 18),
-      width: 56,
-      height: 44,
-    );
+    return Rect.fromLTRB(lidLeft - 8, y - 22, lidLeft + 36, y + 14);
   }
 
   /// Left wall resize handle — vertical strip around left wall mid.

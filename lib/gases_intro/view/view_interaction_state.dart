@@ -55,6 +55,17 @@ class ViewInteractionState extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Lid handle follows pointer. Positive [dWidth] widens the lid (closes).
+  void nudgeLidWidth(IdealGasLawModel model, double dWidth) {
+    final c = model.container;
+    if (!c.lidIsOn) return;
+    final next =
+        (c.lidWidth + dWidth).clamp(c.minLidWidth, c.maxLidWidth).toDouble();
+    if ((next - c.lidWidth).abs() < 1e-6) return;
+    c.lidWidth = next;
+    notifyListeners();
+  }
+
   /// LidDragListener: set lidWidth from opening-left model X.
   void setLidWidthFromOpeningLeft(IdealGasLawModel model, double openingLeftModelX) {
     final c = model.container;

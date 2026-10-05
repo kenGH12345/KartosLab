@@ -19,6 +19,8 @@ class ParticleSystem {
 
   final List<GasParticle> heavyParticles = [];
   final List<GasParticle> lightParticles = [];
+  final List<GasParticle> heavyOutside = [];
+  final List<GasParticle> lightOutside = [];
 
   bool collisionsEnabled = true;
 
@@ -101,21 +103,52 @@ class ParticleSystem {
     for (final p in lightParticles) {
       p.step(dt);
     }
+    for (final p in heavyOutside) {
+      p.step(dt);
+    }
+    for (final p in lightOutside) {
+      p.step(dt);
+    }
   }
 
-  /// Simplified escape: open + above top in opening → remove.
+  /// Open lid: particles that clear the top through the notch become outside
+  /// (still drawn) instead of vanishing.
   void escapeParticles() {
     if (!container.isOpen) return;
-    _escape(heavyParticles);
-    _escape(lightParticles);
+    _escape(heavyParticles, heavyOutside);
+    _escape(lightParticles, lightOutside);
   }
 
-  void _escape(List<GasParticle> particles) {
-    final oL = container.getOpeningLeft();
-    final oR = container.getOpeningRight();
+  void _escape(List<GasParticle> inside, List<GasParticle> outside) {
+    for (var i = inside.length - 1; i >= 0; i--) {
+      final p = inside[i];
+      if (p.top > container.top &&
+          container.isInEscapeOpening(p.left, p.right)) {
+        inside.removeAt(i);
+        outside.add(p);
+      }
+    }
+  }
+
+  void removeParticlesOutOfBounds({
+    required double minX,
+    required double minY,
+    required double maxX,
+    required double maxY,
+  }) {
+    _removeOob(heavyOutside, minX, minY, maxX, maxY);
+    _removeOob(lightOutside, minX, minY, maxX, maxY);
+  }
+
+  void _removeOob(
+    List<GasParticle> particles,
+    double minX,
+    double minY,
+    double maxX,
+    double maxY,
+  ) {
     for (var i = particles.length - 1; i >= 0; i--) {
-      final p = particles[i];
-      if (p.top > container.top && p.left > oL && p.right < oR) {
+      if (!particles[i].intersectsBounds(minX, minY, maxX, maxY)) {
         particles.removeAt(i);
       }
     }
@@ -168,6 +201,8 @@ class ParticleSystem {
   void eraseAll() {
     heavyParticles.clear();
     lightParticles.clear();
+    heavyOutside.clear();
+    lightOutside.clear();
   }
 
   void reset() => eraseAll();

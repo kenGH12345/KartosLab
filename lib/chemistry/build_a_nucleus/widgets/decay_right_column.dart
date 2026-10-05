@@ -30,6 +30,7 @@ class DecayRightColumn extends StatelessWidget {
       key: const ValueKey('ban_decay_right_column'),
       padding: const EdgeInsets.all(4),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,

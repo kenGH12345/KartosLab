@@ -607,9 +607,60 @@ class RealMoleculesModel {
   }
 
   void applyDrag(double dx, double dy) {
-    const scale = 0.007;
-    final qx = MpQuaternion.fromAxisAngle(0, 1, 0, dx * scale);
-    final qy = MpQuaternion.fromAxisAngle(1, 0, 0, dy * scale);
-    quaternion = qx.multiply(qy).multiply(quaternion);
+    applyArcball(Offset.zero, Offset(dx, dy), Offset.zero);
+  }
+
+  static const double viewScale = 90;
+
+  /// Front-most atom under [local], or null if the pointer is on empty space.
+  int? hitTestAtom(Offset local, Offset center) {
+    var best = -1;
+    var bestZ = -1e9;
+    var bestD = 1e9;
+    for (var i = 0; i < molecule.atoms.length; i++) {
+      final atom = molecule.atoms[i];
+      final r = quaternion.rotate(atom.x, atom.y, atom.z);
+      final p = Offset(
+        center.dx + r[0] * viewScale,
+        center.dy - r[1] * viewScale,
+      );
+      final hitR = atomDisplayRadius(atom.symbol) * viewScale * 1.45;
+      final d = (local - p).distance;
+      if (d > hitR) continue;
+      // Prefer the atom facing the camera (larger view-Z), then nearer in 2D.
+      if (r[2] > bestZ + 1e-6 || (r[2] - bestZ).abs() < 1e-6 && d < bestD) {
+        best = i;
+        bestZ = r[2];
+        bestD = d;
+      }
+    }
+    return best < 0 ? null : best;
+  }
+
+  /// Trackball: the point under the pointer stays under the pointer.
+  void applyArcball(Offset from, Offset to, Offset center, {double radius = 220}) {
+    final a = _projectOnBall(from - center, radius);
+    final b = _projectOnBall(to - center, radius);
+    final ax = a[1] * b[2] - a[2] * b[1];
+    final ay = a[2] * b[0] - a[0] * b[2];
+    final az = a[0] * b[1] - a[1] * b[0];
+    final axisLen = math.sqrt(ax * ax + ay * ay + az * az);
+    if (axisLen < 1e-9) return;
+    final dot = (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]).clamp(-1.0, 1.0);
+    final angle = math.acos(dot);
+    if (angle.abs() < 1e-9) return;
+    quaternion =
+        MpQuaternion.fromAxisAngle(ax, ay, az, angle).multiply(quaternion);
+  }
+
+  static List<double> _projectOnBall(Offset p, double radius) {
+    final x = p.dx / radius;
+    final y = -p.dy / radius;
+    final d2 = x * x + y * y;
+    if (d2 <= 1) {
+      return [x, y, math.sqrt(1 - d2)];
+    }
+    final n = math.sqrt(d2);
+    return [x / n, y / n, 0.0];
   }
 }

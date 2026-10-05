@@ -43,6 +43,35 @@ class WireBox extends StatefulWidget {
     return dots;
   }
 
+  /// PhET `ResistorNode` body: rectangle + right elliptical cap (anticlockwise).
+  static Path resistorBodyPath({
+    required Offset center,
+    required double resistorWidth,
+    required double resistorHeight,
+    required double perspectiveFactor,
+  }) {
+    final cx = center.dx;
+    final cy = center.dy;
+    final rw = resistorWidth;
+    final rh = resistorHeight;
+    final path = Path()
+      ..moveTo(cx - rw / 2, cy + rh / 2)
+      ..lineTo(cx + rw / 2, cy + rh / 2)
+      ..arcTo(
+        Rect.fromCenter(
+          center: Offset(cx + rw / 2, cy),
+          width: perspectiveFactor * rh,
+          height: rh,
+        ),
+        math.pi / 2,
+        -math.pi,
+        false,
+      )
+      ..lineTo(cx - rw / 2, cy - rh / 2)
+      ..close();
+    return path;
+  }
+
   @override
   State<WireBox> createState() => _WireBoxState();
 }
@@ -298,22 +327,12 @@ class _WireBoxPainter extends CustomPainter {
     final rh = OhmsLawViewConstants.resistorHeight;
     final pf = OhmsLawViewConstants.perspectiveFactor;
 
-    final bodyPath = Path()
-      ..moveTo(cx - rw / 2, cy + rh / 2)
-      ..lineTo(cx + rw / 2, cy + rh / 2);
-    bodyPath.arcTo(
-      Rect.fromCenter(
-        center: Offset(cx + rw / 2, cy),
-        width: pf * rh,
-        height: rh,
-      ),
-      math.pi / 2,
-      math.pi,
-      false,
+    final bodyPath = WireBox.resistorBodyPath(
+      center: Offset(cx, cy),
+      resistorWidth: rw,
+      resistorHeight: rh,
+      perspectiveFactor: pf,
     );
-    bodyPath.lineTo(cx - rw / 2, cy - rh / 2);
-    bodyPath.lineTo(cx - rw / 2, cy + rh / 2);
-    bodyPath.close();
 
     final bodyPaint = Paint()
       ..shader = ui.Gradient.linear(

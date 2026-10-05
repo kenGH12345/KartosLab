@@ -10,7 +10,6 @@ import 'package:kratos/quantum_measurement/bloch_sphere/animation/bloch_animatio
 import 'package:kratos/quantum_measurement/bloch_sphere/model/bloch_sphere_model.dart';
 import 'package:kratos/quantum_measurement/bloch_sphere/view/bloch_screen.dart';
 import 'package:kratos/quantum_measurement/coins/components/coins_scene_primitives.dart';
-import 'package:kratos/quantum_measurement/coins/model/coin_set.dart';
 import 'package:kratos/quantum_measurement/coins/model/coins_model.dart';
 import 'package:kratos/quantum_measurement/coins/rendering/coin_render_mode.dart';
 import 'package:kratos/quantum_measurement/coins/view/coins_screen.dart';
@@ -25,7 +24,6 @@ import 'package:kratos/quantum_measurement/photons/view/photons_screen.dart';
 import 'package:kratos/quantum_measurement/spin/animation/spin_animation_controller.dart';
 import 'package:kratos/quantum_measurement/spin/animation/spin_particle_simulation.dart';
 import 'package:kratos/quantum_measurement/spin/components/experiment_selector.dart';
-import 'package:kratos/quantum_measurement/spin/components/spin_source.dart';
 import 'package:kratos/quantum_measurement/spin/model/spin_model.dart';
 import 'package:kratos/quantum_measurement/spin/view/spin_screen.dart';
 

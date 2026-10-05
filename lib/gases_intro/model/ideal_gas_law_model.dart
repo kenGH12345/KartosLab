@@ -115,6 +115,24 @@ class IdealGasLawModel extends ChangeNotifier {
             color: const Color(GasesIntroConstants.lightParticleColor),
             highlight: const Color(GasesIntroConstants.lightParticleHighlight),
           ),
+        for (final p in particleSystem.heavyOutside)
+          ParticleRender(
+            x: p.x,
+            y: p.y,
+            radius: p.radius,
+            kind: ParticleKind.heavy,
+            color: const Color(GasesIntroConstants.heavyParticleColor),
+            highlight: const Color(GasesIntroConstants.heavyParticleHighlight),
+          ),
+        for (final p in particleSystem.lightOutside)
+          ParticleRender(
+            x: p.x,
+            y: p.y,
+            radius: p.radius,
+            kind: ParticleKind.light,
+            color: const Color(GasesIntroConstants.lightParticleColor),
+            highlight: const Color(GasesIntroConstants.lightParticleHighlight),
+          ),
       ],
       temperatureK: temperature,
       pressureKpa: pressure,
@@ -168,6 +186,22 @@ class IdealGasLawModel extends ChangeNotifier {
     container.step(dt);
     collisionSolver.update();
     collisionCount += collisionSolver.numberOfParticleContainerCollisions;
+    particleSystem.removeParticlesOutOfBounds(
+      minX: (0 - GasesIntroConstants.modelOriginOffsetX) /
+              GasesIntroConstants.mvtScale -
+          2000,
+      minY: (GasesIntroConstants.modelOriginOffsetY -
+                  GasesIntroConstants.layoutHeight) /
+              GasesIntroConstants.mvtScale -
+          2000,
+      maxX: (GasesIntroConstants.layoutWidth -
+                  GasesIntroConstants.modelOriginOffsetX) /
+              GasesIntroConstants.mvtScale +
+          2000,
+      maxY: GasesIntroConstants.modelOriginOffsetY /
+              GasesIntroConstants.mvtScale +
+          2000,
+    );
   }
 
   void updateModel(double dtPressureGauge, int numberOfCollisions) {

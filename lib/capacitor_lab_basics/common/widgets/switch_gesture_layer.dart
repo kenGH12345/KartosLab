@@ -15,7 +15,8 @@ import '../transform/yaw_pitch_mvt.dart';
 /// Hit-test for switch blade drag + connection-point taps —
 /// `SwitchNode.js` / `ConnectionNode.js` / `CircuitSwitchDragHandler.js`.
 ///
-/// Capacitance: battery + open. Light Bulb: battery + open + lightBulb.
+/// One detector per blade so tap (ConnectionNode) and pan (drag handler)
+/// share the arena: a press on a dashed contact can still drag if it moves.
 class SwitchGestureLayer extends StatefulWidget {
   const SwitchGestureLayer({
     super.key,
@@ -66,11 +67,8 @@ class _SwitchGestureLayerState extends State<SwitchGestureLayer> {
     return Stack(
       clipBehavior: Clip.none,
       children: [
-        _bladeHit(blade: widget.data.topSwitch, isTop: true),
-        _bladeHit(blade: widget.data.bottomSwitch, isTop: false),
-        ..._connectionHits(widget.data.topSwitch),
-        ..._connectionHits(widget.data.bottomSwitch),
-        // ConnectionNode.highlightNode — yellow fill on press/hover analogue.
+        _switchHit(blade: widget.data.topSwitch, isTop: true),
+        _switchHit(blade: widget.data.bottomSwitch, isTop: false),
         if (_flashContact != null)
           Positioned(
             left: _flashContact!.dx - r,
@@ -87,104 +85,101 @@ class _SwitchGestureLayerState extends State<SwitchGestureLayer> {
     );
   }
 
-  List<Widget> _connectionHits(SwitchBladeView blade) {
-    final targets = <({Offset center, CircuitState state})>[
-      (center: blade.batteryContact, state: CircuitState.batteryConnected),
-      (center: blade.openContact, state: CircuitState.openCircuit),
-      if (blade.lightBulbContact != null)
-        (
-          center: blade.lightBulbContact!,
-          state: CircuitState.lightBulbConnected,
-        ),
-    ];
-    return [
-      for (final t in targets)
-        if (widget.model.circuit.allowedConnections.contains(t.state))
-          _contactHit(center: t.center, target: t.state),
-    ];
-  }
-
-  Widget _contactHit({
-    required Offset center,
-    required CircuitState target,
-  }) {
-    const r = SwitchGestureLayer.contactHitRadius;
-    return Positioned(
-      left: center.dx - r,
-      top: center.dy - r,
-      width: r * 2,
-      height: r * 2,
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: (_) => _flash(center),
-        onTap: () => trySelectSwitchConnection(
-          circuit: widget.model.circuit,
-          shared: widget.model.shared,
-          target: target,
-        ),
-      ),
-    );
-  }
-
-  Widget _bladeHit({
+  Widget _switchHit({
     required SwitchBladeView blade,
     required bool isTop,
   }) {
     final circuit = widget.model.circuit;
-    final left =
-        math.min(blade.hinge.dx, blade.tip.dx) - SwitchGestureLayer.hitRadius;
-    final top =
-        math.min(blade.hinge.dy, blade.tip.dy) - SwitchGestureLayer.hitRadius;
-    final w = (blade.hinge.dx - blade.tip.dx).abs() +
-        SwitchGestureLayer.hitRadius * 2;
-    final h = (blade.hinge.dy - blade.tip.dy).abs() +
-        SwitchGestureLayer.hitRadius * 2;
-
+    final rect = switchPointerBounds(blade);
     return Positioned(
-      left: left,
-      top: top,
-      width: w,
-      height: h,
+      key: ValueKey(isTop ? 'clb_switch_top' : 'clb_switch_bottom'),
+      left: rect.left,
+      top: rect.top,
+      width: rect.width,
+      height: rect.height,
       child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (d) {
+          final canvas = Offset(
+            rect.left + d.localPosition.dx,
+            rect.top + d.localPosition.dy,
+          );
+          final hit = connectionAt(
+            blade: blade,
+            canvas: canvas,
+            allowed: circuit.allowedConnections,
+          );
+          if (hit != null) _flash(hit.center);
+        },
+        onTapUp: (d) {
+          final canvas = Offset(
+            rect.left + d.localPosition.dx,
+            rect.top + d.localPosition.dy,
+          );
+          final hit = connectionAt(
+            blade: blade,
+            canvas: canvas,
+            allowed: circuit.allowedConnections,
+          );
+          if (hit == null) return;
+          trySelectSwitchConnection(
+            circuit: circuit,
+            shared: widget.model.shared,
+            target: hit.state,
+          );
+        },
         onPanStart: (_) {
-          _beforeDrag = circuit.circuitConnection == CircuitState.switchInTransit
-              ? CircuitState.batteryConnected
-              : circuit.circuitConnection;
+          _beforeDrag =
+              circuit.circuitConnection == CircuitState.switchInTransit
+                  ? CircuitState.batteryConnected
+                  : circuit.circuitConnection;
           circuit.setSwitchAngleInTransit(
             isTop: isTop,
             angle: isTop ? circuit.topSwitchAngle : circuit.bottomSwitchAngle,
           );
         },
         onPanUpdate: (d) {
-          final transform = widget.mvt ?? YawPitchMvt();
-          final globalX = left + d.localPosition.dx;
-          final globalY = top + d.localPosition.dy;
-          final modelPt = transform.viewToModelXY(globalX, globalY);
-          final hinge = CircuitGeometry.switchHingePoint(
+          _updateDragAngle(
+            circuit: circuit,
             isTop: isTop,
-            config: circuit.config,
+            canvas: Offset(
+              rect.left + d.localPosition.dx,
+              rect.top + d.localPosition.dy,
+            ),
           );
-          var angle = math.atan2(modelPt.y - hinge.y, modelPt.x - hinge.x);
-          final leftLim = CircuitGeometry.leftLimitAngle(isTop: isTop);
-          final rightLim = CircuitGeometry.rightLimitAngle(
-            isTop: isTop,
-            hasLightBulb: circuit.config.hasLightBulb,
-          );
-          if (angle * leftLim < 0) {
-            angle = -angle;
-          }
-          final minA = math.min(leftLim, rightLim);
-          final maxA = math.max(leftLim, rightLim);
-          final mid = (minA + maxA) / 2;
-          angle = _moduloBetweenDown(angle, mid - math.pi, mid + math.pi);
-          angle = angle.clamp(minA, maxA);
-          circuit.setSwitchAngleInTransit(isTop: isTop, angle: angle);
         },
         onPanEnd: (_) => _snap(circuit, isTop),
         onPanCancel: () => _snap(circuit, isTop),
       ),
     );
+  }
+
+  void _updateDragAngle({
+    required ParallelCircuit circuit,
+    required bool isTop,
+    required Offset canvas,
+  }) {
+    final transform = widget.mvt ?? YawPitchMvt();
+    final modelPt = transform.viewToModelXY(canvas.dx, canvas.dy);
+    final hinge = CircuitGeometry.switchHingePoint(
+      isTop: isTop,
+      config: circuit.config,
+    );
+    var angle = math.atan2(modelPt.y - hinge.y, modelPt.x - hinge.x);
+    final leftLim = CircuitGeometry.leftLimitAngle(isTop: isTop);
+    final rightLim = CircuitGeometry.rightLimitAngle(
+      isTop: isTop,
+      hasLightBulb: circuit.config.hasLightBulb,
+    );
+    if (angle * leftLim < 0) {
+      angle = -angle;
+    }
+    final minA = math.min(leftLim, rightLim);
+    final maxA = math.max(leftLim, rightLim);
+    final mid = (minA + maxA) / 2;
+    angle = _moduloBetweenDown(angle, mid - math.pi, mid + math.pi);
+    angle = angle.clamp(minA, maxA);
+    circuit.setSwitchAngleInTransit(isTop: isTop, angle: angle);
   }
 
   void _snap(ParallelCircuit circuit, bool isTop) {
@@ -219,6 +214,61 @@ class _SwitchGestureLayerState extends State<SwitchGestureLayer> {
     }
     return v;
   }
+}
+
+/// Bounding box of blade + ConnectionNode circles (view pixels).
+Rect switchPointerBounds(SwitchBladeView blade) {
+  final pad = math.max(
+    SwitchGestureLayer.hitRadius,
+    SwitchGestureLayer.contactHitRadius,
+  );
+  final pts = <Offset>[
+    blade.hinge,
+    blade.tip,
+    blade.batteryContact,
+    blade.openContact,
+    if (blade.lightBulbContact != null) blade.lightBulbContact!,
+  ];
+  var minX = pts.first.dx;
+  var minY = pts.first.dy;
+  var maxX = pts.first.dx;
+  var maxY = pts.first.dy;
+  for (final p in pts) {
+    minX = math.min(minX, p.dx);
+    minY = math.min(minY, p.dy);
+    maxX = math.max(maxX, p.dx);
+    maxY = math.max(maxY, p.dy);
+  }
+  return Rect.fromLTRB(minX - pad, minY - pad, maxX + pad, maxY + pad);
+}
+
+/// Nearest allowed ConnectionNode under [canvas], or null.
+({Offset center, CircuitState state})? connectionAt({
+  required SwitchBladeView blade,
+  required Offset canvas,
+  required Iterable<CircuitState> allowed,
+  double radius = SwitchGestureLayer.contactHitRadius,
+}) {
+  final targets = <({Offset center, CircuitState state})>[
+    (center: blade.batteryContact, state: CircuitState.batteryConnected),
+    (center: blade.openContact, state: CircuitState.openCircuit),
+    if (blade.lightBulbContact != null)
+      (
+        center: blade.lightBulbContact!,
+        state: CircuitState.lightBulbConnected,
+      ),
+  ];
+  ({Offset center, CircuitState state})? best;
+  var bestD = radius;
+  for (final t in targets) {
+    if (!allowed.contains(t.state)) continue;
+    final d = (t.center - canvas).distance;
+    if (d <= bestD) {
+      bestD = d;
+      best = t;
+    }
+  }
+  return best;
 }
 
 /// `ConnectionNode.js` press — set connection when tapping a different port.

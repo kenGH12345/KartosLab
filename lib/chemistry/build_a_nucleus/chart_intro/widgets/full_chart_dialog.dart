@@ -68,8 +68,11 @@ class FullChartDialog extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      const SizedBox(
-                        width: ChartIntroVisuals.fullChartInfoMaxWidth,
+                      SizedBox(
+                        width: ChartIntroVisuals.fullChartInfoMaxWidth.clamp(
+                          80.0,
+                          MediaQuery.sizeOf(context).width - 48,
+                        ),
                         child: Text(
                           ChartIntroVisuals.fullChartInfoText,
                           key: ValueKey('chart_intro_full_chart_info'),
@@ -81,19 +84,29 @@ class FullChartDialog extends StatelessWidget {
                       const SizedBox(
                         height: ChartIntroVisuals.fullChartDialogContentSpacing,
                       ),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black),
-                        ),
-                        padding: const EdgeInsets.all(
-                          ChartIntroVisuals.fullChartImageBorderPad,
-                        ),
-                        child: Image.asset(
-                          ChartIntroVisuals.fullChartAsset,
-                          key: const ValueKey('chart_intro_full_chart_image'),
-                          width: ChartIntroVisuals.fullChartImageMaxWidth,
-                          fit: BoxFit.fitWidth,
-                        ),
+                      Builder(
+                        builder: (context) {
+                          final maxW = MediaQuery.sizeOf(context).width - 48;
+                          final w = maxW < ChartIntroVisuals.fullChartImageMaxWidth
+                              ? maxW.clamp(80.0, ChartIntroVisuals.fullChartImageMaxWidth)
+                              : ChartIntroVisuals.fullChartImageMaxWidth;
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                            ),
+                            padding: const EdgeInsets.all(
+                              ChartIntroVisuals.fullChartImageBorderPad,
+                            ),
+                            child: Image.asset(
+                              ChartIntroVisuals.fullChartAsset,
+                              key: const ValueKey(
+                                'chart_intro_full_chart_image',
+                              ),
+                              width: w,
+                              fit: BoxFit.fitWidth,
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -156,7 +169,11 @@ class _FullChartButtonState extends State<FullChartButton> {
         backgroundColor: ChartIntroVisuals.fullChartButtonFill,
         foregroundColor: Colors.black,
         side: const BorderSide(color: Colors.black),
-        minimumSize: const Size(80, 32),
+        minimumSize: const Size(88, 28),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         textStyle: const TextStyle(fontSize: ChartIntroVisuals.legendFontSize),
       ),
       child: const Text(ChartIntroVisuals.fullChartButtonLabel),

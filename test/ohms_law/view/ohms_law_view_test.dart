@@ -268,6 +268,23 @@ void main() {
       model.dispose();
     });
 
+    test('resistor body includes the right elliptical cap (PhET anticlockwise arc)', () {
+      const c = Offset(200, 100);
+      final rw = OhmsLawViewConstants.resistorWidth;
+      final rh = OhmsLawViewConstants.resistorHeight;
+      final pf = OhmsLawViewConstants.perspectiveFactor;
+      final path = WireBox.resistorBodyPath(
+        center: c,
+        resistorWidth: rw,
+        resistorHeight: rh,
+        perspectiveFactor: pf,
+      );
+      final bounds = path.getBounds();
+      expect(bounds.right, closeTo(c.dx + rw / 2 + pf * rh / 2, 0.5));
+      expect(bounds.left, closeTo(c.dx - rw / 2, 0.5));
+      expect(bounds.height, closeTo(rh, 0.5));
+    });
+
     testWidgets('golden initial frame (pixel)', (tester) async {
       final model = OhmsLawModel();
       await tester.binding.setSurfaceSize(const Size(1024, 618));

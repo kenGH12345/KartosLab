@@ -4,6 +4,7 @@ import 'package:kratos/wave_on_a_string/model/woas_end_type.dart';
 import 'package:kratos/wave_on_a_string/model/woas_mode.dart';
 import 'package:kratos/wave_on_a_string/model/woas_model.dart';
 import 'package:kratos/wave_on_a_string/model/woas_time_speed.dart';
+import 'package:kratos/wave_on_a_string/view/controls/woas_time_controls.dart';
 import 'package:kratos/wave_on_a_string/view/woas_play_area.dart';
 import 'package:kratos/wave_on_a_string/woas_constants.dart';
 
@@ -111,5 +112,18 @@ void main() {
     await tester.pump();
     expect(model.amplitudeCm, closeTo(0.75, 1e-12));
     expect(model.damping, closeTo(0.2, 1e-12));
+  });
+
+  testWidgets('Restart uses LIGHT_BLUE undo button not circular refresh',
+      (tester) async {
+    await tester.pumpWidget(_harness(WoasModel()));
+    expect(find.byKey(const Key('restart_button')), findsOneWidget);
+    expect(find.byIcon(Icons.refresh), findsNothing);
+    expect(find.byType(WoasRestartButton), findsOneWidget);
+    expect(WoasRestartButton.buttonSize, const Size(40, 40));
+    expect(
+      WoasRestartButton.lightBlue,
+      const Color.fromARGB(255, 153, 206, 255),
+    );
   });
 }

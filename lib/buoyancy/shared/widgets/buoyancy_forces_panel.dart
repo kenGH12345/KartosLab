@@ -45,7 +45,7 @@ class BuoyancyForcesPanel extends StatelessWidget {
               Expanded(
                 child: Text(label, style: const TextStyle(fontSize: 12)),
               ),
-              if (trailing != null) trailing,
+              ?trailing,
             ],
           ),
         ),

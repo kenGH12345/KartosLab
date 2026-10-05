@@ -8,11 +8,10 @@ import 'solute_type.dart';
 class MtParticle {
   MtParticle({
     required this.type,
-    required MtVec2 position,
+    required this.position,
     required MembraneTransportModel model,
     ParticleMode? mode,
-  })  : position = position,
-        dimension = ParticleModelDimensions.of(type.name),
+  })  : dimension = ParticleModelDimensions.of(type.name),
         mode = mode ??
             RandomWalkMode.create(
               model.random,

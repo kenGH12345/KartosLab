@@ -4,6 +4,8 @@ import 'package:kratos/astronomy/keplers_laws/keplers_laws_strings.dart';
 import 'package:kratos/astronomy/keplers_laws/screens/keplers_laws_home.dart';
 import 'package:kratos/astronomy/keplers_laws/screens/keplers_laws_screen.dart';
 import 'package:kratos/astronomy/keplers_laws/model/law_mode.dart';
+import 'package:kratos/astronomy/keplers_laws/widgets/keplers_law_thumbs.dart';
+import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
 
 void main() {
   testWidgets('First Law screen pumps without overflow', (tester) async {
@@ -19,6 +21,7 @@ void main() {
     );
     await tester.pump();
     expect(find.textContaining("Kepler's Laws"), findsWidgets);
+    expect(find.textContaining('Eccentricity'), findsWidgets);
     expect(tester.takeException(), isNull);
   });
 
@@ -48,7 +51,8 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.byIcon(Icons.refresh), findsOneWidget);
+    expect(find.byType(KratosResetAllButton), findsOneWidget);
+    expect(find.byIcon(Icons.refresh), findsNothing);
     expect(find.byIcon(Icons.play_arrow), findsWidgets);
   });
 
@@ -69,7 +73,7 @@ void main() {
     expect(find.byIcon(Icons.pause), findsOneWidget);
   });
 
-  testWidgets('All Laws shows I/II/III radio', (tester) async {
+  testWidgets('All Laws shows law thumbnail radio', (tester) async {
     tester.view.physicalSize = const Size(1024, 768);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.resetPhysicalSize);
@@ -84,9 +88,10 @@ void main() {
       ),
     );
     await tester.pump();
-    expect(find.text('I'), findsOneWidget);
-    expect(find.text('II'), findsOneWidget);
-    expect(find.text('III'), findsOneWidget);
+    expect(find.byType(KeplersLawsRadioRow), findsOneWidget);
+    expect(find.text('I'), findsNothing);
+    expect(find.text('II'), findsNothing);
+    expect(find.text('III'), findsNothing);
   });
 
   testWidgets('play area fills NineGrid center (MVT canvas has height)',
@@ -148,7 +153,7 @@ void main() {
     await tester.tap(find.byIcon(Icons.play_arrow).first);
     await tester.pump();
     expect(find.byIcon(Icons.pause), findsOneWidget);
-    await tester.tap(find.byIcon(Icons.refresh));
+    await tester.tap(find.byType(KratosResetAllButton));
     await tester.pump();
     expect(find.byIcon(Icons.play_arrow), findsWidgets);
     expect(tester.takeException(), isNull);

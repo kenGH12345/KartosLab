@@ -12,7 +12,7 @@ class MasbMass {
     this.density = MasbConstants.massDensity,
     this.mysteryLabel = false,
     this.adjustable = false,
-    this.colorArgb = 0xFF2563EB,
+    this.colorArgb = MasbConstants.labeledMassArgb,
   })  : massKg = massKg,
         _initialMassKg = massKg,
         positionX = xPosition,

@@ -6,10 +6,9 @@ import '../controller/keplers_laws_controller.dart';
 import '../keplers_laws_colors.dart';
 import '../model/target_orbit.dart';
 
-/// Eccentricity comparison graph.
+/// Eccentricity comparison graph — `FirstLawGraph.ts`.
 ///
-/// [已确认] FirstLawGraph.ts Y_AXIS_LENGTH=180, range 0–1
-/// shown: Mercury, Earth, Eris, Nereid, Halley
+/// Y axis 0 at top … 1 at bottom. Examples: Earth, Mercury, Eris, Nereid, Halley.
 class FirstLawGraph extends StatelessWidget {
   const FirstLawGraph({super.key, required this.controller});
 
@@ -18,8 +17,8 @@ class FirstLawGraph extends StatelessWidget {
   static const double axisLength = 180;
 
   static const _examples = [
-    TargetOrbit.mercury,
     TargetOrbit.earth,
+    TargetOrbit.mercury,
     TargetOrbit.eris,
     TargetOrbit.nereid,
     TargetOrbit.halley,
@@ -28,8 +27,8 @@ class FirstLawGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
-      height: axisLength + 16,
+      width: 228,
+      height: axisLength + 8,
       child: CustomPaint(
         painter: _FirstLawGraphPainter(
           eccentricity: controller.engine.eccentricityDisplay.clamp(0.0, 1.0),
@@ -44,41 +43,46 @@ class _FirstLawGraphPainter extends CustomPainter {
 
   final double eccentricity;
 
+  static const double _axisX = 118;
+
   @override
   void paint(Canvas canvas, Size size) {
     const axis = FirstLawGraph.axisLength;
     canvas.save();
-    canvas.translate(140, 8);
+    canvas.translate(0, 4);
 
     final axisPaint = Paint()
       ..color = Colors.white
-      ..strokeWidth = 1;
-    canvas.drawLine(Offset.zero, const Offset(0, axis), axisPaint);
+      ..strokeWidth = 1.5;
+    canvas.drawLine(const Offset(_axisX, 0), const Offset(_axisX, axis), axisPaint);
     for (var i = 0; i <= 10; i++) {
       final y = axis * i / 10;
-      canvas.drawLine(Offset(-4, y), Offset(4, y), axisPaint);
+      canvas.drawLine(Offset(_axisX - 4, y), Offset(_axisX + 4, y), axisPaint);
     }
 
     for (final orbit in FirstLawGraph._examples) {
       final y = axis * orbit.eccentricity;
-      _label(canvas, orbit.name, Offset(-28, y), alignRight: true);
+      _label(canvas, orbit.name, Offset(_axisX - 14, y), alignRight: true);
       canvas.drawLine(
-        Offset(-20, y),
-        Offset(0, y),
-        Paint()..color = Colors.white,
+        Offset(_axisX - 12, y),
+        Offset(_axisX, y),
+        Paint()
+          ..color = Colors.white
+          ..strokeWidth = 1.5,
       );
     }
 
     final cy = axis * eccentricity;
-    canvas.drawLine(
-      Offset(0, cy),
-      Offset(20, cy),
-      Paint()..color = KeplersLawsColors.orbit,
-    );
+    final arrow = Path()
+      ..moveTo(_axisX + 4, cy)
+      ..lineTo(_axisX + 16, cy - 7)
+      ..lineTo(_axisX + 16, cy + 7)
+      ..close();
+    canvas.drawPath(arrow, Paint()..color = KeplersLawsColors.orbit);
     _label(
       canvas,
       eccentricity.toStringAsFixed(2),
-      Offset(24, cy),
+      Offset(_axisX + 20, cy),
       color: KeplersLawsColors.orbit,
     );
     canvas.restore();
@@ -94,7 +98,7 @@ class _FirstLawGraphPainter extends CustomPainter {
     final tp = TextPainter(
       text: TextSpan(
         text: text,
-        style: TextStyle(color: color, fontSize: 12),
+        style: TextStyle(color: color, fontSize: 13, height: 1),
       ),
       textDirection: ui.TextDirection.ltr,
     )..layout();

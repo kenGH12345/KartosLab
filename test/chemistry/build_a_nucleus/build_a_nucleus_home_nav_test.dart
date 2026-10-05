@@ -143,7 +143,7 @@ void main() {
     );
     await tester.pump();
     expect(second.state.protonCount, 0);
-    expect(find.text('质子: 0'), findsWidgets);
+    expect(find.text('Protons: 0'), findsWidgets);
     second.dispose();
   });
 

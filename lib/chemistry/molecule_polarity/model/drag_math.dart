@@ -4,9 +4,21 @@ import '../mp_constants.dart';
 import 'mp_vector2.dart';
 import 'normalize_angle.dart';
 
-/// Quantize molecule angle drag to 5° steps.
-/// Source: `MoleculeAngleDragListener` roundToInterval(..., toRadians(5))
-double snapAngleDegrees(double angleRadians, {
+/// Exponential-ish follow: move [from] toward [to] by [t], wrapping ±π.
+double lerpAngle(double from, double to, double t) {
+  var d = to - from;
+  while (d > math.pi) {
+    d -= 2 * math.pi;
+  }
+  while (d < -math.pi) {
+    d += 2 * math.pi;
+  }
+  return normalizeAngle(from + d * t.clamp(0.0, 1.0), MpConstants.angleMin);
+}
+
+/// Quantize molecule angle to 5° steps. Source: MoleculeAngleDragListener.
+double snapAngleDegrees(
+  double angleRadians, {
   double snapDegrees = MpConstants.angleDragSnapDegrees,
 }) {
   final snap = snapDegrees * math.pi / 180;

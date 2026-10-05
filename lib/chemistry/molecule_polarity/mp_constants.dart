@@ -36,8 +36,13 @@ abstract final class MpConstants {
   /// E-field alignment max step (radians per frame). `MPModel.ts`.
   static const double maxRadiansPerStep = 0.17;
 
-  /// Molecule angle drag quantization (degrees).
+  /// Molecule angle drag quantization on release (degrees).
   static const double angleDragSnapDegrees = 5;
+
+  /// Exponential follow rate (1/s) toward the pointer during atom/molecule drag.
+  static const double angleDragLambda = 14;
+
+  static const double controlPanelWidth = 260;
 
   /// Two Atoms molecule center in model coords (`TwoAtomsScreenView`).
   static const double twoAtomsMoleculeX = 380;
@@ -49,4 +54,11 @@ abstract final class MpConstants {
 
   static const double platesSpacingTwoAtoms = 500;
   static const double platesSpacingThreeAtoms = 600;
+
+  /// `PlateNode.ts` defaults.
+  static const double plateWidth = 50;
+  static const double plateHeight = 430;
+  static const double plateThickness = 5;
+  static const double platePerspectiveYOffset = 35;
+  static const double polarityIndicatorRadius = 20;
 }
