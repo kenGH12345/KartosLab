@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kratos/faradays_law/faradays_law_strings.dart';
 import 'package:kratos/faradays_law/model/faradays_law_model.dart';
 import 'package:kratos/faradays_law/view/faradays_law_screen.dart';
 
@@ -23,7 +24,7 @@ void main() {
     expect(find.byKey(const Key('faradays_law_coil_double')), findsOneWidget);
     expect(find.byKey(const Key('faradays_law_flip_magnet')), findsOneWidget);
     expect(find.byKey(const Key('faradays_law_reset_all')), findsOneWidget);
-    expect(find.text('Voltmeter'), findsOneWidget);
-    expect(find.text('Field Lines'), findsOneWidget);
+    expect(find.text(FaradaysLawStrings.voltmeter), findsOneWidget);
+    expect(find.text(FaradaysLawStrings.fieldLines), findsOneWidget);
   });
 }

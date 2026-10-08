@@ -73,15 +73,17 @@ class DiscreteControlPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final equationForms = EquationMarkup.formsForDomain(domain);
-    return Container(
-      width: 300,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: FmwColors.panelFill,
-        border: Border.all(color: FmwColors.panelStroke),
+    return Material(
+      color: FmwColors.panelFill,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6),
+        side: BorderSide(color: FmwColors.panelStroke),
       ),
-      child: SingleChildScrollView(
+      child: SizedBox(
+        width: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -234,6 +236,8 @@ class DiscreteControlPanel extends StatelessWidget {
               ],
             ),
           ],
+        ),
+          ),
         ),
       ),
     );

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/faradays_law_model.dart';
 import 'faradays_law_play_area.dart';
+import 'package:kratos/faradays_law/faradays_law_strings.dart';
 
 /// Single-screen Faraday's Law — PhET `FaradaysLawScreen`.
 ///
@@ -15,10 +16,10 @@ class FaradaysLawScreen extends StatefulWidget {
   });
 
   /// Home card / AppBar title (PhET English name).
-  static const String title = "Faraday's Law";
+  static const String title = FaradaysLawStrings.title;
 
   /// Home card subtitle.
-  static const String subtitle = '磁铁 · 线圈 · 感应电动势';
+  static const String subtitle = FaradaysLawStrings.subtitle;
 
   /// Home card accent (KartosLab Material card chrome).
   static const Color accentColor = Color(0xFF0277BD);

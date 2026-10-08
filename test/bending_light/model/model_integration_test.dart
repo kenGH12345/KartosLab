@@ -7,6 +7,7 @@ import 'package:kratos/bending_light/model/more_tools_model.dart';
 import 'package:kratos/bending_light/model/prism.dart';
 import 'package:kratos/bending_light/model/prisms_model.dart';
 import 'package:kratos/bending_light/model/substance.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 void main() {
   group('IntroModel integration', () {
@@ -16,8 +17,8 @@ void main() {
         horizontalPlayAreaOffset: true,
       );
       expect(m.laser.on, isFalse);
-      expect(m.topMedium.substance.name, 'Air');
-      expect(m.bottomMedium.substance.name, 'Water');
+      expect(m.topMedium.substance.name, BlStrings.air);
+      expect(m.bottomMedium.substance.name, BlStrings.water);
       expect(m.rays, isEmpty);
     });
 
@@ -87,7 +88,7 @@ void main() {
         ..showAngles = true;
       m.reset();
       expect(m.laser.on, isFalse);
-      expect(m.bottomMedium.substance.name, 'Water');
+      expect(m.bottomMedium.substance.name, BlStrings.water);
       expect(m.laserView, LaserViewEnum.ray);
       expect(m.showAngles, isFalse);
       expect(m.wavelength, 650e-9);
@@ -97,7 +98,7 @@ void main() {
   group('MoreToolsModel', () {
     test('default bottom glass + sensors', () {
       final m = MoreToolsModel();
-      expect(m.bottomMedium.substance.name, 'Glass');
+      expect(m.bottomMedium.substance.name, BlStrings.glass);
       expect(m.velocitySensor.enabled, isFalse);
       expect(m.waveSensor.enabled, isFalse);
     });

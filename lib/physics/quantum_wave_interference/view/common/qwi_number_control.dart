@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'qwi_colors.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Compact PhET-style NumberControl: title · value box · [−] slider [+] · optional ticks.
 class QwiNumberControl extends StatelessWidget {
@@ -139,7 +140,7 @@ class QwiWavelengthControl extends StatelessWidget {
           children: [
             const Expanded(
               child: Text(
-                'Wavelength',
+                QwiStrings.wavelength,
                 style: TextStyle(fontFamily: 'Arial', fontSize: 12, fontWeight: FontWeight.w600),
               ),
             ),

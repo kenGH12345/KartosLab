@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../painters/magnet_painter.dart';
 import '../../model/magnet_orientation.dart';
+import 'package:kratos/faradays_law/faradays_law_strings.dart';
 
 /// `FlipMagnetButton.js` — RectangularPushButton with magnet + curved arrows.
 class FlipMagnetButton extends StatefulWidget {
@@ -27,7 +28,7 @@ class _FlipMagnetButtonState extends State<FlipMagnetButton> {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'Flip Magnet',
+      label: FaradaysLawStrings.flipMagnet,
       hint: 'Flip North and South poles',
       child: GestureDetector(
         key: const Key('faradays_law_flip_magnet'),

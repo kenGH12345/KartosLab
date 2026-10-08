@@ -1,38 +1,41 @@
-/// English strings from PhET CCK common / VL title. No i18n this phase.
+/// CCK AC Virtual Lab strings — Chinese defaults (PHASE 4).
+/// Units / schematic symbols preserved.
 class CckStrings {
   CckStrings._();
 
-  static const String title = 'Circuit Construction Kit: AC - Virtual Lab';
-  static const String wire = 'Wire';
-  static const String battery = 'Battery';
-  static const String acVoltage = 'AC Voltage';
-  static const String lightBulb = 'Light Bulb';
-  static const String resistor = 'Resistor';
-  static const String capacitor = 'Capacitor';
-  static const String inductor = 'Inductor';
-  static const String switchLabel = 'Switch';
-  static const String fuse = 'Fuse';
-  static const String dollarBill = 'Dollar Bill';
-  static const String paperClip = 'Paper Clip';
-  static const String coin = 'Coin';
-  static const String eraser = 'Eraser';
-  static const String pencil = 'Pencil';
-  static const String thinPencil = 'Thin Pencil';
-  static const String showCurrent = 'Show Current';
-  static const String electrons = 'Electrons';
-  static const String conventional = 'Conventional';
-  static const String labels = 'Labels';
-  static const String values = 'Values';
-  static const String stopwatch = 'Stopwatch';
-  static const String advanced = 'Advanced';
-  static const String wireResistivity = 'Wire Resistivity';
-  static const String sourceResistance = 'Source Resistance';
-  static const String tiny = 'tiny';
-  static const String lifelike = 'Lifelike';
-  static const String schematic = 'Schematic';
-  static const String tapToEdit = 'Tap circuit element to edit.';
-  static const String voltmeter = 'Voltmeter';
-  static const String ammeter = 'Ammeter';
-  static const String voltageChart = 'Voltage Chart';
-  static const String currentChart = 'Current Chart';
+  static const String title = '电路搭建工具包：交流虚拟实验室';
+  static const String wire = '导线';
+  static const String battery = '电池';
+  static const String acVoltage = '交流电压';
+  static const String lightBulb = '灯泡';
+  static const String resistor = '电阻器';
+  static const String capacitor = '电容器';
+  static const String inductor = '电感器';
+  static const String switchLabel = '开关';
+  static const String fuse = '保险丝';
+  static const String dollarBill = '美元钞票';
+  static const String paperClip = '回形针';
+  static const String coin = '硬币';
+  static const String eraser = '橡皮';
+  static const String pencil = '铅笔';
+  static const String thinPencil = '细铅笔';
+  static const String showCurrent = '显示电流';
+  static const String electrons = '电子';
+  static const String conventional = '常规电流';
+  static const String labels = '标签';
+  static const String values = '数值';
+  static const String stopwatch = '秒表';
+  static const String advanced = '高级';
+  static const String wireResistivity = '导线电阻率';
+  static const String sourceResistance = '电源内阻';
+  static const String tiny = '微小';
+  static const String lifelike = '逼真';
+  static const String schematic = '原理图';
+  static const String tapToEdit = '点按电路元件以编辑。';
+  static const String voltmeter = '电压表';
+  static const String ammeter = '电流表';
+  static const String voltageChart = '电压图表';
+  static const String currentChart = '电流图表';
+  static const String openSwitch = '断开';
+  static const String closeSwitch = '闭合';
 }

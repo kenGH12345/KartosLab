@@ -1,21 +1,21 @@
-/// Strings from `curve-fitting-strings_en.json`.
+/// Curve Fitting UI strings — Chinese defaults (PHASE 7B remediation).
 class CurveFittingStrings {
   CurveFittingStrings._();
 
-  static const String title = 'Curve Fitting';
-  static const String subtitle = 'Best fit · residuals · χ²';
-  static const String adjustableFit = 'Adjustable fit';
-  static const String resetAll = 'Reset All';
-  static const String bestFit = 'Best fit';
-  static const String cubic = 'Cubic';
-  static const String curve = 'Curve';
-  static const String deviations = 'Deviations';
-  static const String equation = 'Equation';
-  static const String linear = 'Linear';
-  static const String undefinedLabel = 'undefined';
-  static const String quadratic = 'Quadratic';
-  static const String residuals = 'Residuals';
-  static const String values = 'Values';
+  static const String title = '曲线拟合';
+  static const String subtitle = '最佳拟合 · 残差 · χ²';
+  static const String adjustableFit = '可调拟合';
+  static const String resetAll = '全部重置';
+  static const String bestFit = '最佳拟合';
+  static const String cubic = '三次';
+  static const String curve = '曲线';
+  static const String deviations = '偏差';
+  static const String equation = '方程';
+  static const String linear = '线性';
+  static const String undefinedLabel = '未定义';
+  static const String quadratic = '二次';
+  static const String residuals = '残差';
+  static const String values = '数值';
 
   static const String aSymbol = 'a';
   static const String bSymbol = 'b';
@@ -26,20 +26,19 @@ class CurveFittingStrings {
   static const String xSymbol = 'x';
   static const String ySymbol = 'y';
   static const String rSymbol = 'r';
-  static const String chiSymbol = 'X';
+  static const String chiSymbol = 'χ';
 
-  static const String theReducedChiSquaredStatisticIs =
-      'The reduced chi-squared statistic is:';
+  static const String theReducedChiSquaredStatisticIs = '约化卡方统计量为：';
 
   static String fEqualsNumberOfParametersPattern({
     String f = fSymbol,
   }) =>
-      '$f = number of parameters in fit (e.g. $f = 4, for a cubic fit)';
+      '$f = 拟合参数个数（例如三次拟合 $f = 4）';
 
   static String nEqualsNumberOfDataPointsPattern({
     String n = nSymbol,
   }) =>
-      '$n = number of data points';
+      '$n = 数据点个数';
 
   static String deltaEqualsPattern({
     required String y,

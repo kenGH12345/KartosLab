@@ -1,4 +1,5 @@
 import '../waves_intro_constants.dart';
+import 'package:kratos/waves_intro/waves_intro_strings.dart';
 
 enum SceneKind { water, sound, light }
 
@@ -47,7 +48,7 @@ class SceneConfig {
     frequencyUnitLabel: 'Hz',
     positionUnitLabel: 'cm',
     timeUnitLabel: 's',
-    graphVerticalAxisLabel: 'Water Level',
+    graphVerticalAxisLabel: '水位',
   );
 
   static final SceneConfig sound = SceneConfig(
@@ -60,7 +61,7 @@ class SceneConfig {
     frequencyUnitLabel: '/ms',
     positionUnitLabel: 'cm',
     timeUnitLabel: 'ms',
-    graphVerticalAxisLabel: 'Pressure',
+    graphVerticalAxisLabel: '压强',
   );
 
   static final SceneConfig light = SceneConfig(
@@ -73,7 +74,7 @@ class SceneConfig {
     frequencyUnitLabel: '/fs',
     positionUnitLabel: 'nm',
     timeUnitLabel: 'fs',
-    graphVerticalAxisLabel: 'Electric Field',
+    graphVerticalAxisLabel: WavesIntroStrings.electricField,
   );
 
   static SceneConfig forKind(SceneKind kind) {

@@ -12,12 +12,13 @@ import 'beers_law_ruler_node.dart';
 import 'beers_law_solution_panel.dart';
 import 'beers_law_viewport.dart';
 import 'beers_law_wavelength_panel.dart';
+import 'package:kratos/beers_law_lab/bll_strings.dart';
 
 /// PhET `BeersLawScreen` / `BeersLawScreenView`.
 class BeersLawScreen extends StatefulWidget {
   const BeersLawScreen({super.key, this.model, this.showAppBar = true});
 
-  static const String title = "Beer's Law";
+  static const String title = BllStrings.beersLaw;
   static const String subtitle = '光路 · 透过率 · 吸光度';
   static const Color accentColor = Color(0xFF2E7D32);
 

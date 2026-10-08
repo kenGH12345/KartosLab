@@ -16,6 +16,7 @@ import '../painters/challenge_painter.dart';
 import '../painters/color_wheel_painter.dart';
 import '../config/color_vision_scenario.dart';
 import '../config/color_vision_scenario_manager.dart';
+import 'package:kratos/color_vision/color_vision_strings.dart';
 
 class MagicLabScreen extends StatefulWidget {
   const MagicLabScreen({
@@ -705,7 +706,7 @@ class _MagicLabScreenState extends State<MagicLabScreen>
       ),
       const SizedBox(width: 14),
       FilterChip(
-        label: const Text('标签 Labels', style: TextStyle(fontSize: 10)),
+        label: const Text(ColorVisionStrings.labels, style: TextStyle(fontSize: 10)),
         selected: _showLabels,
         visualDensity: VisualDensity.compact,
         onSelected: (v) => setState(() => _showLabels = v),
@@ -910,13 +911,13 @@ class _MagicLabScreenState extends State<MagicLabScreen>
             ),
             const KnowledgeItem(
               dot: Color(0xFF22C55E),
-              title: '绿光 (Green)',
+              title: '绿光',
               titleColor: Color(0xFF22C55E),
               desc: '波长约 495-570nm。M视锥细胞感知。与红光混合得黄、与蓝光混合得青。',
             ),
             const KnowledgeItem(
               dot: Color(0xFF3B82F6),
-              title: '蓝光 (Blue)',
+              title: '蓝光',
               titleColor: Color(0xFF3B82F6),
               desc: '波长约 450-495nm。S视锥细胞感知。与红光混合得品红、与绿光混合得青。',
             ),
@@ -935,7 +936,7 @@ class _MagicLabScreenState extends State<MagicLabScreen>
           items: const [
             KnowledgeItem(
               icon: '➕',
-              title: '加色法原理 (Additive Mixing)',
+              title: '加色法原理',
               titleColor: Color(0xFFF59E0B),
               desc:
                   '光源直接发光的颜色混合属于"加色法"。红+绿+蓝三原色按不同强度混合能产生人眼可见的几乎所有颜色。'

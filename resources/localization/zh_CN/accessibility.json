@@ -1,0 +1,20 @@
+{
+  "accessibility.resetAll": {
+    "en": "Reset All",
+    "zh": "全部重置",
+    "domain": "accessibility",
+    "status": "approved"
+  },
+  "accessibility.increaseMass": {
+    "en": "Increase Mass",
+    "zh": "增加质量",
+    "domain": "accessibility",
+    "status": "approved"
+  },
+  "accessibility.decreaseMass": {
+    "en": "Decrease Mass",
+    "zh": "减小质量",
+    "domain": "accessibility",
+    "status": "approved"
+  }
+}

@@ -75,7 +75,7 @@ class TimeControl extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         IconButton(
-          tooltip: 'Reset All',
+          tooltip: '全部重置',
           onPressed: onReset,
           icon: const Icon(Icons.refresh),
         ),

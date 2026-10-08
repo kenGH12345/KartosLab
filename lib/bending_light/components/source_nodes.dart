@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../model/enums.dart';
 import '../screens/stage_scale.dart';
 import '../phet_font.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// `LaserTypeAquaRadioButtonGroup`: `AquaRadioButton` radius 6, `PhetFont` 12,
 /// vertical spacing 10.
@@ -265,7 +266,7 @@ class SourceTimeControl extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             PhetAquaRadio(
-              label: 'Normal',
+              label: BlStrings.normalSpeed,
               selected: speed == TimeSpeed.normal,
               fontSize: 14,
               radius: 7,
@@ -273,7 +274,7 @@ class SourceTimeControl extends StatelessWidget {
             ),
             const SizedBox(height: 9),
             PhetAquaRadio(
-              label: 'Slow',
+              label: BlStrings.slow,
               selected: speed == TimeSpeed.slow,
               fontSize: 14,
               radius: 7,
@@ -284,14 +285,14 @@ class SourceTimeControl extends StatelessWidget {
         const SizedBox(width: 10),
         _RoundIconButton(
           radius: playRadius,
-          semanticsLabel: isPlaying ? 'Pause' : 'Play',
+          semanticsLabel: isPlaying ? BlStrings.pause : BlStrings.play,
           onPressed: onPlayPause,
           painter: _PlayPausePainter(playing: isPlaying, radius: playRadius),
         ),
         const SizedBox(width: 10),
         _RoundIconButton(
           radius: stepRadius,
-          semanticsLabel: 'Step',
+          semanticsLabel: BlStrings.step,
           enabled: !isPlaying,
           onPressed: onStep,
           painter: _StepPainter(radius: stepRadius),

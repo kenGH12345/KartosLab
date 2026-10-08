@@ -15,6 +15,7 @@ import '../../shared/widgets/buoyancy_forces_panel.dart';
 import '../../shared/widgets/buoyancy_pool_scale_height_control.dart';
 import '../composer/explore_composer.dart';
 import '../model/buoyancy_explore_model.dart';
+import '../../buoyancy_strings.dart';
 
 /// Explore screen — layout anchors from `BuoyancyExploreScreenView.ts`.
 class BuoyancyExploreScreen extends StatefulWidget {
@@ -115,7 +116,7 @@ class _BuoyancyExploreScreenState extends State<BuoyancyExploreScreen> {
                 ),
                 const SizedBox(height: 5),
                 BuoyancyAccordionStub(
-                  title: 'Object Density',
+                  title: BuoyancyStrings.objectDensity,
                   expanded: _densityExpanded,
                   onToggle: () =>
                       setState(() => _densityExpanded = !_densityExpanded),
@@ -138,7 +139,7 @@ class _BuoyancyExploreScreenState extends State<BuoyancyExploreScreen> {
                 ),
                 const SizedBox(height: 5),
                 BuoyancyAccordionStub(
-                  title: '% Submerged',
+                  title: BuoyancyStrings.percentSubmerged,
                   expanded: _submergedExpanded,
                   onToggle: () => setState(
                       () => _submergedExpanded = !_submergedExpanded),

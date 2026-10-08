@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kratos/common/widgets/kratos_measuring_tape.dart';
+import 'package:kratos/l10n/kartos_localization.dart';
+import 'package:kratos/pendulum_lab/widgets/pl_stopwatch_node.dart';
 
 import '../model/waves_intro_model.dart';
 import '../waves_intro_constants.dart';
+import '../waves_intro_strings.dart';
 
 /// Toolbox icons → measuring tape / stopwatch / wave meter.
 /// Evidence: `ToolboxPanel.js` @ WI lock `31ebfd7`.
@@ -26,7 +30,7 @@ class WavesIntroToolbox extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 _ToolIcon(
-                  label: 'Tape',
+                  label: loc.common.measuringTape,
                   selected: t.isMeasuringTapeInPlayArea,
                   onTap: () {
                     if (t.isMeasuringTapeInPlayArea) {
@@ -35,14 +39,11 @@ class WavesIntroToolbox extends StatelessWidget {
                       model.takeOutMeasuringTape();
                     }
                   },
-                  child: CustomPaint(
-                    size: const Size(28, 18),
-                    painter: _TapeIconPainter(),
-                  ),
+                  child: const KratosMeasuringTapeIcon(scale: 0.5),
                 ),
                 const SizedBox(width: 10),
                 _ToolIcon(
-                  label: 'Timer',
+                  label: loc.common.stopwatch,
                   selected: t.isStopwatchVisible,
                   onTap: () {
                     if (t.isStopwatchVisible) {
@@ -58,7 +59,7 @@ class WavesIntroToolbox extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 _ToolIcon(
-                  label: 'Meter',
+                  label: WavesIntroStrings.waveMeter,
                   selected: t.isWaveMeterInPlayArea,
                   onTap: () {
                     if (t.isWaveMeterInPlayArea) {
@@ -105,29 +106,6 @@ class _ToolIcon extends StatelessWidget {
       ),
     );
   }
-}
-
-class _TapeIconPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 4, size.width * 0.55, size.height - 6),
-        const Radius.circular(2),
-      ),
-      Paint()..color = const Color(0xFFF5D76E),
-    );
-    canvas.drawLine(
-      Offset(size.width * 0.5, size.height / 2),
-      Offset(size.width - 1, size.height / 2),
-      Paint()
-        ..color = const Color(0xFF4A90D9)
-        ..strokeWidth = 2,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class _TimerIconPainter extends CustomPainter {
@@ -214,6 +192,12 @@ class _MeasuringTape extends StatelessWidget {
 
   final WavesIntroModel model;
 
+  void _nudgeBoth(Offset delta) {
+    final t = model.tools;
+    model.setMeasuringTapeBase(t.measuringTapeBase + delta);
+    model.setMeasuringTapeTip(t.measuringTapeTip + delta);
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = model.tools;
@@ -223,83 +207,17 @@ class _MeasuringTape extends StatelessWidget {
     );
     final unit = model.scene.config.positionUnitLabel;
 
-    return Stack(
-      children: [
-        CustomPaint(
-          size: const Size(
-            WavesIntroConstants.waveAreaViewSize,
-            WavesIntroConstants.waveAreaViewSize,
-          ),
-          painter: _TapePainter(base: t.measuringTapeBase, tip: t.measuringTapeTip),
-        ),
-        Positioned(
-          left: t.measuringTapeBase.dx,
-          top: t.measuringTapeBase.dy,
-          child: GestureDetector(
-            onPanUpdate: (d) {
-              model.setMeasuringTapeBase(t.measuringTapeBase + d.delta);
-              model.setMeasuringTapeTip(t.measuringTapeTip + d.delta);
-            },
-            child: const _Handle(color: Colors.orange),
-          ),
-        ),
-        Positioned(
-          left: t.measuringTapeTip.dx,
-          top: t.measuringTapeTip.dy,
-          child: GestureDetector(
-            onPanUpdate: (d) =>
-                model.setMeasuringTapeTip(t.measuringTapeTip + d.delta),
-            child: const _Handle(color: Colors.deepOrange),
-          ),
-        ),
-        Positioned(
-          left: (t.measuringTapeBase.dx + t.measuringTapeTip.dx) / 2,
-          top: (t.measuringTapeBase.dy + t.measuringTapeTip.dy) / 2 - 18,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            color: const Color(0x99FFFFFF),
-            child: Text(
-              '${len.toStringAsFixed(2)} $unit',
-              style: const TextStyle(fontSize: 11, color: Colors.black),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _TapePainter extends CustomPainter {
-  _TapePainter({required this.base, required this.tip});
-  final Offset base;
-  final Offset tip;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final p = Paint()
-      ..color = Colors.yellow.shade700
-      ..strokeWidth = 3;
-    canvas.drawLine(base, tip, p);
-  }
-
-  @override
-  bool shouldRepaint(covariant _TapePainter old) =>
-      old.base != base || old.tip != tip;
-}
-
-class _Handle extends StatelessWidget {
-  const _Handle({required this.color});
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 16,
-      height: 16,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-        border: Border.all(color: Colors.black54),
+    return SizedBox(
+      width: WavesIntroConstants.waveAreaViewSize,
+      height: WavesIntroConstants.waveAreaViewSize,
+      child: KratosMeasuringTape(
+        key: const ValueKey('wi-measuring-tape'),
+        base: t.measuringTapeBase,
+        tip: t.measuringTapeTip,
+        label: '${len.toStringAsFixed(2)} $unit',
+        onBaseDelta: _nudgeBoth,
+        onTipDelta: (d) => model.setMeasuringTapeTip(t.measuringTapeTip + d),
+        onBodyDelta: _nudgeBoth,
       ),
     );
   }
@@ -313,49 +231,14 @@ class _StopwatchPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = model.tools;
-    final units = model.scene.config.timeUnitLabel;
     return Positioned(
       right: 8,
       top: 8,
-      child: Material(
-        elevation: 3,
-        color: const Color(0xFF2C2C2C),
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                '${t.stopwatchTime.toStringAsFixed(2)} $units',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontFeatures: [FontFeature.tabularFigures()],
-                  fontSize: 16,
-                ),
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    iconSize: 20,
-                    color: Colors.white,
-                    onPressed: model.toggleStopwatchRunning,
-                    icon: Icon(
-                      t.isStopwatchRunning ? Icons.pause : Icons.play_arrow,
-                    ),
-                  ),
-                  IconButton(
-                    iconSize: 20,
-                    color: Colors.white,
-                    onPressed: model.clearStopwatchTime,
-                    icon: const Icon(Icons.restart_alt),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+      child: PlStopwatchNode(
+        timeSeconds: t.stopwatchTime,
+        isRunning: t.isStopwatchRunning,
+        onToggleRunning: model.toggleStopwatchRunning,
+        onReset: model.clearStopwatchTime,
       ),
     );
   }

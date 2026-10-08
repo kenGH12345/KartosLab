@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kratos/under_pressure/controller/under_pressure_controller.dart';
 import 'package:kratos/under_pressure/view/under_pressure_screen.dart';
+import 'package:kratos/under_pressure/under_pressure_strings.dart';
 
 /// Home entry shell for Under Pressure (物理 → 密度与浮力).
 ///
@@ -13,8 +14,8 @@ class UnderPressureHome extends StatefulWidget {
   /// Injected only for tests; Home creates a fresh controller.
   final UnderPressureController? controller;
 
-  static const String title = 'Under Pressure';
-  static const String subtitle = '压强 · 深度 · 密度';
+  static const String title = UnderPressureStrings.title;
+  static const String subtitle = UnderPressureStrings.subtitle;
   static const Color accentColor = Color(0xFF155E75);
 
   /// Home card Material icon (KartosLab strategy — not a PhET PNG substitute).

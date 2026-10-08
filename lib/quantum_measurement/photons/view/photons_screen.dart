@@ -14,6 +14,7 @@ import '../composer/photons_composer.dart';
 import '../model/photon_simulation.dart';
 import '../model/photons_model.dart';
 import 'photons_scene.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class QuantumMeasurementPhotonsScreen extends StatefulWidget {
   const QuantumMeasurementPhotonsScreen({
@@ -129,11 +130,11 @@ class _QuantumMeasurementPhotonsScreenState
                                 items: const [
                                   (
                                     PhotonExperimentMode.singlePhoton,
-                                    'Single Photon'
+                                    QmStrings.singlePhoton
                                   ),
                                   (
                                     PhotonExperimentMode.manyPhotons,
-                                    'Many Photons'
+                                    QmStrings.manyPhotons
                                   ),
                                 ],
                                 selectedValue: _model.experimentMode,
@@ -175,7 +176,7 @@ class _QuantumMeasurementPhotonsScreenState
                             child: KratosResetAllButton(
                               onPressed: _resetAll,
                               radius: 20.5,
-                              tooltip: 'Reset All',
+                              tooltip: QmStrings.resetAll,
                             ),
                           ),
                         ],

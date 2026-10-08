@@ -55,7 +55,7 @@ class SpringSystemControlsOverlay extends StatelessWidget {
                   child: _SpringStrengthPanel(
                     controller: controller,
                     springIndex: 0,
-                    title: 'Spring Strength',
+                    title: '弹簧强度',
                   ),
                 ),
                 Positioned(
@@ -99,7 +99,7 @@ class SpringSystemControlsOverlay extends StatelessWidget {
                 child: _SpringStrengthPanel(
                   controller: controller,
                   springIndex: 0,
-                  title: 'Spring Strength 1',
+                  title: '弹簧强度 1',
                 ),
               ),
               Positioned(
@@ -127,7 +127,7 @@ class SpringSystemControlsOverlay extends StatelessWidget {
                 child: _SpringStrengthPanel(
                   controller: controller,
                   springIndex: 1,
-                  title: 'Spring Strength 2',
+                  title: '弹簧强度 2',
                 ),
               ),
             ],
@@ -214,7 +214,7 @@ class _StopperButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final active = controller.model.springs[springIndex].buttonEnabled;
     return Tooltip(
-      message: 'Stop oscillation',
+      message: '停止振荡',
       child: Material(
         color: const Color(0xFFEEEEEE),
         borderRadius: BorderRadius.circular(4),
@@ -348,10 +348,10 @@ class _SpringStrengthPanel extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Small',
+                  Text('小',
                       style:
                           TextStyle(fontSize: 10, color: Colors.grey.shade700)),
-                  Text('Large',
+                  Text('大',
                       style:
                           TextStyle(fontSize: 10, color: Colors.grey.shade700)),
                 ],

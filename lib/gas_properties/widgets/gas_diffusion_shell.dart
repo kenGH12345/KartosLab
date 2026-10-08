@@ -13,6 +13,7 @@ import '../gas_properties_constants.dart';
 import '../model/diffusion_model.dart';
 import '../painters/shaded_sphere.dart';
 import '../transform/gas_coordinate_transform.dart';
+import 'package:kratos/gas_properties/gas_properties_strings.dart';
 
 class GasDiffusionShell extends StatelessWidget {
   const GasDiffusionShell({
@@ -174,7 +175,7 @@ class _DiffusionPainter extends CustomPainter {
       final tp = TextPainter(
         text: TextSpan(
           text:
-              'Flow ← ${model.flowRate1.leftFlowRate.toStringAsFixed(2)} / '
+              '${GasPropertiesStrings.flow} ← ${model.flowRate1.leftFlowRate.toStringAsFixed(2)} / '
               '→ ${model.flowRate1.rightFlowRate.toStringAsFixed(2)}',
           style: const TextStyle(color: Colors.white70, fontSize: 11),
         ),
@@ -198,21 +199,21 @@ class _DiffusionControls extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _side('Left', m.leftSettings, m.leftData, true),
+        _side(GasPropertiesStrings.left, m.leftSettings, m.leftData, true),
         const SizedBox(height: 8),
-        _side('Right', m.rightSettings, m.rightData, false),
+        _side(GasPropertiesStrings.right, m.rightSettings, m.rightData, false),
         const SizedBox(height: 8),
         ElevatedButton(
           onPressed: m.numberOfParticles == 0
               ? null
               : () => controller.setHasDivider(!m.container.hasDivider),
           child: Text(
-            m.container.hasDivider ? 'Remove Divider' : 'Reset Divider',
+            m.container.hasDivider ? GasPropertiesStrings.removeDivider : GasPropertiesStrings.resetDivider,
           ),
         ),
         CheckboxListTile(
           dense: true,
-          title: const Text('Center of Mass',
+          title: Text(GasPropertiesStrings.centerOfMass,
               style: TextStyle(color: Colors.white70, fontSize: 12)),
           value: controller.centerOfMassVisible,
           onChanged: (v) =>
@@ -220,7 +221,7 @@ class _DiffusionControls extends StatelessWidget {
         ),
         CheckboxListTile(
           dense: true,
-          title: const Text('Particle Flow Rate',
+          title: Text(GasPropertiesStrings.particleFlowRate,
               style: TextStyle(color: Colors.white70, fontSize: 12)),
           value: controller.flowRateVisible,
           onChanged: (v) => controller.setFlowRateVisible(v ?? false),
@@ -228,7 +229,7 @@ class _DiffusionControls extends StatelessWidget {
         Row(
           children: [
             ChoiceChip(
-              label: const Text('Normal'),
+              label: Text(GasPropertiesStrings.normal),
               selected: (m.clock.psPerSecond -
                           GasPropertiesConstants.normalPsPerSecond)
                       .abs() <
@@ -237,7 +238,7 @@ class _DiffusionControls extends StatelessWidget {
             ),
             const SizedBox(width: 6),
             ChoiceChip(
-              label: const Text('Slow'),
+              label: Text(GasPropertiesStrings.slow),
               selected: (m.clock.psPerSecond -
                           GasPropertiesConstants.slowPsPerSecond)
                       .abs() <
@@ -274,14 +275,14 @@ class _DiffusionControls extends StatelessWidget {
               controller.setRightCount(v);
             }
           }, 0, 200, 10),
-          _row('Mass', s.mass, (v) {
+          _row(GasPropertiesStrings.mass, s.mass, (v) {
             if (left) {
               controller.setLeftMass(v);
             } else {
               controller.setRightMass(v);
             }
           }, 4, 32, 1),
-          _row('Radius', s.radius, (v) {
+          _row(GasPropertiesStrings.radius, s.radius, (v) {
             if (left) {
               controller.setLeftRadius(v);
             } else {

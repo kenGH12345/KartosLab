@@ -10,6 +10,7 @@ import '../../common/system_type.dart';
 import '../model/photons_model.dart';
 import '../qm_photons_colors.dart';
 import 'flat_polarization_indicator.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class PhotonBehaviorControls extends StatelessWidget {
   const PhotonBehaviorControls({
@@ -27,16 +28,16 @@ class PhotonBehaviorControls extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('Behavior', style: QmTypography.boldTitle),
+        Text(QmStrings.behavior, style: QmTypography.boldTitle),
         const SizedBox(height: 8),
         _RadioRow(
-          label: 'Classical',
+          label: QmStrings.classical,
           selected: mode == SystemType.classical,
           onTap: () => onChanged(SystemType.classical),
         ),
         const SizedBox(height: 8),
         _RadioRow(
-          label: 'Quantum',
+          label: QmStrings.quantum,
           selected: mode == SystemType.quantum,
           onTap: () => onChanged(SystemType.quantum),
         ),
@@ -143,19 +144,19 @@ class PhotonPolarizationAnglePanel extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Photon Polarization Angle',
+                QmStrings.photonPolarizationAngle,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8),
               _RadioRow(
-                label: 'Vertical (V)',
+                label: QmStrings.verticalV,
                 selected: preset == PolarizationPreset.vertical,
                 labelColor: QmPhotonsColors.verticalPolarization,
                 onTap: () => onPresetChanged(PolarizationPreset.vertical),
               ),
               const SizedBox(height: 6),
               _RadioRow(
-                label: 'Horizontal (H)',
+                label: QmStrings.horizontalH,
                 selected: preset == PolarizationPreset.horizontal,
                 labelColor: QmPhotonsColors.horizontalPolarization,
                 onTap: () => onPresetChanged(PolarizationPreset.horizontal),
@@ -169,13 +170,13 @@ class PhotonPolarizationAnglePanel extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               _RadioRow(
-                label: 'Unpolarized',
+                label: QmStrings.unpolarized,
                 selected: preset == PolarizationPreset.unpolarized,
                 onTap: () => onPresetChanged(PolarizationPreset.unpolarized),
               ),
               const SizedBox(height: 6),
               _RadioRow(
-                label: 'Custom',
+                label: QmStrings.custom,
                 selected: preset == PolarizationPreset.custom,
                 onTap: () => onPresetChanged(PolarizationPreset.custom),
               ),
@@ -229,7 +230,7 @@ class PhotonPolarizationAnglePanel extends StatelessWidget {
                   Text('⊗', style: TextStyle(fontSize: 11)),
                   SizedBox(width: 4),
                   Text(
-                    'Propagation (into page)',
+                    QmStrings.propagationIntoPage,
                     style: TextStyle(fontSize: 10),
                   ),
                 ],
@@ -275,13 +276,13 @@ class PhotonTimeControls extends StatelessWidget {
         ),
         const SizedBox(width: 14),
         _RadioRow(
-          label: 'Normal',
+          label: QmStrings.normal,
           selected: !slowMotion,
           onTap: () => onSlowMotionChanged(false),
         ),
         const SizedBox(width: 10),
         _RadioRow(
-          label: 'Slow',
+          label: QmStrings.slow,
           selected: slowMotion,
           onTap: () => onSlowMotionChanged(true),
         ),

@@ -79,7 +79,7 @@ class _ChartIntroInteractViewState extends State<ChartIntroInteractView>
               TextButton(
                 key: const ValueKey('chart_intro_reset'),
                 onPressed: c.reset,
-                child: const Text('Reset'),
+                child: const Text('重置'),
               ),
               MiniAtomView.fromState(s, c.repository),
               FittedBox(

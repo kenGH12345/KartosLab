@@ -1,0 +1,45 @@
+# Localization program meta — PHASE 9
+program: kartoslab-global-localization
+phase: 9
+phase_name: FINAL_RELEASE_GATE
+status: ready
+updated_at: "2026-10-08T17:45:00+08:00"
+global_zh_status: VERIFIED
+android_zh_status: VERIFIED
+release_apk_status: VERIFIED
+device:
+  id: emulator-5554
+  model: Pixel Tablet
+  android: "15"
+  api: 35
+  resolution: 2560x1600
+  density: 320
+  orientation: landscape
+apk:
+  path: build/app/outputs/flutter-apk/app-release.apk
+  size_bytes: 99024163
+  sha256: BEFDFFB2A4B294B19BC718E2620784C1CAE035584CE328DDA69BCA0BA5A7FA92
+  build_mode: release
+  package: com.demo.kratos
+  impeller: disabled
+gates:
+  user_facing_english: 0
+  material_back_tooltip: zh_返回
+  zh_golden: all_required_pass
+  android_startup: pass
+  android_home: pass
+  android_touch: pass
+  android_lifecycle: pass
+  android_cjk: pass
+  release_apk: pass
+  localization_regression: pass
+  analyze: pass_scoped
+p0: 0
+p1: 0
+p2: minor_cjk_baseline_spacing
+verified_modules: 69
+localized_modules: 0
+android_evidence: requirements/localization/android_evidence/
+release_docs: requirements/release/
+final_status: READY
+next_phase: STOP_after_phase9

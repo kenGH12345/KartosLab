@@ -11,6 +11,7 @@ import '../controller/build_a_nucleus_controller.dart';
 import '../data/decay_type.dart';
 import 'ban_undo_button.dart';
 import 'decay_type_icon.dart';
+import 'package:kratos/chemistry/build_a_nucleus/ban_strings.dart';
 
 class AvailableDecaysPanel extends StatelessWidget {
   const AvailableDecaysPanel({super.key, required this.controller});
@@ -231,13 +232,13 @@ class _DecayParticleLegend extends StatelessWidget {
       child: Row(
         key: ValueKey('ban_decay_legend'),
         children: [
-          _LegendDot(color: Color(BanConstants.protonColorValue), label: 'Proton'),
+          _LegendDot(color: Color(BanConstants.protonColorValue), label: BanStrings.proton),
           SizedBox(width: 10),
-          _LegendDot(color: Color(BanConstants.neutronColorValue), label: 'Neutron'),
+          _LegendDot(color: Color(BanConstants.neutronColorValue), label: BanStrings.neutron),
           SizedBox(width: 10),
-          _LegendDot(color: Color(BanConstants.electronColorValue), label: 'Electron'),
+          _LegendDot(color: Color(BanConstants.electronColorValue), label: BanStrings.electron),
           SizedBox(width: 10),
-          _LegendDot(color: Color(0xFF35B64A), label: 'Positron'),
+          _LegendDot(color: Color(0xFF35B64A), label: '正电子'),
         ],
       ),
     );

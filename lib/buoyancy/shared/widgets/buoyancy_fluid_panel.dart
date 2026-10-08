@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../buoyancy_strings.dart';
 import '../../domain/material/buoyancy_material.dart';
 import '../../physics/constants.dart';
 import '../../rendering/runtime/buoyancy_play_area.dart';
@@ -65,22 +66,8 @@ class BuoyancyFluidPanel extends StatelessWidget {
   static const _customSentinel = '__custom__';
 
   String _label(BuoyancyMaterial m) {
-    if (m.custom) return 'Custom';
-    return switch (m.id) {
-      'gasoline' => 'Gasoline',
-      'oil' => 'Oil',
-      'water' => 'Water',
-      'seawater' => 'Seawater',
-      'honey' => 'Honey',
-      'mercury' => 'Mercury',
-      'fluidA' => 'Fluid A',
-      'fluidB' => 'Fluid B',
-      'fluidC' => 'Fluid C',
-      'fluidD' => 'Fluid D',
-      'fluidE' => 'Fluid E',
-      'fluidF' => 'Fluid F',
-      _ => m.id,
-    };
+    if (m.custom) return BuoyancyStrings.custom;
+    return BuoyancyStrings.fluidLabel(m.id);
   }
 
   @override
@@ -99,7 +86,7 @@ class BuoyancyFluidPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Fluid Density',
+            const Text(BuoyancyStrings.fluidDensity,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
             DropdownButton<String>(
               isExpanded: true,
@@ -110,7 +97,7 @@ class BuoyancyFluidPanel extends StatelessWidget {
                   DropdownMenuItem(value: f.id, child: Text(_label(f))),
                 const DropdownMenuItem(
                   value: _customSentinel,
-                  child: Text('Custom'),
+                  child: Text(BuoyancyStrings.custom),
                 ),
               ],
               onChanged: (id) {

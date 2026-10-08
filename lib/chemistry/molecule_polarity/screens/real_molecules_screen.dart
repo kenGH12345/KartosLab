@@ -66,7 +66,7 @@ class _RealMoleculesScreenBodyState extends State<RealMoleculesScreenBody> {
   @override
   Widget build(BuildContext context) {
     if (_error != null) {
-      return Center(child: Text('Failed to load molecules: $_error'));
+      return Center(child: Text('分子加载失败：$_error'));
     }
     final model = _model;
     if (model == null) {

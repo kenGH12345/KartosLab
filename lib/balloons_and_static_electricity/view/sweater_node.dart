@@ -5,6 +5,7 @@ import '../model/balloons_static_electricity_model.dart';
 import '../model/base_vec2.dart';
 import 'base_view_layout.dart';
 import 'charge_painter.dart';
+import 'package:kratos/balloons_and_static_electricity/base_strings.dart';
 
 /// Sweater image + charges — PhET `SweaterNode` (not draggable).
 class SweaterNode extends StatelessWidget {
@@ -44,7 +45,7 @@ class SweaterNode extends StatelessWidget {
       width: s.width,
       height: s.height,
       child: Semantics(
-        label: 'Sweater',
+        label: BaseStrings.sweater,
         child: IgnorePointer(
           child: Stack(
             clipBehavior: Clip.none,

@@ -6,6 +6,7 @@ import '../model/abs_math.dart';
 import '../model/my_solution_model.dart';
 import 'abs_ab_switch.dart';
 import 'abs_log_slider.dart';
+import 'package:kratos/chemistry/acid_base_solutions/abs_strings.dart';
 
 /// My Solution panel — PhET `MySolutionPanel.ts`.
 class MySolutionPanel extends StatelessWidget {
@@ -41,7 +42,7 @@ class MySolutionPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Solution',
+            AbsStrings.solution,
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,
@@ -53,8 +54,8 @@ class MySolutionPanel extends StatelessWidget {
             child: AbsAbSwitch(
               value: model.isAcid,
               onChanged: onAcidChanged,
-              leftLabel: 'Acid',
-              rightLabel: 'Base',
+              leftLabel: AbsStrings.acid,
+              rightLabel: AbsStrings.base,
             ),
           ),
           const Padding(
@@ -62,7 +63,7 @@ class MySolutionPanel extends StatelessWidget {
             child: Divider(height: 1, color: Color(0xFF8890C0)),
           ),
           const Text(
-            'Initial Concentration (mol/L):',
+            AbsStrings.initialConcentration,
             style: TextStyle(fontFamily: 'Arial', fontSize: 12),
           ),
           const SizedBox(height: 6),
@@ -84,7 +85,7 @@ class MySolutionPanel extends StatelessWidget {
             child: Divider(height: 1, color: Color(0xFF8890C0)),
           ),
           const Text(
-            'Strength:',
+            AbsStrings.strength,
             style: TextStyle(fontFamily: 'Arial', fontSize: 12),
           ),
           const SizedBox(height: 6),
@@ -92,8 +93,8 @@ class MySolutionPanel extends StatelessWidget {
             child: AbsAbSwitch(
               value: model.isWeak,
               onChanged: onWeakChanged,
-              leftLabel: 'weak',
-              rightLabel: 'strong',
+              leftLabel: AbsStrings.weak,
+              rightLabel: AbsStrings.strong,
             ),
           ),
           // Keep space when strong (source sliderWrapper excludeInvisibleChildrenFromBounds: false)

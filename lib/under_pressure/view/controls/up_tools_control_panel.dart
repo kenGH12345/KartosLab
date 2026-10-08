@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kratos/under_pressure/controller/under_pressure_controller.dart';
+import 'package:kratos/under_pressure/under_pressure_strings.dart';
 
 /// Source: `ControlPanel.js` — ruler / grid checkboxes + atmosphere radios.
 class UpToolsControlPanel extends StatelessWidget {
@@ -26,25 +27,25 @@ class UpToolsControlPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _check(
-            'Ruler',
+            UnderPressureStrings.ruler,
             m.isRulerVisible,
             (v) => controller.setRulerVisible(v),
           ),
           _check(
-            'Grid',
+            UnderPressureStrings.grid,
             m.isGridVisible,
             (v) => controller.setGridVisible(v),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Atmosphere',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          Text(
+            UnderPressureStrings.atmosphere,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           Row(
             children: [
-              _radio('On', m.isAtmosphere, () => controller.setAtmosphere(true)),
+              _radio(UnderPressureStrings.on, m.isAtmosphere, () => controller.setAtmosphere(true)),
               const SizedBox(width: 10),
-              _radio('Off', !m.isAtmosphere, () => controller.setAtmosphere(false)),
+              _radio(UnderPressureStrings.off, !m.isAtmosphere, () => controller.setAtmosphere(false)),
             ],
           ),
         ],

@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import '../../../common/simulation_clock.dart';
 import '../../../common/widgets/kratos_reset_all_button.dart';
 import '../ban_constants.dart';
+import '../ban_strings.dart';
 import '../chart_intro/chart_intro_visuals.dart';
 import '../chart_intro/controller/chart_intro_controller.dart';
 import '../chart_intro/render/periodic_table_panel_geometry.dart';
@@ -86,7 +87,7 @@ class _ChartIntroScreenState extends State<ChartIntroScreen>
     if (widget.embedded) return _playBackground(body);
     return Scaffold(
       backgroundColor: ChartIntroVisuals.screenBackground,
-      appBar: AppBar(title: const Text('构建原子核 · Chart Intro')),
+      appBar: AppBar(title: const Text('构建原子核 · 图表介绍')),
       body: body,
     );
   }
@@ -283,7 +284,7 @@ class _ChartIntroStageState extends State<_ChartIntroStage> {
                               key: const ValueKey('chart_intro_reset'),
                               onPressed: _resetAll,
                               radius: 20.5,
-                              tooltip: 'Reset',
+                              tooltip: BanStrings.resetAll,
                             ),
                           ),
                         ],

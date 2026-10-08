@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:kratos/charges_and_fields/caf_strings.dart';
 import 'package:kratos/charges_and_fields/model/charges_and_fields_model.dart';
 import 'package:kratos/charges_and_fields/model/vec2.dart';
 import 'package:kratos/charges_and_fields/screens/charges_and_fields_screen.dart';
@@ -113,7 +114,7 @@ void main() {
       ),
     );
     await settle(tester, 5);
-    expect(find.text('Electric Field'), findsOneWidget);
+    expect(find.text(CafStrings.electricField), findsOneWidget);
     expect(find.text('+1 nC'), findsOneWidget);
   });
 

@@ -1,3 +1,4 @@
+import 'package:kratos/hookes_law/hookes_law_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/hookes_law_constants.dart';
@@ -136,7 +137,7 @@ class _EnergySystemViewState extends State<EnergySystemView> with SystemsArmDrag
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             IntroNumberControl(
-              title: 'Spring Constant:',
+              title: '${HookesLawStrings.springConstant}:',
               value: spring.springConstant,
               min: spring.springConstantRange.min,
               max: spring.springConstantRange.max,
@@ -161,7 +162,7 @@ class _EnergySystemViewState extends State<EnergySystemView> with SystemsArmDrag
             ),
             const SizedBox(width: 10),
             IntroNumberControl(
-              title: 'Displacement:',
+              title: '${HookesLawStrings.displacement}:',
               value: spring.displacement,
               min: spring.displacementRange.min,
               max: spring.displacementRange.max,

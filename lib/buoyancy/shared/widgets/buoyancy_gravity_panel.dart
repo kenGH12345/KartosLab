@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../buoyancy_strings.dart';
 import '../../domain/material/buoyancy_gravity.dart';
 import '../../rendering/runtime/buoyancy_play_area.dart';
 
@@ -16,13 +17,7 @@ class BuoyancyGravityPanel extends StatelessWidget {
   final List<BuoyancyGravity> presets;
   final ValueChanged<BuoyancyGravity> onChanged;
 
-  String _label(BuoyancyGravity g) => switch (g.id) {
-        'moon' => 'Moon',
-        'earth' => 'Earth',
-        'jupiter' => 'Jupiter',
-        'planetX' => 'Planet X',
-        _ => g.id,
-      };
+  String _label(BuoyancyGravity g) => BuoyancyStrings.gravityLabel(g.id);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +33,7 @@ class BuoyancyGravityPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Gravity',
+            const Text(BuoyancyStrings.gravity,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
             DropdownButton<BuoyancyGravity>(
               isExpanded: true,

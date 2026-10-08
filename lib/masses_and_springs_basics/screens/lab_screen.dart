@@ -74,7 +74,7 @@ class _LabHud extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: m.playing ? 'Pause' : 'Play',
+                    tooltip: m.playing ? '暂停' : '播放',
                     onPressed: controller.togglePlayPause,
                     icon: Icon(
                       m.playing ? Icons.pause : Icons.play_arrow,
@@ -82,7 +82,7 @@ class _LabHud extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    tooltip: 'Reset',
+                    tooltip: '重置',
                     onPressed: controller.reset,
                     icon: const Icon(Icons.refresh, color: Colors.white),
                   ),

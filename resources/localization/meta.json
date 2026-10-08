@@ -1,0 +1,9 @@
+{
+  "defaultLocale": "zh-CN",
+  "supportedLocales": [
+    "zh-CN",
+    "en"
+  ],
+  "phase": 1,
+  "note": "JSON is human-readable catalog; runtime source of truth is lib/l10n/* Dart tables."
+}

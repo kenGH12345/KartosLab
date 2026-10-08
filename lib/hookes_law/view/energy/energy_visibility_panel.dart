@@ -27,15 +27,15 @@ class EnergyVisibilityPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _radio('energy-radio-bar', 'Bar Graph', properties.graph == EnergyGraphKind.barGraph, () {
+            _radio('energy-radio-bar', '柱状图', properties.graph == EnergyGraphKind.barGraph, () {
               properties.graphKind = EnergyGraphKind.barGraph;
             }),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
-            _radio('energy-radio-energy', 'Energy Plot', properties.graph == EnergyGraphKind.energyPlot, () {
+            _radio('energy-radio-energy', '能量图像', properties.graph == EnergyGraphKind.energyPlot, () {
               properties.graphKind = EnergyGraphKind.energyPlot;
             }),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
-            _radio('energy-radio-force', 'Force Plot', forcePlot, () {
+            _radio('energy-radio-force', '力的图像', forcePlot, () {
               properties.graphKind = EnergyGraphKind.forcePlot;
             }),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
@@ -43,7 +43,7 @@ class EnergyVisibilityPanel extends StatelessWidget {
               padding: const EdgeInsets.only(left: 25),
               child: _check(
                 key: const Key('energy-checkbox'),
-                label: 'Energy',
+                label: '能量',
                 checked: properties.energyOnForcePlotVisible,
                 enabled: forcePlot,
                 onTap: () => properties.setEnergyOnForcePlotVisible(!properties.energyOnForcePlotVisible),
@@ -53,25 +53,25 @@ class EnergyVisibilityPanel extends StatelessWidget {
             Container(height: 1, width: 150, color: IntroColors.panelStroke),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              label: 'Applied Force',
+              label: '外力',
               checked: properties.appliedForceVectorVisible,
               onTap: () => properties.setAppliedForceVectorVisible(!properties.appliedForceVectorVisible),
             ),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              label: 'Displacement',
+              label: '位移',
               checked: properties.displacementVectorVisible,
               onTap: () => properties.setDisplacementVectorVisible(!properties.displacementVectorVisible),
             ),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              label: 'Equilibrium Position',
+              label: '平衡位置',
               checked: properties.equilibriumPositionVisible,
               onTap: () => properties.setEquilibriumPositionVisible(!properties.equilibriumPositionVisible),
             ),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              label: 'Values',
+              label: '数值',
               checked: properties.valuesVisible,
               onTap: () => properties.setValuesVisible(!properties.valuesVisible),
             ),

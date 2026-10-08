@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kratos/forces/config/forces_strings.dart';
 import 'package:kratos/forces/screens/forces_home.dart';
 import 'package:kratos/friction/view/friction_screen.dart';
 import 'package:kratos/screens/home_screen.dart';
@@ -41,36 +42,36 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Forces and Motion: Basics'), findsOneWidget);
-    expect(find.text('Net Force'), findsWidgets);
-    expect(find.text('Motion'), findsWidgets);
-    expect(find.text('Friction'), findsWidgets);
-    expect(find.text('Acceleration'), findsWidgets);
-    expect(find.text('Go!'), findsOneWidget);
+    expect(find.text(ForcesStrings.forcesHomeTitle), findsOneWidget);
+    expect(find.text(ForcesStrings.screenNetForce), findsWidgets);
+    expect(find.text(ForcesStrings.screenMotion), findsWidgets);
+    expect(find.text(ForcesStrings.screenFriction), findsWidgets);
+    expect(find.text(ForcesStrings.screenAcceleration), findsWidgets);
+    expect(find.text(ForcesStrings.netForceGo), findsOneWidget);
 
     // Motion — tap the Tab label (first match is the tab bar).
-    await tester.tap(find.text('Motion').first);
+    await tester.tap(find.text(ForcesStrings.screenMotion).first);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Applied Force'), findsWidgets);
+    expect(find.text('外力'), findsWidgets);
 
     // Friction
-    await tester.tap(find.text('Friction').first);
+    await tester.tap(find.text(ForcesStrings.screenFriction).first);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Forces'), findsWidgets);
+    expect(find.textContaining('力'), findsWidgets);
 
     // Acceleration
-    await tester.tap(find.text('Acceleration').first);
+    await tester.tap(find.text(ForcesStrings.screenAcceleration).first);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Acceleration'), findsWidgets);
+    expect(find.text(ForcesStrings.screenAcceleration), findsWidgets);
 
     // Back to Net Force
-    await tester.tap(find.text('Net Force').first);
+    await tester.tap(find.text(ForcesStrings.screenNetForce).first);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 400));
-    expect(find.text('Go!'), findsOneWidget);
+    expect(find.text(ForcesStrings.netForceGo), findsOneWidget);
 
     // Simulate Home leave → re-enter F&M → Net Force
     await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
@@ -80,8 +81,8 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: ForcesHome()));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 200));
-    expect(find.text('Net Force'), findsWidgets);
-    expect(find.text('Go!'), findsOneWidget);
+    expect(find.text(ForcesStrings.screenNetForce), findsWidgets);
+    expect(find.text(ForcesStrings.netForceGo), findsOneWidget);
 
     await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
     await tester.pump(const Duration(milliseconds: 100));
@@ -113,7 +114,7 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: ForcesHome()));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('Forces and Motion: Basics'), findsOneWidget);
+    expect(find.text(ForcesStrings.forcesHomeTitle), findsOneWidget);
 
     await tester.pumpWidget(const MaterialApp(home: SizedBox.shrink()));
     await tester.pump(const Duration(milliseconds: 100));

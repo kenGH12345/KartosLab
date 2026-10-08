@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../controller/make_isotopes_controller.dart';
 import '../iaam_constants.dart';
+import '../iaam_strings.dart';
 import '../painters/nucleon_ball_painter.dart';
 
 class ParticleCountDisplay extends StatelessWidget {
@@ -23,19 +24,19 @@ class ParticleCountDisplay extends StatelessWidget {
         children: [
           _CountChip(
             color: IaamConstants.proton,
-            label: 'Protons:',
+            label: IaamStrings.protons,
             count: m.protonCount,
           ),
           const SizedBox(width: 12),
           _CountChip(
             color: IaamConstants.neutron,
-            label: 'Neutrons:',
+            label: IaamStrings.neutrons,
             count: m.neutronCount,
           ),
           const SizedBox(width: 12),
           _CountChip(
             color: const Color(0xFF2196F3),
-            label: 'Electrons:',
+            label: IaamStrings.electrons,
             count: m.electronCount,
             isElectron: true,
           ),

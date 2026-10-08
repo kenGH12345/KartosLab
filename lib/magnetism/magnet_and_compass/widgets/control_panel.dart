@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/magnet_state.dart';
 import 'mini_compass_preview_painter.dart';
+import 'package:kratos/magnetism/magnet_and_compass/mac_strings.dart';
 
 /// Control panel for the Magnet & Compass simulation.
 ///
@@ -41,11 +42,11 @@ class MagnetControlPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           _card(children: [
-            const Text('Bar Magnet',
+            Text(MacStrings.barMagnet,
               style: TextStyle(color: Colors.black87, fontWeight: FontWeight.bold, fontSize: 14)),
             const SizedBox(height: 6),
             Row(children: [
-              const Text('Strength:', style: TextStyle(color: Colors.black87, fontSize: 12)),
+              Text('${MacStrings.strength}:', style: TextStyle(color: Colors.black87, fontSize: 12)),
               const SizedBox(width: 6),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -86,9 +87,9 @@ class MagnetControlPanel extends StatelessWidget {
               ]),
             ]),
             const SizedBox(height: 2),
-            _check('Magnetic Field (B)', state.showField, onShowFieldChanged),
-            _check('See Inside', state.seeInside, onSeeInsideChanged),
-            _check('Earth', state.earthField, onEarthFieldChanged),
+            _check(MacStrings.magneticFieldB, state.showField, onShowFieldChanged),
+            _check(MacStrings.seeInside, state.seeInside, onSeeInsideChanged),
+            _check(MacStrings.earth, state.earthField, onEarthFieldChanged),
             const SizedBox(height: 6),
             SizedBox(
               width: double.infinity,
@@ -101,7 +102,7 @@ class MagnetControlPanel extends StatelessWidget {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
                   elevation: 0,
                 ),
-                child: const Text('Flip Polarity', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
+                child: Text(MacStrings.flipPolarity, style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600)),
               ),
             ),
           ]),
@@ -118,7 +119,7 @@ class MagnetControlPanel extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              const Expanded(child: Text('Compass', style: TextStyle(color: Colors.black87, fontSize: 13))),
+              Expanded(child: Text(MacStrings.compass, style: TextStyle(color: Colors.black87, fontSize: 13))),
               SizedBox(width: 60, height: 22, child: CustomPaint(painter: MiniCompassPreviewPainter())),
             ]),
             const SizedBox(height: 2),
@@ -133,7 +134,7 @@ class MagnetControlPanel extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              const Expanded(child: Text('Field Meter', style: TextStyle(color: Colors.black87, fontSize: 13))),
+              Expanded(child: Text(MacStrings.fieldMeter, style: TextStyle(color: Colors.black87, fontSize: 13))),
               const Icon(Icons.add_circle_outline, color: Color(0xff5c35c8), size: 20),
             ]),
           ]),

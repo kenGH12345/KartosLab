@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:kratos/magnetism/magnet_and_compass/mac_strings.dart';
 import 'package:kratos/magnetism/magnet_and_compass/painters/bar_magnet_painter.dart';
 import 'package:kratos/magnetism/magnet_and_compass/painters/field_needle_painter.dart';
 import 'package:kratos/magnetism/magnet_and_compass/screens/magnet_and_compass_screen.dart';
@@ -43,10 +44,10 @@ void main() {
 
         expect(find.byType(MagnetControlPanel), findsOneWidget);
         expect(find.byType(Slider), findsOneWidget);
-        expect(find.text('Bar Magnet'), findsOneWidget);
-        expect(find.text('Flip Polarity'), findsOneWidget);
-        expect(find.text('Compass'), findsOneWidget);
-        expect(find.text('Field Meter'), findsOneWidget);
+        expect(find.text(MacStrings.barMagnet), findsOneWidget);
+        expect(find.text(MacStrings.flipPolarity), findsOneWidget);
+        expect(find.text(MacStrings.compass), findsOneWidget);
+        expect(find.text(MacStrings.fieldMeter), findsOneWidget);
 
         final panel = tester.getRect(find.byType(MagnetControlPanel));
         final canvas = tester.getRect(_paint((p) => p is FieldNeedlePainter));

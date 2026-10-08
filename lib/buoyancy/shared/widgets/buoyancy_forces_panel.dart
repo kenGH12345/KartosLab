@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../buoyancy_strings.dart';
 import '../display_properties.dart';
 import '../../rendering/runtime/buoyancy_play_area.dart';
 
@@ -61,22 +62,22 @@ class BuoyancyForcesPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Forces',
+            const Text(BuoyancyStrings.forces,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
             check(
-              'Gravity',
+              BuoyancyStrings.gravity,
               display.gravityForceVisible,
               (v) => display.gravityForceVisible = v ?? false,
               trailing: arrow(const Color(0xFFC51E1E)),
             ),
             check(
-              'Buoyancy',
+              BuoyancyStrings.buoyancy,
               display.buoyancyForceVisible,
               (v) => display.buoyancyForceVisible = v ?? false,
               trailing: arrow(const Color(0xFFDA338A)),
             ),
             check(
-              'Contact',
+              BuoyancyStrings.contact,
               display.contactForceVisible,
               (v) => display.contactForceVisible = v ?? false,
               trailing: arrow(const Color(0xFFEA963E)),
@@ -86,7 +87,8 @@ class BuoyancyForcesPanel extends StatelessWidget {
               child: Row(
                 children: [
                   const Expanded(
-                    child: Text('Vector Zoom', style: TextStyle(fontSize: 12)),
+                    child: Text(BuoyancyStrings.vectorZoom,
+                        style: TextStyle(fontSize: 12)),
                   ),
                   _zoomBtn(Icons.remove, () {
                     display.vectorZoomLevel =
@@ -102,19 +104,19 @@ class BuoyancyForcesPanel extends StatelessWidget {
               ),
             ),
             check(
-              'Force Values',
+              BuoyancyStrings.forceValues,
               display.forceValuesVisible,
               (v) => display.forceValuesVisible = v ?? false,
             ),
             const Divider(height: 6),
             check(
-              'Mass Values',
+              BuoyancyStrings.massValues,
               display.massValuesVisible,
               (v) => display.massValuesVisible = v ?? false,
             ),
             if (display.supportsDepthLines)
               check(
-                'Depth Lines',
+                BuoyancyStrings.depthLines,
                 display.depthLinesVisible,
                 (v) => display.depthLinesVisible = v ?? false,
               ),

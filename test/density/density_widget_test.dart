@@ -138,7 +138,8 @@ void main() {
       MaterialApp(home: Scaffold(body: IntroductionScreen(controller: controller))),
     );
     await tester.pump();
-    expect(find.text('Wood'), findsWidgets);
+    expect(find.text(DensityStrings.materialName('density.material.wood')),
+        findsWidgets);
 
     await tester.tap(find.byTooltip(DensityStrings.twoBlocks));
     await tester.pump();
@@ -172,8 +173,10 @@ void main() {
     expect(find.text(DensityStrings.set1), findsOneWidget);
     await tester.tap(find.text(DensityStrings.densityTable));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Gold'), findsOneWidget);
-    expect(find.text('Wood'), findsOneWidget);
+    expect(find.text(DensityStrings.materialName('density.material.gold')),
+        findsOneWidget);
+    expect(find.text(DensityStrings.materialName('density.material.wood')),
+        findsOneWidget);
   });
 
   testWidgets('Mystery density table visible at 840x520 viewport', (tester) async {
@@ -192,7 +195,8 @@ void main() {
     await tester.pump();
     await tester.tap(find.text(DensityStrings.densityTable));
     await tester.pump(const Duration(milliseconds: 300));
-    expect(find.text('Gold'), findsOneWidget);
+    expect(find.text(DensityStrings.materialName('density.material.gold')),
+        findsOneWidget);
     expect(find.text('0.40'), findsOneWidget);
   });
 }

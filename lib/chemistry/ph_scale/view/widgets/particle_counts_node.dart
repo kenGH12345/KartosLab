@@ -173,7 +173,7 @@ class BeakerControlPanel extends StatelessWidget {
                     text: PhScaleConstants.ohFormulaPlain,
                     style: font.copyWith(color: PhScaleColors.ohParticles),
                   ),
-                  const TextSpan(text: ' Ratio'),
+                  const TextSpan(text: ' 比值'),
                 ],
               ),
             ),
@@ -185,7 +185,7 @@ class BeakerControlPanel extends StatelessWidget {
           _CheckRow(
             value: particleCountsVisible,
             onChanged: onParticleCountsChanged,
-            child: Text('Particle Counts', style: font),
+            child: Text('粒子计数', style: font),
           ),
         ],
       ),

@@ -1,0 +1,26 @@
+{
+  "home.appTitle": {
+    "en": "Kratos Lab",
+    "zh": "Kratos 仿真实验室",
+    "domain": "home",
+    "status": "approved"
+  },
+  "home.search": {
+    "en": "Search simulations",
+    "zh": "搜索实验",
+    "domain": "home",
+    "status": "approved"
+  },
+  "category.physics": {
+    "en": "Physics",
+    "zh": "物理",
+    "domain": "category",
+    "status": "approved"
+  },
+  "category.chemistry": {
+    "en": "Chemistry",
+    "zh": "化学",
+    "domain": "category",
+    "status": "approved"
+  }
+}

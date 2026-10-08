@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// PhET HI/SP right-column `toolsPanel` checkboxes.
 ///
@@ -39,32 +40,32 @@ class QwiToolsPanel extends StatelessWidget {
       children: [
         _row(
           key: Key('${keyPrefix}_tape_checkbox'),
-          label: 'Measuring Tape',
+          label: QwiStrings.measuringTape,
           value: measuringTape,
           onChanged: onMeasuringTape,
         ),
         _row(
           key: Key('${keyPrefix}_stopwatch_checkbox'),
-          label: 'Stopwatch',
+          label: QwiStrings.stopwatch,
           value: stopwatch,
           onChanged: onStopwatch ?? (_) {},
         ),
         _row(
           key: Key('${keyPrefix}_time_plot_checkbox'),
-          label: 'Time Plot',
+          label: QwiStrings.timePlot,
           value: timePlot,
           onChanged: onTimePlot ?? (_) {},
         ),
         _row(
           key: Key('${keyPrefix}_position_plot_checkbox'),
-          label: 'Position Plot',
+          label: QwiStrings.positionPlot,
           value: positionPlot,
           onChanged: onPositionPlot ?? (_) {},
         ),
         if (detectorProbe != null && onDetectorProbe != null)
           _row(
             key: Key('${keyPrefix}_probe_checkbox'),
-            label: 'Detector Probe',
+            label: QwiStrings.detectorProbe,
             value: detectorProbe!,
             onChanged: onDetectorProbe!,
           ),

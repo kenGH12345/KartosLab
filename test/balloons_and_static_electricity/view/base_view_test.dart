@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kratos/balloons_and_static_electricity/base_strings.dart';
 import 'package:kratos/balloons_and_static_electricity/model/balloons_static_electricity_constants.dart';
 import 'package:kratos/balloons_and_static_electricity/model/balloons_static_electricity_model.dart';
 import 'package:kratos/balloons_and_static_electricity/model/base_vec2.dart';
@@ -151,9 +152,9 @@ void main() {
     testWidgets('controls include KratosResetAllButton', (tester) async {
       await pumpPlayArea(tester);
       expect(find.byType(KratosResetAllButton), findsOneWidget);
-      expect(find.text('Show all charges'), findsOneWidget);
-      expect(find.text('Remove Wall'), findsOneWidget);
-      expect(find.text('Reset Balloon'), findsOneWidget);
+      expect(find.text(BaseStrings.showAllCharges), findsOneWidget);
+      expect(find.text(BaseStrings.removeWall), findsOneWidget);
+      expect(find.text(BaseStrings.resetBalloon), findsOneWidget);
     });
 
     testWidgets('sweater and wall are not independently draggable targets',

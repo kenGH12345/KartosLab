@@ -5,6 +5,7 @@ import '../diffusion_constants.dart';
 import '../model/diffusion_model.dart';
 import '../painters/diffusion_play_area_painter.dart';
 import '../painters/particle_flow_rate_painter.dart';
+import 'package:kratos/diffusion/diffusion_strings.dart';
 
 /// Diffusion screen shell — layout mirrors DiffusionScreenView @ 7a52c48.
 ///
@@ -118,8 +119,8 @@ class _DataAccordion extends StatelessWidget {
           onExpansionChanged: model.setDataExpanded,
           tilePadding: const EdgeInsets.symmetric(horizontal: 12),
           childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
-          title: const Text(
-            'Data',
+          title: Text(
+            DiffusionStrings.data,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -307,9 +308,9 @@ class _SpeedToggle extends StatelessWidget {
 
     return Row(
       children: [
-        item(DiffusionTimeSpeed.normal, 'Normal'),
+        item(DiffusionTimeSpeed.normal, DiffusionStrings.normal),
         const SizedBox(width: 10),
-        item(DiffusionTimeSpeed.slow, 'Slow'),
+        item(DiffusionTimeSpeed.slow, DiffusionStrings.slow),
       ],
     );
   }
@@ -331,7 +332,7 @@ class _ControlPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _QuantityControl(
-              label: 'Number of Particles',
+              label: DiffusionStrings.numberOfParticles,
               leftValue: model.leftSettings.numberOfParticles,
               rightValue: model.rightSettings.numberOfParticles,
               min: DiffusionConstants.numberOfParticlesMin,
@@ -343,7 +344,7 @@ class _ControlPanel extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             _QuantityControl(
-              label: 'Mass (AMU)',
+              label: DiffusionStrings.massAmu,
               leftValue: model.leftSettings.mass,
               rightValue: model.rightSettings.mass,
               min: DiffusionConstants.massMin,
@@ -355,7 +356,7 @@ class _ControlPanel extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             _QuantityControl(
-              label: 'Radius (pm)',
+              label: DiffusionStrings.radiusPm,
               leftValue: model.leftSettings.radius,
               rightValue: model.rightSettings.radius,
               min: DiffusionConstants.radiusMin,
@@ -367,7 +368,7 @@ class _ControlPanel extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             _QuantityControl(
-              label: 'Initial Temperature (K)',
+              label: DiffusionStrings.initialTemperatureK,
               leftValue: model.leftSettings.initialTemperature,
               rightValue: model.rightSettings.initialTemperature,
               min: DiffusionConstants.temperatureMin,
@@ -615,7 +616,7 @@ class _DividerToggleButton extends StatelessWidget {
         ),
         onPressed: enabled ? model.toggleDivider : null,
         child: Text(
-          model.container.hasDivider ? 'Remove Divider' : 'Reset Divider',
+          model.container.hasDivider ? DiffusionStrings.removeDivider : DiffusionStrings.resetDivider,
         ),
       ),
     );
@@ -633,7 +634,7 @@ class _ViewToggles extends StatelessWidget {
         CheckboxListTile(
           dense: true,
           contentPadding: EdgeInsets.zero,
-          title: const Text('Center of Mass',
+          title: Text(DiffusionStrings.centerOfMass,
               style: TextStyle(color: Colors.white, fontSize: 12)),
           value: model.centerOfMassVisible,
           onChanged: (v) => model.setCenterOfMassVisible(v ?? false),
@@ -642,7 +643,7 @@ class _ViewToggles extends StatelessWidget {
           dense: true,
           contentPadding: EdgeInsets.zero,
           secondary: const _FlowRateIcon(),
-          title: const Text('Particle Flow Rate',
+          title: Text(DiffusionStrings.particleFlowRate,
               style: TextStyle(color: Colors.white, fontSize: 12)),
           value: model.particleFlowRateVisible,
           onChanged: (v) => model.setParticleFlowRateVisible(v ?? false),
@@ -650,7 +651,7 @@ class _ViewToggles extends StatelessWidget {
         CheckboxListTile(
           dense: true,
           contentPadding: EdgeInsets.zero,
-          title: const Text('Scale',
+          title: Text(DiffusionStrings.scale,
               style: TextStyle(color: Colors.white, fontSize: 12)),
           value: model.scaleVisible,
           onChanged: (v) => model.setScaleVisible(v ?? false),
@@ -658,7 +659,7 @@ class _ViewToggles extends StatelessWidget {
         CheckboxListTile(
           dense: true,
           contentPadding: EdgeInsets.zero,
-          title: const Text('Stopwatch',
+          title: Text(DiffusionStrings.stopwatch,
               style: TextStyle(color: Colors.white, fontSize: 12)),
           value: model.stopwatchVisible,
           onChanged: (v) => model.setStopwatchVisible(v ?? false),

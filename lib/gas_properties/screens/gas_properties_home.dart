@@ -9,6 +9,7 @@ import '../transform/gas_coordinate_transform.dart';
 import '../widgets/gas_ideal_family_shell.dart';
 import '../widgets/gas_properties_diffusion_tab.dart';
 import 'gas_properties_perf_harness.dart';
+import 'package:kratos/gas_properties/gas_properties_strings.dart';
 
 /// Gas Properties — Ideal | Explore | Energy | Diffusion.
 ///
@@ -18,7 +19,7 @@ import 'gas_properties_perf_harness.dart';
 class GasPropertiesHome extends StatefulWidget {
   const GasPropertiesHome({super.key});
 
-  static const String title = 'Gas Properties';
+  static const String title = GasPropertiesStrings.title;
   static const Color accentColor = Color(GasPropertiesColors.accent);
 
   /// Phase 4.1 K8: `flutter run --dart-define=GP_PERF_N=1000`
@@ -80,10 +81,10 @@ class _GasPropertiesHomeState extends State<GasPropertiesHome>
           splashFactory: NoSplash.splashFactory,
           overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           tabs: const [
-            Tab(text: 'Ideal'),
-            Tab(text: 'Explore'),
-            Tab(text: 'Energy'),
-            Tab(text: 'Diffusion'),
+            Tab(text: GasPropertiesStrings.ideal),
+            Tab(text: GasPropertiesStrings.explore),
+            Tab(text: GasPropertiesStrings.energy),
+            Tab(text: GasPropertiesStrings.diffusion),
           ],
         ),
       ),

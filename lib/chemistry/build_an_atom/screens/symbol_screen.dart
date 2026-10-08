@@ -15,6 +15,7 @@ import '../widgets/baa_symbol_node.dart';
 import '../widgets/electron_model_control.dart';
 import '../widgets/interactive_atom_play_area.dart';
 import '../widgets/particle_count_panel.dart';
+import 'package:kratos/chemistry/build_an_atom/baa_strings.dart';
 
 /// Build an Atom — Symbol Screen (PhET `SymbolScreen` / `SymbolScreenView`).
 ///
@@ -136,7 +137,7 @@ class BuildAnAtomSymbolScreenState extends State<BuildAnAtomSymbolScreen>
                         top: ptTop,
                         width: _accordionPanelW,
                         child: BaaAccordionBox(
-                          title: 'Periodic Table',
+                          title: '元素周期表',
                           expanded: _appearance.periodicTableExpanded,
                           onToggle: () =>
                               _appearance.setPeriodicTableExpanded(
@@ -154,7 +155,7 @@ class BuildAnAtomSymbolScreenState extends State<BuildAnAtomSymbolScreen>
                         width: _accordionPanelW,
                         child: BaaAccordionBox(
                           key: const Key('baaSymbolAccordion'),
-                          title: 'Symbol',
+                          title: BaaStrings.symbol,
                           expanded: _symbolView.symbolExpanded,
                           onToggle: () => _symbolView.setSymbolExpanded(
                               !_symbolView.symbolExpanded),
@@ -212,14 +213,14 @@ class BuildAnAtomSymbolScreenState extends State<BuildAnAtomSymbolScreen>
     return Scaffold(
       backgroundColor: BuildAnAtomSymbolScreen.backgroundColor,
       appBar: AppBar(
-        title: const Text('Symbol'),
+        title: const Text(BaaStrings.symbol),
         backgroundColor: const Color(0xFF1177AA),
         foregroundColor: Colors.white,
         actions: [
           if (Navigator.of(context).canPop())
             TextButton(
               onPressed: () => Navigator.of(context).maybePop(),
-              child: const Text('Back', style: TextStyle(color: Colors.white)),
+              child: const Text('返回', style: TextStyle(color: Colors.white)),
             ),
         ],
       ),

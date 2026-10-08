@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/widgets/kratos_tab_bar.dart';
 import '../masb_constants.dart';
+import '../masb_strings.dart';
 import 'bounce_screen.dart';
 import 'lab_screen.dart';
 import 'stretch_screen.dart';
@@ -9,8 +10,8 @@ import 'stretch_screen.dart';
 class MasbHome extends StatelessWidget {
   const MasbHome({super.key});
 
-  static const String title = 'Masses and Springs: Basics';
-  static const String subtitle = 'Stretch · Bounce · Lab';
+  static const String title = MasbStrings.title;
+  static const String subtitle = MasbStrings.subtitle;
   static const Color accentColor = Color(0xFF1D4ED8);
 
   @override

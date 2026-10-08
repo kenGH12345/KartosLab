@@ -161,7 +161,7 @@ void main() {
       expect(find.byType(WireNode), findsOneWidget);
       expect(find.byType(StaticArrow), findsOneWidget);
       expect(find.byType(KratosResetAllButton), findsOneWidget);
-      expect(find.textContaining('resistance = 0.667 ohms'), findsOneWidget);
+      expect(find.textContaining('电阻 = 0.667 ohms'), findsOneWidget);
       expect(find.text('0.50'), findsOneWidget);
       expect(find.text('10.00'), findsOneWidget);
       expect(find.text('7.50'), findsOneWidget);

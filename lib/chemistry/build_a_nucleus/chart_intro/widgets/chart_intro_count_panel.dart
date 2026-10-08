@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../chart_intro_visuals.dart';
 import '../model/chart_intro_state.dart';
+import 'package:kratos/chemistry/build_a_nucleus/ban_strings.dart';
 
 class ChartIntroCountPanel extends StatelessWidget {
   const ChartIntroCountPanel({super.key, required this.state});
@@ -31,7 +32,7 @@ class ChartIntroCountPanel extends StatelessWidget {
             _row(
               key: 'chart_intro_proton_count',
               color: ChartIntroVisuals.proton,
-              label: 'Protons',
+              label: BanStrings.proton,
               value: state.protonCount,
             ),
             const SizedBox(
@@ -41,7 +42,7 @@ class ChartIntroCountPanel extends StatelessWidget {
             _row(
               key: 'chart_intro_neutron_count',
               color: ChartIntroVisuals.neutron,
-              label: 'Neutrons',
+              label: BanStrings.neutron,
               value: state.neutronCount,
             ),
           ],

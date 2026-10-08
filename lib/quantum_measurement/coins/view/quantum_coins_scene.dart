@@ -15,6 +15,7 @@ import '../components/coins_scene_primitives.dart';
 import '../components/multi_coin_display.dart';
 import '../components/quantum_coin_display.dart';
 import '../model/coins_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class QuantumCoinsScene extends StatefulWidget {
   const QuantumCoinsScene({
@@ -89,7 +90,7 @@ class _QuantumCoinsSceneState extends State<QuantumCoinsScene> {
         scene.singleCoin.measurementState == ExperimentMeasurementState.revealed;
     final multiRevealed =
         scene.coinSet.measurementState == ExperimentMeasurementState.revealed;
-    final title = preparing ? "Quantum 'Coin' to Prepare" : 'Prepared State';
+    final title = preparing ? QmStrings.quantumCoinToPrepare : QmStrings.preparedState;
     final showSuperpositionPrep = preparing &&
         (scene.initialCoinState == 'superposition' ||
             (scene.upProbability > 0 && scene.upProbability < 1));
@@ -190,7 +191,7 @@ class _QuantumCoinsSceneState extends State<QuantumCoinsScene> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CoinsSectionTitle('Single Coin Measurements'),
+              CoinsSectionTitle(QmStrings.singleCoinMeasurements),
               const SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -248,7 +249,7 @@ class _QuantumCoinsSceneState extends State<QuantumCoinsScene> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CoinsSectionTitle('Multiple Coin Measurements'),
+              CoinsSectionTitle(QmStrings.multipleCoinMeasurements),
               const SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

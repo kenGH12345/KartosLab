@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/measurement_plots_state.dart';
 import '../../domain/wave_display_mode.dart';
 import 'qwi_wave_plot_chart.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// PhET `TimePlotNode` — draggable probe + chart connected by a wire.
 class QwiTimePlotOverlay extends StatelessWidget {
@@ -72,7 +73,7 @@ class QwiTimePlotOverlay extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Time',
+                      QwiStrings.time,
                       style: TextStyle(
                         fontFamily: 'Arial',
                         fontSize: 11,

@@ -24,7 +24,7 @@ class ReactantsProductsAndLeftoversHome extends StatefulWidget {
   });
 
   static const String title = RpalStrings.title;
-  static const String subtitle = 'Sandwiches · Molecules · Game';
+  static const String subtitle = '三明治 · 分子 · 游戏';
   static const Color accentColor = RpalColors.statusBarFill;
 
   /// Optional injection for tests; when null, Home creates and owns instances.

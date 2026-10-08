@@ -3,6 +3,7 @@ import 'dart:ui';
 import '../bending_light_constants.dart';
 import '../physics/dispersion_function.dart';
 import 'enums.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// Immutable medium substance (`Substance.ts`).
 class Substance {
@@ -26,44 +27,44 @@ class Substance {
       dispersionFunction.getIndexOfRefraction(BendingLightConstants.wavelengthRed);
 
   static final air = Substance(
-    name: 'Air',
+    name: BlStrings.air,
     indexForRed: 1.000293,
     mystery: false,
     custom: false,
   );
   static final water = Substance(
-    name: 'Water',
+    name: BlStrings.water,
     indexForRed: 1.333,
     mystery: false,
     custom: false,
   );
   static final glass = Substance(
-    name: 'Glass',
+    name: BlStrings.glass,
     indexForRed: 1.5,
     mystery: false,
     custom: false,
   );
   static final diamond = Substance(
-    name: 'Diamond',
+    name: BlStrings.diamond,
     indexForRed: 2.419,
     mystery: false,
     custom: false,
   );
   static final mysteryA = Substance(
-    name: 'Mystery A',
+    name: BlStrings.mysteryA,
     indexForRed: 2.419,
     mystery: true,
     custom: false,
   );
   static final mysteryB = Substance(
-    name: 'Mystery B',
+    name: BlStrings.mysteryB,
     indexForRed: 1.4,
     mystery: true,
     custom: false,
   );
 
   static Substance customWith(double indexForRed) => Substance(
-        name: 'Custom',
+        name: BlStrings.custom,
         indexForRed: indexForRed,
         mystery: false,
         custom: true,

@@ -6,6 +6,7 @@ import 'package:kratos/bending_light/model/more_tools_model.dart';
 import 'package:kratos/bending_light/model/prism.dart';
 import 'package:kratos/bending_light/model/prisms_model.dart';
 import 'package:kratos/bending_light/model/substance.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 void main() {
   test('Intro reset restores laser, media, time and sensor', () {
@@ -26,8 +27,8 @@ void main() {
 
     expect(model.laser.on, isFalse);
     expect(model.laserView, LaserViewEnum.ray);
-    expect(model.topMedium.substance.name, 'Air');
-    expect(model.bottomMedium.substance.name, 'Water');
+    expect(model.topMedium.substance.name, BlStrings.air);
+    expect(model.bottomMedium.substance.name, BlStrings.water);
     expect(model.wavelength, BendingLightConstants.wavelengthRed);
     expect(model.time, 0);
     expect(model.isPlaying, isTrue);
@@ -45,7 +46,7 @@ void main() {
     model.step();
     model.reset();
 
-    expect(model.bottomMedium.substance.name, 'Glass');
+    expect(model.bottomMedium.substance.name, BlStrings.glass);
     expect(model.wavelength, BendingLightConstants.wavelengthRed);
     expect(model.showAngles, isFalse);
     expect(model.velocitySensor.enabled, isFalse);

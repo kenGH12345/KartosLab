@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../faradays_law_assets.dart';
+import 'package:kratos/faradays_law/faradays_law_strings.dart';
 
 /// `RectangularRadioButtonGroup` for 1-coil vs 2-coil (`topCoilVisible`).
 class CoilRadioGroup extends StatelessWidget {
@@ -18,7 +19,7 @@ class CoilRadioGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Circuit Mode',
+      label: FaradaysLawStrings.circuitMode,
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

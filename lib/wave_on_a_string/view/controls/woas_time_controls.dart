@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import '../../../common/widgets/kratos_reset_all_button.dart';
 import '../../model/woas_model.dart';
 import '../../model/woas_time_speed.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 /// Play/Pause + Step + Normal/Slow (`TimeControlNode`).
 class WoasTimeControls extends StatelessWidget {
@@ -50,13 +51,13 @@ class WoasTimeControls extends StatelessWidget {
           children: [
             _SpeedRow(
               key: const Key('speed_normal'),
-              label: 'Normal',
+              label: WoasStrings.normal,
               selected: model.timeSpeed == WoasTimeSpeed.normal,
               onTap: () => model.setTimeSpeed(WoasTimeSpeed.normal),
             ),
             _SpeedRow(
               key: const Key('speed_slow'),
-              label: 'Slow Motion',
+              label: WoasStrings.slowMotion,
               selected: model.timeSpeed == WoasTimeSpeed.slow,
               onTap: () => model.setTimeSpeed(WoasTimeSpeed.slow),
             ),
@@ -239,7 +240,7 @@ class WoasRestartButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Semantics(
       button: true,
-      label: 'Restart String',
+      label: WoasStrings.restartString,
       child: GestureDetector(
         key: const Key('restart_button'),
         onTap: onPressed,
@@ -372,7 +373,7 @@ class WoasResetAllControl extends StatelessWidget {
       key: const Key('reset_all_button'),
       onPressed: onPressed,
       radius: 20.5,
-      tooltip: 'Reset All',
+      tooltip: WoasStrings.resetAll,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kratos/l10n/kartos_localization.dart';
 
 import '../model/clb_model.dart';
 import '../model/time_speed.dart';
@@ -67,7 +68,7 @@ class _PlayPauseStepGroup extends StatelessWidget {
         _RoundIconButton(
           radius: ClbTimeControlNode.playPauseRadius,
           onPressed: () => model.setPlaying(!model.isPlaying),
-          semanticLabel: model.isPlaying ? 'Pause' : 'Play',
+          semanticLabel: model.isPlaying ? loc.common.pause : loc.common.play,
           painter: model.isPlaying
               ? const _PauseIconPainter()
               : const _PlayIconPainter(),
@@ -76,7 +77,7 @@ class _PlayPauseStepGroup extends StatelessWidget {
         _RoundIconButton(
           radius: ClbTimeControlNode.stepRadius,
           onPressed: () => model.manualStep(),
-          semanticLabel: 'Step',
+          semanticLabel: loc.common.step,
           painter: const _StepForwardIconPainter(),
         ),
       ],
@@ -97,13 +98,13 @@ class _SpeedRadioGroup extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SpeedRadio(
-          label: 'Normal',
+          label: '正常',
           selected: model.timeSpeed == TimeSpeed.normal,
           onTap: () => model.setTimeSpeed(TimeSpeed.normal),
         ),
         const SizedBox(height: 9),
         _SpeedRadio(
-          label: 'Slow',
+          label: '慢速',
           selected: model.timeSpeed == TimeSpeed.slow,
           onTap: () => model.setTimeSpeed(TimeSpeed.slow),
         ),
@@ -399,7 +400,7 @@ class ClbStopwatchNode extends StatelessWidget {
                       model.stopwatchRunning = false;
                       model.notifyViewChanged();
                     },
-                    semanticLabel: 'Reset',
+                    semanticLabel: loc.common.reset,
                     painter: const _UTurnIconPainter(),
                   ),
                   const SizedBox(width: 6),
@@ -410,7 +411,7 @@ class ClbStopwatchNode extends StatelessWidget {
                       model.notifyViewChanged();
                     },
                     semanticLabel:
-                        model.stopwatchRunning ? 'Pause' : 'Play',
+                        model.stopwatchRunning ? loc.common.pause : loc.common.play,
                     painter: model.stopwatchRunning
                         ? const _PauseIconPainter()
                         : const _PlayIconPainter(),

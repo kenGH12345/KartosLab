@@ -11,7 +11,7 @@ class RutherfordScatteringHome extends StatelessWidget {
   const RutherfordScatteringHome({super.key});
 
   static const String title = RsStrings.title;
-  static const String subtitle = 'Rutherford · Plum Pudding';
+  static const String subtitle = '卢瑟福 · 葡萄干布丁';
   static const Color accentColor = Color(0xFFB45309);
 
   @override

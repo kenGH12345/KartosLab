@@ -1,0 +1,30 @@
+--------- beginning of main
+10-02 02:49:25.996  1436  1612 E TelephonyManager: Error calling #isDataEnabled, returning default (false).
+10-02 02:49:25.996  1436  1612 E TelephonyManager: java.lang.IllegalStateException: telephony service is null.
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at android.telephony.TelephonyManager.isDataEnabledForReason(TelephonyManager.java:14365)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at android.telephony.TelephonyManager.isDataEnabledForReason(TelephonyManager.java:14356)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at android.telephony.TelephonyManager.isDataEnabled(TelephonyManager.java:11659)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at com.google.android.gms.common.d.b$$ExternalSyntheticApiModelOutline0.m(D8$$SyntheticClass:81)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at com.google.android.libraries.gsa.c.a.a.aa.a(PG:151)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at com.google.android.libraries.gsa.h.a.k.call(PG:9)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at com.google.android.libraries.k.x.run(PG:3)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at com.google.common.n.c.c.run(PG:50)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at com.google.android.libraries.k.e.run(PG:8)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at java.lang.Thread.run(Thread.java:1012)
+10-02 02:49:25.996  1436  1612 E TelephonyManager: 	at com.google.android.libraries.k.d.b.run(PG:74)
+10-02 02:49:27.243   589   734 E WifiScoringParams: Invalid frequency(-1), using 5G as default rssi array
+10-02 02:49:29.072  1436  1614 E TelephonyManager: Error calling #isDataEnabled, returning default (false).
+10-02 02:49:29.072  1436  1614 E TelephonyManager: java.lang.IllegalStateException: telephony service is null.
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at android.telephony.TelephonyManager.isDataEnabledForReason(TelephonyManager.java:14365)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at android.telephony.TelephonyManager.isDataEnabledForReason(TelephonyManager.java:14356)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at android.telephony.TelephonyManager.isDataEnabled(TelephonyManager.java:11659)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at com.google.android.gms.common.d.b$$ExternalSyntheticApiModelOutline0.m(D8$$SyntheticClass:81)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at com.google.android.libraries.gsa.c.a.a.aa.a(PG:151)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at com.google.android.libraries.gsa.h.a.k.call(PG:9)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at java.util.concurrent.FutureTask.run(FutureTask.java:264)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at com.google.android.libraries.k.x.run(PG:3)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at com.google.common.n.c.c.run(PG:50)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at com.google.android.libraries.k.e.run(PG:8)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at java.lang.Thread.run(Thread.java:1012)
+10-02 02:49:29.072  1436  1614 E TelephonyManager: 	at com.google.android.libraries.k.d.b.run(PG:74)

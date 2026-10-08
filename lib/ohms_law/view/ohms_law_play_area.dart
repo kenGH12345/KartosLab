@@ -12,6 +12,7 @@ import 'formula_equation.dart';
 import 'ohms_law_audio_hooks.dart';
 import 'ohms_law_bindings.dart';
 import 'wire_box.dart';
+import 'package:kratos/ohms_law/ohms_law_strings.dart';
 
 /// PhET `OhmsLawScreenView` play area in **1024×618** source coordinates
 /// (`ScreenView.DEFAULT_LAYOUT_BOUNDS`; ohms-law does not override).
@@ -230,7 +231,7 @@ class OhmsLawPlayAreaState extends State<OhmsLawPlayArea> {
                   bottom: 20,
                   child: Semantics(
                     button: true,
-                    label: 'Reset All',
+                    label: OhmsLawStrings.resetAll,
                     child: KratosResetAllButton(
                       key: const Key('ohms_law_reset_all'),
                       radius: OhmsLawViewConstants.resetRadius,

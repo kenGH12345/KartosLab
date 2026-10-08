@@ -4,6 +4,7 @@ import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
 import '../model/balloons_static_electricity_constants.dart';
 import '../model/balloons_static_electricity_model.dart';
 import 'base_view_layout.dart';
+import 'package:kratos/balloons_and_static_electricity/base_strings.dart';
 
 /// Bottom controls — PhET `ControlPanel.ts` as Stack children (not full-screen overlay).
 class BaseControlPanel extends StatelessWidget {
@@ -44,7 +45,7 @@ class BaseControlPanel extends StatelessWidget {
                 _BalloonCountSelector(model: model),
                 const SizedBox(height: 2),
                 _YellowPushButton(
-                  label: two ? 'Reset Balloons' : 'Reset Balloon',
+                  label: two ? BaseStrings.resetBalloons : BaseStrings.resetBalloon,
                   onPressed: () {
                     model.resetBalloons();
                     onResetBalloons?.call();
@@ -72,7 +73,7 @@ class BaseControlPanel extends StatelessWidget {
             ),
             const SizedBox(width: 14),
             _YellowPushButton(
-              label: wallVisible ? 'Remove Wall' : 'Add Wall',
+              label: wallVisible ? BaseStrings.removeWall : BaseStrings.addWall,
               onPressed: () {
                 if (wallVisible) {
                   model.removeWall();
@@ -113,10 +114,10 @@ class _ChargeModePanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          for (final entry in const [
-            (ShowCharges.allCharges, 'Show all charges'),
-            (ShowCharges.noCharges, 'Show no charges'),
-            (ShowCharges.chargeDifferences, 'Show charge differences'),
+          for (final entry in [
+            (ShowCharges.allCharges, BaseStrings.showAllCharges),
+            (ShowCharges.noCharges, BaseStrings.showNoCharges),
+            (ShowCharges.chargeDifferences, BaseStrings.showChargeDifferences),
           ])
             _AquaRadioRow(
               selected: model.showCharges == entry.$1,

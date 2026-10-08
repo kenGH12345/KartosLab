@@ -125,9 +125,11 @@ class _ToolboxRow extends StatelessWidget {
               if (showLabel)
                 Text(
                   spec.label,
-                  style: const TextStyle(fontSize: 10),
+                  style: const TextStyle(fontSize: 10, height: 1.05),
                   textAlign: TextAlign.center,
                   maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
                 ),
             ],
           ),
@@ -382,13 +384,17 @@ class SensorToolbox extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: Opacity(opacity: on ? 0.45 : 1, child: icon),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: Opacity(opacity: on ? 0.45 : 1, child: icon),
+            ),
           ),
           Text(
             label,
             textAlign: TextAlign.center,
-            maxLines: 2,
-            style: const TextStyle(fontSize: 10),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 9, height: 1.05),
           ),
         ],
       ),
@@ -557,7 +563,8 @@ class EditBar extends StatelessWidget {
           if (el is CckSwitch)
             TextButton(
               onPressed: () => controller.toggleSwitch(el),
-              child: Text(el.closed ? 'Open' : 'Close'),
+              child: Text(
+                  el.closed ? CckStrings.openSwitch : CckStrings.closeSwitch),
             ),
           if (el is CckBattery)
             _num(el.voltage, 0, CckConstants.acMaxVoltage, (v) {

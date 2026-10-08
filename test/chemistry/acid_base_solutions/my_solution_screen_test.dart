@@ -11,6 +11,7 @@ import 'package:kratos/chemistry/acid_base_solutions/view/my_solution_controller
 import 'package:kratos/chemistry/acid_base_solutions/view/my_solution_screen.dart';
 import 'package:kratos/chemistry/acid_base_solutions/view/intro_controller.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+import 'package:kratos/chemistry/acid_base_solutions/abs_strings.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -27,11 +28,11 @@ void main() {
       expect(find.byType(KratosResetAllButton), findsOneWidget);
       expect(find.text('Solution'), findsOneWidget);
       expect(find.text('Views'), findsOneWidget);
-      expect(find.text('Acid'), findsOneWidget);
-      expect(find.text('Base'), findsOneWidget);
-      expect(find.text('weak'), findsOneWidget);
-      expect(find.text('strong'), findsOneWidget);
-      expect(find.text('Water (H₂O)'), findsNothing);
+      expect(find.text(AbsStrings.acid), findsOneWidget);
+      expect(find.text(AbsStrings.base), findsOneWidget);
+      expect(find.text(AbsStrings.weak), findsOneWidget);
+      expect(find.text(AbsStrings.strong), findsOneWidget);
+      expect(find.text(AbsStrings.waterH2O), findsNothing);
       expect(find.byType(AbsLogSlider), findsWidgets);
       controller.dispose();
     });

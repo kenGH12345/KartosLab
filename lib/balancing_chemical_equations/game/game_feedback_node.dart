@@ -6,6 +6,7 @@ import '../views/bar_charts_node.dart';
 import 'game_level.dart';
 import 'game_model.dart';
 import 'game_state.dart';
+import 'package:kratos/balancing_chemical_equations/bce_strings.dart';
 
 /// PhET `GameFeedbackNode` — three mutually exclusive panels.
 class GameFeedbackNode extends StatelessWidget {
@@ -226,9 +227,9 @@ class _BalancedAndSimplifiedPanel extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const _StatusLine(ok: true, label: 'Balanced'),
+                  const _StatusLine(ok: true, label: BceStrings.balanced),
                   const SizedBox(height: 6),
-                  const _StatusLine(ok: true, label: 'Simplified'),
+                  const _StatusLine(ok: true, label: BceStrings.simplified),
                   const SizedBox(height: 8),
                   Text(
                     '+$points',
@@ -244,7 +245,7 @@ class _BalancedAndSimplifiedPanel extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          _YellowButton(label: 'Next', onPressed: onNext),
+          _YellowButton(label: BceStrings.next, onPressed: onNext),
         ],
       ),
     );
@@ -275,9 +276,9 @@ class _BalancedNotSimplifiedPanel extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _StatusLine(ok: true, label: 'Balanced'),
+                  _StatusLine(ok: true, label: BceStrings.balanced),
                   SizedBox(height: 6),
-                  _StatusLine(ok: false, label: 'Not simplified'),
+                  _StatusLine(ok: false, label: BceStrings.notSimplified),
                 ],
               ),
             ],
@@ -287,9 +288,9 @@ class _BalancedNotSimplifiedPanel extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (gameState == GameState.tryAgain)
-                _YellowButton(label: 'Try Again', onPressed: onTryAgain),
+                _YellowButton(label: BceStrings.tryAgain, onPressed: onTryAgain),
               if (gameState == GameState.showAnswer)
-                _YellowButton(label: 'Show Answer', onPressed: onShowAnswer),
+                _YellowButton(label: BceStrings.showAnswer, onPressed: onShowAnswer),
             ],
           ),
         ],
@@ -315,7 +316,7 @@ class _NotBalancedPanel extends StatelessWidget {
             children: [
               _Face(smile: false),
               SizedBox(width: 10),
-              _StatusLine(ok: false, label: 'Not balanced'),
+              _StatusLine(ok: false, label: BceStrings.notBalanced),
             ],
           ),
           const SizedBox(height: 10),
@@ -323,14 +324,14 @@ class _NotBalancedPanel extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               if (model.gameState == GameState.tryAgain)
-                _YellowButton(label: 'Try Again', onPressed: model.tryAgain),
+                _YellowButton(label: BceStrings.tryAgain, onPressed: model.tryAgain),
               if (model.gameState == GameState.showAnswer)
-                _YellowButton(label: 'Show Answer', onPressed: model.showAnswer),
+                _YellowButton(label: BceStrings.showAnswer, onPressed: model.showAnswer),
             ],
           ),
           const SizedBox(height: 8),
           _YellowButton(
-            label: model.showWhy ? 'Hide Why' : 'Show Why',
+            label: model.showWhy ? '隐藏原因' : '显示原因',
             onPressed: model.toggleShowWhy,
           ),
           if (model.showWhy) ...[

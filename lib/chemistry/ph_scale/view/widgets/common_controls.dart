@@ -5,6 +5,7 @@ import '../../model/ph_scale_constants.dart';
 import '../../model/solute.dart';
 import '../../ph_scale_assets.dart';
 import '../ph_scale_fonts.dart';
+import 'package:kratos/chemistry/ph_scale/phs_strings.dart';
 
 /// Volume arrow + label — PhET `VolumeIndicatorNode.ts`.
 class VolumeIndicator extends StatelessWidget {
@@ -88,7 +89,7 @@ class NeutralIndicator extends StatelessWidget {
           color: const Color.fromARGB(255, 200, 200, 200),
           borderRadius: BorderRadius.circular(8),
         ),
-        child: Text('Neutral', style: PhScaleFonts.neutral),
+        child: Text(PhsStrings.neutral, style: PhScaleFonts.neutral),
       ),
     );
   }

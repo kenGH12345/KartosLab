@@ -15,6 +15,8 @@ import '../../shared/widgets/buoyancy_pool_scale_height_control.dart';
 import '../../shared/widgets/buoyancy_shapes_controls_panel.dart';
 import '../../shapes/model/buoyancy_shapes_model.dart';
 import '../composer/shapes_composer.dart';
+import '../../buoyancy_strings.dart';
+import 'package:kratos/buoyancy/buoyancy_strings.dart';
 
 /// Shapes screen — layout anchors from `BuoyancyShapesScreenView.ts`.
 class BuoyancyShapesScreen extends StatefulWidget {
@@ -143,7 +145,7 @@ class _BuoyancyShapesScreenState extends State<BuoyancyShapesScreen> {
                   const SizedBox(height: 5),
                   BuoyancyAccordionStub(
                     key: _densityKey,
-                    title: 'Object Density',
+                    title: BuoyancyStrings.objectDensity,
                     expanded: _densityExpanded,
                     onToggle: () => _toggleDensity(),
                     child: Text(
@@ -155,7 +157,7 @@ class _BuoyancyShapesScreenState extends State<BuoyancyShapesScreen> {
                   const SizedBox(height: 5),
                   BuoyancyAccordionStub(
                     key: _submergedKey,
-                    title: '% Submerged',
+                    title: BuoyancyStrings.percentSubmerged,
                     expanded: _submergedExpanded,
                     onToggle: () => _toggleSubmerged(),
                     child: Column(
@@ -226,7 +228,7 @@ class _BuoyancyShapesScreenState extends State<BuoyancyShapesScreen> {
                 showDialog<void>(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    title: const Text('Shapes'),
+                    title: const Text(BuoyancyStrings.shapes),
                     content: const Text(
                       // density-buoyancy-common-strings_en.json · shapesInfoDialog
                       'This simulation is limited to vertical forces, without '
@@ -236,7 +238,7 @@ class _BuoyancyShapesScreenState extends State<BuoyancyShapesScreen> {
                     actions: [
                       TextButton(
                         onPressed: () => Navigator.pop(ctx),
-                        child: const Text('Close'),
+                        child: const Text('关闭'),
                       ),
                     ],
                   ),

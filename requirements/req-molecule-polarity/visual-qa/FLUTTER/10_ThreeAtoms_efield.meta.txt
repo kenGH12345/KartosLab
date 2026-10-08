@@ -2,4 +2,4 @@ state: 10_ThreeAtoms_efield
 viewport: 1280x800
 DPR: 1.0
 contentScale: 1.1636363636363636
-captured_at: 2026-10-05T21:00:32.260573
+captured_at: 2026-10-08T17:25:28.305196

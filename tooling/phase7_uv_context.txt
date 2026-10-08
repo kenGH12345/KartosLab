@@ -1,0 +1,148 @@
+=== lib/hookes_law/view/systems/systems_visibility_panel.dart:49 [Total]
+label: 'Total',
+=== lib/hookes_law/view/systems/systems_visibility_panel.dart:58 [Components]
+label: 'Components',
+=== lib/forces/screens/motion_screen_v2.dart:554 [Speed]
+label: 'Speed',
+=== lib/forces/screens/motion_screen_v2.dart:598 [Stop]
+child: Text(model.stopwatchRunning ? 'Stop' : 'Start'),
+=== lib/forces/screens/motion_screen_v2.dart:598 [Start]
+child: Text(model.stopwatchRunning ? 'Stop' : 'Start'),
+=== lib/forces/screens/netforce_screen.dart:93 [${_model.winner == ]
+title: '${_model.winner == 'right' ? '红队' : '蓝队'} 获胜! 🎉',
+=== lib/color_vision/view/rgb_screen_view.dart:212 [Green]
+label: 'Green',
+=== lib/color_vision/view/single_bulb_screen_view.dart:320 [Bulb Color]
+label: 'Bulb Color',
+=== lib/color_vision/view/single_bulb_screen_view.dart:408 [Filter Color]
+label: 'Filter Color',
+=== lib/collision_lab/widgets/ball_values_panel.dart:136 [${CollisionLabStrings.balls} ${ball.index} ${axisX ? ]
+title: '${CollisionLabStrings.balls} ${ball.index} ${axisX ? 'x' : 'y'} (m)',
+=== lib/collision_lab/widgets/ball_values_panel.dart:156 [${CollisionLabStrings.balls} ${ball.index} ${axisX ? ]
+title: '${CollisionLabStrings.balls} ${ball.index} ${axisX ? 'vx' : 'vy'} (m/s)',
+=== lib/collision_lab/widgets/control_panel.dart:99 [Preset]
+const Text('Preset', style: TextStyle(fontWeight: FontWeight.w600)),
+=== lib/collision_lab/widgets/keypad_dialog.dart:104 [Cancel]
+child: const Text('Cancel'),
+=== lib/collision_lab/widgets/keypad_dialog.dart:108 [Enter]
+child: const Text('Enter'),
+=== lib/collision_lab/widgets/momenta_diagram_panel.dart:55 [Zoom out]
+tooltip: 'Zoom out',
+=== lib/collision_lab/widgets/momenta_diagram_panel.dart:64 [Zoom in]
+tooltip: 'Zoom in',
+=== lib/chemistry/states_of_matter/screens/states_of_matter_home.dart:48 [States of Matter]
+title: 'States of Matter',
+=== lib/chemistry/ph_scale/view/graph/ph_scale_graph_node.dart:278 [Logarithmic]
+leftLabel: 'Logarithmic',
+=== lib/chemistry/ph_scale/view/graph/ph_scale_graph_node.dart:279 [Linear]
+rightLabel: 'Linear',
+=== lib/chemistry/ph_scale/view/screens/ph_scale_screen.dart:60 [pH Scale]
+title: const Text('pH Scale'),
+=== lib/chemistry/ph_scale/view/widgets/particle_counts_node.dart:176 [ Ratio]
+const TextSpan(text: ' Ratio'),
+=== lib/chemistry/ph_scale/view/widgets/particle_counts_node.dart:188 [Particle Counts]
+child: Text('Particle Counts', style: font),
+=== lib/chemistry/molarity/view/widgets/compact_slider.dart:43 [${icon ?? ]
+Text('${icon ?? ''}$label',
+=== lib/chemistry/isotopes_and_atomic_mass/screens/isotopes_and_atomic_mass_home.dart:91 [Isotopes]
+label: 'Isotopes',
+=== lib/chemistry/isotopes_and_atomic_mass/screens/isotopes_and_atomic_mass_home.dart:98 [Mixtures]
+label: 'Mixtures',
+=== lib/chemistry/isotopes_and_atomic_mass/screens/make_isotopes_screen.dart:228 [Isotopes]
+appBar: AppBar(title: const Text('Isotopes')),
+=== lib/chemistry/isotopes_and_atomic_mass/screens/mix_isotopes_screen.dart:136 [Percent Composition]
+title: 'Percent Composition',
+=== lib/chemistry/isotopes_and_atomic_mass/screens/mix_isotopes_screen.dart:233 [Mixtures]
+appBar: AppBar(title: const Text('Mixtures')),
+=== lib/chemistry/isotopes_and_atomic_mass/widgets/symbol_abundance_panels.dart:76 [Abundance in Nature]
+title: 'Abundance in Nature',
+=== lib/chemistry/isotopes_and_atomic_mass/widgets/symbol_abundance_panels.dart:105 [This Isotope]
+const Text('This Isotope', style: TextStyle(fontSize: 11)),
+=== lib/chemistry/build_a_nucleus/model/half_life_readout.dart:30 [Unknown]
+static const String unknown = 'Unknown';
+=== lib/chemistry/build_a_nucleus/screens/build_a_nucleus_screen.dart:323 [Protons]
+label: 'Protons',
+=== lib/chemistry/build_a_nucleus/screens/build_a_nucleus_screen.dart:341 [Neutrons]
+label: 'Neutrons',
+=== lib/chemistry/build_a_nucleus/widgets/available_decays_panel.dart:241 [Positron]
+_LegendDot(color: Color(0xFF35B64A), label: 'Positron'),
+=== lib/chemistry/build_a_nucleus/widgets/half_life_info_dialog.dart:68 [Close]
+tooltip: 'Close',
+=== lib/chemistry/build_a_nucleus/widgets/half_life_stability_legend.dart:12 [less stable]
+static const String lessStable = 'less stable';
+=== lib/chemistry/build_a_nucleus/widgets/half_life_stability_legend.dart:13 [more stable]
+static const String moreStable = 'more stable';
+=== lib/chemistry/build_a_nucleus/widgets/nuclide_status.dart:151 [Protons]
+label: 'Protons',
+=== lib/chemistry/build_a_nucleus/widgets/nuclide_status.dart:158 [Neutrons]
+label: 'Neutrons',
+=== lib/chemistry/build_a_nucleus/widgets/show_electron_cloud_checkbox.dart:37 [Electron Cloud]
+const Text('Electron Cloud', style: TextStyle(fontSize: 14)),
+=== lib/chemistry/build_a_nucleus/chart_intro/widgets/chart_intro_count_panel.dart:34 [Protons]
+label: 'Protons',
+=== lib/chemistry/build_a_nucleus/chart_intro/widgets/chart_intro_count_panel.dart:44 [Neutrons]
+label: 'Neutrons',
+=== lib/chemistry/build_a_nucleus/chart_intro/widgets/full_chart_dialog.dart:61 [Close]
+tooltip: 'Close',
+=== lib/chemistry/build_an_atom/screens/atom_screen.dart:153 [Periodic Table]
+title: 'Periodic Table',
+=== lib/chemistry/build_an_atom/screens/atom_screen.dart:169 [Net Charge]
+title: 'Net Charge',
+=== lib/chemistry/build_an_atom/screens/atom_screen.dart:265 [Back]
+child: const Text('Back', style: TextStyle(color: Colors.white)),
+=== lib/chemistry/build_an_atom/screens/game_screen.dart:133 [Back]
+child: const Text('Back', style: TextStyle(color: Colors.white)),
+=== lib/chemistry/build_an_atom/screens/symbol_screen.dart:140 [Periodic Table]
+title: 'Periodic Table',
+=== lib/chemistry/build_an_atom/screens/symbol_screen.dart:223 [Back]
+child: const Text('Back', style: TextStyle(color: Colors.white)),
+=== lib/chemistry/acid_base_solutions/view/abs_views_panel.dart:25 [Particles]
+label: 'Particles',
+=== lib/chemistry/acid_base_solutions/view/abs_views_panel.dart:30 [Graph]
+label: 'Graph',
+=== lib/chemistry/acid_base_solutions/view/abs_views_panel.dart:35 [Hide Views]
+label: 'Hide Views',
+=== lib/capacitor_lab_basics/common/widgets/clb_time_control_node.dart:101 [Normal]
+label: 'Normal',
+=== lib/capacitor_lab_basics/common/widgets/clb_time_control_node.dart:107 [Slow]
+label: 'Slow',
+=== lib/buoyancy/shapes/view/buoyancy_shapes_screen.dart:230 [Shapes]
+title: const Text('Shapes'),
+=== lib/buoyancy/shapes/view/buoyancy_shapes_screen.dart:240 [Close]
+child: const Text('Close'),
+=== lib/buoyancy/applications/view/buoyancy_applications_screen.dart:388 [Bottle]
+const Text('Bottle',
+=== lib/buoyancy/applications/view/buoyancy_applications_screen.dart:391 [Material Inside]
+const Text('Material Inside', style: TextStyle(fontSize: 11)),
+=== lib/bending_light/screens/bending_light_viewport.dart:50 [BendingLightViewport]
+label: 'BendingLightViewport',
+=== lib/beers_law_lab/view/beers_law_cuvette_node.dart:77 [Cuvette width]
+label: 'Cuvette width',
+=== lib/beers_law_lab/view/beers_law_detector_node.dart:60 [Detector reading $_valueText]
+label: 'Detector reading $_valueText',
+=== lib/beers_law_lab/view/beers_law_detector_node.dart:205 [Detector probe]
+label: 'Detector probe',
+=== lib/beers_law_lab/view/beers_law_light_node.dart:36 [Light]
+label: 'Light',
+=== lib/beers_law_lab/view/beers_law_ruler_node.dart:42 [Ruler]
+label: 'Ruler',
+=== lib/balancing_chemical_equations/game/game_feedback_node.dart:334 [Hide Why]
+label: model.showWhy ? 'Hide Why' : 'Show Why',
+=== lib/balancing_chemical_equations/game/game_feedback_node.dart:334 [Show Why]
+label: model.showWhy ? 'Hide Why' : 'Show Why',
+=== lib/astronomy/my_solar_system/screens/my_solar_system_screen.dart:393 [Orbital System]
+label: 'Orbital System',
+=== lib/astronomy/gravity_and_orbits/model/mode_config.dart:139 [Earth]
+tickLabel: 'Earth',
+=== lib/astronomy/gravity_and_orbits/model/mode_config.dart:196 [Earth]
+tickLabel: 'Earth',
+=== lib/astronomy/gravity_and_orbits/model/mode_config.dart:215 [Our Moon]
+tickLabel: 'Our Moon',
+=== lib/astronomy/gravity_and_orbits/model/mode_config.dart:265 [Earth]
+tickLabel: 'Earth',
+=== lib/astronomy/gravity_and_orbits/model/mode_config.dart:275 [Our Moon]
+tickLabel: 'Our Moon',
+=== lib/astronomy/gravity_and_orbits/model/mode_config.dart:323 [Earth]
+tickLabel: 'Earth',
+=== lib/astronomy/gravity_and_orbits/model/mode_config.dart:335 [Space Station]
+tickLabel: 'Space Station',

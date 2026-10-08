@@ -52,7 +52,7 @@ class MomentaDiagramPanel extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    tooltip: 'Zoom out',
+                    tooltip: '缩小',
                     onPressed: controller.zoomMomentaOut,
                     icon: const Icon(Icons.remove_circle_outline, size: 20),
                   ),
@@ -61,7 +61,7 @@ class MomentaDiagramPanel extends StatelessWidget {
                     style: const TextStyle(fontSize: 12),
                   ),
                   IconButton(
-                    tooltip: 'Zoom in',
+                    tooltip: '放大',
                     onPressed: controller.zoomMomentaIn,
                     icon: const Icon(Icons.add_circle_outline, size: 20),
                   ),

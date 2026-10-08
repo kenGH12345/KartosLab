@@ -277,7 +277,7 @@ class FirstLawSidePanel extends StatelessWidget {
                 fontSize: 16,
               ),
               children: [
-                const TextSpan(text: 'Eccentricity = '),
+                TextSpan(text: '${KeplersLawsStrings.eccentricity} = '),
                 TextSpan(
                   text: 'c',
                   style: TextStyle(color: KeplersLawsColors.focalDistance),

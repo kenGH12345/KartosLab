@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../concentration_strings.dart';
 import '../model/concentration_constants.dart';
 import '../model/concentration_meter.dart';
 import '../model/concentration_model.dart';
@@ -82,7 +83,7 @@ class _MeterBody extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Concentration',
+            ConcentrationStrings.concentration,
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,

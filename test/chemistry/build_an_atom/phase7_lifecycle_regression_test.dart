@@ -13,6 +13,7 @@ import 'package:kratos/chemistry/build_an_atom/screens/symbol_screen.dart';
 import 'package:kratos/chemistry/build_an_atom/widgets/game/game_interactive_periodic_table.dart';
 
 import 'behavioral_harness.dart';
+import 'package:kratos/chemistry/build_an_atom/baa_strings.dart';
 
 /// PHASE 7 — Cross-screen / lifecycle / stress / isolation.
 void main() {
@@ -78,7 +79,7 @@ void main() {
       // contrast: owned screen dispose must not throw.
       await pumpOwned(tester, const SizedBox());
       await pumpOwned(tester, const BuildAnAtomAtomScreen());
-      expect(find.text('Atom'), findsOneWidget);
+      expect(find.text(BaaStrings.atom), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   });

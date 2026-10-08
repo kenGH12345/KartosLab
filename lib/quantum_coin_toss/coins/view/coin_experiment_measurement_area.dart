@@ -175,7 +175,9 @@ class _HazeOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned.fill(
+    // SizedBox.expand works both as a Container child and inside Stack
+    // (avoid Positioned outside Stack — preparing branch has no Stack).
+    return SizedBox.expand(
       child: DecoratedBox(
         decoration: BoxDecoration(
           gradient: LinearGradient(

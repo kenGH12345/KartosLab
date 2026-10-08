@@ -16,6 +16,7 @@ import 'instrument_controls.dart';
 import 'instruments.dart';
 import 'play_area_layout.dart';
 import 'tool_nodes.dart';
+import 'package:kratos/gases_intro/gases_intro_strings.dart';
 
 /// V2 anchors + V3 tools + V4 interaction (radio / units / lid / oops / accordion).
 class GasesIntroShell extends StatefulWidget {
@@ -216,7 +217,7 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                     height: a.returnLidH,
                     child: TextButton(
                       onPressed: model.returnLid,
-                      child: const Text('Return Lid'),
+                      child: Text(GasesIntroStrings.returnLid),
                     ),
                   ),
                 Positioned(
@@ -283,7 +284,7 @@ class _GasesIntroShellState extends State<GasesIntroShell> {
                     key: const Key('reset_all_button'),
                     onPressed: _resetAll,
                     radius: 20.5,
-                    tooltip: 'Reset All',
+                    tooltip: GasesIntroStrings.resetAll,
                   ),
                 ),
                 if (viewState.pendingOopsMessage != null)
@@ -397,8 +398,8 @@ class IdealControlPanel extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (showHoldConstant) ...[
-              const Text(
-                'Hold Constant',
+              Text(
+                GasesIntroStrings.holdConstant,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -441,19 +442,19 @@ class IdealControlPanel extends StatelessWidget {
               const Divider(color: Color(0xFF334155), height: 24),
             ],
             _toolCheckbox(
-              label: 'Width',
+              label: GasesIntroStrings.width,
               value: model.widthVisible,
               onChanged: model.setWidthVisible,
               icon: const _WidthPreviewIcon(),
             ),
             _toolCheckbox(
-              label: 'Stopwatch',
+              label: GasesIntroStrings.stopwatch,
               value: model.stopwatchVisible,
               onChanged: model.setStopwatchVisible,
               icon: const _StopwatchPreviewIcon(),
             ),
             _toolCheckbox(
-              label: 'Collision Counter',
+              label: GasesIntroStrings.collisionCounter,
               value: model.collisionCounterVisible,
               onChanged: model.setCollisionCounterVisible,
               icon: const _CollisionPreviewIcon(),
@@ -506,15 +507,15 @@ class IdealControlPanel extends StatelessWidget {
   static String _holdLabel(HoldConstant m) {
     switch (m) {
       case HoldConstant.nothing:
-        return 'Nothing';
+        return GasesIntroStrings.nothing;
       case HoldConstant.volume:
-        return 'Volume (V)';
+        return GasesIntroStrings.volumeV;
       case HoldConstant.temperature:
-        return 'Temperature (T)';
+        return GasesIntroStrings.temperatureT;
       case HoldConstant.pressureV:
-        return 'Pressure ↕ V';
+        return GasesIntroStrings.pressureV;
       case HoldConstant.pressureT:
-        return 'Pressure ↕ T';
+        return GasesIntroStrings.pressureT;
     }
   }
 }
@@ -574,7 +575,7 @@ class ParticlesAccordionBox extends StatelessWidget {
                     const SizedBox(width: 10),
                     const Expanded(
                       child: Text(
-                        'Particles',
+                        GasesIntroStrings.particles,
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -594,7 +595,7 @@ class ParticlesAccordionBox extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   NumberOfParticlesControl(
-                    label: 'Heavy',
+                    label: GasesIntroStrings.heavy,
                     color: const Color(GasesIntroConstants.heavyParticleColor),
                     value: model.particleSystem.numberOfHeavy,
                     onSet: model.setNumberHeavy,
@@ -602,7 +603,7 @@ class ParticlesAccordionBox extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   NumberOfParticlesControl(
-                    label: 'Light',
+                    label: GasesIntroStrings.light,
                     color: const Color(GasesIntroConstants.lightParticleColor),
                     value: model.particleSystem.numberOfLight,
                     onSet: model.setNumberLight,

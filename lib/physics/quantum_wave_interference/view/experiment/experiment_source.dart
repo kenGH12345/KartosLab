@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
+
 import '../../domain/source_type.dart';
 import '../common/qwi_layout.dart';
 import 'experiment_controller.dart';
@@ -83,13 +85,13 @@ class ExperimentSourceView extends StatelessWidget {
   static String _sourceLabel(SourceType type) {
     switch (type) {
       case SourceType.photons:
-        return 'Photon Source';
+        return QwiStrings.photonSource;
       case SourceType.electrons:
-        return 'Electron Source';
+        return QwiStrings.electronSource;
       case SourceType.neutrons:
-        return 'Neutron Source';
+        return QwiStrings.neutronSource;
       case SourceType.heliumAtoms:
-        return 'Helium Atom Source';
+        return QwiStrings.heliumAtomSource;
     }
   }
 

@@ -4,6 +4,7 @@ import '../../domain/probe.dart';
 import 'qwi_colors.dart';
 import 'qwi_panel.dart';
 import 'qwi_typography.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Port of PhET `DetectorProbeNode` chrome (circle + % / state + wire + Detect panel).
 ///
@@ -40,15 +41,15 @@ class QwiProbeNode extends StatelessWidget {
   String get _circleLabel {
     switch (probe.state) {
       case ProbeState.detected:
-        return 'Particle\nDetected';
+        return QwiStrings.particleDetected;
       case ProbeState.notDetected:
-        return 'Not\nDetected';
+        return QwiStrings.notDetected;
       case ProbeState.ready:
         return '${(probe.probability * 100).toStringAsFixed(1)}%';
     }
   }
 
-  String get _buttonLabel => probe.state == ProbeState.ready ? 'Detect' : 'Reset Detector';
+  String get _buttonLabel => probe.state == ProbeState.ready ? QwiStrings.detect : QwiStrings.resetDetector;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,7 @@ class QwiProbeNode extends StatelessWidget {
           width: r * 2,
           height: r * 2,
           child: Semantics(
-            label: 'Detector probe',
+            label: QwiStrings.detectorProbe,
             value: _circleLabel.replaceAll('\n', ' '),
             child: GestureDetector(
               onPanUpdate: (d) {
@@ -117,7 +118,7 @@ class QwiProbeNode extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('Detector Size', style: QwiTypography.label(11)),
+                        Text(QwiStrings.detectorSize, style: QwiTypography.label(11)),
                         SliderTheme(
                           data: SliderThemeData(
                             trackHeight: 3,

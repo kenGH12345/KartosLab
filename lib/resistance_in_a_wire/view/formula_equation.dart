@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kratos/resistance_in_a_wire/riaw_strings.dart';
 
 import '../model/resistance_in_a_wire_constants.dart';
 import '../model/resistance_in_a_wire_model.dart';
@@ -15,8 +16,7 @@ class FormulaEquation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Resistance Equation. Resistance R equals resistivity rho times '
-          'length L over area A.',
+      label: RiawStrings.equationA11y(),
       child: CustomPaint(
         size: ResistanceInAWireViewConstants.formulaPaintSize,
         painter: _FormulaPainter(model: model),

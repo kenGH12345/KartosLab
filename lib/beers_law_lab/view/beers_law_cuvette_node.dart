@@ -74,7 +74,7 @@ class _BeersLawCuvetteNodeState extends State<BeersLawCuvetteNode> {
               left: w - BeersLawLayout.arrowLength / 2,
               bottom: 10,
               child: Semantics(
-                label: 'Cuvette width',
+                label: '比色皿宽度',
                 slider: true,
                 value: '${model.cuvette.width.toStringAsFixed(2)} cm',
                 child: GestureDetector(

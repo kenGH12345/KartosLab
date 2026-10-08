@@ -1,48 +1,48 @@
-/// English strings matching PhET Gravity and Orbits.
+/// Gravity and Orbits — PHASE 2 Chinese (synced with `loc.*`).
 library;
 
 class GaoStrings {
   GaoStrings._();
 
-  static const String title = 'Gravity and Orbits';
-  static const String model = 'Model';
-  static const String toScale = 'To Scale';
+  static const String title = '引力与轨道';
+  static const String model = '模型';
+  static const String toScale = '按比例';
 
-  static const String gravity = 'Gravity';
-  static const String on = 'on';
-  static const String off = 'off';
+  static const String gravity = '重力';
+  static const String on = '开';
+  static const String off = '关';
 
-  static const String gravityForce = 'Gravity Force';
-  static const String velocity = 'Velocity';
-  static const String mass = 'Mass';
-  static const String path = 'Path';
-  static const String grid = 'Grid';
-  static const String measuringTape = 'Measuring Tape';
+  static const String gravityForce = '引力';
+  static const String velocity = '速度';
+  static const String mass = '质量';
+  static const String path = '轨迹';
+  static const String grid = '网格';
+  static const String measuringTape = '卷尺';
 
-  static const String clear = 'Clear';
-  static const String returnObjects = 'Return Objects';
+  static const String clear = '清除';
+  static const String returnObjects = '收回物体';
 
-  static const String fast = 'Fast';
-  static const String normal = 'Normal';
-  static const String slow = 'Slow';
+  static const String fast = '快速';
+  static const String normal = '正常';
+  static const String slow = '慢速';
 
-  static const String play = 'Play';
-  static const String pause = 'Pause';
-  static const String step = 'Step';
-  static const String rewind = 'Rewind';
-  static const String resetAll = 'Reset All';
-  static const String resetScene = 'Reset Scene';
+  static const String play = '播放';
+  static const String pause = '暂停';
+  static const String step = '步进';
+  static const String rewind = '倒回';
+  static const String resetAll = '全部重置';
+  static const String resetScene = '重置场景';
 
-  static const String earthDays = 'Earth Days';
-  static const String earthMinutes = 'Earth Minutes';
+  static const String earthDays = '地球日';
+  static const String earthMinutes = '地球分钟';
 
-  static const String starMass = 'Star Mass';
-  static const String planetMass = 'Planet Mass';
-  static const String moonMass = 'Moon Mass';
-  static const String satelliteMass = 'Satellite Mass';
+  static const String starMass = '恒星质量';
+  static const String planetMass = '行星质量';
+  static const String moonMass = '月球质量';
+  static const String satelliteMass = '卫星质量';
 
-  static const String ourSun = 'Our Sun';
-  static const String earth = 'Earth';
-  static const String ourMoon = 'Our Moon';
-  static const String spaceStation = 'Space Station';
+  static const String ourSun = '太阳';
+  static const String earth = '地球';
+  static const String ourMoon = '月球';
+  static const String spaceStation = '空间站';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kratos/gravity_force_lab/a11y/gfl_a11y_strings.dart';
+import 'package:kratos/gravity_force_lab/gfl_strings.dart';
 import 'package:kratos/gravity_force_lab/audio/gfl_audio.dart';
 import 'package:kratos/gravity_force_lab/model/force_values_display.dart';
 import 'package:kratos/gravity_force_lab/model/gravity_force_lab_model.dart';
@@ -59,10 +60,10 @@ void main() {
     });
 
     test('mass value semantics strings from Model', () {
-      expect(GflA11yStrings.massAndUnit(100), '100 kilograms');
-      expect(GflA11yStrings.massAndUnit(400), '400 kilograms');
-      expect(GflA11yStrings.massAndUnit(10), '10 kilograms');
-      expect(GflA11yStrings.massAndUnit(1000), '1000 kilograms');
+      expect(GflA11yStrings.massAndUnit(100), '100 千克');
+      expect(GflA11yStrings.massAndUnit(400), '400 千克');
+      expect(GflA11yStrings.massAndUnit(10), '10 千克');
+      expect(GflA11yStrings.massAndUnit(1000), '1000 千克');
     });
   });
 
@@ -79,15 +80,15 @@ void main() {
       );
       await tester.pump();
 
-      await tester.tap(find.text('Scientific Notation'));
+      await tester.tap(find.text(GflStrings.scientificNotation));
       await tester.pump();
       expect(model.forceValuesDisplay, ForceValuesDisplay.scientific);
 
-      await tester.tap(find.text('Hidden'));
+      await tester.tap(find.text(GflStrings.hidden));
       await tester.pump();
       expect(model.forceValuesDisplay, ForceValuesDisplay.hidden);
 
-      await tester.tap(find.text('Decimal Notation'));
+      await tester.tap(find.text(GflStrings.decimalNotation));
       await tester.pump();
       expect(model.forceValuesDisplay, ForceValuesDisplay.decimal);
 
@@ -108,12 +109,12 @@ void main() {
       await tester.pump();
 
       expect(model.constantRadius, isFalse);
-      await tester.tap(find.text('Constant Size'));
+      await tester.tap(find.text(GflStrings.constantSize));
       await tester.pump();
       expect(model.constantRadius, isTrue);
       expect(model.mass1.radius, 0.5);
 
-      await tester.tap(find.text('Constant Size'));
+      await tester.tap(find.text(GflStrings.constantSize));
       await tester.pump();
       expect(model.constantRadius, isFalse);
 
@@ -168,13 +169,13 @@ void main() {
       await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.text(GflA11yStrings.keyboardHelp), findsOneWidget);
-      expect(find.text(GflA11yStrings.moveSpheresHeading), findsOneWidget);
+      expect(find.text(GflA11yStrings.moveSpheresHeading), findsWidgets);
       expect(find.text(GflA11yStrings.changeMassHeading), findsOneWidget);
       expect(find.textContaining('J + C'), findsOneWidget);
       expect(find.textContaining('J + H'), findsOneWidget);
       expect(find.byType(GflKeyboardHelpDialog), findsOneWidget);
 
-      await tester.tap(find.text('Close'));
+      await tester.tap(find.text('关闭'));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
 

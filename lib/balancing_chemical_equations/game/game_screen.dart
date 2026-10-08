@@ -14,6 +14,7 @@ import 'package:kratos/balancing_chemical_equations/views/bce_molecule_node.dart
 import 'package:kratos/balancing_chemical_equations/views/horizontal_aligner.dart';
 import 'package:kratos/balancing_chemical_equations/views/particles_node.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+import 'package:kratos/balancing_chemical_equations/bce_strings.dart';
 
 /// PhET `GameScreen` / `GameScreenView` — level selection + play + completed.
 class GameScreen extends StatefulWidget {
@@ -506,13 +507,13 @@ class _LevelPlayView extends StatelessWidget {
                     child: IgnorePointer(
                       ignoring: !model.checkEnabled,
                       child: _GamePushButton(
-                        label: 'Check',
+                        label: BceStrings.check,
                         onPressed: model.check,
                       ),
                     ),
                   ),
                 if (model.nextButtonVisible)
-                  _GamePushButton(label: 'Next', onPressed: model.next),
+                  _GamePushButton(label: BceStrings.next, onPressed: model.next),
               ],
             ),
           ),
@@ -644,7 +645,7 @@ class _LevelCompletedView extends StatelessWidget {
                 ],
                 const SizedBox(height: 20),
                 _GamePushButton(
-                  label: 'Continue',
+                  label: BceStrings.continueLabel,
                   onPressed: model.startOver,
                 ),
               ],

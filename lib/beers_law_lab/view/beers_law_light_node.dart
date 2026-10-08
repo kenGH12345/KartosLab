@@ -33,7 +33,7 @@ class BeersLawLightNode extends StatelessWidget {
       height: h,
       child: Semantics(
         button: true,
-        label: 'Light',
+        label: '光源',
         toggled: on,
         child: GestureDetector(
           behavior: HitTestBehavior.opaque,

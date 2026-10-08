@@ -12,6 +12,7 @@ import 'background_node.dart';
 import 'electron_layer_node.dart';
 import 'jt_view_layout.dart';
 import 'leg_node.dart';
+import 'package:kratos/john_travoltage/jt_strings.dart';
 
 /// Design-coordinate play area (768×504) — PhET `JohnTravoltageView` scene graph.
 ///
@@ -154,8 +155,8 @@ class JohnTravoltageScreen extends StatefulWidget {
   final bool autoStartClock;
   final bool enableAudio;
 
-  static const String title = 'John Travoltage';
-  static const String subtitle = '静电 · 摩擦起电 · 放电';
+  static const String title = JtStrings.title;
+  static const String subtitle = JtStrings.subtitle;
   static const Color accentColor = Color(0xFFF79722);
 
   @override

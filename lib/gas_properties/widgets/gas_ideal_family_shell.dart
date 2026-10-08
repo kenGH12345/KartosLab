@@ -22,6 +22,7 @@ import '../painters/histogram_painter.dart';
 import '../solver/hold_constant_solver.dart';
 import '../transform/gas_coordinate_transform.dart';
 import 'ideal_phet_controls.dart';
+import 'package:kratos/gas_properties/gas_properties_strings.dart';
 
 /// Shared shell for Ideal / Explore / Energy.
 /// Interaction: discrete hit regions — no full-screen gesture guessing.
@@ -259,7 +260,7 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
                           width: heaterW,
                           height: heaterH,
                           child: Semantics(
-                            label: 'Heat Cool',
+                            label: GasPropertiesStrings.heatCool,
                             child: HeaterCoolerWidget(
                               listenable: c,
                               factorOf: () => c.model.heatCoolFactor,
@@ -321,7 +322,7 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
                                 36,
                             child: TextButton(
                               onPressed: c.returnLid,
-                              child: const Text('Return Lid'),
+                              child: Text(GasPropertiesStrings.returnLid),
                             ),
                           ),
                         if (c.stopwatchVisible)
@@ -402,7 +403,7 @@ class _GasIdealFamilyShellState extends State<GasIdealFamilyShell> {
           key: const Key('reset_all_button'),
           onPressed: _resetAll,
           radius: 20.5,
-          tooltip: 'Reset All',
+          tooltip: GasPropertiesStrings.resetAll,
         ),
       ),
     ];
@@ -451,7 +452,7 @@ class _StopwatchPanel extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Stopwatch',
+            Text(GasPropertiesStrings.stopwatch,
                 style: TextStyle(color: Colors.white70, fontSize: 11)),
             Text(
               '${ps.toStringAsFixed(2)} ps',
@@ -506,7 +507,7 @@ class _CollisionCounterBadge extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Collisions',
+            Text(GasPropertiesStrings.collisions,
                 style: TextStyle(color: Colors.black87, fontSize: 11)),
             Text(
               '$count',
@@ -531,11 +532,11 @@ class _InjectionPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final tm = controller.model.temperatureSolver;
     return IdealPanelChrome(
-      title: 'Injection Temperature',
+      title: GasPropertiesStrings.injectionTemperature,
       child: Column(
         children: [
           IdealCheckRow(
-            label: 'Set to',
+            label: GasPropertiesStrings.setTo,
             value: tm.setInjectionTemperatureEnabled,
             onChanged: (v) {
               if (v) {
@@ -561,7 +562,7 @@ class _InjectionPanel extends StatelessWidget {
           Text(
             tm.setInjectionTemperatureEnabled
                 ? '${tm.injectionTemperature.round()} K'
-                : 'Match Container',
+                : GasPropertiesStrings.matchContainer,
             style: const TextStyle(color: Colors.white54, fontSize: 11),
           ),
         ],
@@ -589,7 +590,7 @@ class _EnergyLeftPanels extends StatelessWidget {
               heavyBins: e?.heavySpeedBins ?? const [],
               lightBins: e?.lightSpeedBins ?? const [],
               yMax: e?.zoomYMax ?? 100,
-              title: 'Speed',
+              title: GasPropertiesStrings.speed,
             ),
           ),
         ),
@@ -602,7 +603,7 @@ class _EnergyLeftPanels extends StatelessWidget {
               heavyBins: e?.heavyKeBins ?? const [],
               lightBins: e?.lightKeBins ?? const [],
               yMax: e?.zoomYMax ?? 100,
-              title: 'Kinetic Energy',
+              title: GasPropertiesStrings.kineticEnergy,
               heavyColor: const Color(GasPropertiesColors.keHistogramBar),
               lightColor: const Color(0xFFFFAA88),
             ),
@@ -615,7 +616,7 @@ class _EnergyLeftPanels extends StatelessWidget {
               icon: const Icon(Icons.zoom_out, color: Colors.white70),
             ),
             Text(
-              'Zoom ${e?.zoomLevelIndex ?? 0}',
+              '${GasPropertiesStrings.zoom} ${e?.zoomLevelIndex ?? 0}',
               style: const TextStyle(color: Colors.white54, fontSize: 11),
             ),
             IconButton(
@@ -636,16 +637,15 @@ class _OopsOverlay extends StatelessWidget {
 
   String get _message => switch (oops) {
         HoldConstantOops.temperatureContainerEmpty =>
-          'Temperature cannot be held constant when the container is empty.',
-        HoldConstantOops.temperatureLidOpen =>
-          'Temperature cannot be held constant when the container is open.',
+          GasPropertiesStrings.tempEmpty,
+        HoldConstantOops.temperatureLidOpen => GasPropertiesStrings.tempOpen,
         HoldConstantOops.pressureContainerEmpty =>
-          'Pressure cannot be held constant when the container is empty.',
+          GasPropertiesStrings.pressureEmpty,
         HoldConstantOops.pressureVolumeTooLarge =>
-          'Pressure cannot be held constant. Volume would be too large.',
+          GasPropertiesStrings.pressureVolumeLarge,
         HoldConstantOops.pressureVolumeTooSmall =>
-          'Pressure cannot be held constant. Volume would be too small.',
-        HoldConstantOops.maximumTemperature => 'Maximum temperature reached.',
+          GasPropertiesStrings.pressureVolumeSmall,
+        HoldConstantOops.maximumTemperature => GasPropertiesStrings.maxTemperature,
       };
 
   @override
@@ -671,12 +671,12 @@ class _OopsOverlay extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Oops!\n\n$_message',
+                '${GasPropertiesStrings.oops}\n\n$_message',
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: Colors.white),
               ),
               const SizedBox(height: 16),
-              TextButton(onPressed: onDismiss, child: const Text('OK')),
+              TextButton(onPressed: onDismiss, child: Text(GasPropertiesStrings.ok)),
             ],
           ),
         ),

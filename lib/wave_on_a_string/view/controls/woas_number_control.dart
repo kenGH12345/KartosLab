@@ -15,6 +15,8 @@ class WoasNumberControl extends StatelessWidget {
     required this.unitSuffix,
     required this.onChanged,
     this.trackWidth = 135,
+    /// Stable automation id (English); defaults to [title] for legacy callers.
+    this.keyPrefix,
   });
 
   final String title;
@@ -26,6 +28,7 @@ class WoasNumberControl extends StatelessWidget {
   final String unitSuffix;
   final ValueChanged<double> onChanged;
   final double trackWidth;
+  final String? keyPrefix;
 
   void _nudge(int dir) {
     final next = (value + dir * delta).clamp(min, max);
@@ -50,6 +53,7 @@ class WoasNumberControl extends StatelessWidget {
     final display = decimalPlaces == 0
         ? '${value.round()}$unitSuffix'
         : '${value.toStringAsFixed(decimalPlaces)}$unitSuffix';
+    final id = keyPrefix ?? title;
 
     return Semantics(
       label: '$title $display',
@@ -69,7 +73,7 @@ class WoasNumberControl extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _ArrowChip(
-                key: ValueKey('${title}_dec'),
+                key: ValueKey('${id}_dec'),
                 left: true,
                 onTap: () => _nudge(-1),
               ),
@@ -91,7 +95,7 @@ class WoasNumberControl extends StatelessWidget {
               ),
               const SizedBox(width: 5),
               _ArrowChip(
-                key: ValueKey('${title}_inc'),
+                key: ValueKey('${id}_inc'),
                 left: false,
                 onTap: () => _nudge(1),
               ),

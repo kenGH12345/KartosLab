@@ -1,3 +1,4 @@
+import 'package:kratos/forces/config/forces_strings.dart';
 import 'dart:math' as math;
 
 import 'package:audioplayers/audioplayers.dart';
@@ -382,8 +383,8 @@ class _NetForceScreenState extends State<NetForceScreen>
         ? (blueRed ? Colors.blue : const Color(0xFF8A2BE2))
         : (blueRed ? Colors.red : const Color(0xFFFF5500));
     final label = leftWins
-        ? (blueRed ? 'Blue Wins!' : 'Purple Wins!')
-        : (blueRed ? 'Red Wins!' : 'Orange Wins!');
+        ? (blueRed ? '蓝队获胜!' : '紫队获胜!')
+        : (blueRed ? '红队获胜!' : '橙队获胜!');
     return Positioned(
       left: centerX - 110,
       top: 8,
@@ -457,7 +458,9 @@ class _NetForceScreenState extends State<NetForceScreen>
   Widget _pullerWidget(Puller p) {
     final pos = _pullerPos(p);
     final sz = _pullerDisplaySize(p);
-    final mirror = p.team == PullerTeam.right;
+    // PhET pull_figure assets are already team-facing:
+    // BLUE/PURPLE face right (toward cart), RED/ORANGE face left (toward cart).
+    // Do not mirror — tug-of-war requires face-to-face with hands on knots.
     return Positioned(
       left: pos.dx,
       top: pos.dy,
@@ -471,21 +474,17 @@ class _NetForceScreenState extends State<NetForceScreen>
         },
         onPanEnd: (_) => _onDragEnd(),
         onPanCancel: _onDragEnd,
-        child: Transform(
-          alignment: Alignment.center,
-          transform: Matrix4.diagonal3Values(mirror ? -1.0 : 1.0, 1, 1),
-          child: Image.asset(
-            _pullerAsset(p),
-            width: sz.width,
-            height: sz.height,
-            fit: BoxFit.fill,
-            filterQuality: FilterQuality.medium,
-            gaplessPlayback: true,
-            errorBuilder: (_, _, _) => ColoredBox(
-              color: p.team == PullerTeam.left
-                  ? const Color(0xFF1565C0)
-                  : const Color(0xFFC62828),
-            ),
+        child: Image.asset(
+          _pullerAsset(p),
+          width: sz.width,
+          height: sz.height,
+          fit: BoxFit.fill,
+          filterQuality: FilterQuality.medium,
+          gaplessPlayback: true,
+          errorBuilder: (_, _, _) => ColoredBox(
+            color: p.team == PullerTeam.left
+                ? const Color(0xFF1565C0)
+                : const Color(0xFFC62828),
           ),
         ),
       ),
@@ -541,7 +540,7 @@ class _NetForceScreenState extends State<NetForceScreen>
               dashed: dashed,
               label: model.showValues
                   ? '${model.netForce.abs().round()} N'
-                  : 'Sum of Forces',
+                  : '合力',
             ),
           ),
         if (model.showSumOfForces && model.netForce.abs() <= 1e-6)
@@ -549,7 +548,7 @@ class _NetForceScreenState extends State<NetForceScreen>
             left: centerX - 60,
             top: 102,
             child: Text(
-              'Sum of Forces = 0',
+              '合力 = 0',
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
             ),
           ),
@@ -590,7 +589,7 @@ class _NetForceScreenState extends State<NetForceScreen>
                   ],
                 ),
                 child: Text(
-                  model.isRunning ? 'Pause' : 'Go!',
+                  model.isRunning ? ForcesStrings.netForcePause : ForcesStrings.netForceGo,
                   style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
@@ -619,7 +618,7 @@ class _NetForceScreenState extends State<NetForceScreen>
                   border: Border.all(color: Colors.black54),
                 ),
                 child: const Text(
-                  'Return',
+                  ForcesStrings.netForceReturn,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -665,7 +664,7 @@ class _NetForceScreenState extends State<NetForceScreen>
           mainAxisSize: MainAxisSize.min,
           children: [
             _check(
-              'Sum of Forces',
+              '合力',
               model.showSumOfForces,
               (v) => setState(() => model.showSumOfForces = v),
             ),

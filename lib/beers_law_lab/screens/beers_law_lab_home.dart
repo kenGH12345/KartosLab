@@ -5,6 +5,7 @@ import 'package:kratos/common/widgets/kratos_tab_bar.dart';
 import 'package:kratos/concentration/audio/concentration_audio.dart';
 import 'package:kratos/concentration/model/concentration_model.dart';
 import 'package:kratos/concentration/view/concentration_screen.dart';
+import 'package:kratos/beers_law_lab/bll_strings.dart';
 
 /// Dual-screen product shell — PhET Beer's Law Lab.
 ///
@@ -19,8 +20,8 @@ class BeersLawLabHome extends StatefulWidget {
     this.concentrationAudio,
   });
 
-  static const String title = "Beer's Law Lab";
-  static const String subtitle = 'Concentration · Beer\'s Law';
+  static const String title = BllStrings.title;
+  static const String subtitle = BllStrings.subtitle;
   static const Color accentColor = Color(0xFF00695C);
 
   /// Optional inject; production Home leaves null (real Concentration audio).
@@ -60,7 +61,7 @@ class BeersLawLabHomeState extends State<BeersLawLabHome> {
       initialIndex: 0,
       tabs: [
         KratosTab(
-          label: 'Concentration',
+          label: BllStrings.concentration,
           child: ConcentrationScreen(
             key: const Key('bll_concentration_tab'),
             model: concentrationModel,
@@ -69,7 +70,7 @@ class BeersLawLabHomeState extends State<BeersLawLabHome> {
           ),
         ),
         KratosTab(
-          label: "Beer's Law",
+          label: BllStrings.beersLaw,
           child: BeersLawScreen(
             key: const Key('bll_beers_law_tab'),
             model: beersLawModel,

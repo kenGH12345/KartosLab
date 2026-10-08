@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../model/resistance_in_a_wire_model.dart';
 import '../resistance_in_a_wire_view_constants.dart';
+import 'package:kratos/resistance_in_a_wire/riaw_strings.dart';
 
 /// PhET `WireNode` + `DotsCanvasNode` — 3D wire with impurity dots.
 ///
@@ -61,7 +62,7 @@ class _WireNodeState extends State<WireNode> {
     final boxH = ResistanceInAWireViewConstants.wireViewHeightMax + padY * 2;
 
     return Semantics(
-      label: 'The Wire',
+      label: RiawStrings.theWire,
       child: SizedBox(
         width: boxW,
         height: boxH,

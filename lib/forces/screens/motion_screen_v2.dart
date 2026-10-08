@@ -1,3 +1,4 @@
+import 'package:kratos/forces/config/forces_strings.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -502,13 +503,13 @@ class _MotionScreenV2State extends State<MotionScreenV2>
                   sum,
                   y - 40,
                   const Color(0xFF7DC673),
-                  model.showValues ? '${sum.round()} N' : 'Sum of Forces',
+                  model.showValues ? '${sum.round()} N' : '合力',
                 )
               : const Positioned(
                   left: centerX - 70,
                   top: skyH - 230,
                   child: Text(
-                    'Sum of Forces = 0',
+                    '合力 = 0',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),
@@ -550,7 +551,7 @@ class _MotionScreenV2State extends State<MotionScreenV2>
       child: _MiniGauge(
         value: model.sim.speed,
         max: MotionConstants.maxSpeed,
-        label: 'Speed',
+        label: '速度',
       ),
     );
   }
@@ -594,14 +595,14 @@ class _MotionScreenV2State extends State<MotionScreenV2>
                 onPressed: () => setState(
                   () => model.stopwatchRunning = !model.stopwatchRunning,
                 ),
-                child: Text(model.stopwatchRunning ? 'Stop' : 'Start'),
+                child: Text(model.stopwatchRunning ? '停止' : '开始'),
               ),
               TextButton(
                 onPressed: () => setState(() {
                   model.stopwatchElapsed = 0;
                   model.stopwatchRunning = false;
                 }),
-                child: const Text('Reset'),
+                child: const Text(ForcesStrings.netForceReset),
               ),
             ],
           ),
@@ -636,7 +637,7 @@ class _MotionScreenV2State extends State<MotionScreenV2>
           mainAxisSize: MainAxisSize.min,
           children: [
             _cb(
-              model.hasFrictionSlider ? 'Forces' : 'Force',
+              model.hasFrictionSlider ? '力' : ForcesStrings.motionForce,
               model.showForce,
               (v) => setState(() => model.showForce = v),
               trailing: const Icon(Icons.arrow_right_alt,
@@ -644,7 +645,7 @@ class _MotionScreenV2State extends State<MotionScreenV2>
             ),
             if (model.hasFrictionSlider)
               _cb(
-                'Sum of Forces',
+                '合力',
                 model.showSumOfForces,
                 (v) => setState(() => model.showSumOfForces = v),
               ),
@@ -669,7 +670,7 @@ class _MotionScreenV2State extends State<MotionScreenV2>
               ),
             if (model.hasAccelerometer)
               _cb(
-                'Acceleration',
+                ForcesStrings.screenAcceleration,
                 model.showAcceleration,
                 (v) => setState(() => model.showAcceleration = v),
               ),
@@ -677,7 +678,7 @@ class _MotionScreenV2State extends State<MotionScreenV2>
               const SizedBox(height: 6),
               const Center(
                 child: Text(
-                  'Friction',
+                  ForcesStrings.screenFriction,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -699,8 +700,8 @@ class _MotionScreenV2State extends State<MotionScreenV2>
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('None', style: TextStyle(fontSize: 11)),
-                  Text('Lots', style: TextStyle(fontSize: 11)),
+                  Text('无', style: TextStyle(fontSize: 11)),
+                  Text('很多', style: TextStyle(fontSize: 11)),
                 ],
               ),
             ],
@@ -932,7 +933,7 @@ class _MotionScreenV2State extends State<MotionScreenV2>
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Applied Force',
+                '外力',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
               ),
               const SizedBox(height: 2),

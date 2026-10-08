@@ -7,6 +7,7 @@ import 'package:kratos/quantum_coin_toss/common/quantum_measurement_colors.dart'
 
 import '../../common/qm_typography.dart';
 import '../../common/qm_visual.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class CoinsDashedDivider extends StatelessWidget {
   const CoinsDashedDivider({super.key, required this.height});
@@ -82,7 +83,7 @@ class NewCoinButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
         child: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-          child: Text('New Coin', style: TextStyle(fontSize: 14)),
+          child: Text(QmStrings.newCoin, style: TextStyle(fontSize: 14)),
         ),
       ),
     );

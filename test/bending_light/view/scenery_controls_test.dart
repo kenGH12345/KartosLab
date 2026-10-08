@@ -8,6 +8,7 @@ import 'package:kratos/bending_light/components/toolbox_icons.dart';
 import 'package:kratos/bending_light/components/wave_view.dart';
 import 'package:kratos/bending_light/model/substance.dart';
 import 'package:kratos/bending_light/view/source_layout.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 void main() {
   test('graph highlight is ShadedRectangle, not flat white', () {
@@ -58,14 +59,14 @@ void main() {
   });
 
   testWidgets('combo box opens, selects, and closes on reset', (tester) async {
-    var name = 'Air';
+    var name = BlStrings.air;
     Future<void> pump() {
       return tester.pumpWidget(
         MaterialApp(
           home: Center(
             child: PhetComboBox(
               value: name,
-              items: const ['Air', 'Water', 'Glass'],
+              items: const [BlStrings.air, BlStrings.water, BlStrings.glass],
               onSelected: (v) => name = v,
             ),
           ),
@@ -74,21 +75,21 @@ void main() {
     }
 
     await pump();
-    expect(find.text('Water'), findsNothing);
+    expect(find.text(BlStrings.water), findsNothing);
 
     await tester.tap(find.byType(PhetComboBox));
     await tester.pump();
-    expect(find.text('Water'), findsOneWidget);
-    expect(find.text('Glass'), findsOneWidget);
+    expect(find.text(BlStrings.water), findsOneWidget);
+    expect(find.text(BlStrings.glass), findsOneWidget);
 
-    await tester.tap(find.text('Water'));
+    await tester.tap(find.text(BlStrings.water));
     await tester.pump();
-    expect(name, 'Water');
+    expect(name, BlStrings.water);
 
-    name = 'Air';
+    name = BlStrings.air;
     await pump();
-    expect(find.text('Water'), findsNothing);
-    expect(find.text('Air'), findsWidgets);
+    expect(find.text(BlStrings.water), findsNothing);
+    expect(find.text(BlStrings.air), findsWidgets);
   });
 
   testWidgets('arrow buttons step and stop at the bounds', (tester) async {
@@ -150,7 +151,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Intensity'), findsNothing);
+    expect(find.text(BlStrings.intensity), findsNothing);
     expect(find.byType(IntensityToolboxIcon), findsOneWidget);
     expect(find.byType(ProbeGlyph), findsOneWidget);
 
@@ -158,7 +159,7 @@ void main() {
     await gesture.moveBy(const Offset(80, 40));
     await tester.pump();
     expect(find.byType(IntensityToolboxIcon), findsWidgets);
-    expect(find.text('Intensity'), findsNothing);
+    expect(find.text(BlStrings.intensity), findsNothing);
     await gesture.up();
     await tester.pump();
     expect(dropped, isNotNull);

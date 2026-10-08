@@ -17,6 +17,7 @@ import '../widgets/electron_model_control.dart';
 import '../widgets/interactive_atom_play_area.dart';
 import '../widgets/mass_number_display.dart';
 import '../widgets/particle_count_panel.dart';
+import 'package:kratos/chemistry/build_an_atom/baa_strings.dart';
 
 /// Build an Atom — Atom Screen (PhET `AtomScreen` / `AtomScreenView`).
 class BuildAnAtomAtomScreen extends StatefulWidget {
@@ -149,7 +150,7 @@ class BuildAnAtomAtomScreenState extends State<BuildAnAtomAtomScreen>
                         top: ptTop,
                         width: _accordionPanelW,
                         child: BaaAccordionBox(
-                          title: 'Periodic Table',
+                          title: '元素周期表',
                           expanded: _viewState.periodicTableExpanded,
                           onToggle: () => _viewState.setPeriodicTableExpanded(
                               !_viewState.periodicTableExpanded),
@@ -165,7 +166,7 @@ class BuildAnAtomAtomScreenState extends State<BuildAnAtomAtomScreen>
                         top: netTop,
                         width: _accordionPanelW,
                         child: BaaAccordionBox(
-                          title: 'Net Charge',
+                          title: '净电荷',
                           expanded: _viewState.netChargeExpanded,
                           onToggle: () => _viewState.setNetChargeExpanded(
                               !_viewState.netChargeExpanded),
@@ -193,7 +194,7 @@ class BuildAnAtomAtomScreenState extends State<BuildAnAtomAtomScreen>
                         top: massTop,
                         width: _accordionPanelW,
                         child: BaaAccordionBox(
-                          title: 'Mass Number',
+                          title: BaaStrings.massNumber,
                           expanded: _viewState.massNumberExpanded,
                           onToggle: () => _viewState.setMassNumberExpanded(
                               !_viewState.massNumberExpanded),
@@ -254,14 +255,14 @@ class BuildAnAtomAtomScreenState extends State<BuildAnAtomAtomScreen>
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Atom'),
+        title: const Text(BaaStrings.atom),
         backgroundColor: const Color(0xFF1177AA),
         foregroundColor: Colors.white,
         actions: [
           if (Navigator.of(context).canPop())
             TextButton(
               onPressed: () => Navigator.of(context).maybePop(),
-              child: const Text('Back', style: TextStyle(color: Colors.white)),
+              child: const Text('返回', style: TextStyle(color: Colors.white)),
             ),
         ],
       ),

@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-/// English string table for Build-a-Molecule display names.
+/// Build-a-Molecule display names — Chinese defaults (PHASE 6).
+///
+/// Loads `strings_zh.json` by default; English asset retained for archaeology.
 class BamStrings {
   BamStrings._();
 
@@ -12,7 +14,7 @@ class BamStrings {
   static bool get isLoaded => _loaded;
 
   static Future<void> load([
-    String assetPath = 'assets/data/build_a_molecule/strings_en.json',
+    String assetPath = 'assets/data/build_a_molecule/strings_zh.json',
   ]) async {
     final raw = await rootBundle.loadString(assetPath);
     final decoded = jsonDecode(raw) as Map<String, dynamic>;

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../../bloch_sphere/components/bloch_sphere_view.dart';
 import '../model/spin_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class SpinPrepControls extends StatelessWidget {
   const SpinPrepControls({
@@ -66,7 +67,7 @@ class SpinPrepControls extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         const Text(
-          'Spin State to Prepare',
+          QmStrings.spinStateToPrepare,
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),

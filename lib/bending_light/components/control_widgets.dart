@@ -9,6 +9,7 @@ import '../model/substance.dart';
 import '../view/source_layout.dart';
 import 'scenery_controls.dart';
 import 'source_nodes.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 List<Substance> mediumChoices() => [
       Substance.air,
@@ -87,13 +88,13 @@ class MediumControlPanel extends StatelessWidget {
               ),
               SizedBox(width: 8 * view),
               PhetComboBox(
-                value: substance.custom ? 'Custom' : substance.name,
+                value: substance.custom ? BlStrings.custom : substance.name,
                 items: [
                   for (final s in mediumChoices()) s.name,
-                  'Custom',
+                  BlStrings.custom,
                 ],
                 onSelected: (name) {
-                  if (name == 'Custom') {
+                  if (name == BlStrings.custom) {
                     final seed = mystery ? 1.33 : n;
                     onCustomIndex(seed.clamp(iorMin, iorMax));
                   } else {
@@ -108,7 +109,7 @@ class MediumControlPanel extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text('Index of Refraction (n)', style: PhetFont.of(12)),
+                  child: Text(BlStrings.indexOfRefraction, style: PhetFont.of(12)),
                 ),
                 PhetArrowButton(
                   pointRight: false,
@@ -149,7 +150,7 @@ class MediumControlPanel extends StatelessWidget {
           ] else
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8 * view),
-              child: Text('What is n?', style: PhetFont.of(16)),
+              child: Text(BlStrings.whatIsN, style: PhetFont.of(16)),
             ),
         ],
       ),
@@ -320,9 +321,9 @@ class RayViewRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                PhetAquaRadio(label: 'Ray', selected: !wave, onSelected: onRay),
+                PhetAquaRadio(label: BlStrings.ray, selected: !wave, onSelected: onRay),
                 SizedBox(height: 10 * view),
-                PhetAquaRadio(label: 'Wave', selected: wave, onSelected: onWave),
+                PhetAquaRadio(label: BlStrings.wave, selected: wave, onSelected: onWave),
               ],
             ),
           if (includeChecks)
@@ -331,7 +332,7 @@ class RayViewRow extends StatelessWidget {
               children: [
                 PhetCheckbox(checked: showNormal, onChanged: onNormal),
                 SizedBox(width: 5 * view),
-                Text('Normal', style: PhetFont.of(12)),
+                Text(BlStrings.normal, style: PhetFont.of(12)),
                 SizedBox(width: 12 * view),
                 const NormalLineIcon(),
               ],
@@ -346,7 +347,7 @@ class RayViewRow extends StatelessWidget {
                   onChanged: (v) => onAngles?.call(v),
                 ),
                 SizedBox(width: 5 * view),
-                Text('Angles', style: PhetFont.of(12)),
+                Text(BlStrings.angles, style: PhetFont.of(12)),
                 SizedBox(width: 12 * view),
                 const AngleMarkIcon(),
               ],
@@ -403,7 +404,7 @@ class ResetAllCorner extends StatelessWidget {
     return KratosResetAllButton(
       onPressed: onPressed,
       radius: 19 * StageScale.of(context),
-      tooltip: 'Reset All',
+      tooltip: BlStrings.resetAll,
     );
   }
 }

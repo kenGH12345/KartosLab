@@ -17,6 +17,7 @@ import '../model/photon_simulation.dart';
 import '../model/photons_model.dart';
 import '../qm_photons_colors.dart';
 import '../transform/photon_view_transform.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class PhotonsScene extends StatelessWidget {
   const PhotonsScene({
@@ -136,8 +137,8 @@ class PhotonsScene extends StatelessWidget {
           top: vDet.dy -
               PhotonDetectorDisplay.apertureCenterFromTop(lookingUp: true),
           child: PhotonDetectorDisplay(
-            label: 'Vertical Polarization Detector',
-            highlightWord: 'Vertical',
+            label: QmStrings.verticalPolarizationDetector,
+            highlightWord: QmStrings.vertical,
             value: scene.verticalDetectionCount,
             lookingUp: true,
             showRate: isMany,
@@ -149,8 +150,8 @@ class PhotonsScene extends StatelessWidget {
           top: hDet.dy -
               PhotonDetectorDisplay.apertureCenterFromTop(lookingUp: false),
           child: PhotonDetectorDisplay(
-            label: 'Horizontal Polarization Detector',
-            highlightWord: 'Horizontal',
+            label: QmStrings.horizontalPolarizationDetector,
+            highlightWord: QmStrings.horizontal,
             value: scene.horizontalDetectionCount,
             lookingUp: false,
             showRate: isMany,

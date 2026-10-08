@@ -80,14 +80,15 @@ class ControlPanel extends StatelessWidget {
     final bs = model.ballSystem;
     final pa = model.playArea;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(
-        color: CollisionLabColors.panelFill,
+    return Material(
+      color: CollisionLabColors.panelFill,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(color: CollisionLabColors.panelStroke),
+        side: BorderSide(color: CollisionLabColors.panelStroke),
       ),
-      child: Column(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (config.showBallsPicker || config.showGridCheckbox)
@@ -96,7 +97,7 @@ class ControlPanel extends StatelessWidget {
               config: config,
             ),
           if (config.showPresets) ...[
-            const Text('Preset', style: TextStyle(fontWeight: FontWeight.w600)),
+            const Text('预设', style: TextStyle(fontWeight: FontWeight.w600)),
             const SizedBox(height: 4),
             DropdownButton<InelasticPreset>(
               isExpanded: true,
@@ -184,6 +185,7 @@ class ControlPanel extends StatelessWidget {
           _check(CollisionLabStrings.moreData, view.moreDataVisible,
               controller.setMoreData),
         ],
+        ),
       ),
     );
   }

@@ -1,0 +1,1019 @@
+{
+  "files_scanned": 2221,
+  "total_string_hits": 2341,
+  "by_classification": {
+    "technical": 39,
+    "english": 1337,
+    "other": 96,
+    "scientific_symbol": 34,
+    "mixed": 70,
+    "chinese": 765
+  },
+  "by_kind": {
+    "strings_const": 976,
+    "label": 293,
+    "name": 81,
+    "Text": 293,
+    "TextSpan": 32,
+    "title": 227,
+    "semanticLabel": 13,
+    "tooltip": 59,
+    "semanticsLabel": 7,
+    "cjk_literal": 343,
+    "message": 4,
+    "hintText": 1,
+    "displayName": 9,
+    "hint": 1,
+    "englishName": 2
+  },
+  "english_count": 1337,
+  "chinese_count": 765,
+  "mixed_count": 70,
+  "a11y_count": 55,
+  "strings_file_hits": 810,
+  "existing_strings_files": [
+    "lib/astronomy/gravity_and_orbits/gao_strings.dart",
+    "lib/astronomy/keplers_laws/keplers_laws_strings.dart",
+    "lib/astronomy/my_solar_system/my_solar_system_strings.dart",
+    "lib/balancing_act/ba_strings.dart",
+    "lib/balancing_chemical_equations/bce_strings.dart",
+    "lib/blackbody_spectrum/blackbody_spectrum_strings.dart",
+    "lib/capacitor_lab_basics/clb_strings.dart",
+    "lib/cck_ac_virtual_lab/cck_strings.dart",
+    "lib/charges_and_fields/caf_strings.dart",
+    "lib/chemistry/build_a_molecule/data/bam_strings.dart",
+    "lib/chemistry/molecule_polarity/mp_strings.dart",
+    "lib/chemistry/states_of_matter/som_strings.dart",
+    "lib/collision_lab/collision_lab_strings.dart",
+    "lib/curve_fitting/curve_fitting_strings.dart",
+    "lib/density/density_strings.dart",
+    "lib/energy_forms_and_changes/efac_strings.dart",
+    "lib/energy_skate_park/esp_strings.dart",
+    "lib/forces/config/forces_strings.dart",
+    "lib/fourier_making_waves/fmw_strings.dart",
+    "lib/friction/friction_strings.dart",
+    "lib/gravity_force_lab/a11y/gfl_a11y_strings.dart",
+    "lib/gravity_force_lab/gfl_strings.dart",
+    "lib/gravity_force_lab_basics/gflb_strings.dart",
+    "lib/molecule_shapes/molecule_shapes_strings.dart",
+    "lib/normal_modes/normal_modes_strings.dart",
+    "lib/pendulum_lab/pl_strings.dart",
+    "lib/plinko_probability/plinko_strings.dart",
+    "lib/projectile_motion/pm_strings.dart",
+    "lib/quantum_coin_toss/common/quantum_measurement_strings.dart",
+    "lib/reactants_products_and_leftovers/rpal_strings.dart",
+    "lib/rutherford_scattering/rs_strings.dart",
+    "lib/vector_addition/vector_addition_strings.dart"
+  ],
+  "top20_impact_files": [
+    [
+      "lib/chemistry/states_of_matter/som_strings.dart",
+      41
+    ],
+    [
+      "lib/astronomy/keplers_laws/keplers_laws_strings.dart",
+      40
+    ],
+    [
+      "lib/projectile_motion/pm_strings.dart",
+      38
+    ],
+    [
+      "lib/gravity_force_lab/a11y/gfl_a11y_strings.dart",
+      35
+    ],
+    [
+      "lib/pendulum_lab/pl_strings.dart",
+      34
+    ],
+    [
+      "lib/astronomy/gravity_and_orbits/gao_strings.dart",
+      33
+    ],
+    [
+      "lib/astronomy/my_solar_system/my_solar_system_strings.dart",
+      33
+    ],
+    [
+      "lib/cck_ac_virtual_lab/cck_strings.dart",
+      33
+    ],
+    [
+      "lib/balancing_act/ba_strings.dart",
+      28
+    ],
+    [
+      "lib/collision_lab/collision_lab_strings.dart",
+      28
+    ],
+    [
+      "lib/quantum_coin_toss/common/quantum_measurement_strings.dart",
+      28
+    ],
+    [
+      "lib/chemistry/molecule_polarity/mp_strings.dart",
+      25
+    ],
+    [
+      "lib/density/density_strings.dart",
+      23
+    ],
+    [
+      "lib/energy_forms_and_changes/efac_strings.dart",
+      22
+    ],
+    [
+      "lib/rutherford_scattering/rs_strings.dart",
+      21
+    ],
+    [
+      "lib/screens/home_screen.dart",
+      21
+    ],
+    [
+      "lib/vector_addition/vector_addition_strings.dart",
+      19
+    ],
+    [
+      "lib/blackbody_spectrum/blackbody_spectrum_strings.dart",
+      16
+    ],
+    [
+      "lib/normal_modes/normal_modes_strings.dart",
+      16
+    ],
+    [
+      "lib/capacitor_lab_basics/clb_strings.dart",
+      15
+    ]
+  ],
+  "module_english_mixed": [
+    [
+      "physics/quantum_wave_interference",
+      56
+    ],
+    [
+      "gravity_force_lab",
+      52
+    ],
+    [
+      "astronomy/keplers_laws",
+      51
+    ],
+    [
+      "bending_light",
+      46
+    ],
+    [
+      "collision_lab",
+      46
+    ],
+    [
+      "quantum_measurement",
+      46
+    ],
+    [
+      "projectile_motion",
+      44
+    ],
+    [
+      "chemistry/states_of_matter",
+      42
+    ],
+    [
+      "astronomy/my_solar_system",
+      37
+    ],
+    [
+      "chemistry/build_a_nucleus",
+      36
+    ],
+    [
+      "pendulum_lab",
+      36
+    ],
+    [
+      "buoyancy",
+      35
+    ],
+    [
+      "cck_ac_virtual_lab",
+      34
+    ],
+    [
+      "astronomy/gravity_and_orbits",
+      33
+    ],
+    [
+      "balancing_act",
+      33
+    ],
+    [
+      "quantum_coin_toss",
+      31
+    ],
+    [
+      "vector_addition",
+      31
+    ],
+    [
+      "color_vision",
+      30
+    ],
+    [
+      "masses_and_springs_basics",
+      30
+    ],
+    [
+      "chemistry/molecule_polarity",
+      27
+    ],
+    [
+      "gas_properties",
+      27
+    ],
+    [
+      "hookes_law",
+      26
+    ],
+    [
+      "chemistry/ph_scale",
+      24
+    ],
+    [
+      "density",
+      24
+    ],
+    [
+      "energy_forms_and_changes",
+      24
+    ],
+    [
+      "balancing_chemical_equations",
+      23
+    ],
+    [
+      "waves_intro",
+      23
+    ],
+    [
+      "rutherford_scattering",
+      22
+    ],
+    [
+      "screens",
+      22
+    ],
+    [
+      "beers_law_lab",
+      21
+    ],
+    [
+      "capacitor_lab_basics",
+      19
+    ],
+    [
+      "concentration",
+      19
+    ],
+    [
+      "curve_fitting",
+      18
+    ],
+    [
+      "chemistry/isotopes_and_atomic_mass",
+      17
+    ],
+    [
+      "forces",
+      17
+    ],
+    [
+      "plinko_probability",
+      17
+    ],
+    [
+      "blackbody_spectrum",
+      16
+    ],
+    [
+      "normal_modes",
+      16
+    ],
+    [
+      "under_pressure",
+      16
+    ],
+    [
+      "wave_on_a_string",
+      16
+    ],
+    [
+      "common",
+      15
+    ],
+    [
+      "chemistry/build_an_atom",
+      14
+    ],
+    [
+      "john_travoltage",
+      14
+    ],
+    [
+      "membrane_transport",
+      14
+    ],
+    [
+      "balloons_and_static_electricity",
+      12
+    ],
+    [
+      "charges_and_fields",
+      12
+    ],
+    [
+      "chemistry/acid_base_solutions",
+      12
+    ],
+    [
+      "gases_intro",
+      12
+    ],
+    [
+      "ohms_law",
+      12
+    ],
+    [
+      "resistance_in_a_wire",
+      11
+    ],
+    [
+      "friction",
+      10
+    ],
+    [
+      "diffusion",
+      9
+    ],
+    [
+      "energy_skate_park",
+      9
+    ],
+    [
+      "gravity_force_lab_basics",
+      9
+    ],
+    [
+      "chemistry/build_a_molecule",
+      8
+    ],
+    [
+      "molecules_and_light",
+      7
+    ],
+    [
+      "circuit",
+      6
+    ],
+    [
+      "faradays_law",
+      6
+    ],
+    [
+      "fourier_making_waves",
+      6
+    ],
+    [
+      "magnetism/magnet_and_compass",
+      6
+    ],
+    [
+      "chemistry/molarity",
+      5
+    ],
+    [
+      "reactants_products_and_leftovers",
+      5
+    ],
+    [
+      "radio_waves",
+      4
+    ],
+    [
+      "wave_interference",
+      2
+    ],
+    [
+      "main.dart",
+      1
+    ],
+    [
+      "molecule_shapes",
+      1
+    ],
+    [
+      "optics",
+      1
+    ],
+    [
+      "sound",
+      1
+    ]
+  ],
+  "home": {
+    "title_literals": [
+      "力与运动",
+      "合力 · 摩擦 · 加速度",
+      "密度",
+      "质量 · 体积 · 材料",
+      "电路搭建",
+      "串并联 · 电流路径",
+      "AC 虚拟实验室",
+      "交流 · 电容 · 电感",
+      "电容 · 电荷 · 灯泡放电",
+      "磁铁与罗盘",
+      "条形磁铁 · 磁场 · 罗盘",
+      "Kepler",
+      "椭圆轨道 · 面积定律 · 周期定律",
+      "N-body 引力 · 轨道系统",
+      "引力 · 轨道 · Model / To Scale",
+      "几何光学",
+      "透镜 · 镜面 · 成像",
+      "色觉",
+      "Single Bulb · RGB Bulbs",
+      "波的干涉",
+      "双缝 · 叠加原理",
+      "Waves Intro",
+      "水波 · 声波 · 光波",
+      "声波",
+      "频率 · 振幅 · 波形",
+      "耦合振子 · 简正模",
+      "傅里叶合成 · 波包",
+      "电磁波",
+      "天线 · 传播",
+      "粒子扩散 · 隔板 · 质量/半径",
+      "理想气体 · Intro / Laws",
+      "Ideal · Explore · Energy · Diffusion",
+      "黑体辐射 · Planck · Wien",
+      "Intro · Systems · 能量形式与转化",
+      "摩尔浓度",
+      "溶液配比 · 浓度计算",
+      "pH 标度",
+      "酸 · 碱 · 浓度 · Macro/Micro",
+      "构建原子核",
+      "质子 · 中子 · 衰变",
+      "搭建分子",
+      "原子 · 成键 · 收集",
+      "Two · Three · Real Molecules",
+      "States of Matter",
+      "States · Phase Changes · Interaction"
+    ],
+    "subtitle_literals": [
+      "合力 · 摩擦 · 加速度",
+      "质量 · 体积 · 材料",
+      "串并联 · 电流路径",
+      "交流 · 电容 · 电感",
+      "电容 · 电荷 · 灯泡放电",
+      "条形磁铁 · 磁场 · 罗盘",
+      "椭圆轨道 · 面积定律 · 周期定律",
+      "N-body 引力 · 轨道系统",
+      "引力 · 轨道 · Model / To Scale",
+      "透镜 · 镜面 · 成像",
+      "Single Bulb · RGB Bulbs",
+      "双缝 · 叠加原理",
+      "水波 · 声波 · 光波",
+      "频率 · 振幅 · 波形",
+      "耦合振子 · 简正模",
+      "傅里叶合成 · 波包",
+      "天线 · 传播",
+      "粒子扩散 · 隔板 · 质量/半径",
+      "理想气体 · Intro / Laws",
+      "Ideal · Explore · Energy · Diffusion",
+      "黑体辐射 · Planck · Wien",
+      "Intro · Systems · 能量形式与转化",
+      "溶液配比 · 浓度计算",
+      "酸 · 碱 · 浓度 · Macro/Micro",
+      "质子 · 中子 · 衰变",
+      "原子 · 成键 · 收集",
+      "Two · Three · Real Molecules",
+      "States · Phase Changes · Interaction"
+    ],
+    "group_names": [
+      "物理",
+      "力学",
+      "数学与概率",
+      "密度与浮力",
+      "电学与电路",
+      "电磁学",
+      "天体力学",
+      "光学与波动",
+      "热学与气体",
+      "化学",
+      "溶液与浓度",
+      "原子核",
+      "原子结构",
+      "分子搭建",
+      "分子极性",
+      "分子形状",
+      "光与分子",
+      "反应物与生成物",
+      "物态"
+    ],
+    "english_names": [
+      "Physics",
+      "Chemistry"
+    ],
+    "home_hits": 71,
+    "home_english": 10,
+    "home_chinese": 50,
+    "home_mixed": 11
+  },
+  "top_english_phrases": [
+    [
+      "Reset All",
+      25
+    ],
+    [
+      "Normal",
+      17
+    ],
+    [
+      "Slow",
+      13
+    ],
+    [
+      "Intro",
+      13
+    ],
+    [
+      "None",
+      10
+    ],
+    [
+      "Custom",
+      10
+    ],
+    [
+      "Stopwatch",
+      9
+    ],
+    [
+      "Close",
+      9
+    ],
+    [
+      "Velocity",
+      8
+    ],
+    [
+      "Speed",
+      8
+    ],
+    [
+      "Reset",
+      8
+    ],
+    [
+      "Earth",
+      7
+    ],
+    [
+      "Arial",
+      7
+    ],
+    [
+      "Values",
+      7
+    ],
+    [
+      "Gravity",
+      6
+    ],
+    [
+      "Mass",
+      6
+    ],
+    [
+      "Grid",
+      6
+    ],
+    [
+      "Step",
+      6
+    ],
+    [
+      "Water",
+      6
+    ],
+    [
+      "Material",
+      6
+    ],
+    [
+      "Jupiter",
+      5
+    ],
+    [
+      "Lab",
+      5
+    ],
+    [
+      "% Submerged",
+      5
+    ],
+    [
+      "Energy",
+      5
+    ],
+    [
+      "Path",
+      4
+    ],
+    [
+      "Measuring Tape",
+      4
+    ],
+    [
+      "Fast",
+      4
+    ],
+    [
+      "Center of Mass",
+      4
+    ],
+    [
+      "Light",
+      4
+    ],
+    [
+      "Intensity",
+      4
+    ],
+    [
+      "Object Density",
+      4
+    ],
+    [
+      "Protons",
+      4
+    ],
+    [
+      "Neutrons",
+      4
+    ],
+    [
+      "Symbol",
+      4
+    ],
+    [
+      "Constant Size",
+      4
+    ],
+    [
+      "OK",
+      4
+    ],
+    [
+      "Lots",
+      4
+    ],
+    [
+      "Cartesian",
+      4
+    ],
+    [
+      "Gravity Force",
+      3
+    ],
+    [
+      "Mars",
+      3
+    ],
+    [
+      "Game",
+      3
+    ],
+    [
+      "Next",
+      3
+    ],
+    [
+      "Try Again",
+      3
+    ],
+    [
+      "Show Answer",
+      3
+    ],
+    [
+      "Balanced",
+      3
+    ],
+    [
+      "Ruler",
+      3
+    ],
+    [
+      "Light Bulb",
+      3
+    ],
+    [
+      "Electric Field",
+      3
+    ],
+    [
+      "Voltage",
+      3
+    ],
+    [
+      "Particles",
+      3
+    ],
+    [
+      "Graph",
+      3
+    ],
+    [
+      "Back",
+      3
+    ],
+    [
+      "View",
+      3
+    ],
+    [
+      "pH",
+      3
+    ],
+    [
+      "Heat",
+      3
+    ],
+    [
+      "Cool",
+      3
+    ],
+    [
+      "Return Lid",
+      3
+    ],
+    [
+      "Kinetic Energy",
+      3
+    ],
+    [
+      "Friction",
+      3
+    ],
+    [
+      "Acceleration",
+      3
+    ],
+    [
+      "Mass 1",
+      3
+    ],
+    [
+      "Mass 2",
+      3
+    ],
+    [
+      "Force Values",
+      3
+    ],
+    [
+      "Components",
+      3
+    ],
+    [
+      "Slit Separation",
+      3
+    ],
+    [
+      "Configuration",
+      3
+    ],
+    [
+      "Snapshots",
+      3
+    ],
+    [
+      "Polar",
+      3
+    ],
+    [
+      "Model",
+      2
+    ],
+    [
+      "Clear",
+      2
+    ],
+    [
+      "Play",
+      2
+    ],
+    [
+      "Pause",
+      2
+    ],
+    [
+      "Star Mass",
+      2
+    ],
+    [
+      "Our Sun",
+      2
+    ],
+    [
+      "Kepler's Laws",
+      2
+    ],
+    [
+      "Period",
+      2
+    ],
+    [
+      "AU",
+      2
+    ],
+    [
+      "years",
+      2
+    ],
+    [
+      "km/s",
+      2
+    ],
+    [
+      "Mercury",
+      2
+    ]
+  ],
+  "top_mixed_phrases": [
+    [
+      "加载失败: $_error",
+      3
+    ],
+    [
+      "N-body 引力 · 轨道系统",
+      2
+    ],
+    [
+      "加色法 vs 减色法 · 生活对照",
+      2
+    ],
+    [
+      "Intro · My Solution · 酸碱电离",
+      1
+    ],
+    [
+      "构建原子核 · Chart Intro",
+      1
+    ],
+    [
+      "溶质量(${range.unit ?? ",
+      1
+    ],
+    [
+      "烧杯。溶质 ${solution.solute.name}。体积 ${solution.volume.toStringAsFixed(3)} 升。浓度 ${solution.concentration.toStringAsFixed(3)} 摩尔每升。${solution.isSaturated ? ",
+      1
+    ],
+    [
+      "溶液浓度 ${solution.concentration.toStringAsFixed(3)} 摩尔每升",
+      1
+    ],
+    [
+      "体积(${range.unit ?? ",
+      1
+    ],
+    [
+      "显式设为 null",
+      1
+    ],
+    [
+      "电路搭建 - ${sel.type.label}",
+      1
+    ],
+    [
+      "电流的本质 · 电子流 vs 常规电流",
+      1
+    ],
+    [
+      "KCL(电流定律): 流入节点的电流=流出节点的电流。KVL(电压定律): 闭合回路总电压降=0。",
+      1
+    ],
+    [
+      "灯泡: 亮度 ${(b * 100).toInt()}%",
+      1
+    ],
+    [
+      "${sel.type.label} (不可调)",
+      1
+    ],
+    [
+      "匹配度 ${accuracy.round()}%",
+      1
+    ],
+    [
+      "颜色名称：$cname",
+      1
+    ],
+    [
+      "RGB 值：rgb($rv, $gv, $bv)",
+      1
+    ],
+    [
+      "十六进制：$hex",
+      1
+    ],
+    [
+      "Color Vision / 色觉",
+      1
+    ],
+    [
+      "🎯 探究目标全部达成 · +$earnedScore 分",
+      1
+    ],
+    [
+      "完美匹配 · +$earnedScore 分",
+      1
+    ],
+    [
+      "亮度 Brightness",
+      1
+    ],
+    [
+      "标签 Labels",
+      1
+    ],
+    [
+      "红光 (Red)",
+      1
+    ],
+    [
+      "绿光 (Green)",
+      1
+    ],
+    [
+      "蓝光 (Blue)",
+      1
+    ],
+    [
+      "加色法原理 (Additive Mixing)",
+      1
+    ],
+    [
+      "加色法(光源RGB): 越混越亮,三原色全开=白光。减色法(颜料CMYK): 越混越暗,三原色全混=黑色。",
+      1
+    ],
+    [
+      "屏幕显示用RGB加色,打印用CMYK减色——两种体系互补,覆盖了从发光到反射的全部色彩场景。",
+      1
+    ],
+    [
+      "舞台灯光、LED装饰灯、手机屏幕都在用RGB加色法——你身边到处都是这个原理的应用。",
+      1
+    ],
+    [
+      "看到颜色：${ColorModel.colorName(perceived)}",
+      1
+    ],
+    [
+      "这就是为什么打印用CMYK(青/品红/黄/黑)而非RGB——纸张上做的是减色混合。",
+      1
+    ],
+    [
+      "关系图（$xLabel × $yLabel）",
+      1
+    ],
+    [
+      "所选轴（$xLabel × $yLabel）有效数值数据不足 2 组，无法生成关系图。",
+      1
+    ],
+    [
+      "进入 sim 不知道要干嘛",
+      1
+    ],
+    [
+      "本实验有 $count 道预测题，去探究工作流猜一猜",
+      1
+    ],
+    [
+      "记录已满（最多 ${widget.maxRows} 条），请删除最早记录",
+      1
+    ],
+    [
+      "实验记录（${_rows.length}/${widget.maxRows}）",
+      1
+    ],
+    [
+      "$score 分",
+      1
+    ]
+  ],
+  "has_arb": false,
+  "has_lib_l10n": false,
+  "has_flutter_localizations_in_pubspec": false
+}

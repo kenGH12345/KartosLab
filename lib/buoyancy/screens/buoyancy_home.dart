@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../buoyancy_sim_host.dart';
+import '../buoyancy_strings.dart';
 import '../rendering/texture/buoyancy_texture_asset.dart';
 
 /// KartosLab Home entry for Buoyancy (five screens).
@@ -9,8 +10,8 @@ class BuoyancyHome extends StatelessWidget {
   const BuoyancyHome({super.key});
 
   static const String simulationId = 'buoyancy';
-  static const String title = '浮力';
-  static const String subtitle = 'Compare · Explore · Lab · Shapes · Applications';
+  static const String title = BuoyancyStrings.title;
+  static const String subtitle = BuoyancyStrings.subtitle;
   static const Color accentColor = Color(0xFF1177AA);
   static const String homeIconAsset = BuoyancyTextureAsset.bottleIcon;
 

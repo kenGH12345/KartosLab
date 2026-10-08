@@ -21,14 +21,14 @@ class ForceNotationFormatter {
     required String otherObject,
     required String value,
   }) =>
-      'Force on $thisObject by $otherObject = $value N';
+      '$otherObject 对 $thisObject 的力 = $value N';
 
   /// Hidden / no-value pattern: `Force on m1 by m2`
   static String labelWithoutValue({
     required String thisObject,
     required String otherObject,
   }) =>
-      'Force on $thisObject by $otherObject';
+      '$otherObject 对 $thisObject 的力';
 
   /// Full arrow label for the current display mode.
   static String formatForceLabel({

@@ -7,6 +7,7 @@ import '../../common/experiment_measurement_state.dart';
 import '../../common/system_type.dart';
 import '../../common/qm_visual.dart';
 import '../../layout/qm_coins_layout_spec.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class CoinControls extends StatelessWidget {
   const CoinControls({
@@ -32,16 +33,16 @@ class CoinControls extends StatelessWidget {
       measurementState == ExperimentMeasurementState.revealed;
 
   String get _revealLabel {
-    if (_isRevealed) return 'Hide';
-    return systemType == SystemType.classical ? 'Reveal' : 'Observe';
+    if (_isRevealed) return QmStrings.hide;
+    return systemType == SystemType.classical ? QmStrings.reveal : QmStrings.observe;
   }
 
   String get _prepareLabel =>
-      systemType == SystemType.classical ? 'Flip' : 'Reprepare';
+      systemType == SystemType.classical ? QmStrings.flip : QmStrings.reprepare;
 
   String get _prepareRevealLabel => systemType == SystemType.classical
-      ? 'Flip and Reveal'
-      : 'Reprepare and Observe';
+      ? QmStrings.flipAndReveal
+      : QmStrings.reprepareAndObserve;
 
   @override
   Widget build(BuildContext context) {

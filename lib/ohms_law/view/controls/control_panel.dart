@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../model/ohms_law_model.dart';
 import '../../ohms_law_view_constants.dart';
 import 'slider_unit.dart';
+import 'package:kratos/ohms_law/ohms_law_strings.dart';
 
 /// PhET `ControlPanel` — voltage + resistance slider units in a bordered panel.
 class OhmsLawControlPanel extends StatelessWidget {
@@ -41,10 +42,10 @@ class OhmsLawControlPanel extends StatelessWidget {
             property: model.voltageProperty,
             range: model.voltageProperty.range,
             symbol: 'V',
-            name: 'voltage',
+            name: OhmsLawStrings.voltage,
             unit: 'V',
             decimalPlaces: 1,
-            semanticLabel: 'Voltage',
+            semanticLabel: OhmsLawStrings.voltage,
             // ControlPanel.js: keyboardStep 0.5; SliderUnit default shift 0.1
             keyboardStep: 0.5,
             shiftKeyboardStep: 0.1,
@@ -56,10 +57,10 @@ class OhmsLawControlPanel extends StatelessWidget {
             property: model.resistanceProperty,
             range: model.resistanceProperty.range,
             symbol: 'R',
-            name: 'resistance',
+            name: OhmsLawStrings.resistance,
             unit: 'Ω',
             decimalPlaces: 0,
-            semanticLabel: 'Resistance',
+            semanticLabel: OhmsLawStrings.resistance,
             // ControlPanel.js: keyboardStep 20, shiftKeyboardStep 1
             keyboardStep: 20,
             shiftKeyboardStep: 1,

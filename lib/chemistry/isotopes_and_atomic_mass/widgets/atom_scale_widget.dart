@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../controller/make_isotopes_controller.dart';
 import '../iaam_constants.dart';
 import '../model/data/phet_number_utils.dart';
+import 'package:kratos/chemistry/isotopes_and_atomic_mass/iaam_strings.dart';
 
 class AtomScaleWidget extends StatelessWidget {
   const AtomScaleWidget({
@@ -76,14 +77,14 @@ class AtomScaleWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _RadioRow(
-                        label: 'Mass Number',
+                        label: IaamStrings.massNumber,
                         selected: mode == ScaleDisplayMode.massNumber,
                         onTap: () => controller
                             .setDisplayMode(ScaleDisplayMode.massNumber),
                       ),
                       const SizedBox(height: 8),
                       _RadioRow(
-                        label: 'Atomic Mass',
+                        label: IaamStrings.atomicMass,
                         selected: mode == ScaleDisplayMode.atomicMass,
                         onTap: () => controller
                             .setDisplayMode(ScaleDisplayMode.atomicMass),

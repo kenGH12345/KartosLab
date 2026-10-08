@@ -609,7 +609,7 @@ class _LevelSelectOverlay extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Timer', style: PhetFont.of(14)),
+                  Text('计时器', style: PhetFont.of(14)),
                   Switch(
                     value: controller.model.timerEnabled,
                     onChanged: controller.setTimerEnabled,
@@ -712,7 +712,7 @@ class _LevelCompletedOverlay extends StatelessWidget {
             ),
             if (m.timerEnabled) ...[
               const SizedBox(height: 8),
-              Text('Time: ${m.elapsedTime.toStringAsFixed(0)} s',
+              Text('时间: ${m.elapsedTime.toStringAsFixed(0)} s',
                   style: PhetFont.of(16)),
             ],
             const SizedBox(height: 20),

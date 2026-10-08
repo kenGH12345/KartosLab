@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:kratos/ohms_law/ohms_law_strings.dart';
 
 import '../model/current_units.dart';
 import '../model/ohms_law_model.dart';
@@ -135,7 +136,7 @@ class _CurrentReadout extends StatelessWidget {
       height: 1.1,
     );
     return Semantics(
-      label: 'current equals $value $unit',
+      label: OhmsLawStrings.currentEquals(value, unit),
       liveRegion: true,
       child: Container(
         padding: const EdgeInsets.symmetric(
@@ -159,7 +160,7 @@ class _CurrentReadout extends StatelessWidget {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
-                'current',
+                OhmsLawStrings.current,
                 style: style.copyWith(color: OhmsLawViewConstants.redColorblind),
               ),
               SizedBox(width: OhmsLawViewConstants.readoutSpacing),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../data/measurement_plots_state.dart';
 import '../../domain/wave_display_mode.dart';
 import 'qwi_wave_plot_chart.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// PhET `PositionPlotNode` — horizontal aperture + chart below linked by a short wire.
 class QwiPositionPlotOverlay extends StatelessWidget {
@@ -98,7 +99,7 @@ class QwiPositionPlotOverlay extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Position',
+                        QwiStrings.position,
                         style: TextStyle(
                           fontFamily: 'Arial',
                           fontSize: 11,

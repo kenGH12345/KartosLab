@@ -14,6 +14,7 @@ import '../../shared/widgets/buoyancy_forces_panel.dart';
 import '../../shared/widgets/buoyancy_gravity_panel.dart';
 import '../../shared/widgets/buoyancy_pool_scale_height_control.dart';
 import '../composer/lab_composer.dart';
+import '../../buoyancy_strings.dart';
 
 /// Lab screen — layout anchors from `BuoyancyLabScreenView.ts`.
 class BuoyancyLabScreen extends StatefulWidget {
@@ -157,7 +158,7 @@ class _BuoyancyLabScreenState extends State<BuoyancyLabScreen> {
                 ),
                 const SizedBox(height: 5),
                 BuoyancyAccordionStub(
-                  title: 'Object Density',
+                  title: BuoyancyStrings.objectDensity,
                   expanded: _densityExpanded,
                   onToggle: () =>
                       setState(() => _densityExpanded = !_densityExpanded),
@@ -168,7 +169,7 @@ class _BuoyancyLabScreenState extends State<BuoyancyLabScreen> {
                 ),
                 const SizedBox(height: 5),
                 BuoyancyAccordionStub(
-                  title: '% Submerged',
+                  title: BuoyancyStrings.percentSubmerged,
                   expanded: _submergedExpanded,
                   onToggle: () => setState(
                       () => _submergedExpanded = !_submergedExpanded),

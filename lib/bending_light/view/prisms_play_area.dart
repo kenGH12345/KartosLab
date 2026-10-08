@@ -22,6 +22,7 @@ import '../model/substance.dart';
 import '../screens/stage_scale.dart';
 import '../transform/bl_mvt.dart';
 import 'source_layout.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// Prisms play area: translate/rotate laser, prism toolbox, medium panels.
 class PrismsPlayArea extends StatefulWidget {
@@ -339,7 +340,7 @@ class _PrismsPlayAreaState extends State<PrismsPlayArea> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   MediumControlPanel(
-                    title: 'Environment',
+                    title: BlStrings.environment,
                     substance: model.environmentMedium.substance,
                     decimals: 2,
                     showReadout: false,
@@ -612,7 +613,7 @@ class _PrismToolboxBar extends StatelessWidget {
           _ToolboxDivider(),
           SizedBox(width: 8 * s),
           MediumControlPanel(
-            title: 'Objects',
+            title: BlStrings.objects,
             substance: substance,
             decimals: 2,
             showReadout: false,
@@ -849,9 +850,9 @@ class _PrismChecks extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          row('Reflections', reflections, onReflections),
-          row('Normal', normals, onNormals),
-          row('Protractor', protractorOn, onProtractor, icon: true),
+          row(BlStrings.reflections, reflections, onReflections),
+          row(BlStrings.normal, normals, onNormals),
+          row(BlStrings.protractor, protractorOn, onProtractor, icon: true),
         ],
     );
   }

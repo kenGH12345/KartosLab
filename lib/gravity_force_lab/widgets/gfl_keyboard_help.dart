@@ -49,7 +49,7 @@ class GflKeyboardHelpDialog extends StatelessWidget {
               _Section(
                 heading: GflA11yStrings.grabReleaseRulerHeading,
                 rows: const [
-                  _Row('Grab or release ruler', 'Enter / Space'),
+                  _Row('抓取或释放尺子', 'Enter / Space'),
                 ],
               ),
               _Section(
@@ -68,7 +68,7 @@ class GflKeyboardHelpDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Close'),
+          child: const Text('关闭'),
         ),
       ],
     );

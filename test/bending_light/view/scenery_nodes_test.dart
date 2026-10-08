@@ -9,6 +9,7 @@ import 'package:kratos/bending_light/model/bl_vec2.dart';
 import 'package:kratos/bending_light/model/enums.dart';
 import 'package:kratos/bending_light/model/intro_model.dart';
 import 'package:kratos/bending_light/model/substance.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 void main() {
   testWidgets('ray and wave radios toggle and reset', (tester) async {
@@ -29,8 +30,8 @@ void main() {
     }
 
     await pump();
-    expect(find.text('Ray'), findsOneWidget);
-    await tester.tap(find.text('Wave'));
+    expect(find.text(BlStrings.ray), findsOneWidget);
+    await tester.tap(find.text(BlStrings.wave));
     await pump();
     expect(wave, isTrue);
     wave = false;
@@ -85,24 +86,24 @@ void main() {
     );
 
     expect(model.isPlaying, isTrue);
-    await tester.tap(find.bySemanticsLabel('Pause'));
+    await tester.tap(find.bySemanticsLabel(BlStrings.pause));
     await tester.pump();
     expect(model.isPlaying, isFalse);
 
     final before = model.time;
-    await tester.tap(find.bySemanticsLabel('Step'));
+    await tester.tap(find.bySemanticsLabel(BlStrings.step));
     await tester.pump();
     expect(model.time, greaterThan(before));
 
-    await tester.tap(find.bySemanticsLabel('Play'));
+    await tester.tap(find.bySemanticsLabel(BlStrings.play));
     await tester.pump();
     expect(model.isPlaying, isTrue);
     final playingTime = model.time;
-    await tester.tap(find.bySemanticsLabel('Step'), warnIfMissed: false);
+    await tester.tap(find.bySemanticsLabel(BlStrings.step), warnIfMissed: false);
     await tester.pump();
     expect(model.time, playingTime);
 
-    await tester.tap(find.bySemanticsLabel('Pause'));
+    await tester.tap(find.bySemanticsLabel(BlStrings.pause));
     await tester.pump();
     expect(model.isPlaying, isFalse);
 

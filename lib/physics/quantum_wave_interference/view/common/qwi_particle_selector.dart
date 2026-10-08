@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../assets/qwi_assets.dart';
 import '../../domain/source_type.dart';
 import 'qwi_colors.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// PhET SceneRadioButtonGroup — 2×2 square buttons, icon above label.
 class QwiParticleSelector extends StatelessWidget {
@@ -27,10 +28,10 @@ class QwiParticleSelector extends StatelessWidget {
   final double runSpacing;
 
   static const _labels = {
-    SourceType.photons: 'Photons',
-    SourceType.electrons: 'Electrons',
-    SourceType.neutrons: 'Neutrons',
-    SourceType.heliumAtoms: 'Helium Atoms',
+    SourceType.photons: QwiStrings.photons,
+    SourceType.electrons: QwiStrings.electrons,
+    SourceType.neutrons: QwiStrings.neutrons,
+    SourceType.heliumAtoms: QwiStrings.heliumAtoms,
   };
 
   @override

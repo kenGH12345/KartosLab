@@ -11,6 +11,7 @@ import 'control_panel.dart';
 import 'sweater_node.dart';
 import 'tether_node.dart';
 import 'wall_node.dart';
+import 'package:kratos/balloons_and_static_electricity/base_strings.dart';
 
 /// Design-coordinate play area (768×504) — PhET `BASEView`.
 class BalloonsStaticElectricityPlayArea extends StatefulWidget {
@@ -129,7 +130,7 @@ class BalloonsStaticElectricityPlayAreaState
         model: model,
         balloon: model.yellowBalloon,
         assetPath: BaseAssets.yellowBalloon,
-        semanticLabel: 'Yellow Balloon',
+        semanticLabel: BaseStrings.yellowBalloon,
         onBroughtToFront: _bringYellowFront,
       ),
     ];
@@ -143,7 +144,7 @@ class BalloonsStaticElectricityPlayAreaState
         model: model,
         balloon: model.greenBalloon,
         assetPath: BaseAssets.greenBalloon,
-        semanticLabel: 'Green Balloon',
+        semanticLabel: BaseStrings.greenBalloon,
         onBroughtToFront: _bringGreenFront,
       ),
     ];

@@ -6,6 +6,7 @@ import '../model/ohms_law_model.dart';
 import '../ohms_law_view_constants.dart';
 import 'ohms_law_audio_hooks.dart';
 import 'ohms_law_play_area.dart';
+import 'package:kratos/ohms_law/ohms_law_strings.dart';
 
 /// Single-screen Ohm's Law — PhET `OhmsLawScreen` + `OhmsLawScreenView`.
 ///
@@ -23,10 +24,10 @@ class OhmsLawScreen extends StatefulWidget {
   });
 
   /// Home card / AppBar title (PhET English name; peer: Faraday's Law).
-  static const String title = "Ohm's Law";
+  static const String title = OhmsLawStrings.title;
 
   /// Home card subtitle (Chinese discoverability keywords).
-  static const String subtitle = '欧姆定律 · 电压 · 电阻 · 电流';
+  static const String subtitle = OhmsLawStrings.subtitle;
 
   /// Home card accent (KartosLab Material card chrome).
   static const Color accentColor = Color(0xFF1565C0);

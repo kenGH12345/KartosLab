@@ -5,6 +5,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../model/spin_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class SpinSourceNode extends StatelessWidget {
   const SpinSourceNode({
@@ -39,7 +40,7 @@ class SpinSourceNode extends StatelessWidget {
           width: 108,
           height: labelAboveHeight - 4,
           child: Text(
-            'Spin-1/2 Source',
+            QmStrings.spinHalfSource,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 12),
           ),
@@ -123,13 +124,13 @@ class SpinSourceNode extends StatelessWidget {
         const SizedBox(height: 10),
         // Source mode — AquaRadioButtonGroup below apparatus (ParticleSourceNode.ts)
         _ModeRadio(
-          label: 'Single Particle',
+          label: QmStrings.singleParticle,
           selected: sourceMode == SourceMode.single,
           onTap: () => onSourceModeChanged(SourceMode.single),
         ),
         const SizedBox(height: 6),
         _ModeRadio(
-          label: 'Continuous',
+          label: QmStrings.continuous,
           selected: sourceMode == SourceMode.continuous,
           onTap: () => onSourceModeChanged(SourceMode.continuous),
         ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'experiment_controller.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Camera / gallery + 4 snapshot dots (PhET FrontFacingDetectorScreenNode).
 class ExperimentSnapshotIconColumn extends StatelessWidget {
@@ -36,7 +37,7 @@ class ExperimentSnapshotIconColumn extends StatelessWidget {
         const SizedBox(height: 6),
         _IconBtn(
           key: const Key('qwi_take_snapshot'),
-          tooltip: 'Take Snapshot',
+          tooltip: QwiStrings.takeSnapshot,
           enabled: canTake,
           onTap: canTake ? () => controller.takeSnapshot() : null,
           child: const CustomPaint(size: Size(18, 14), painter: _CameraIconPainter()),
@@ -44,7 +45,7 @@ class ExperimentSnapshotIconColumn extends StatelessWidget {
         const SizedBox(height: 4),
         _IconBtn(
           key: const Key('qwi_view_snapshots'),
-          tooltip: 'View Snapshots',
+          tooltip: QwiStrings.viewSnapshots,
           enabled: canView,
           onTap: canView ? () => controller.setSnapshotPanelOpen(true) : null,
           child: const CustomPaint(size: Size(18, 14), painter: _GalleryIconPainter()),
@@ -152,12 +153,12 @@ class ExperimentSnapshotPanel extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Text('Snapshots', style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(QwiStrings.snapshots, style: const TextStyle(fontWeight: FontWeight.bold)),
                     const Spacer(),
                     TextButton(
                       key: const Key('qwi_snapshot_close'),
                       onPressed: () => controller.setSnapshotPanelOpen(false),
-                      child: const Text('Close'),
+                      child: Text(QwiStrings.close),
                     ),
                   ],
                 ),
@@ -168,7 +169,7 @@ class ExperimentSnapshotPanel extends StatelessWidget {
                       final s = snaps[i];
                       return ListTile(
                         key: Key('qwi_snapshot_$i'),
-                        title: Text('Snapshot ${s.snapshotNumber}'),
+                        title: Text(QwiStrings.snapshotN(s.snapshotNumber)),
                         subtitle: Text(
                           '${s.sourceType.name} · λ=${s.wavelengthNm.toStringAsFixed(0)} · '
                           'hits=${s.hits.length}',
@@ -176,7 +177,7 @@ class ExperimentSnapshotPanel extends StatelessWidget {
                         trailing: TextButton(
                           key: Key('qwi_snapshot_delete_$i'),
                           onPressed: () => controller.deleteSnapshot(i),
-                          child: const Text('Delete', style: TextStyle(fontSize: 11)),
+                          child: Text(QwiStrings.delete, style: const TextStyle(fontSize: 11)),
                         ),
                       );
                     },

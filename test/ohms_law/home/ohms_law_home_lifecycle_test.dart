@@ -310,7 +310,7 @@ void main() {
 
       for (final title in [
         '电路搭建',
-        'AC 虚拟实验室',
+        '交流虚拟实验室',
         OhmsLawScreen.title,
         FaradaysLawScreen.title,
         HookesLawHome.title,

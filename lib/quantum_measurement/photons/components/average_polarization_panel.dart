@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../model/photons_model.dart';
 import '../qm_photons_colors.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class AveragePolarizationPanel extends StatefulWidget {
   const AveragePolarizationPanel({
@@ -51,7 +52,7 @@ class _AveragePolarizationPanelState extends State<AveragePolarizationPanel> {
               border: Border.all(color: const Color(0xFF777777)),
             ),
             child: const Text(
-              'Average Polarization',
+              QmStrings.averagePolarization,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
             ),
@@ -77,7 +78,7 @@ class _AveragePolarizationPanelState extends State<AveragePolarizationPanel> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const TextSpan(text: ')) / N(Total)'),
+                const TextSpan(text: ')) / N(总数)'),
               ],
             ),
           ),
@@ -97,13 +98,13 @@ class _AveragePolarizationPanelState extends State<AveragePolarizationPanel> {
           ),
           const SizedBox(height: 6),
           _check(
-            'Vector Representation',
+            QmStrings.vectorRepresentation,
             _showVector,
             (v) => setState(() => _showVector = v),
             trailing: const Icon(Icons.arrow_right_alt, size: 16),
           ),
           _check(
-            'Expectation Value',
+            QmStrings.expectationValue,
             _showExpectation,
             (v) => setState(() => _showExpectation = v),
             trailing: Container(
@@ -114,7 +115,7 @@ class _AveragePolarizationPanelState extends State<AveragePolarizationPanel> {
             enabled: expectation != null,
           ),
           _check(
-            'Decimal Values',
+            QmStrings.decimalValues,
             _showDecimal,
             (v) => setState(() => _showDecimal = v),
           ),

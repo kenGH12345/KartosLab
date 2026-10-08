@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kratos/under_pressure/controller/under_pressure_controller.dart';
 import 'package:kratos/under_pressure/model/under_pressure_units.dart';
+import 'package:kratos/under_pressure/under_pressure_strings.dart';
 
 /// Source: `UnitsControlPanel.js`
 class UpUnitsControlPanel extends StatelessWidget {
@@ -23,13 +24,13 @@ class UpUnitsControlPanel extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Units',
+          Text(
+            UnderPressureStrings.units,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
-          _item('Metric', MeasureUnits.metric, m.measureUnits),
-          _item('Atmospheres', MeasureUnits.atmosphere, m.measureUnits),
-          _item('English', MeasureUnits.english, m.measureUnits),
+          _item(UnderPressureStrings.metric, MeasureUnits.metric, m.measureUnits),
+          _item(UnderPressureStrings.atmospheres, MeasureUnits.atmosphere, m.measureUnits),
+          _item(UnderPressureStrings.english, MeasureUnits.english, m.measureUnits),
         ],
       ),
     );

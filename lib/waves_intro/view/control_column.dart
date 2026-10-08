@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:kratos/common/widgets/kratos_phet_time_control.dart';
+import 'package:kratos/waves_intro/waves_intro_strings.dart';
 
 import '../model/scene_kind.dart';
 import '../model/waves_intro_model.dart';
@@ -29,7 +31,7 @@ class WavesIntroControlColumn extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('Frequency', style: _labelStyle(context)),
+                  Text(WavesIntroStrings.frequency, style: _labelStyle(context)),
                   if (config.kind == SceneKind.light)
                     _SpectrumFrequencySlider(
                       value: scene.controlFrequency,
@@ -50,7 +52,7 @@ class WavesIntroControlColumn extends StatelessWidget {
                     const _TickRuler(left: 'min', right: 'max'),
                   ],
                   const SizedBox(height: 7),
-                  Text('Amplitude', style: _labelStyle(context)),
+                  Text(WavesIntroStrings.amplitude, style: _labelStyle(context)),
                   SliderTheme(
                     data: _sliderTheme(context),
                     child: Slider(
@@ -64,24 +66,24 @@ class WavesIntroControlColumn extends StatelessWidget {
                   const SizedBox(height: 8),
                   const Divider(height: 14, color: Color(0xFF646464)),
                   _Check(
-                    label: 'Graph',
+                    label: WavesIntroStrings.graph,
                     value: model.showGraph,
                     onChanged: model.setShowGraph,
                   ),
                   if (config.kind == SceneKind.sound)
                     _Check(
-                      label: 'Play Tone',
+                      label: WavesIntroStrings.playTone,
                       value: model.audioState.isTonePlaying,
                       onChanged: model.setTonePlaying,
                     ),
                   if (config.kind == SceneKind.light) ...[
                     _Check(
-                      label: 'Screen',
+                      label: WavesIntroStrings.screen,
                       value: model.showScreen,
                       onChanged: model.setShowScreen,
                     ),
                     _Check(
-                      label: 'Sound Effect',
+                      label: WavesIntroStrings.soundEffect,
                       value: model.audioState.soundEffectEnabled,
                       onChanged: model.setSoundEffectEnabled,
                     ),
@@ -92,9 +94,9 @@ class WavesIntroControlColumn extends StatelessWidget {
                       groupValue: scene.soundViewType,
                       onChanged: model.setSoundViewType,
                       items: const [
-                        (SoundViewType.waves, 'Waves'),
-                        (SoundViewType.particles, 'Particles'),
-                        (SoundViewType.both, 'Both'),
+                        (SoundViewType.waves, WavesIntroStrings.waves),
+                        (SoundViewType.particles, WavesIntroStrings.particles),
+                        (SoundViewType.both, WavesIntroStrings.both),
                       ],
                     ),
                   ],
@@ -452,15 +454,15 @@ class ViewpointRadioGroup extends StatelessWidget {
     return _RadioPair<Viewpoint>(
       a: Viewpoint.top,
       b: Viewpoint.side,
-      aLabel: 'Top View',
-      bLabel: 'Side View',
+      aLabel: WavesIntroStrings.topView,
+      bLabel: WavesIntroStrings.sideView,
       value: model.viewpoint,
       onChanged: model.setViewpoint,
     );
   }
 }
 
-/// PhET TimeControlNode — play/pause/step + vertical Normal/Slow.
+/// PhET TimeControlNode — L0 [KratosPhetTimeControl] + vertical Normal/Slow.
 class TimeControlCluster extends StatelessWidget {
   const TimeControlCluster({super.key, required this.model});
   final WavesIntroModel model;
@@ -471,31 +473,20 @@ class TimeControlCluster extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        _RoundTimeButton(
-          size: 50,
-          onPressed: model.togglePlayPause,
-          child: Icon(
-            model.isRunning ? Icons.pause : Icons.play_arrow,
-            color: Colors.black87,
-            size: 28,
-          ),
-        ),
-        const SizedBox(width: 8),
-        _RoundTimeButton(
-          size: 38,
-          onPressed: model.manualStep,
-          child: const Icon(
-            Icons.skip_next,
-            color: Colors.black87,
-            size: 22,
-          ),
+        KratosPhetTimeControl(
+          isPlaying: model.isRunning,
+          onPlayPause: model.togglePlayPause,
+          onStep: model.manualStep,
+          playPauseRadius: 25,
+          stepRadius: 19,
+          spacing: 8,
         ),
         const SizedBox(width: 12),
         _RadioPair<bool>(
           a: false,
           b: true,
-          aLabel: 'Normal',
-          bLabel: 'Slow',
+          aLabel: WavesIntroStrings.normal,
+          bLabel: WavesIntroStrings.slow,
           value: model.slowMotion,
           onChanged: model.setSlowMotion,
         ),
@@ -548,35 +539,6 @@ class _RadioPair<T> extends StatelessWidget {
         const SizedBox(height: 4),
         item(b, bLabel),
       ],
-    );
-  }
-}
-
-class _RoundTimeButton extends StatelessWidget {
-  const _RoundTimeButton({
-    required this.size,
-    required this.onPressed,
-    required this.child,
-  });
-
-  final double size;
-  final VoidCallback onPressed;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: size,
-      height: size,
-      child: Material(
-        color: const Color(0xFF6DCEF8),
-        shape: const CircleBorder(),
-        child: InkWell(
-          customBorder: const CircleBorder(),
-          onTap: onPressed,
-          child: Center(child: child),
-        ),
-      ),
     );
   }
 }

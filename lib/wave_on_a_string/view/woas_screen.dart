@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/woas_model.dart';
 import 'woas_play_area.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 /// Single-screen Wave on a String — PhET `WOASScreen`.
 ///
@@ -19,7 +20,7 @@ class WoasScreen extends StatefulWidget {
   });
 
   /// Home card / AppBar title (PhET English name).
-  static const String title = 'Wave on a String';
+  static const String title = WoasStrings.title;
 
   /// Home card subtitle.
   static const String subtitle = '绳波 · 反射 · 阻尼 · 张力';

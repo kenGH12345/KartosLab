@@ -59,11 +59,13 @@ class _CircuitScreenState extends State<CircuitScreen> {
   @override
   void initState() {
     super.initState();
-    _sfx = SoundEffects();
+    // Defer SoundEffects until first playback (lazy AudioPlayer).
     if (useScenarioLoader) {
       _loadDefaultScenario();
     }
   }
+
+  SoundEffects get _sounds => _sfx ??= SoundEffects();
 
   /// AC-4 · 从 `assets/scenarios/circuit/default.json` 异步加载初始状态。
   ///
@@ -139,7 +141,7 @@ class _CircuitScreenState extends State<CircuitScreen> {
       _state = next;
       _solved = CircuitSolver.solve(next);
     });
-    if (sound) _sfx?.tap();
+    if (sound) _sounds.tap();
     _maybeNotifyObjectiveMet();
   }
 

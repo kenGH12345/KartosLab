@@ -3,4 +3,4 @@ viewport: 1024x768
 DPR: 1
 actions: equipotential
 source: local-flutter-widget-test
-captured_at: 2026-09-27T17:26:30.348234Z
+captured_at: 2026-10-08T09:24:46.419821Z

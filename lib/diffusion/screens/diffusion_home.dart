@@ -4,11 +4,12 @@ import '../../common/widgets/nine_grid_layout.dart';
 import '../diffusion_constants.dart';
 import '../model/diffusion_model.dart';
 import '../widgets/diffusion_shell.dart';
+import 'package:kratos/diffusion/diffusion_strings.dart';
 
 class DiffusionHome extends StatefulWidget {
   const DiffusionHome({super.key});
 
-  static const String title = 'Diffusion';
+  static const String title = DiffusionStrings.title;
   static const Color accentColor = Color(0xFF00838F);
 
   @override

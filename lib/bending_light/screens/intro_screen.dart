@@ -4,6 +4,7 @@ import '../model/intro_model.dart';
 import '../model/substance.dart';
 import '../view/intro_play_area.dart';
 import 'bending_light_scene_shell.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key, this.embedded = false});
@@ -34,7 +35,7 @@ class _IntroScreenState extends State<IntroScreen> {
     );
     if (widget.embedded) return body;
     return Scaffold(
-      appBar: AppBar(title: const Text('Bending Light — Intro')),
+      appBar: AppBar(title: const Text(BlStrings.titleIntro)),
       body: body,
     );
   }

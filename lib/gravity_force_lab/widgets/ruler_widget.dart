@@ -148,8 +148,8 @@ class _RulerWidgetState extends State<RulerWidget> {
                 ? '${GflA11yStrings.rulerGrabbed}, $valueText'
                 : valueText,
             hint: _grabbed
-                ? 'Use arrow keys or WASD to move. Press Enter to release.'
-                : 'Press Enter or Space to grab.',
+                ? '使用方向键或 WASD 移动。按 Enter 释放。'
+                : '按 Enter 或空格键抓取。',
             onTap: () {
               Focus.of(context).requestFocus();
               _toggleGrab();

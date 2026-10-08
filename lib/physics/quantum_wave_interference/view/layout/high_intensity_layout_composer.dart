@@ -22,6 +22,7 @@ import '../high_intensity/high_intensity_controller.dart';
 import '../high_intensity/high_intensity_controls.dart';
 import 'high_intensity_layout_spec.dart';
 import 'qwi_layout_primitives.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Places existing High Intensity components per [HighIntensityLayoutSpec].
 ///
@@ -184,7 +185,7 @@ class HighIntensityLayoutComposer extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Wave Display',
+                                QwiStrings.waveDisplay,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
                                   fontWeight: FontWeight.w600,
@@ -220,7 +221,7 @@ class HighIntensityLayoutComposer extends StatelessWidget {
                                 children: [
                                   QwiPushButton(
                                     key: const Key('hi_take_snapshot'),
-                                    label: 'Snap',
+                                    label: QwiStrings.snap,
                                     enabled: !controller.scene.snapshots.isFull,
                                     onPressed: controller.scene.snapshots.isFull
                                         ? null
@@ -231,7 +232,7 @@ class HighIntensityLayoutComposer extends StatelessWidget {
                                   const SizedBox(width: 6),
                                   QwiPushButton(
                                     key: const Key('hi_view_snapshots'),
-                                    label: 'View',
+                                    label: QwiStrings.view,
                                     enabled: controller.scene.snapshots.length > 0,
                                     onPressed: controller.scene.snapshots.length == 0
                                         ? null
@@ -369,11 +370,11 @@ class HighIntensityLayoutComposer extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Text('Snapshots', style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text(QwiStrings.snapshots, style: const TextStyle(fontWeight: FontWeight.bold)),
                               const Spacer(),
                               TextButton(
                                 onPressed: () => controller.setSnapshotPanelOpen(false),
-                                child: const Text('Close'),
+                                child: Text(QwiStrings.close),
                               ),
                             ],
                           ),

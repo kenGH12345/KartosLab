@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kratos/color_vision/view/cv_spectrum_slider.dart';
 
+import '../bll_strings.dart';
 import '../model/beers_law_constants.dart';
 import '../model/beers_law_model.dart';
 import '../model/light_mode.dart';
@@ -51,7 +52,7 @@ class BeersLawWavelengthPanel extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('Wavelength:', style: TextStyle(fontSize: 20)),
+                Text('${BllStrings.wavelength}：', style: const TextStyle(fontSize: 20)),
                 const SizedBox(width: 10),
                 Container(
                   padding:

@@ -8,6 +8,7 @@ import '../controller/mixtures_controller.dart';
 import '../iaam_constants.dart';
 import 'make_isotopes_screen.dart';
 import 'mix_isotopes_screen.dart';
+import 'package:kratos/chemistry/isotopes_and_atomic_mass/iaam_strings.dart';
 
 class IsotopesAndAtomicMassHome extends StatefulWidget {
   const IsotopesAndAtomicMassHome({
@@ -22,7 +23,7 @@ class IsotopesAndAtomicMassHome extends StatefulWidget {
   final int initialTab;
 
   static const String title = '同位素与原子质量';
-  static const String subtitle = 'Isotopes · Atomic Mass';
+  static const String subtitle = IaamStrings.subtitle;
   static const Color accentColor = Color(0xFF0E7490);
 
   /// Compact PhET-style screen selector height (was ~112 with title+TabBar).
@@ -87,14 +88,14 @@ class _IsotopesAndAtomicMassHomeState extends State<IsotopesAndAtomicMassHome>
                 height: IsotopesAndAtomicMassHome.tabBarHeight,
                 child: _ScreenTab(
                   asset: IaamConstants.isotopesIconAsset,
-                  label: 'Isotopes',
+                  label: '同位素',
                 ),
               ),
               Tab(
                 height: IsotopesAndAtomicMassHome.tabBarHeight,
                 child: _ScreenTab(
                   asset: IaamConstants.mixturesIconAsset,
-                  label: 'Mixtures',
+                  label: '混合物',
                 ),
               ),
             ],

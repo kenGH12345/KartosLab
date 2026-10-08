@@ -21,6 +21,7 @@ import '../model/wire_geometry.dart';
 import '../screens/stage_scale.dart';
 import '../transform/bl_mvt.dart';
 import 'source_layout.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// More Tools: Intro controls plus wavelength, angles, velocity and wave probes.
 class MoreToolsPlayArea extends StatefulWidget {
@@ -174,7 +175,7 @@ class _MoreToolsPlayAreaState extends State<MoreToolsPlayArea>
               right: 0,
               top: h * SourceLayout.timeLabelFraction,
               child: Text(
-                'Time',
+                BlStrings.time,
                 textAlign: TextAlign.center,
                 style: PhetFont.of(16 * bodyScale, color: Colors.white, height: 1),
               ),
@@ -439,7 +440,7 @@ class _MoreToolsPlayAreaState extends State<MoreToolsPlayArea>
                       SourceLayout.introTopPanelBottom) *
                   sy,
               child: MediumControlPanel(
-                title: 'Material',
+                title: BlStrings.material,
                 substance: model.topMedium.substance,
                 decimals: 3,
                 onSubstance: model.setTopSubstance,
@@ -451,7 +452,7 @@ class _MoreToolsPlayAreaState extends State<MoreToolsPlayArea>
               right: SourceLayout.edgePadding * sx,
               top: SourceLayout.introBottomPanelTop * sy,
               child: MediumControlPanel(
-                title: 'Material',
+                title: BlStrings.material,
                 substance: model.bottomMedium.substance,
                 decimals: 3,
                 onSubstance: model.setBottomSubstance,
@@ -474,7 +475,7 @@ class _MoreToolsPlayAreaState extends State<MoreToolsPlayArea>
                         ToolboxSlot(
                           inToolbox: !protractor.enabled,
                           child: ToolboxChip(
-                            semanticsLabel: 'Protractor',
+                            semanticsLabel: BlStrings.protractor,
                             child: const ProtractorToolboxIcon(),
                             onDragEnd: (g) => _drop(g, (world) {
                               setState(() {
@@ -487,7 +488,7 @@ class _MoreToolsPlayAreaState extends State<MoreToolsPlayArea>
                         ToolboxSlot(
                           inToolbox: !model.intensityMeter.enabled,
                           child: ToolboxChip(
-                            semanticsLabel: 'Intensity',
+                            semanticsLabel: BlStrings.intensity,
                             child: const IntensityToolboxIcon(),
                             onDragEnd: (g) => _drop(g, (world) {
                               final meter = model.intensityMeter;
@@ -505,7 +506,7 @@ class _MoreToolsPlayAreaState extends State<MoreToolsPlayArea>
                         ToolboxSlot(
                           inToolbox: !velocity.enabled,
                           child: ToolboxChip(
-                            semanticsLabel: 'Velocity',
+                            semanticsLabel: BlStrings.velocity,
                             child: const VelocityToolboxIcon(),
                             onDragEnd: (g) => _drop(g, (world) {
                               model.velocitySensor.position = world;
@@ -518,7 +519,7 @@ class _MoreToolsPlayAreaState extends State<MoreToolsPlayArea>
                         ToolboxSlot(
                           inToolbox: !wave.enabled,
                           child: ToolboxChip(
-                            semanticsLabel: 'Wave',
+                            semanticsLabel: BlStrings.wave,
                             child: const WaveToolboxIcon(),
                             onDragEnd: (g) => _drop(g, (world) {
                               final sensor = model.waveSensor;

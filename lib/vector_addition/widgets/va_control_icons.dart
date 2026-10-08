@@ -262,7 +262,7 @@ class VaResetAllButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Tooltip(
-      message: 'Reset All',
+      message: '全部重置',
       child: InkWell(
         customBorder: const CircleBorder(),
         onTap: onPressed,

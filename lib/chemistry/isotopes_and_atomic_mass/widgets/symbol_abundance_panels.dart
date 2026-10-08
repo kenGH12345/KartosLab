@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import '../controller/make_isotopes_controller.dart';
 import '../iaam_constants.dart';
 import '../model/data/phet_number_utils.dart';
+import 'package:kratos/chemistry/isotopes_and_atomic_mass/iaam_strings.dart';
 
 class SymbolAccordion extends StatelessWidget {
   const SymbolAccordion({
@@ -23,7 +24,7 @@ class SymbolAccordion extends StatelessWidget {
   Widget build(BuildContext context) {
     final m = controller.model;
     return _AccordionShell(
-      title: 'Symbol',
+      title: IaamStrings.symbol,
       width: width,
       expanded: controller.symbolExpanded,
       onToggle: () =>
@@ -72,7 +73,7 @@ class AbundanceAccordion extends StatelessWidget {
     final otherSlice = (1.0 - thisSlice).clamp(0.0, 1.0);
 
     return _AccordionShell(
-      title: 'Abundance in Nature',
+      title: '自然界丰度',
       width: width,
       expanded: controller.abundanceExpanded,
       onToggle: () =>
@@ -101,7 +102,7 @@ class AbundanceAccordion extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                const Text('This Isotope', style: TextStyle(fontSize: 11)),
+                const Text('该同位素', style: TextStyle(fontSize: 11)),
               ],
             ),
             const SizedBox(width: 10),

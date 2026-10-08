@@ -45,7 +45,7 @@ class _StatesOfMatterHomeState extends State<StatesOfMatterHome>
   @override
   Widget build(BuildContext context) {
     return KratosTabbedScreen(
-      title: 'States of Matter',
+      title: '物质状态',
       accentColor: const Color(0xFF1177AA),
       tabs: [
         KratosTab(

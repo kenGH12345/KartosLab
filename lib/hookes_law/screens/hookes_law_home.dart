@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kratos/common/widgets/kratos_tab_bar.dart';
+import 'package:kratos/hookes_law/hookes_law_strings.dart';
 import 'package:kratos/hookes_law/model/energy_model.dart';
 import 'package:kratos/hookes_law/model/intro_model.dart';
 import 'package:kratos/hookes_law/model/systems_model.dart';
@@ -21,8 +22,8 @@ import 'package:kratos/hookes_law/view/systems/systems_view_properties.dart';
 class HookesLawHome extends StatefulWidget {
   const HookesLawHome({super.key});
 
-  static const String title = "Hooke's Law";
-  static const String subtitle = 'Intro · Systems · Energy';
+  static const String title = HookesLawStrings.title;
+  static const String subtitle = HookesLawStrings.subtitle;
   static const Color accentColor = Color(0xFF1E3A8A);
 
   @override
@@ -64,15 +65,15 @@ class HookesLawHomeState extends State<HookesLawHome> {
       initialIndex: 0,
       tabs: [
         KratosTab(
-          label: 'Intro',
+          label: '介绍',
           child: IntroScreen(model: intro, viewProperties: introView),
         ),
         KratosTab(
-          label: 'Systems',
+          label: '系统',
           child: SystemsScreen(model: systems, viewProperties: systemsView),
         ),
         KratosTab(
-          label: 'Energy',
+          label: '能量',
           child: EnergyScreen(model: energy, viewProperties: energyView),
         ),
       ],

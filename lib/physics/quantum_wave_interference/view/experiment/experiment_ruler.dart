@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../domain/detector_screen_scale.dart';
 import '../common/qwi_layout.dart';
 import 'experiment_controller.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Detector ruler — display-only; calibrated to [DetectorScreenScale].
 class ExperimentRulerView extends StatelessWidget {
@@ -102,7 +103,7 @@ class ExperimentRulerCheckbox extends StatelessWidget {
             onChanged: (v) => controller.setRulerVisible(v ?? false),
           ),
         ),
-        const Text('Ruler', style: TextStyle(fontSize: 12)),
+        Text(QwiStrings.ruler, style: const TextStyle(fontSize: 12)),
       ],
     );
   }

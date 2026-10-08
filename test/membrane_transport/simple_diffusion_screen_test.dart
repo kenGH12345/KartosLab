@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kratos/membrane_transport/layout/membrane_transport_layout.dart';
+import 'package:kratos/membrane_transport/membrane_transport_strings.dart';
 import 'package:kratos/membrane_transport/screens/simple_diffusion_screen.dart';
 
 void main() {
@@ -20,11 +21,12 @@ void main() {
     await tester.pump(); // first frame
     await tester.pump(const Duration(milliseconds: 100));
 
-    expect(find.text('Solutes'), findsOneWidget);
-    expect(find.text('Solute Concentrations'), findsOneWidget);
-    expect(find.text('Outside'), findsWidgets);
-    expect(find.text('Inside'), findsWidgets);
-    expect(find.text('Normal'), findsOneWidget);
+    expect(find.text(MembraneTransportStrings.solutes), findsOneWidget);
+    expect(find.text(MembraneTransportStrings.soluteConcentrations),
+        findsOneWidget);
+    expect(find.text(MembraneTransportStrings.outside), findsWidgets);
+    expect(find.text(MembraneTransportStrings.inside), findsWidgets);
+    expect(find.text(MembraneTransportStrings.normal), findsOneWidget);
     expect(MembraneTransportLayoutPrimitives.designWidth, 1024);
   });
 }

@@ -35,7 +35,7 @@ class FrictionPlayArea extends StatefulWidget {
 class FrictionPlayAreaState extends State<FrictionPlayArea>
     with SingleTickerProviderStateMixin {
   late final FrictionModel _model;
-  late final FrictionAudio _audio;
+  FrictionAudio? _audio;
   late final AnimationController _ticker;
   late final FocusNode _focusNode;
 
@@ -49,12 +49,14 @@ class FrictionPlayAreaState extends State<FrictionPlayArea>
   void initState() {
     super.initState();
     _model = widget.model;
-    _audio = FrictionAudio();
     _focusNode = FocusNode(debugLabel: 'frictionPlayArea');
 
+    // Create audio only when enabled — avoids audioplayers plugin init in
+    // golden / muted tests without changing production audio semantics.
     if (widget.enableAudio) {
-      _model.onContactStarted = () => _audio.playContact();
-      _model.onShearedOff = () => _audio.onShearedOff();
+      _audio = FrictionAudio();
+      _model.onContactStarted = () => _audio?.playContact();
+      _model.onShearedOff = () => _audio?.onShearedOff();
     }
 
     _ticker = AnimationController(
@@ -123,13 +125,13 @@ class FrictionPlayAreaState extends State<FrictionPlayArea>
     _model.onContactStarted = null;
     _model.onShearedOff = null;
     _focusNode.dispose();
-    _audio.dispose();
+    _audio?.dispose();
     super.dispose();
   }
 
   void _reset() {
     _model.reset();
-    _audio.reset();
+    _audio?.reset();
     _keysDown.clear();
   }
 
@@ -140,7 +142,7 @@ class FrictionPlayAreaState extends State<FrictionPlayArea>
     _focusNode.requestFocus();
     _macroDragging = true;
     _model.hideHint();
-    if (widget.enableAudio) _audio.playSimplePickup();
+    if (widget.enableAudio) _audio?.playSimplePickup();
   }
 
   void _onMacroDragUpdate(DragUpdateDetails d) {
@@ -153,7 +155,7 @@ class FrictionPlayAreaState extends State<FrictionPlayArea>
   }
 
   void _onMacroDragEnd(DragEndDetails d) {
-    if (_macroDragging && widget.enableAudio) _audio.playSimpleDrop();
+    if (_macroDragging && widget.enableAudio) _audio?.playSimpleDrop();
     _macroDragging = false;
   }
 
@@ -162,7 +164,7 @@ class FrictionPlayAreaState extends State<FrictionPlayArea>
     _focusNode.requestFocus();
     _magDragging = true;
     _model.hideHint();
-    if (widget.enableAudio) _audio.playHarpPickup();
+    if (widget.enableAudio) _audio?.playHarpPickup();
   }
 
   void _onMagDragUpdate(DragUpdateDetails d) {
@@ -171,7 +173,7 @@ class FrictionPlayAreaState extends State<FrictionPlayArea>
   }
 
   void _onMagDragEnd(DragEndDetails d) {
-    if (_magDragging && widget.enableAudio) _audio.playHarpDrop();
+    if (_magDragging && widget.enableAudio) _audio?.playHarpDrop();
     _magDragging = false;
   }
 

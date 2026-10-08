@@ -34,7 +34,7 @@ class ShowElectronCloudCheckbox extends StatelessWidget {
             if (v != null) onChanged(v);
           },
         ),
-        const Text('Electron Cloud', style: TextStyle(fontSize: 14)),
+        const Text('电子云', style: TextStyle(fontSize: 14)),
         const SizedBox(width: 5),
         // 图标半径原版 = 文字高度 × 0.82。[已确认]
         // 文字字号与 REGULAR_FONT(20) 未逐像素对齐 → [视觉待确认]

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../buoyancy_strings.dart';
 import '../../domain/material/buoyancy_material.dart';
 import '../../domain/shape/shape_geometry.dart';
 import '../../rendering/runtime/buoyancy_play_area.dart';
@@ -20,8 +21,25 @@ class BuoyancyShapesControlsPanel extends StatelessWidget {
   final void Function(String which, MassShapeKind shape) onShape;
   final void Function(String which, double width, double height) onRatios;
 
-  String _matLabel(BuoyancyMaterial m) =>
-      m.id[0].toUpperCase() + m.id.substring(1);
+  String _matLabel(BuoyancyMaterial m) {
+    const map = <String, String>{
+      'styrofoam': '泡沫塑料',
+      'wood': '木材',
+      'ice': '冰',
+      'pvc': 'PVC',
+      'brick': '砖',
+      'aluminum': '铝',
+      'steel': '钢',
+      'copper': '铜',
+      'lead': '铅',
+      'gold': '金',
+      'glass': '玻璃',
+      'diamond': '金刚石',
+      'titanium': '钛',
+    };
+    return map[m.id] ??
+        (m.id.isEmpty ? m.id : '${m.id[0].toUpperCase()}${m.id.substring(1)}');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +58,7 @@ class BuoyancyShapesControlsPanel extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Material',
+                const Text(BuoyancyStrings.material,
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                 DropdownButton<BuoyancyMaterial>(
@@ -122,7 +140,7 @@ class _ShapeSizePanel extends StatelessWidget {
                           fontSize: 12)),
                 ),
                 const SizedBox(width: 8),
-                Text('Shape',
+                Text(BuoyancyStrings.shape,
                     style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
@@ -136,21 +154,26 @@ class _ShapeSizePanel extends StatelessWidget {
               children: [
                 for (final s in kShapesCatalog)
                   ChoiceChip(
-                    label: Text(s.name, style: const TextStyle(fontSize: 10)),
+                    label: Text(BuoyancyStrings.shapeKindLabel(s.name),
+                        style: const TextStyle(fontSize: 10)),
                     selected: slot.shape == s,
                     visualDensity: VisualDensity.compact,
                     onSelected: (_) => onShape(s),
                   ),
               ],
             ),
-            Text('Width ${(slot.widthRatio * 100).toStringAsFixed(0)}%',
+            Text(
+                BuoyancyStrings.widthPercent(
+                    (slot.widthRatio * 100).toStringAsFixed(0)),
                 style: const TextStyle(fontSize: 11)),
             Slider(
               value: slot.widthRatio,
               activeColor: tagColor,
               onChanged: (w) => onRatios(w, slot.heightRatio),
             ),
-            Text('Height ${(slot.heightRatio * 100).toStringAsFixed(0)}%',
+            Text(
+                BuoyancyStrings.heightPercent(
+                    (slot.heightRatio * 100).toStringAsFixed(0)),
                 style: const TextStyle(fontSize: 11)),
             Slider(
               value: slot.heightRatio,

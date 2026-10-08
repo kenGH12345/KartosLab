@@ -12,6 +12,7 @@ import 'riaw_audio_hooks.dart';
 import 'riaw_bindings.dart';
 import 'static_arrow.dart';
 import 'wire_node.dart';
+import 'package:kratos/resistance_in_a_wire/riaw_strings.dart';
 
 /// PhET `ResistanceInAWireScreenView` play area in **1024×618** coordinates.
 class ResistanceInAWirePlayArea extends StatefulWidget {
@@ -203,7 +204,7 @@ class ResistanceInAWirePlayAreaState extends State<ResistanceInAWirePlayArea> {
                   bottom: ResistanceInAWireViewConstants.resetBottomMargin,
                   child: Semantics(
                     button: true,
-                    label: 'Reset All',
+                    label: RiawStrings.resetAll,
                     child: KratosResetAllButton(
                       key: const Key('riaw_reset_all'),
                       radius: ResistanceInAWireViewConstants.resetRadius,

@@ -10,6 +10,7 @@ import 'package:kratos/gas_properties/model/hold_constant.dart';
 import 'package:kratos/gas_properties/model/ideal_gas_law_model.dart';
 import 'package:kratos/gas_properties/model/random_source.dart';
 import 'package:kratos/gas_properties/transform/gas_coordinate_transform.dart';
+import 'package:kratos/gas_properties/gas_properties_strings.dart';
 import 'package:kratos/gas_properties/widgets/gas_ideal_family_shell.dart';
 import 'package:kratos/gas_properties/widgets/gas_properties_diffusion_tab.dart';
 
@@ -250,7 +251,7 @@ void main() {
         tester,
         GasIdealFamilyShell(controller: c, layoutScale: 1),
       );
-      await tester.tap(find.text('Volume (V)'));
+      await tester.tap(find.text(GasPropertiesStrings.volumeV));
       await tester.pump();
       expect(c.model.holdConstant, HoldConstant.volume);
 
@@ -258,7 +259,7 @@ void main() {
       await tester.pump();
       expect(c.model.particleSystem.numberOfHeavy, greaterThan(0));
 
-      await tester.tap(find.text('Width'));
+      await tester.tap(find.text(GasPropertiesStrings.width));
       await tester.pump();
       expect(c.widthVisible, isTrue);
     });
@@ -355,8 +356,8 @@ void main() {
         ),
       );
       await tester.pump();
-      await tester.ensureVisible(find.text('Remove Divider'));
-      await tester.tap(find.text('Remove Divider'));
+      await tester.ensureVisible(find.text(GasPropertiesStrings.removeDivider));
+      await tester.tap(find.text(GasPropertiesStrings.removeDivider));
       await tester.pump();
       expect(m.container.hasDivider, isFalse);
     });

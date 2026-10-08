@@ -27,7 +27,7 @@ class HalfLifeReadoutContent {
   static const String label = 'Half-life:';
 
   /// [已确认] `unknown` = "Unknown"
-  static const String unknown = 'Unknown';
+  static const String unknown = '未知';
 
   /// [已确认] `s` = "s"（科学计数后的单位，不是轴下方的 "seconds"）
   static const String unit = 's';

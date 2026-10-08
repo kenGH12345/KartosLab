@@ -1,3 +1,4 @@
+import 'package:kratos/hookes_law/hookes_law_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/hookes_law_constants.dart';
@@ -178,7 +179,7 @@ class _ParallelSystemViewState extends State<ParallelSystemView> with SystemsArm
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         systemsSpringControl(
-                          title: 'Top Spring:',
+                          title: '${HookesLawStrings.topSpring}:',
                           spring: system.topSpring,
                           thumbColor: SystemsColors.spring1Middle,
                           sliderKey: const Key('systems-k-top-slider'),
@@ -191,7 +192,7 @@ class _ParallelSystemViewState extends State<ParallelSystemView> with SystemsArm
                         const SystemsSeparator.horizontal(),
                         const SizedBox(height: 5),
                         systemsSpringControl(
-                          title: 'Bottom Spring:',
+                          title: '${HookesLawStrings.bottomSpring}:',
                           spring: system.bottomSpring,
                           thumbColor: SystemsColors.spring2Middle,
                           sliderKey: const Key('systems-k-bottom-slider'),
@@ -398,7 +399,7 @@ class _SeriesSystemViewState extends State<SeriesSystemView> with SystemsArmDrag
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       systemsSpringControl(
-                        title: 'Left Spring:',
+                        title: '${HookesLawStrings.leftSpring}:',
                         spring: system.leftSpring,
                         thumbColor: SystemsColors.spring1Middle,
                         sliderKey: const Key('systems-k-left-slider'),
@@ -411,7 +412,7 @@ class _SeriesSystemViewState extends State<SeriesSystemView> with SystemsArmDrag
                       const SystemsSeparator.vertical(),
                       const SizedBox(width: 20),
                       systemsSpringControl(
-                        title: 'Right Spring:',
+                        title: '${HookesLawStrings.rightSpring}:',
                         spring: system.rightSpring,
                         thumbColor: SystemsColors.spring2Middle,
                         sliderKey: const Key('systems-k-right-slider'),

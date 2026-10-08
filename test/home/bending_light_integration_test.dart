@@ -8,6 +8,7 @@ import 'package:kratos/bending_light/view/intro_play_area.dart';
 import 'package:kratos/bending_light/view/more_tools_play_area.dart';
 import 'package:kratos/bending_light/view/prisms_play_area.dart';
 import 'package:kratos/screens/home_screen.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 void main() {
   Future<void> desktop(WidgetTester tester) async {
@@ -48,8 +49,8 @@ void main() {
 
     expect(find.byType(BendingLightHome), findsOneWidget);
     expect(find.byType(BendingLightHub), findsNothing);
-    expect(find.text('Bending Light — Intro'), findsNothing);
-    expect(find.text('Intro'), findsWidgets);
+    expect(find.text(BlStrings.titleIntro), findsNothing);
+    expect(find.text(BlStrings.intro), findsWidgets);
     expect(find.byType(IntroPlayArea), findsOneWidget);
   });
 
@@ -81,7 +82,8 @@ void main() {
     expect(second.laser.on, isFalse);
     expect(second.wavelength, BendingLightConstants.wavelengthRed);
     expect(find.byType(IntroPlayArea), findsOneWidget);
-    expect(find.byType(PrismsPlayArea), findsOneWidget);
-    expect(find.byType(MoreToolsPlayArea), findsOneWidget);
+    // Default tab only; inactive tabs are not kept in the tree until selected.
+    expect(find.text(BlStrings.prisms), findsOneWidget);
+    expect(find.text(BlStrings.moreTools), findsOneWidget);
   });
 }

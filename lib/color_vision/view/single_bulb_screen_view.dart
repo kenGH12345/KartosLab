@@ -317,7 +317,7 @@ class _SingleBulbScreenViewState extends State<SingleBulbScreenView>
             child: CvSpectrumSlider(
               wavelength: m.flashlightWavelength,
               onChanged: m.setFlashlightWavelength,
-              label: 'Bulb Color',
+              label: '灯泡颜色',
             ),
           ),
 
@@ -405,7 +405,7 @@ class _SingleBulbScreenViewState extends State<SingleBulbScreenView>
           child: CvGaussianSlider(
             wavelength: m.filterWavelength,
             onChanged: m.setFilterWavelength,
-            label: 'Filter Color',
+            label: '滤光片颜色',
           ),
         ),
 

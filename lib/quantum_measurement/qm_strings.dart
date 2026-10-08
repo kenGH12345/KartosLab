@@ -1,0 +1,91 @@
+/// Quantum Measurement UI strings — Chinese defaults (PHASE 5).
+class QmStrings {
+  QmStrings._();
+
+  static const String title = '量子测量';
+  static const String subtitle = '硬币 · 光子 · 自旋 · 布洛赫';
+  static const String coins = '硬币';
+  static const String photons = '光子';
+  static const String spin = '自旋';
+  static const String blochSphere = '布洛赫球';
+  static const String resetAll = '全部重置';
+
+  static const String initialOrientation = '初始取向';
+  static const String stateToPrepare = '待制备态';
+  static const String preparedState = '制备态';
+  static const String basisState = '基态';
+  static const String probabilityP = '概率 P(';
+  static const String newCoin = '新硬币';
+  static const String identicalCoins = '相同硬币';
+  static const String photonSource = '光子源';
+  static const String behavior = '行为';
+  static const String classical = '经典';
+  static const String quantum = '量子';
+  static const String reprepare = '重新制备';
+  static const String start = '开始';
+  static const String observe = '观测';
+  static const String reveal = '揭示';
+  static const String hide = '隐藏';
+  static const String flip = '翻转';
+  static const String flipAndReveal = '翻转并揭示';
+  static const String reprepareAndObserve = '重新制备并观测';
+  static const String numberOfAtoms = '原子数';
+  static const String spinMeasurementAxis = '自旋测量轴';
+  static const String measurementDelay = '测量延迟';
+  static const String magneticField = '磁场';
+  static const String custom = '自定义';
+  static const String polarAngle = '极角 (θ)';
+  static const String azimuthalAngle = '方位角 (φ)';
+  static const String spinStateToPrepare = '待制备自旋态';
+  static const String basis = '基：';
+  static const String atom = '原子';
+  static const String atoms = '原子';
+
+  static const String probability = '概率';
+  static const String verticalV = '竖直 (V)';
+  static const String horizontalH = '水平 (H)';
+  static const String unpolarized = '非偏振';
+  static const String angle45 = '45°';
+  static const String continuous = '连续';
+  static const String normal = '正常';
+  static const String slow = '慢速';
+  static const String play = '播放';
+  static const String pause = '暂停';
+  static const String step = '步进';
+
+  static const String classicalCoin = '经典硬币';
+  static const String quantumCoinQuoted = "量子「硬币」";
+  static const String coinBiasState = '硬币偏置（态）';
+  static const String coinToPrepare = '待制备硬币';
+  static const String quantumCoinToPrepare = "待制备量子「硬币」";
+  static const String coin = '硬币';
+  static const String singleCoinMeasurements = '单硬币测量';
+  static const String multipleCoinMeasurements = '多硬币测量';
+  static const String singlePhoton = '单光子';
+  static const String manyPhotons = '多光子';
+  static const String photonPolarizationAngle = '光子偏振角';
+  static const String propagationIntoPage = '传播方向（入页）';
+  static const String propagation = '传播';
+  static const String averagePolarization = '平均偏振';
+  static const String vectorRepresentation = '矢量表示';
+  static const String expectationValue = '期望值';
+  static const String decimalValues = '小数值';
+  static const String polarizingBeamSplitter = '偏振\n分束器';
+  static const String verticalPolarizationDetector = '竖直偏振探测器';
+  static const String horizontalPolarizationDetector = '水平偏振探测器';
+  static const String vertical = '竖直';
+  static const String horizontal = '水平';
+  static const String spinHalfSource = '自旋 1/2 源';
+  static const String singleParticle = '单粒子';
+  static const String sternGerlachMeasurements = '施特恩–盖拉赫（SG）测量';
+  static const String none = '无';
+  static const String blockUp = '阻挡 ↑';
+  static const String blockDown = '阻挡 ↓';
+
+  static const String experiment1 = '实验 1 [SGz]';
+  static const String experiment2 = '实验 2 [SGx]';
+  static const String experiment3 = '实验 3 [SGz, SGx]';
+  static const String experiment4 = '实验 4 [SGz, SGz]';
+  static const String experiment5 = '实验 5 [SGx, SGz]';
+  static const String experiment6 = '实验 6 [SGx, SGx]';
+}

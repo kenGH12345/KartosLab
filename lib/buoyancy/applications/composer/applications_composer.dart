@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import '../../applications/model/buoyancy_applications_model.dart';
 import '../../applications/model/boat_basin.dart';
+import '../../buoyancy_strings.dart';
 import '../../layout/buoyancy_applications_layout_spec.dart';
 import '../../layout/buoyancy_global_layout_spec.dart';
 import '../../rendering/camera/buoyancy_camera_config.dart';
@@ -76,7 +77,7 @@ class ApplicationsComposer {
       // Mesh already scaled to geometry.height (includes stepMultiplier).
       boatScale: (_) => 1.0,
       tagForMass: (m) {
-        if (m.id == model.block.id) return 'Brick';
+        if (m.id == model.block.id) return BuoyancyStrings.brick;
         if (m.id == model.bottle.id) return 'A';
         return null;
       },

@@ -9,6 +9,7 @@ import 'package:kratos/beers_law_lab/view/beers_law_mvt.dart';
 import 'package:kratos/beers_law_lab/view/beers_law_screen.dart';
 import 'package:kratos/concentration/view/concentration_screen.dart';
 import 'package:kratos/concentration/view/concentration_viewport.dart';
+import 'package:kratos/beers_law_lab/bll_strings.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -196,7 +197,7 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: BeersLawLabHome()));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 50));
-      expect(find.text('Concentration'), findsWidgets);
+      expect(find.text(BllStrings.concentration), findsWidgets);
       expect(find.text("Beer's Law"), findsWidgets);
       expect(find.byKey(const Key('bll_concentration_tab')), findsOneWidget);
       await tester.tap(find.text("Beer's Law").last);

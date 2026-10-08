@@ -7,6 +7,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../qm_photons_colors.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class AngleVisualization extends StatelessWidget {
   const AngleVisualization({
@@ -110,7 +111,7 @@ class _ObliqueAnglePainter extends CustomPainter {
         Offset(hEnd.dx + 4, hEnd.dy - 4),
         QmPhotonsColors.horizontalPolarization,
       );
-      lab('Propagation', Offset(propEnd.dx + 2, propEnd.dy - 12), Colors.black54);
+      lab(QmStrings.propagation, Offset(propEnd.dx + 2, propEnd.dy - 12), Colors.black54);
     }
 
     if (angleDegrees == null) {

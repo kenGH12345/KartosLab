@@ -8,6 +8,7 @@ import 'package:kratos/quantum_coin_toss/common/quantum_measurement_colors.dart'
 import '../../common/qm_typography.dart';
 import '../../common/qm_visual.dart';
 import '../model/bloch_sphere_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 const _controlFont = QmTypography.control;
 
@@ -23,10 +24,10 @@ class MeasurementControls extends StatelessWidget {
 
   String get _buttonLabel {
     if (model.measurementState == BlochMeasurementState.observed) {
-      return 'Reprepare';
+      return QmStrings.reprepare;
     }
-    if (model.magneticFieldEnabled) return 'Start';
-    return 'Observe';
+    if (model.magneticFieldEnabled) return QmStrings.start;
+    return QmStrings.observe;
   }
 
   Color get _buttonColor {
@@ -91,7 +92,7 @@ class MeasurementControls extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Number of Atoms', style: _controlFont),
+              Text(QmStrings.numberOfAtoms, style: _controlFont),
               const SizedBox(height: 6),
               _AtomCountRadio(
                 selected: model.isSingleMeasurementMode,
@@ -113,7 +114,7 @@ class MeasurementControls extends StatelessWidget {
                 },
               ),
               const SizedBox(height: 12),
-              const Text('Spin Measurement Axis', style: _controlFont),
+              Text(QmStrings.spinMeasurementAxis, style: _controlFont),
               const SizedBox(height: 6),
               Row(
                 children: [
@@ -133,7 +134,7 @@ class MeasurementControls extends StatelessWidget {
               if (model.magneticFieldEnabled) ...[
                 const SizedBox(height: 10),
                 Text(
-                  'Measurement Delay',
+                  QmStrings.measurementDelay,
                   style: _controlFont,
                 ),
                 Slider(

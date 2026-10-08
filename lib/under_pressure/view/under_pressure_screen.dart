@@ -17,6 +17,7 @@ import 'package:kratos/under_pressure/view/up_cement_pattern.dart';
 import 'package:kratos/under_pressure/view/up_chamber_pool_layer.dart';
 import 'package:kratos/under_pressure/view/up_square_pool_layer.dart';
 import 'package:kratos/under_pressure/view/up_trapezoid_pool_layer.dart';
+import 'package:kratos/under_pressure/under_pressure_strings.dart';
 
 /// Source: `UnderPressureScreen` + `UnderPressureScreenView`.
 class UnderPressureScreen extends StatefulWidget {
@@ -170,7 +171,7 @@ class _UnderPressureScreenState extends State<UnderPressureScreen>
           bottom: 55 + 120,
           child: UpControlSlider(
             controller: c,
-            title: 'Fluid Density',
+            title: UnderPressureStrings.fluidDensity,
             value: m.fluidDensity,
             min: m.fluidDensityMin,
             max: m.fluidDensityMax,
@@ -184,7 +185,7 @@ class _UnderPressureScreenState extends State<UnderPressureScreen>
             ticks: [
               (title: 'gasoline', value: m.fluidDensityMin),
               (
-                title: 'water',
+                title: '水',
                 value: UnderPressureConstants.waterDensity,
               ),
               (title: 'honey', value: m.fluidDensityMax),
@@ -196,7 +197,7 @@ class _UnderPressureScreenState extends State<UnderPressureScreen>
           bottom: 55,
           child: UpControlSlider(
             controller: c,
-            title: 'Gravity',
+            title: UnderPressureStrings.gravity,
             value: m.gravity,
             min: m.gravityMin,
             max: m.gravityMax,
@@ -209,8 +210,8 @@ class _UnderPressureScreenState extends State<UnderPressureScreen>
                 m.mysteryChoice == 'gravity',
             ticks: [
               (title: 'Mars', value: m.gravityMin),
-              (title: 'Earth', value: UnderPressureConstants.earthGravity),
-              (title: 'Jupiter', value: m.gravityMax),
+              (title: UnderPressureStrings.earth, value: UnderPressureConstants.earthGravity),
+              (title: '木星', value: m.gravityMax),
             ],
           ),
         ),

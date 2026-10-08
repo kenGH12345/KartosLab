@@ -18,6 +18,7 @@ import 'package:kratos/chemistry/ph_scale/view/widgets/ph_scale_faucet_node.dart
 import 'package:kratos/chemistry/ph_scale/view/widgets/ph_scale_viewport.dart';
 import 'package:kratos/common/simulation_clock.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+import 'package:kratos/chemistry/ph_scale/phs_strings.dart';
 
 /// Top-level pH Scale sim with Macro / Micro / My Solution screens.
 class PhScaleScreen extends StatefulWidget {
@@ -56,7 +57,7 @@ class _PhScaleScreenState extends State<PhScaleScreen>
       appBar: AppBar(
         backgroundColor: const Color(0xFF0575B1),
         foregroundColor: Colors.white,
-        title: const Text('pH Scale'),
+        title: const Text(PhsStrings.title),
         bottom: TabBar(
           controller: _tabs,
           indicatorColor: Colors.white,
@@ -65,15 +66,15 @@ class _PhScaleScreenState extends State<PhScaleScreen>
           tabs: [
             Tab(
               icon: Image.asset(PhScaleAssets.macroNavbar, height: 28),
-              text: 'Macro',
+              text: PhsStrings.macro,
             ),
             Tab(
               icon: Image.asset(PhScaleAssets.microNavbar, height: 28),
-              text: 'Micro',
+              text: PhsStrings.micro,
             ),
             Tab(
               icon: Image.asset(PhScaleAssets.mySolutionNavbar, height: 28),
-              text: 'My Solution',
+              text: PhsStrings.mySolution,
             ),
           ],
         ),
@@ -275,7 +276,7 @@ class _MicroScreenViewState extends State<MicroScreenView>
                 maxFlowRate: _model.waterFaucet.maxFlowRate,
                 enabled: _model.waterFaucet.enabled && !_model.isAutofilling,
                 verticalPipeLength: 20,
-                label: 'Water',
+                label: PhsStrings.water,
                 onFlowChanged: (v) {
                   _model.waterFaucet.flowRate = v;
                   setState(() {});

@@ -9,6 +9,7 @@ import 'package:kratos/quantum_coin_toss/common/quantum_measurement_colors.dart'
 
 import '../../common/system_type.dart';
 import '../../qm_assets.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class InitialOrientationSelector extends StatelessWidget {
   const InitialOrientationSelector({
@@ -28,7 +29,7 @@ class InitialOrientationSelector extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          'Initial Orientation',
+          QmStrings.initialOrientation,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 6),
@@ -124,13 +125,13 @@ class CoinBiasControls extends StatelessWidget {
       children: [
         if (isClassical)
           const Text(
-            'Coin Bias (State)',
+            QmStrings.coinBiasState,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           )
         else ...[
           const Text(
-            'State to Prepare',
+            QmStrings.stateToPrepare,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
@@ -196,7 +197,7 @@ class BasisStateSelector extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          'Basis State',
+          QmStrings.basisState,
           style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 6),
@@ -285,7 +286,7 @@ class _ProbabilityTitle extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text('Probability P(', style: style),
+        Text(QmStrings.probabilityP, style: style),
         if (systemType == SystemType.classical)
           _CoinFaceGlyph(face: face, size: 14)
         else

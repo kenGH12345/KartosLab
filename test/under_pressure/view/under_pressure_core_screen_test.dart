@@ -6,6 +6,7 @@ import 'package:kratos/under_pressure/model/under_pressure_constants.dart';
 import 'package:kratos/under_pressure/model/under_pressure_model.dart';
 import 'package:kratos/under_pressure/model/under_pressure_units.dart';
 import 'package:kratos/under_pressure/transform/up_mvt.dart';
+import 'package:kratos/under_pressure/under_pressure_strings.dart';
 import 'package:kratos/under_pressure/view/under_pressure_screen.dart';
 
 void main() {
@@ -188,9 +189,9 @@ void main() {
       );
       await tester.pump();
       expect(find.byType(UnderPressureScreen), findsOneWidget);
-      expect(find.text('Fluid Density'), findsOneWidget);
-      expect(find.text('Gravity'), findsOneWidget);
-      expect(find.text('Atmosphere'), findsOneWidget);
+      expect(find.text(UnderPressureStrings.fluidDensity), findsOneWidget);
+      expect(find.text(UnderPressureStrings.gravity), findsOneWidget);
+      expect(find.text(UnderPressureStrings.atmosphere), findsOneWidget);
     });
 
     testWidgets('lifecycle enter leave re-enter ×3', (tester) async {
@@ -233,7 +234,7 @@ void main() {
       c.setAtmosphere(false);
       await tester.pump();
       expect(c.model.isAtmosphere, isFalse);
-      expect(find.text('Off'), findsWidgets);
+      expect(find.text(UnderPressureStrings.off), findsWidgets);
     });
   });
 

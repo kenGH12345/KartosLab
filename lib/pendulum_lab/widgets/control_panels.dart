@@ -450,7 +450,7 @@ class EnergyGraphAccordion extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Close'),
+            child: const Text('关闭'),
           ),
         ],
       ),

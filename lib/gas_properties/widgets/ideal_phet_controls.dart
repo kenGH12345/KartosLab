@@ -8,6 +8,7 @@ import '../model/hold_constant.dart';
 import '../model/ideal_gas_law_model.dart';
 import '../model/particle_type.dart';
 import '../painters/ideal_instruments_painters.dart';
+import 'package:kratos/gas_properties/gas_properties_strings.dart';
 
 /// PhET AccordionBox-style dark panel.
 class IdealPanelChrome extends StatelessWidget {
@@ -248,19 +249,19 @@ class IdealParticlesPanel extends StatelessWidget {
     final l = controller.model.particleSystem.numberOfLight;
     final energy = controller.profile == IdealGasProfile.energy;
     return IdealPanelChrome(
-      title: 'Particles',
+      title: GasPropertiesStrings.particles,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           IdealParticleSpinner(
-            label: 'Heavy',
+            label: GasPropertiesStrings.heavy,
             value: h,
             color: const Color(GasPropertiesColors.heavyParticle),
             onChanged: controller.setNumberHeavy,
           ),
           const SizedBox(height: 12),
           IdealParticleSpinner(
-            label: 'Light',
+            label: GasPropertiesStrings.light,
             value: l,
             color: const Color(GasPropertiesColors.lightParticle),
             onChanged: controller.setNumberLight,
@@ -268,7 +269,7 @@ class IdealParticlesPanel extends StatelessWidget {
           if (energy) ...[
             const SizedBox(height: 10),
             IdealCheckRow(
-              label: 'Collisions',
+              label: GasPropertiesStrings.collisions,
               value: controller.model.particleCollisionsEnabled,
               onChanged: controller.setParticleCollisionsEnabled,
             ),
@@ -290,7 +291,7 @@ class IdealHoldConstantPanel extends StatelessWidget {
     final open = controller.model.container.isOpen;
     final p = controller.model.pressureKpa;
     return IdealPanelChrome(
-      title: 'Hold Constant',
+      title: GasPropertiesStrings.holdConstant,
       child: Column(
         children: [
           for (final e in HoldConstant.values)
@@ -356,11 +357,11 @@ class IdealHoldConstantPanel extends StatelessWidget {
   }
 
   String _label(HoldConstant e) => switch (e) {
-        HoldConstant.nothing => 'Nothing',
-        HoldConstant.volume => 'Volume (V)',
-        HoldConstant.temperature => 'Temperature (T)',
-        HoldConstant.pressureV => 'Pressure ↕V',
-        HoldConstant.pressureT => 'Pressure ↕T',
+        HoldConstant.nothing => GasPropertiesStrings.nothing,
+        HoldConstant.volume => GasPropertiesStrings.volumeV,
+        HoldConstant.temperature => GasPropertiesStrings.temperatureT,
+        HoldConstant.pressureV => GasPropertiesStrings.pressureV,
+        HoldConstant.pressureT => GasPropertiesStrings.pressureT,
       };
 
   bool _enabled(HoldConstant e, int n, bool open, double p) {
@@ -390,7 +391,7 @@ class IdealToolsPanel extends StatelessWidget {
       child: Column(
         children: [
           IdealCheckRow(
-            label: 'Width',
+            label: GasPropertiesStrings.width,
             value: controller.widthVisible,
             onChanged: controller.setWidthVisible,
             trailing: CustomPaint(
@@ -400,12 +401,12 @@ class IdealToolsPanel extends StatelessWidget {
           ),
           if (explore)
             IdealCheckRow(
-              label: 'Wall Velocity',
+              label: GasPropertiesStrings.wallVelocity,
               value: controller.wallVelocityVisible,
               onChanged: controller.setWallVelocityVisible,
             ),
           IdealCheckRow(
-            label: 'Stopwatch',
+            label: GasPropertiesStrings.stopwatch,
             value: controller.stopwatchVisible,
             onChanged: controller.setStopwatchVisible,
             trailing: Container(
@@ -426,7 +427,7 @@ class IdealToolsPanel extends StatelessWidget {
           ),
           if (showCollision)
             IdealCheckRow(
-              label: 'Collision Counter',
+              label: GasPropertiesStrings.collisionCounter,
               value: controller.collisionCounterVisible,
               onChanged: controller.setCollisionCounterVisible,
               trailing: Container(
@@ -439,7 +440,7 @@ class IdealToolsPanel extends StatelessWidget {
               ),
             ),
           IdealCheckRow(
-            label: 'Pressure Noise',
+            label: GasPropertiesStrings.pressureNoise,
             value: controller.model.pressureSolver.pressureNoiseEnabled,
             onChanged: controller.setPressureNoiseEnabled,
           ),

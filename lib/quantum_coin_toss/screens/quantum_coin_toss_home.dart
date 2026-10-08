@@ -7,7 +7,7 @@ class QuantumCoinTossHome extends StatelessWidget {
   const QuantumCoinTossHome({super.key});
 
   static const String title = '量子抛硬币';
-  static const String subtitle = 'Classical · Quantum Coin';
+  static const String subtitle = '经典 · 量子硬币';
   static const Color accentColor = Color(0xFF7C3AED);
 
   @override

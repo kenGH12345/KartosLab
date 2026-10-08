@@ -209,7 +209,7 @@ class _RgbScreenViewState extends State<RgbScreenView>
                 asset: CvAssets.flashlight0Deg,
                 width: greenW,
                 height: greenH,
-                label: 'Green',
+                label: '绿',
                 labelRotation: 0,
                 labelDx: 45,
                 labelDy: 10,

@@ -9,6 +9,7 @@ import '../widgets/game/game_challenge_view.dart';
 import '../widgets/game/game_level_completed_view.dart';
 import '../widgets/game/game_level_selection_view.dart';
 import '../widgets/game/game_status_bar.dart';
+import 'package:kratos/chemistry/build_an_atom/baa_strings.dart';
 
 /// Build an Atom — Game Screen (PhET `GameScreen` / `GameScreenView`).
 class BuildAnAtomGameScreen extends StatefulWidget {
@@ -122,14 +123,14 @@ class BuildAnAtomGameScreenState extends State<BuildAnAtomGameScreen>
     return Scaffold(
       backgroundColor: BuildAnAtomGameScreen.backgroundColor,
       appBar: AppBar(
-        title: const Text('Game'),
+        title: const Text(BaaStrings.game),
         backgroundColor: const Color(0xFF1177AA),
         foregroundColor: Colors.white,
         actions: [
           if (Navigator.of(context).canPop())
             TextButton(
               onPressed: () => Navigator.of(context).maybePop(),
-              child: const Text('Back', style: TextStyle(color: Colors.white)),
+              child: const Text('返回', style: TextStyle(color: Colors.white)),
             ),
         ],
       ),

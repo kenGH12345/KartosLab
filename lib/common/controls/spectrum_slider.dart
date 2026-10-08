@@ -1,4 +1,5 @@
 ﻿import 'package:flutter/material.dart';
+import 'package:kratos/l10n/kartos_localization.dart';
 
 /// Converts a wavelength (380-780 nm) to an RGB Color using
 /// the standard visible spectrum algorithm.
@@ -128,7 +129,7 @@ class SpectrumSlider extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(children: [
-          const Text('Wavelength', style: TextStyle(fontSize: 12, color: Color(0xFF334155))),
+          Text(loc.physics.wavelength, style: const TextStyle(fontSize: 12, color: Color(0xFF334155))),
           const Spacer(),
           Text(
             '${wavelength.round()} nm',
@@ -138,7 +139,7 @@ class SpectrumSlider extends StatelessWidget {
         const SizedBox(height: 4),
         Row(children: [
           // Left label
-          Text('UV', style: TextStyle(fontSize: 9, color: wavelengthToColor(380).withAlpha(180))),
+          Text('紫外', style: TextStyle(fontSize: 9, color: wavelengthToColor(380).withAlpha(180))),
           // Track
           Expanded(
             child: SizedBox(
@@ -180,7 +181,7 @@ class SpectrumSlider extends StatelessWidget {
             ),
           ),
           // Right label
-          Text('IR', style: TextStyle(fontSize: 9, color: wavelengthToColor(780).withAlpha(180))),
+          Text('红外', style: TextStyle(fontSize: 9, color: wavelengthToColor(780).withAlpha(180))),
         ]),
         // Color preview
         Center(

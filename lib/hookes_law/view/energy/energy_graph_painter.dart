@@ -72,7 +72,7 @@ class EnergyGraphPainter extends CustomPainter {
       axis,
       axis + const Offset(0, -HookesLawConstants.energyYAxisLength),
     );
-    _rotatedLabel(canvas, 'Potential Energy', axis + const Offset(-14, -HookesLawConstants.energyYAxisLength / 2));
+    _rotatedLabel(canvas, '势能', axis + const Offset(-14, -HookesLawConstants.energyYAxisLength / 2));
     if (properties.valuesVisible) {
       final text = '${sample.energy.toStringAsFixed(HookesLawConstants.energyDecimalPlaces)} J';
       final label = _measure(text, energyColor, 16);
@@ -102,7 +102,7 @@ class EnergyGraphPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = HookesLawConstants.energyPlotLineWidth,
     );
-    _axes(canvas, bezier.viewMinX, bezier.viewMaxX, 0, -bezier.viewMaxY, 'Displacement', 'Potential Energy');
+    _axes(canvas, bezier.viewMinX, bezier.viewMaxX, 0, -bezier.viewMaxY, '位移', '势能');
     _pointAndGuides(
       canvas,
       xMeters: spring.displacement,
@@ -139,7 +139,7 @@ class EnergyGraphPainter extends CustomPainter {
         ..color = IntroColors.appliedForce
         ..strokeWidth = HookesLawConstants.energyPlotLineWidth,
     );
-    _axes(canvas, line.viewMinX, line.viewMaxX, line.viewMaxY, line.viewMinY, 'Displacement', 'Applied Force');
+    _axes(canvas, line.viewMinX, line.viewMaxX, line.viewMaxY, line.viewMinY, '位移', '外力');
     _pointAndGuides(
       canvas,
       xMeters: spring.displacement,

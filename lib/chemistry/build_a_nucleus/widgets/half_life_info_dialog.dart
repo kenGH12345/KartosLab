@@ -11,6 +11,7 @@ import '../model/ban_timescale_points.dart';
 import '../model/half_life_number_line.dart';
 import '../painters/half_life_number_line_painter.dart';
 import 'half_life_number_line_view.dart';
+import 'package:kratos/chemistry/build_a_nucleus/ban_strings.dart';
 
 class HalfLifeInfoDialogData {
   const HalfLifeInfoDialogData({
@@ -28,7 +29,7 @@ class HalfLifeInfoDialog extends StatelessWidget {
   final HalfLifeInfoDialogData data;
 
   /// [已确认] halfLifeTimescale = "Half-Life Timescale"
-  static const String title = 'Half-Life Timescale';
+  static const String title = BanStrings.halfLifeTimescale;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class HalfLifeInfoDialog extends StatelessWidget {
                       color: Colors.black,
                       size: BanConstants.closeIconSize,
                     ),
-                    tooltip: 'Close',
+                    tooltip: '关闭',
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],

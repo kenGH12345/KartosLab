@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import '../../common/widgets/kratos_tab_bar.dart';
 import '../model/scene_kind.dart';
 import 'waves_intro_medium_screen.dart';
+import 'package:kratos/waves_intro/waves_intro_strings.dart';
 
 /// Waves Intro home: Water / Sound / Light tabs. Default: Water.
 class WavesIntroHome extends StatefulWidget {
   const WavesIntroHome({super.key});
 
-  static const String title = 'Waves Intro';
+  static const String title = WavesIntroStrings.title;
   static const Color accentColor = Color(0xFF1177AA);
 
   @override
@@ -50,15 +51,15 @@ class _WavesIntroHomeState extends State<WavesIntroHome>
           tabs: const [
             Tab(
               icon: _ScreenIcon('assets/phet/waves_intro/waterScreenIcon.png'),
-              text: 'Water',
+              text: WavesIntroStrings.water,
             ),
             Tab(
               icon: _ScreenIcon('assets/phet/waves_intro/soundScreenIcon.png'),
-              text: 'Sound',
+              text: WavesIntroStrings.sound,
             ),
             Tab(
               icon: _ScreenIcon('assets/phet/waves_intro/lightScreenIcon.png'),
-              text: 'Light',
+              text: WavesIntroStrings.light,
             ),
           ],
         ),

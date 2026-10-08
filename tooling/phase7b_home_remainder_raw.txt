@@ -1,0 +1,64 @@
+forces-and-motion-basics|forces|Home title ZH via loc.sim; module LOCALIZED (alias→forces)|ALREADY LOCALIZED
+collision-lab|collision-lab|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+vector-addition|vector-addition|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+energy-skate-park|energy-skate-park|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+curve-fitting|curve-fitting|Home title ZH; in-sim bag EN:Curve Fitting|MIGRATE
+gravity-force-lab-basics|gravity-force-lab-basics|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+gravity-force-lab|gravity-force-lab|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+masses-and-springs-basics|masses-and-springs-basics|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+hookes-law|hookes-law|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+pendulum-lab|pendulum-lab|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+projectile-motion|projectile-motion|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+balancing-act|balancing-act|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+friction|friction|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+plinko-probability|plinko-probability|Home title ZH; in-sim bag EN:Plinko Probability|MIGRATE
+density|density|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+buoyancy|buoyancy|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+under-pressure|under-pressure|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+circuit|circuit|status unknown (CHECK_INLINE)|MIGRATE
+cck-ac-virtual-lab|cck-ac-virtual-lab|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+capacitor-lab-basics|capacitor-lab-basics|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+ohms-law|ohms-law|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+resistance-in-a-wire|resistance-in-a-wire|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+charges-and-fields|charges-and-fields|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+john-travoltage|john-travoltage|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+balloons-and-static-electricity|balloons-and-static-electricity|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+magnet-and-compass|magnet-and-compass|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+faradays-law|faradays-law|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+keplers-laws|keplers-laws|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+my-solar-system|my-solar-system|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+gravity-and-orbits|gravity-and-orbits|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+optics|optics|status unknown (CHECK_INLINE)|MIGRATE
+color-vision|color-vision|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+wave-interference|wave-interference|status unknown (CHECK_INLINE)|MIGRATE
+quantum-wave-interference|quantum-wave-interference|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+quantum-coin-toss|quantum-coin-toss|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+quantum-measurement|quantum-measurement|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+waves-intro|waves-intro|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+sound|sound|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+normal-modes|normal-modes|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+fourier-making-waves|fourier-making-waves|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+radio-waves|radio-waves|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+bending-light|bending-light|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+wave-on-a-string|wave-on-a-string|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+diffusion|diffusion|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+membrane-transport|membrane-transport|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+gases-intro|gases-intro|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+gas-properties|gas-properties|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+blackbody-spectrum|blackbody-spectrum|Home title ZH; in-sim bag EN:Blackbody Spectrum|MIGRATE
+energy-forms-and-changes|energy-forms-and-changes|Home title ZH; in-sim bag EN:Energy Forms and Changes|MIGRATE
+molarity|molarity|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+beers-law-lab|beers-law-lab|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+ph-scale|ph-scale|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+acid-base-solutions|acid-base-solutions|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+build-a-nucleus|build-a-nucleus|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+rutherford-scattering|rutherford-scattering|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+build-an-atom|build-an-atom|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+isotopes-and-atomic-mass|isotopes-and-atomic-mass|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+build-a-molecule|build-a-molecule|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+molecule-polarity|molecule-polarity|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+molecule-shapes|molecule-shapes|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+molecules-and-light|molecules-and-light|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+reactants-products-and-leftovers|reactants-products-and-leftovers|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+balancing-chemical-equations|balancing-chemical-equations|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED
+states-of-matter|states-of-matter|Home title ZH via loc.sim; module LOCALIZED|ALREADY LOCALIZED

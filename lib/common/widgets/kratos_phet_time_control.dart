@@ -1,6 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:kratos/l10n/kartos_localization.dart';
 
 /// scenery-phet `TimeControlNode` — PlayPauseButton + StepForwardButton.
 ///
@@ -29,28 +30,39 @@ class KratosPhetTimeControl extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chrome = loc.shared;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _RoundControlButton(
-          key: const Key('phet_play_pause'),
-          radius: playPauseRadius,
-          onTap: onPlayPause,
-          child: CustomPaint(
-            size: Size(playPauseRadius * 2, playPauseRadius * 2),
-            painter:
-                isPlaying ? const _PauseIconPainter() : const _PlayIconPainter(),
+        Semantics(
+          button: true,
+          label: isPlaying ? chrome.pauseSemantics : chrome.playSemantics,
+          child: _RoundControlButton(
+            key: const Key('phet_play_pause'),
+            radius: playPauseRadius,
+            onTap: onPlayPause,
+            child: CustomPaint(
+              size: Size(playPauseRadius * 2, playPauseRadius * 2),
+              painter: isPlaying
+                  ? const _PauseIconPainter()
+                  : const _PlayIconPainter(),
+            ),
           ),
         ),
         SizedBox(width: spacing),
-        _RoundControlButton(
-          key: const Key('phet_step'),
-          radius: stepRadius,
-          onTap: isPlaying ? null : onStep,
+        Semantics(
+          button: true,
           enabled: !isPlaying,
-          child: CustomPaint(
-            size: Size(stepRadius * 2, stepRadius * 2),
-            painter: _StepIconPainter(enabled: !isPlaying),
+          label: chrome.stepForwardSemantics,
+          child: _RoundControlButton(
+            key: const Key('phet_step'),
+            radius: stepRadius,
+            onTap: isPlaying ? null : onStep,
+            enabled: !isPlaying,
+            child: CustomPaint(
+              size: Size(stepRadius * 2, stepRadius * 2),
+              painter: _StepIconPainter(enabled: !isPlaying),
+            ),
           ),
         ),
       ],

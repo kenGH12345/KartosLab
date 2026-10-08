@@ -6,6 +6,7 @@ import '../../model/faradays_law_model.dart';
 import 'coil_radio_group.dart';
 import 'fl_phet_checkbox.dart';
 import 'flip_magnet_button.dart';
+import 'package:kratos/faradays_law/faradays_law_strings.dart';
 
 /// Bottom control strip — `ControlPanelNode.js`.
 ///
@@ -40,7 +41,7 @@ class FaradaysLawControlPanel extends StatelessWidget {
           top: voltmeterCenterY - 14,
           child: FlLabeledCheckbox(
             key: const Key('faradays_law_voltmeter_checkbox'),
-            label: 'Voltmeter',
+            label: FaradaysLawStrings.voltmeter,
             value: model.voltmeterVisible,
             onChanged: model.setVoltmeterVisible,
           ),
@@ -52,7 +53,7 @@ class FaradaysLawControlPanel extends StatelessWidget {
           top: fieldLinesCenterY - 14,
           child: FlLabeledCheckbox(
             key: const Key('faradays_law_field_lines_checkbox'),
-            label: 'Field Lines',
+            label: FaradaysLawStrings.fieldLines,
             value: model.magnet.fieldLinesVisible,
             onChanged: model.setFieldLinesVisible,
           ),

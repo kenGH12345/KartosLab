@@ -1,38 +1,38 @@
-/// English UI strings aligned with PhET `molecule-polarity-strings_en.json`.
+/// Molecule Polarity UI strings — Chinese defaults (PHASE 6).
 abstract final class MpStrings {
-  static const String title = 'Molecule Polarity';
-  static const String twoAtoms = 'Two Atoms';
-  static const String threeAtoms = 'Three Atoms';
-  static const String realMolecules = 'Real Molecules';
+  static const String title = '分子极性';
+  static const String twoAtoms = '双原子';
+  static const String threeAtoms = '三原子';
+  static const String realMolecules = '真实分子';
 
   static const String atomA = 'A';
   static const String atomB = 'B';
   static const String atomC = 'C';
 
-  static const String electronegativity = 'Electronegativity';
-  static const String view = 'View';
-  static const String surface = 'Surface';
-  static const String electricField = 'Electric Field';
-  static const String molecule = 'Molecule';
-  static const String model = 'Model';
+  static const String electronegativity = '电负性';
+  static const String view = '视图';
+  static const String surface = '表面';
+  static const String electricField = '电场';
+  static const String molecule = '分子';
+  static const String model = '模型';
 
-  static const String bondDipole = 'Bond Dipole';
-  static const String bondDipoles = 'Bond Dipoles';
-  static const String molecularDipole = 'Molecular Dipole';
-  static const String partialCharges = 'Partial Charges';
-  static const String bondCharacter = 'Bond Character';
-  static const String atomElectronegativities = 'Atom Electronegativities';
-  static const String atomLabels = 'Atom Labels';
+  static const String bondDipole = '键偶极';
+  static const String bondDipoles = '键偶极';
+  static const String molecularDipole = '分子偶极';
+  static const String partialCharges = '部分电荷';
+  static const String bondCharacter = '键特性';
+  static const String atomElectronegativities = '原子电负性';
+  static const String atomLabels = '原子标签';
 
-  static const String none = 'None';
-  static const String electrostaticPotential = 'Electrostatic Potential';
-  static const String electronDensity = 'Electron Density';
+  static const String none = '无';
+  static const String electrostaticPotential = '静电势';
+  static const String electronDensity = '电子密度';
 
-  static const String basic = 'Basic';
-  static const String advanced = 'Advanced';
+  static const String basic = '基础';
+  static const String advanced = '高级';
 
-  static const String covalent = 'Covalent';
-  static const String ionic = 'Ionic';
+  static const String covalent = '共价';
+  static const String ionic = '离子';
 
-  static const String resetAll = 'Reset All';
+  static const String resetAll = '全部重置';
 }

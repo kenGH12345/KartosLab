@@ -6,6 +6,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../model/bloch_sphere_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 const _controlFont = TextStyle(fontSize: 14, color: Colors.black);
 const _sliderStep = math.pi / 12;
@@ -27,7 +28,7 @@ class StatePresetControls extends StatelessWidget {
     (BlochStateDirection.yMinus, '−Y'),
     (BlochStateDirection.zPlus, '+Z'),
     (BlochStateDirection.zMinus, '−Z'),
-    (BlochStateDirection.custom, 'Custom'),
+    (BlochStateDirection.custom, QmStrings.custom),
   ];
 
   @override
@@ -63,7 +64,7 @@ class StatePresetControls extends StatelessWidget {
             },
           ),
           const SizedBox(height: 12),
-          Text('Polar angle (θ)', style: _controlFont),
+          Text(QmStrings.polarAngle, style: _controlFont),
           Slider(
             value: model.preparation.polarAngle.clamp(0, math.pi),
             min: 0,
@@ -76,7 +77,7 @@ class StatePresetControls extends StatelessWidget {
               onChanged();
             },
           ),
-          Text('Azimuthal angle (φ)', style: _controlFont),
+          Text(QmStrings.azimuthalAngle, style: _controlFont),
           Slider(
             value: model.preparation.azimuthalAngle.clamp(0, 2 * math.pi),
             min: 0,

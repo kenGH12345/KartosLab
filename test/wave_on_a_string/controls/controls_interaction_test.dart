@@ -6,6 +6,7 @@ import 'package:kratos/wave_on_a_string/model/woas_model.dart';
 import 'package:kratos/wave_on_a_string/model/woas_time_speed.dart';
 import 'package:kratos/wave_on_a_string/view/woas_play_area.dart';
 import 'package:kratos/wave_on_a_string/woas_constants.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 Widget _harness(WoasModel model) {
   return MaterialApp(
@@ -27,33 +28,33 @@ void main() {
       final model = WoasModel();
       await tester.pumpWidget(_harness(model));
 
-      expect(find.text('Damping'), findsOneWidget);
-      expect(find.text('Frequency'), findsNothing);
+      expect(find.text(WoasStrings.damping), findsOneWidget);
+      expect(find.text(WoasStrings.frequency), findsNothing);
 
-      await tester.tap(find.text('Oscillate'));
+      await tester.tap(find.text(WoasStrings.oscillate));
       await tester.pump();
       expect(model.waveMode, WoasMode.oscillate);
-      expect(find.text('Frequency'), findsOneWidget);
-      expect(find.text('Amplitude'), findsOneWidget);
-      expect(find.text('Pulse Width'), findsNothing);
+      expect(find.text(WoasStrings.frequency), findsOneWidget);
+      expect(find.text(WoasStrings.amplitude), findsOneWidget);
+      expect(find.text(WoasStrings.pulseWidth), findsNothing);
 
-      await tester.tap(find.text('Pulse'));
+      await tester.tap(find.text(WoasStrings.pulse));
       await tester.pump();
       expect(model.waveMode, WoasMode.pulse);
-      expect(find.text('Pulse Width'), findsOneWidget);
-      expect(find.text('Frequency'), findsNothing);
+      expect(find.text(WoasStrings.pulseWidth), findsOneWidget);
+      expect(find.text(WoasStrings.frequency), findsNothing);
 
-      await tester.tap(find.text('Manual'));
+      await tester.tap(find.text(WoasStrings.manual));
       await tester.pump();
       expect(model.waveMode, WoasMode.manual);
-      expect(find.text('Amplitude'), findsNothing);
+      expect(find.text(WoasStrings.amplitude), findsNothing);
     });
 
     testWidgets('mode switch restarts wave not ResetAll', (tester) async {
       final model = WoasModel()..setAmplitudeCm(1.1)..setDamping(0.6);
       await tester.pumpWidget(_harness(model));
       model.debugSeedBead(index: 8, yNow: 5, yLast: 5);
-      await tester.tap(find.text('Oscillate'));
+      await tester.tap(find.text(WoasStrings.oscillate));
       await tester.pump();
       expect(model.yNowAt(8), 0);
       expect(model.amplitudeCm, 1.1);
@@ -66,17 +67,17 @@ void main() {
       final model = WoasModel();
       await tester.pumpWidget(_harness(model));
 
-      await tester.tap(find.text('Loose End'));
+      await tester.tap(find.text(WoasStrings.looseEnd));
       await tester.pump();
       expect(model.stringEndType, WoasEndType.looseEnd);
 
       model.debugSeedBead(index: 10, yNow: 3, yLast: 3);
-      await tester.tap(find.text('No End'));
+      await tester.tap(find.text(WoasStrings.noEnd));
       await tester.pump();
       expect(model.stringEndType, WoasEndType.noEnd);
       expect(model.yNowAt(10), 3); // no full restart
 
-      await tester.tap(find.text('Fixed End'));
+      await tester.tap(find.text(WoasStrings.fixedEnd));
       await tester.pump();
       expect(model.stringEndType, WoasEndType.fixedEnd);
       expect(model.yNowAt(10), 3);

@@ -14,6 +14,7 @@ import '../../shared/widgets/buoyancy_forces_panel.dart';
 import '../../shared/widgets/buoyancy_pool_scale_height_control.dart';
 import '../composer/compare_composer.dart';
 import '../model/buoyancy_compare_model.dart';
+import '../../buoyancy_strings.dart';
 
 /// Compare screen — layout anchors from `BuoyancyCompareScreenView.ts`.
 class BuoyancyCompareScreen extends StatefulWidget {
@@ -134,7 +135,7 @@ class _BuoyancyCompareScreenState extends State<BuoyancyCompareScreen> {
                 ),
                 const SizedBox(height: 5),
                 BuoyancyAccordionStub(
-                  title: 'Density Comparison',
+                  title: BuoyancyStrings.densityComparison,
                   expanded: _densityExpanded,
                   onToggle: () =>
                       setState(() => _densityExpanded = !_densityExpanded),
@@ -142,7 +143,7 @@ class _BuoyancyCompareScreenState extends State<BuoyancyCompareScreen> {
                 ),
                 const SizedBox(height: 5),
                 BuoyancyAccordionStub(
-                  title: '% Submerged',
+                  title: BuoyancyStrings.percentSubmerged,
                   expanded: _submergedExpanded,
                   onToggle: () =>
                       setState(() => _submergedExpanded = !_submergedExpanded),
@@ -260,11 +261,17 @@ class _BuoyancyCompareScreenState extends State<BuoyancyCompareScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Block A: ${a.density.toStringAsFixed(0)} kg/m³',
+        Text(
+            BuoyancyStrings.blockDensity(
+                'A', a.density.toStringAsFixed(0)),
             style: const TextStyle(fontSize: 11, color: Color(0xFF2F59A6))),
-        Text('Block B: ${b.density.toStringAsFixed(0)} kg/m³',
+        Text(
+            BuoyancyStrings.blockDensity(
+                'B', b.density.toStringAsFixed(0)),
             style: const TextStyle(fontSize: 11, color: Color(0xFFED3732))),
-        Text('Fluid: ${fluid.density.toStringAsFixed(0)} kg/m³',
+        Text(
+            BuoyancyStrings.fluidDensityValue(
+                fluid.density.toStringAsFixed(0)),
             style: const TextStyle(fontSize: 11)),
       ],
     );
@@ -276,9 +283,13 @@ class _BuoyancyCompareScreenState extends State<BuoyancyCompareScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Block A: ${a.percentSubmerged.toStringAsFixed(1)} %',
+        Text(
+            BuoyancyStrings.submergedPercent(
+                'A', a.percentSubmerged.toStringAsFixed(1)),
             style: const TextStyle(fontSize: 11, color: Color(0xFF2F59A6))),
-        Text('Block B: ${b.percentSubmerged.toStringAsFixed(1)} %',
+        Text(
+            BuoyancyStrings.submergedPercent(
+                'B', b.percentSubmerged.toStringAsFixed(1)),
             style: const TextStyle(fontSize: 11, color: Color(0xFFED3732))),
       ],
     );

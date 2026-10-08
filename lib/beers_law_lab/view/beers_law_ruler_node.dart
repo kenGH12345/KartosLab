@@ -39,7 +39,7 @@ class BeersLawRulerNode extends StatelessWidget {
           return KeyEventResult.ignored;
         },
         child: Semantics(
-          label: 'Ruler',
+          label: '直尺',
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onPanUpdate: (d) {

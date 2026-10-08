@@ -14,6 +14,7 @@ import '../composer/spin_composer.dart';
 import '../configuration/spin_experiment_view_configuration.dart';
 import '../model/spin_model.dart';
 import 'spin_scene.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class QuantumMeasurementSpinScreen extends StatefulWidget {
   const QuantumMeasurementSpinScreen({
@@ -114,7 +115,7 @@ class _QuantumMeasurementSpinScreenState
                             child: KratosResetAllButton(
                               onPressed: _reset,
                               radius: 20.5,
-                              tooltip: 'Reset All',
+                              tooltip: QmStrings.resetAll,
                             ),
                           ),
                         ],

@@ -47,7 +47,7 @@ class BendingLightViewport extends StatelessWidget {
         final textScale = math.min(sx, sy);
         final mq = MediaQuery.of(context);
         return Semantics(
-          label: 'BendingLightViewport',
+          label: '光的折射视口',
           container: true,
           child: SizedBox(
             width: view.width,

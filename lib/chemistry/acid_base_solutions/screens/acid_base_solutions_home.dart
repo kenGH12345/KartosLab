@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kratos/common/widgets/kratos_tab_bar.dart';
 import 'package:kratos/chemistry/acid_base_solutions/view/intro_screen.dart';
 import 'package:kratos/chemistry/acid_base_solutions/view/my_solution_screen.dart';
+import 'package:kratos/chemistry/acid_base_solutions/abs_strings.dart';
 
 /// Acid-Base Solutions Home shell — PhET 2 screens (Intro + My Solution).
 ///
@@ -10,8 +11,8 @@ import 'package:kratos/chemistry/acid_base_solutions/view/my_solution_screen.dar
 class AcidBaseSolutionsHome extends StatelessWidget {
   const AcidBaseSolutionsHome({super.key});
 
-  static const String title = '酸碱溶液';
-  static const String subtitle = 'Intro · My Solution · 酸碱电离';
+  static const String title = AbsStrings.title;
+  static const String subtitle = AbsStrings.subtitle;
   static const Color accentColor = Color(0xFF155E75);
 
   @override
@@ -20,8 +21,8 @@ class AcidBaseSolutionsHome extends StatelessWidget {
       title: AcidBaseSolutionsHome.title,
       accentColor: AcidBaseSolutionsHome.accentColor,
       tabs: const [
-        KratosTab(label: 'Intro', child: AbsIntroScreen()),
-        KratosTab(label: 'My Solution', child: AbsMySolutionScreen()),
+        KratosTab(label: AbsStrings.intro, child: AbsIntroScreen()),
+        KratosTab(label: AbsStrings.mySolution, child: AbsMySolutionScreen()),
       ],
     );
   }

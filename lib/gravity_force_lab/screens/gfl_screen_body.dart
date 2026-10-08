@@ -235,16 +235,11 @@ class _GflScreenBodyState extends State<GflScreenBody>
                             bottom: resetBottom - 4,
                             child: FocusTraversalOrder(
                               order: const NumericFocusOrder(50),
-                              child: Semantics(
-                                button: true,
-                                label: GflA11yStrings.resetAll,
-                                enabled: true,
-                                onTap: _onReset,
-                                child: KratosResetAllButton(
-                                  onPressed: _onReset,
-                                  radius: resetRadius,
-                                  tooltip: GflStrings.resetAll,
-                                ),
+                              // Semantics come from KratosResetAllButton (loc.shared).
+                              child: KratosResetAllButton(
+                                onPressed: _onReset,
+                                radius: resetRadius,
+                                tooltip: GflStrings.resetAll,
                               ),
                             ),
                           ),

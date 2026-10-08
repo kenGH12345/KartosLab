@@ -163,7 +163,7 @@ class ControlPanel extends StatelessWidget {
               CheckboxListTile(
                 dense: true,
                 contentPadding: EdgeInsets.zero,
-                title: const Text('Energy Graph',
+                title: const Text(EspStrings.energyGraph,
                     style: TextStyle(fontSize: 13)),
                 value: (controller as GraphsController)
                     .graphsModel

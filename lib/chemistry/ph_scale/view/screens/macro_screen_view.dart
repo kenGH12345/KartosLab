@@ -8,6 +8,7 @@ import 'package:kratos/chemistry/ph_scale/view/widgets/ph_scale_faucet_node.dart
 import 'package:kratos/chemistry/ph_scale/view/widgets/ph_scale_viewport.dart';
 import 'package:kratos/common/simulation_clock.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+import 'package:kratos/chemistry/ph_scale/phs_strings.dart';
 
 /// Macro screen — PhET `MacroScreenView.ts`.
 class MacroScreenView extends StatefulWidget {
@@ -146,7 +147,7 @@ class _MacroScreenViewState extends State<MacroScreenView>
             maxFlowRate: _model.waterFaucet.maxFlowRate,
             enabled: _model.waterFaucet.enabled && !_model.isAutofilling,
             verticalPipeLength: 20,
-            label: 'Water',
+            label: PhsStrings.water,
             onFlowChanged: (v) {
               _model.waterFaucet.flowRate = v;
               setState(() {});

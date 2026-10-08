@@ -1,25 +1,22 @@
-/// Full Gravity Force Lab UI strings (PhET gravity-force-lab + ISLC).
+/// Gravity Force Lab UI — PHASE 2 Chinese (synced with `loc.*`).
 class GflStrings {
   GflStrings._();
 
-  static const String title = 'Gravity Force Lab';
-  /// Home card subtitle (distinct from Basics).
-  static const String subtitle = "Newton's gravity · kg · m · N";
-  static const String mass1 = 'Mass 1';
-  static const String mass2 = 'Mass 2';
+  static const String title = '万有引力实验室';
+  static const String subtitle = '牛顿引力 · kg · m · N';
+  static const String mass1 = '质量 1';
+  static const String mass2 = '质量 2';
   static const String mass1Label = 'm1';
   static const String mass2Label = 'm2';
   static const String unitsKg = 'kg';
-  static const String forceValues = 'Force Values';
-  static const String decimalNotation = 'Decimal Notation';
-  static const String scientificNotation = 'Scientific Notation';
-  static const String hidden = 'Hidden';
-  static const String constantSize = 'Constant Size';
-  static const String resetAll = 'Reset All';
-  /// ISLCRulerNode / GravityForceLabScreenView `unitString` → "meters".
-  static const String rulerUnit = 'meters';
+  static const String forceValues = '力的数值';
+  static const String decimalNotation = '十进制记数';
+  static const String scientificNotation = '科学计数法';
+  static const String hidden = '隐藏';
+  static const String constantSize = '恒定大小';
+  static const String resetAll = '全部重置';
+  static const String rulerUnit = '米';
 
-  /// ISLC figurePull_1..31 — same PNGs as registered Basics puller assets.
   static const String pullerAssetDir =
       'assets/phet/gravity_force_lab_basics/pullers';
 }

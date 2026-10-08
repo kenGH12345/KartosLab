@@ -4,6 +4,7 @@ library;
 import 'dart:math' as math;
 
 import '../../common/qm_random.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 enum SourceMode { single, continuous }
 
@@ -45,19 +46,19 @@ enum SpinExperiment {
   String get label {
     switch (this) {
       case SpinExperiment.experiment1:
-        return 'Experiment 1 [SGz]';
+        return QmStrings.experiment1;
       case SpinExperiment.experiment2:
-        return 'Experiment 2 [SGx]';
+        return QmStrings.experiment2;
       case SpinExperiment.experiment3:
-        return 'Experiment 3 [SGz, SGx]';
+        return QmStrings.experiment3;
       case SpinExperiment.experiment4:
-        return 'Experiment 4 [SGz, SGz]';
+        return QmStrings.experiment4;
       case SpinExperiment.experiment5:
-        return 'Experiment 5 [SGx, SGz]';
+        return QmStrings.experiment5;
       case SpinExperiment.experiment6:
-        return 'Experiment 6 [SGx, SGx]';
+        return QmStrings.experiment6;
       case SpinExperiment.custom:
-        return 'Custom';
+        return QmStrings.custom;
     }
   }
 

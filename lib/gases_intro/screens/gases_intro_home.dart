@@ -5,6 +5,7 @@ import '../../common/widgets/nine_grid_layout.dart';
 import '../model/ideal_gas_law_model.dart';
 import '../view/layout_policy.dart';
 import '../widgets/gases_intro_shell.dart';
+import 'package:kratos/gases_intro/gases_intro_strings.dart';
 
 /// Gases Intro — Intro | Laws tabs.
 ///
@@ -14,7 +15,7 @@ import '../widgets/gases_intro_shell.dart';
 class GasesIntroHome extends StatefulWidget {
   const GasesIntroHome({super.key});
 
-  static const String title = 'Gases Intro';
+  static const String title = GasesIntroStrings.title;
   static const Color accentColor = Color(0xFF0284C7);
 
   @override
@@ -62,8 +63,8 @@ class _GasesIntroHomeState extends State<GasesIntroHome>
           splashFactory: NoSplash.splashFactory,
           overlayColor: const WidgetStatePropertyAll(Colors.transparent),
           tabs: const [
-            Tab(text: 'Intro'),
-            Tab(text: 'Laws'),
+            Tab(text: GasesIntroStrings.intro),
+            Tab(text: GasesIntroStrings.laws),
           ],
         ),
       ),

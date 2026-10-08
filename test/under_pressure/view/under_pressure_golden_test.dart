@@ -6,6 +6,7 @@ import 'package:kratos/under_pressure/model/under_pressure_model.dart';
 import 'package:kratos/under_pressure/model/under_pressure_units.dart';
 import 'package:kratos/under_pressure/transform/up_mvt.dart';
 import 'package:kratos/under_pressure/view/controls/up_control_slider.dart';
+import 'package:kratos/under_pressure/under_pressure_strings.dart';
 import 'package:kratos/under_pressure/view/under_pressure_screen.dart';
 import 'package:kratos/under_pressure/view/up_cement_pattern.dart';
 
@@ -179,7 +180,7 @@ void main() {
       final c = UnderPressureController();
       addTearDown(c.dispose);
       await pumpUp(tester, c, scene: UnderPressureScene.mystery);
-      await tester.tap(find.text('Fluid A'));
+      await tester.tap(find.text(UnderPressureStrings.fluidA));
       await tester.pump();
       await expectLater(
         find.byType(UnderPressureScreen),
@@ -253,9 +254,9 @@ void main() {
       addTearDown(c.dispose);
       await pumpUp(tester, c, scene: UnderPressureScene.mystery);
       // Open dropdown (visual), then select via Model API (source ComboBox value).
-      await tester.tap(find.text('Fluid A'));
+      await tester.tap(find.text(UnderPressureStrings.fluidA));
       await tester.pump();
-      expect(find.text('Fluid B'), findsWidgets);
+      expect(find.text(UnderPressureStrings.fluidB), findsWidgets);
       c.setMysteryFluidIndex(1);
       await tester.pump();
       expect(c.model.fluidDensity, 840);

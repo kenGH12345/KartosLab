@@ -9,6 +9,8 @@ class WoasRadioPanel<T> extends StatelessWidget {
     required this.groupValue,
     required this.onChanged,
     this.semanticLabel,
+    /// Stable automation ids (English); defaults to [labels].
+    this.keyIds,
   });
 
   final List<T> values;
@@ -16,10 +18,12 @@ class WoasRadioPanel<T> extends StatelessWidget {
   final T groupValue;
   final ValueChanged<T> onChanged;
   final String? semanticLabel;
+  final List<String>? keyIds;
 
   @override
   Widget build(BuildContext context) {
     assert(values.length == labels.length);
+    assert(keyIds == null || keyIds!.length == labels.length);
     return Semantics(
       label: semanticLabel,
       child: Container(
@@ -35,7 +39,7 @@ class WoasRadioPanel<T> extends StatelessWidget {
           children: [
             for (var i = 0; i < values.length; i++)
               _RadioRow<T>(
-                key: ValueKey('radio_${labels[i]}'),
+                key: ValueKey('radio_${keyIds?[i] ?? labels[i]}'),
                 value: values[i],
                 label: labels[i],
                 groupValue: groupValue,

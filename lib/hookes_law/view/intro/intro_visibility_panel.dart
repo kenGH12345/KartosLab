@@ -27,7 +27,7 @@ class IntroVisibilityPanel extends StatelessWidget {
           children: [
             _row(
               checked: properties.appliedForceVectorVisible,
-              label: 'Applied Force',
+              label: '外力',
               icon: const _MiniArrow(color: IntroColors.appliedForce, filled: true),
               onTap: () => properties.setAppliedForceVectorVisible(
                 !properties.appliedForceVectorVisible,
@@ -36,7 +36,7 @@ class IntroVisibilityPanel extends StatelessWidget {
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _row(
               checked: properties.springForceVectorVisible,
-              label: 'Spring Force',
+              label: '弹簧力',
               icon: const _MiniArrow(color: IntroColors.springMiddle, filled: true),
               onTap: () => properties.setSpringForceVectorVisible(
                 !properties.springForceVectorVisible,
@@ -45,7 +45,7 @@ class IntroVisibilityPanel extends StatelessWidget {
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _row(
               checked: properties.displacementVectorVisible,
-              label: 'Displacement',
+              label: '位移',
               icon: const _MiniArrow(color: IntroColors.displacement, filled: false),
               onTap: () => properties.setDisplacementVectorVisible(
                 !properties.displacementVectorVisible,
@@ -54,7 +54,7 @@ class IntroVisibilityPanel extends StatelessWidget {
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _row(
               checked: properties.equilibriumPositionVisible,
-              label: 'Equilibrium Position',
+              label: '平衡位置',
               icon: const _DashedIcon(),
               onTap: () => properties.setEquilibriumPositionVisible(
                 !properties.equilibriumPositionVisible,
@@ -63,7 +63,7 @@ class IntroVisibilityPanel extends StatelessWidget {
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _row(
               checked: properties.valuesVisible,
-              label: 'Values',
+              label: '数值',
               enabled: properties.valuesEnabled,
               onTap: () => properties.setValuesVisible(!properties.valuesVisible),
             ),

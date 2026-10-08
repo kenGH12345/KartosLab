@@ -6,6 +6,7 @@ import '../model/woas_mode.dart';
 import '../model/woas_model.dart';
 import '../woas_constants.dart';
 import 'woas_layout.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 /// Left apparatus (`StartNode`): wrench / oscillator wheel / pulse box.
 class WoasStartNode extends StatelessWidget {
@@ -265,7 +266,7 @@ class _PulseBox extends StatelessWidget {
               ),
               onPressed: model.isPulseActive ? null : model.triggerPulse,
               child: Text(
-                'Pulse',
+                WoasStrings.pulse,
                 style: TextStyle(fontSize: 11 * scaleFromOriginal, color: Colors.black),
               ),
             ),

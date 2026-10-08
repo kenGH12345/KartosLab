@@ -1,0 +1,79 @@
+# Localization process log
+
+2026-10-08 — PHASE 0 AUDIT COMPLETE
+2026-10-08 — PHASE 1 Home + Chrome + architecture COMPLETE
+2026-10-08 — PHASE 2 Mechanics/Gravity/Vector READY CANDIDATE (15 LOCALIZED)
+2026-10-08 — PHASE 3 Fluids READY CANDIDATE (7 LOCALIZED)
+2026-10-08 — PHASE 4 Electricity READY CANDIDATE (9 LOCALIZED)
+2026-10-08 — PHASE 5 Optics/Waves/Quantum READY CANDIDATE (11 LOCALIZED)
+2026-10-08 — PHASE 6 Chemistry READY CANDIDATE (15 LOCALIZED)
+
+2026-10-08T12:35+08:00 — PHASE 7 GLOBAL ZH VERIFICATION START
+- Added LocalizationMigrationStatus.verified (unused until ZH Golden PASS)
+- Global string scan: tooling/phase7_global_zh_scan.py → GLOBAL_ZH_STRING_AUDIT.md
+- Residual UV English triage/fix for Hookes/Membrane/MAL/WavesIntro/MASB/Pendulum/UP/QWI
+- ZH Golden: placeholders only under test/goldens/zh/phase{3-6}/ — NO PNG captures → no VERIFIED promotions
+- Generated GLOBAL_ZH_* audit reports
+- Added test/localization/global_zh_audit_test.dart
+- Android verification explicitly NOT started
+
+2026-10-08T12:40+08:00 — PHASE 7 mid: residual UV triage ongoing
+
+2026-10-08T14:20+08:00 — PHASE 7 COMPLETE (READY CANDIDATE)
+- Global scan files=1897 USER_VISIBLE_ENGLISH=0 (migrated paths)
+- Residual ZH fixes: Hookes/Forces/CV/Collision/SOM/pH/IAAM/BAN/BAA/ABS/CLB/Buoyancy/BLL/BCE/MSS/GAO/…
+- Reports: GLOBAL_ZH_* (string/exception/golden/layout/font/a11y/term/legacy/simulation/verification)
+- migration_status.* synced — all domain modules LOCALIZED; VERIFIED=0 (golden pending)
+- ZH Golden placeholders only — no PNG → no VERIFIED promotion
+- Android verification NOT started
+- Localization-aware test updates: bending_light (BlStrings), ohms_law Home sibling title
+- flutter test test/localization/ = PASS; sample BL/ohms Home = PASS after ZH expect updates
+Final: READY CANDIDATE (PHASE 7)
+
+2026-10-08T14:55+08:00 — PHASE 7B GLOBAL ZH GOLDEN CLOSURE
+- Home remainder audit: GLOBAL_ZH_HOME_REMAINDER.md (NOT STARTED user cards = 0)
+- Remediation: curve-fitting / plinko / blackbody / efac / concentration (+ solute names)
+- Registered: circuit / optics / wave-interference / forces-and-motion-basics alias
+- Captured real ZH PNGs under test/goldens/zh/ (81 files); EN baselines retained
+- Golden capture suite deterministic PASS for non-skipped Home entries
+- Promoted majority LOCALIZED→VERIFIED; 11 plugin/flaky sims remain LOCALIZED
+- Added test/localization/global_zh_verification_test.dart
+- Android NOT started
+Final: READY CANDIDATE (ZH Golden incomplete for plugin/flaky subset)
+
+2026-10-08T15:30+08:00 — PHASE 7C FINAL ZH GOLDEN REMEDIATION
+- Remaining LOCALIZED=12 closed → VERIFIED=69 / LOCALIZED=0
+- Audio: lazy SoundEffects; inject RecordingMolarityAudio / silent ConcentrationAudio; friction enableAudio=false in golden
+- Animation: TickerMode + seeded RNG (ABS/SoM/RIAW dots)
+- Layout: CCK toolbox ellipsis; Collision/Fourier panels Material (ListTile)
+- Goldens: test/localization/phase7c_remaining_golden_test.dart (11 UI PNGs, double-capture + dual-run deterministic)
+- Docs: PHASE7C_REMAINING / AUDIO / REPORT; GLOBAL_* updated
+- flutter test test/localization/ PASS; phase2–6 batch PASS; audit+verification PASS
+- Android NOT started — STOP after 7C
+Final: GLOBAL ZH VERIFIED
+
+2026-10-08T16:50+08:00 — PHASE 8 ANDROID ZH RUNTIME VERIFICATION
+- Device: Pixel Tablet emulator-5554 · Android 15 · API 35 · 2560×1600 · density 320 · landscape
+- Build: flutter build apk --debug + adb install Success
+- ANDROID_RUNTIME_ROOT_CAUSE: Impeller cold Splash hang → EnableImpeller=false (Manifest)
+- Cold start Status=ok; Home Chinese evidence PNGs
+- integration_test/phase8_android_zh_runtime_test.dart 5/5 PASS (Home/Collision/Buoyancy/high-risk/domain)
+- Lifecycle bg/resume PASS; localization suite PASS; analyze CLEAN
+- Reports: ANDROID_ZH_* + PHASE8_ANDROID_ZH_REPORT
+- GLOBAL ZH remains VERIFIED (not downgraded)
+Final: ANDROID ZH VERIFIED · READY CANDIDATE · STOP
+
+2026-10-08T17:45+08:00 — PHASE 9 FINAL RELEASE GATE
+- Material Back tooltip: MaterialApp locale zh_CN + flutter_localizations → 「返回」
+- test: material_back_tooltip_zh_test + global_zh_audit + global_zh_verification PASS
+- Release APK: flutter build apk --release → 94.4MB
+  SHA-256: BEFDFFB2A4B294B19BC718E2620784C1CAE035584CE328DDA69BCA0BA5A7FA92
+- Install + Cold Start + Home + phase8 integration 5/5 + bg/resume PASS on emulator-5554
+- Impeller Disabled (config note; not “bug fixed”)
+- Docs: requirements/release/FINAL_* + RELEASE_ARTIFACT_REPORT
+- Regression scope: localization + Android integration PASS
+- Analyze scope: Phase 9 delta CLEAN; whole-project pre-existing debt recorded
+- P0=0 P1=0 P2=minor CJK baseline
+Final: READY · STOP after Phase 9
+
+

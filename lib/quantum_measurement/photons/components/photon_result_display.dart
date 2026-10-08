@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../model/photons_model.dart';
 import '../qm_photons_colors.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class PhotonResultDisplay extends StatefulWidget {
   const PhotonResultDisplay({
@@ -43,7 +44,7 @@ class _PhotonResultDisplayState extends State<PhotonResultDisplay> {
               children: [
                 const Expanded(
                   child: Text(
-                    'Probability',
+                    QmStrings.probability,
                     style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                   ),
                 ),

@@ -1,3 +1,4 @@
+import 'package:kratos/hookes_law/hookes_law_strings.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -251,7 +252,7 @@ class _IntroSystemViewState extends State<IntroSystemView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             IntroNumberControl(
-              title: 'Spring Constant $n:',
+              title: '${HookesLawStrings.springConstant} $n:',
               value: spring.springConstant,
               min: spring.springConstantRange.min,
               max: spring.springConstantRange.max,
@@ -275,7 +276,7 @@ class _IntroSystemViewState extends State<IntroSystemView> {
             ),
             const SizedBox(width: 10),
             IntroNumberControl(
-              title: 'Applied Force $n:',
+              title: '${HookesLawStrings.appliedForce} $n:',
               value: spring.appliedForce,
               min: spring.appliedForceRange.min,
               max: spring.appliedForceRange.max,

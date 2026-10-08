@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 class HalfLifeStabilityLegend extends StatelessWidget {
   const HalfLifeStabilityLegend({super.key});
 
-  static const String lessStable = 'less stable';
-  static const String moreStable = 'more stable';
+  static const String lessStable = '较不稳定';
+  static const String moreStable = '较稳定';
 
   static const double _fontSize = 14;
   static const double _arrowLength = 30;

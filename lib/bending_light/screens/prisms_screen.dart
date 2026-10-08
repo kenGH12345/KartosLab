@@ -5,6 +5,7 @@ import '../model/prisms_model.dart';
 import '../qa_launch.dart';
 import '../view/prisms_play_area.dart';
 import 'bending_light_scene_shell.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 class PrismsScreen extends StatefulWidget {
   const PrismsScreen({super.key, this.embedded = false});
@@ -45,7 +46,7 @@ class _PrismsScreenState extends State<PrismsScreen> {
     );
     if (widget.embedded) return body;
     return Scaffold(
-      appBar: AppBar(title: const Text('Bending Light — Prisms')),
+      appBar: AppBar(title: const Text(BlStrings.titlePrisms)),
       body: body,
     );
   }

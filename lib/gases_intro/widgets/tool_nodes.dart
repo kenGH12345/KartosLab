@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../view/tools_controller.dart';
+import 'package:kratos/gases_intro/gases_intro_strings.dart';
 
 /// Port of scenery-phet StopwatchNode + GasPropertiesStopwatchNode.
 ///
@@ -129,8 +130,8 @@ class CollisionCounterTool extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
-                'Wall Collisions',
+              Text(
+                GasesIntroStrings.wallCollisions,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -179,8 +180,8 @@ class CollisionCounterTool extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Sample Period',
+              Text(
+                GasesIntroStrings.samplePeriod,
                 style: TextStyle(fontSize: 16, color: Colors.black87),
               ),
               const SizedBox(height: 4),

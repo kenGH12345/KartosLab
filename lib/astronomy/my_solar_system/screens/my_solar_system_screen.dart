@@ -390,7 +390,7 @@ class _MySolarSystemScreenState extends State<MySolarSystemScreen>
       child: Padding(
         padding: const EdgeInsets.all(8),
         child: KratosComboBox<MssScenario>(
-          label: 'Orbital System',
+          label: '轨道系统',
           items: effectiveItems,
           itemLabels: [for (final s in effectiveItems) s.name],
           value: selected,

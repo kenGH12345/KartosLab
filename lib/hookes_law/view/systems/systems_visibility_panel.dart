@@ -27,14 +27,14 @@ class SystemsVisibilityPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _check(
-              'Applied Force',
+              '外力',
               properties.appliedForceVectorVisible,
               () => properties.setAppliedForceVectorVisible(!properties.appliedForceVectorVisible),
               icon: const _MiniArrow(color: SystemsColors.appliedForce),
             ),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              'Spring Force',
+              '弹簧力',
               properties.springForceVectorVisible,
               () => properties.setSpringForceVectorVisible(!properties.springForceVectorVisible),
             ),
@@ -46,7 +46,7 @@ class SystemsVisibilityPanel extends StatelessWidget {
                 children: [
                   _radio(
                     key: const Key('systems-total'),
-                    label: 'Total',
+                    label: '合力',
                     selected: properties.springForceRepresentation == SpringForceRepresentation.total,
                     enabled: properties.springForceVectorVisible,
                     onTap: () => properties.springForceRepresentation = SpringForceRepresentation.total,
@@ -55,7 +55,7 @@ class SystemsVisibilityPanel extends StatelessWidget {
                   const SizedBox(height: 10),
                   _radio(
                     key: const Key('systems-components'),
-                    label: 'Components',
+                    label: '分量',
                     selected: properties.springForceRepresentation == SpringForceRepresentation.components,
                     enabled: properties.springForceVectorVisible,
                     onTap: () => properties.springForceRepresentation = SpringForceRepresentation.components,
@@ -73,20 +73,20 @@ class SystemsVisibilityPanel extends StatelessWidget {
             ),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              'Displacement',
+              '位移',
               properties.displacementVectorVisible,
               () => properties.setDisplacementVectorVisible(!properties.displacementVectorVisible),
               icon: const _MiniArrow(color: SystemsColors.displacement, filled: false),
             ),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              'Equilibrium Position',
+              '平衡位置',
               properties.equilibriumPositionVisible,
               () => properties.setEquilibriumPositionVisible(!properties.equilibriumPositionVisible),
             ),
             const SizedBox(height: HookesLawConstants.visibilityPanelSpacing),
             _check(
-              'Values',
+              '数值',
               properties.valuesVisible,
               () => properties.setValuesVisible(!properties.valuesVisible),
               enabled: properties.valuesEnabled,

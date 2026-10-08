@@ -17,6 +17,7 @@ import '../model/intro_model.dart';
 import '../screens/stage_scale.dart';
 import '../transform/bl_mvt.dart';
 import 'source_layout.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// Intro play area plus the original control set (no wavelength / angles).
 class IntroPlayArea extends StatefulWidget {
@@ -263,7 +264,7 @@ class _IntroPlayAreaState extends State<IntroPlayArea>
                       SourceLayout.introTopPanelBottom) *
                   sy,
               child: MediumControlPanel(
-                title: 'Material',
+                title: BlStrings.material,
                 substance: model.topMedium.substance,
                 decimals: 2,
                 onSubstance: model.setTopSubstance,
@@ -275,7 +276,7 @@ class _IntroPlayAreaState extends State<IntroPlayArea>
               right: SourceLayout.edgePadding * sx,
               top: SourceLayout.introBottomPanelTop * sy,
               child: MediumControlPanel(
-                title: 'Material',
+                title: BlStrings.material,
                 substance: model.bottomMedium.substance,
                 decimals: 2,
                 onSubstance: model.setBottomSubstance,
@@ -298,7 +299,7 @@ class _IntroPlayAreaState extends State<IntroPlayArea>
                         ToolboxSlot(
                           inToolbox: !protractor.enabled,
                           child: ToolboxChip(
-                            semanticsLabel: 'Protractor',
+                            semanticsLabel: BlStrings.protractor,
                             child: const ProtractorToolboxIcon(),
                             onDragEnd: (global) => _drop(global, (world) {
                               setState(() {
@@ -312,7 +313,7 @@ class _IntroPlayAreaState extends State<IntroPlayArea>
                         ToolboxSlot(
                           inToolbox: !model.intensityMeter.enabled,
                           child: ToolboxChip(
-                            semanticsLabel: 'Intensity',
+                            semanticsLabel: BlStrings.intensity,
                             child: const IntensityToolboxIcon(),
                             onDragEnd: (global) => _drop(global, (world) {
                               final meter = model.intensityMeter;

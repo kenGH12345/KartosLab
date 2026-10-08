@@ -1,0 +1,1642 @@
+{
+  "files": 1897,
+  "counts": {
+    "APPROVED_EXCEPTION": 75,
+    "UNIT": 40,
+    "SCIENTIFIC_SYMBOL": 44,
+    "FORMULA": 4
+  },
+  "uv": 0,
+  "rows": [
+    {
+      "file": "lib/bending_light/bl_strings.dart",
+      "line": 10,
+      "module": "bending-light",
+      "string": "折射率 (n)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/bending_light/bl_strings.dart",
+      "line": 11,
+      "module": "bending-light",
+      "string": "n 是什么？",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/bending_light/bl_strings.dart",
+      "line": 25,
+      "module": "bending-light",
+      "string": "神秘 A",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/bending_light/bl_strings.dart",
+      "line": 26,
+      "module": "bending-light",
+      "string": "神秘 B",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/buoyancy/buoyancy_strings.dart",
+      "line": 48,
+      "module": "buoyancy",
+      "string": "行星 X",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/charges_and_fields/caf_strings.dart",
+      "line": 8,
+      "module": "charges-and-fields",
+      "string": "+1 nC",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/charges_and_fields/caf_strings.dart",
+      "line": 9,
+      "module": "charges-and-fields",
+      "string": "-1 nC",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/charges_and_fields/caf_strings.dart",
+      "line": 18,
+      "module": "charges-and-fields",
+      "string": "deg",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/collision_lab_strings.dart",
+      "line": 10,
+      "module": "collision-lab",
+      "string": "探索 1D",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/collision_lab_strings.dart",
+      "line": 11,
+      "module": "collision-lab",
+      "string": "探索 2D",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/color_vision_constants.dart",
+      "line": 25,
+      "module": "color-vision",
+      "string": "#c0b9b9",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/color_vision_strings.dart",
+      "line": 6,
+      "module": "color-vision",
+      "string": "单灯泡 · RGB 灯泡",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/color_vision_strings.dart",
+      "line": 8,
+      "module": "color-vision",
+      "string": "RGB 灯泡",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/diffusion/diffusion_strings.dart",
+      "line": 11,
+      "module": "diffusion",
+      "string": "质量 (AMU)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/diffusion/diffusion_strings.dart",
+      "line": 12,
+      "module": "diffusion",
+      "string": "半径 (pm)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/diffusion/diffusion_strings.dart",
+      "line": 13,
+      "module": "diffusion",
+      "string": "初始温度 (K)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/fourier_making_waves/fmw_strings.dart",
+      "line": 34,
+      "module": "fourier-making-waves",
+      "string": "周期 T",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gases_intro/gases_intro_strings.dart",
+      "line": 19,
+      "module": "gases-intro",
+      "string": "体积 (V)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gases_intro/gases_intro_strings.dart",
+      "line": 20,
+      "module": "gases-intro",
+      "string": "温度 (T)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gases_intro/gases_intro_strings.dart",
+      "line": 21,
+      "module": "gases-intro",
+      "string": "压强 ↕ V",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gases_intro/gases_intro_strings.dart",
+      "line": 22,
+      "module": "gases-intro",
+      "string": "压强 ↕ T",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gas_properties/gas_properties_strings.dart",
+      "line": 23,
+      "module": "gas-properties",
+      "string": "体积 (V)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gas_properties/gas_properties_strings.dart",
+      "line": 24,
+      "module": "gas-properties",
+      "string": "温度 (T)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gas_properties/gas_properties_strings.dart",
+      "line": 25,
+      "module": "gas-properties",
+      "string": "压强 ↕V",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gas_properties/gas_properties_strings.dart",
+      "line": 26,
+      "module": "gas-properties",
+      "string": "压强 ↕T",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gravity_force_lab/gfl_strings.dart",
+      "line": 6,
+      "module": "gravity-force-lab",
+      "string": "牛顿引力 · kg · m · N",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gravity_force_lab/gfl_strings.dart",
+      "line": 9,
+      "module": "gravity-force-lab",
+      "string": "m1",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gravity_force_lab/gfl_strings.dart",
+      "line": 10,
+      "module": "gravity-force-lab",
+      "string": "m2",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gravity_force_lab_basics/gflb_strings.dart",
+      "line": 10,
+      "module": "gravity-force-lab-basics",
+      "string": "m1",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gravity_force_lab_basics/gflb_strings.dart",
+      "line": 11,
+      "module": "gravity-force-lab-basics",
+      "string": "m2",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/masses_and_springs_basics/masb_strings.dart",
+      "line": 12,
+      "module": "masses-and-springs-basics",
+      "string": "行星 X",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/membrane_transport/membrane_transport_strings.dart",
+      "line": 17,
+      "module": "membrane-transport",
+      "string": "膜电位 (mV)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/membrane_transport/membrane_transport_strings.dart",
+      "line": 28,
+      "module": "membrane-transport",
+      "string": "Na⁺/K⁺ 泵",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/membrane_transport/membrane_transport_strings.dart",
+      "line": 29,
+      "module": "membrane-transport",
+      "string": "Na⁺/葡萄糖",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/ohms_law/ohms_law_strings.dart",
+      "line": 13,
+      "module": "ohms-law",
+      "string": "毫安 (mA)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/ohms_law/ohms_law_strings.dart",
+      "line": 14,
+      "module": "ohms-law",
+      "string": "安培 (A)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/pendulum_lab/pl_strings.dart",
+      "line": 34,
+      "module": "pendulum-lab",
+      "string": "行星 X",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/pendulum_lab/pl_strings.dart",
+      "line": 39,
+      "module": "pendulum-lab",
+      "string": "KE",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/pendulum_lab/pl_strings.dart",
+      "line": 40,
+      "module": "pendulum-lab",
+      "string": "PE",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 17,
+      "module": "quantum-measurement",
+      "string": "概率 P(",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 45,
+      "module": "quantum-measurement",
+      "string": "竖直 (V)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 46,
+      "module": "quantum-measurement",
+      "string": "水平 (H)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 80,
+      "module": "quantum-measurement",
+      "string": "施特恩–盖拉赫（SG）测量",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 85,
+      "module": "quantum-measurement",
+      "string": "实验 1 [SGz]",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 86,
+      "module": "quantum-measurement",
+      "string": "实验 2 [SGx]",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 87,
+      "module": "quantum-measurement",
+      "string": "实验 3 [SGz, SGx]",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 88,
+      "module": "quantum-measurement",
+      "string": "实验 4 [SGz, SGz]",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 89,
+      "module": "quantum-measurement",
+      "string": "实验 5 [SGx, SGz]",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/qm_strings.dart",
+      "line": 90,
+      "module": "quantum-measurement",
+      "string": "实验 6 [SGx, SGx]",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/resistance_in_a_wire/riaw_strings.dart",
+      "line": 6,
+      "module": "resistance-in-a-wire",
+      "string": "电阻率 · 长度 · 截面积 · R = ρL/A",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/resistance_in_a_wire/riaw_strings.dart",
+      "line": 17,
+      "module": "resistance-in-a-wire",
+      "string": "L，长度",
+      "visible": false,
+      "a11y": true,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/resistance_in_a_wire/riaw_strings.dart",
+      "line": 18,
+      "module": "resistance-in-a-wire",
+      "string": "A，截面积",
+      "visible": false,
+      "a11y": true,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/screens/home_disciplines.dart",
+      "line": 488,
+      "module": "home",
+      "string": "molarity",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/under_pressure_strings.dart",
+      "line": 24,
+      "module": "under-pressure",
+      "string": "流体 A",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/under_pressure_strings.dart",
+      "line": 25,
+      "module": "under-pressure",
+      "string": "流体 B",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/under_pressure_strings.dart",
+      "line": 26,
+      "module": "under-pressure",
+      "string": "流体 C",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/under_pressure_strings.dart",
+      "line": 27,
+      "module": "under-pressure",
+      "string": "行星 A",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/under_pressure_strings.dart",
+      "line": 28,
+      "module": "under-pressure",
+      "string": "行星 B",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/under_pressure_strings.dart",
+      "line": 29,
+      "module": "under-pressure",
+      "string": "行星 C",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/vector_addition/vector_addition_strings.dart",
+      "line": 8,
+      "module": "vector-addition",
+      "string": "探索 1D",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/vector_addition/vector_addition_strings.dart",
+      "line": 9,
+      "module": "vector-addition",
+      "string": "探索 2D",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/waves_intro/model/scene_kind.dart",
+      "line": 76,
+      "module": "waves-intro",
+      "string": "fs",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/waves_intro/widgets/waves_intro_toolbox.dart",
+      "line": 29,
+      "module": "waves-intro",
+      "string": "Tape",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/model/under_pressure_units.dart",
+      "line": 24,
+      "module": "under-pressure",
+      "string": "psi",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/view/under_pressure_screen.dart",
+      "line": 186,
+      "module": "under-pressure",
+      "string": "gasoline",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/view/under_pressure_screen.dart",
+      "line": 191,
+      "module": "under-pressure",
+      "string": "honey",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/under_pressure/view/under_pressure_screen.dart",
+      "line": 212,
+      "module": "under-pressure",
+      "string": "Mars",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/sound/config/sound_scenario.dart",
+      "line": 57,
+      "module": "sound",
+      "string": "message",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/sound/screens/sound_screen.dart",
+      "line": 170,
+      "module": "sound",
+      "string": "频率(Hz)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/sound/screens/sound_screen.dart",
+      "line": 172,
+      "module": "sound",
+      "string": "波长(m)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/resistance_in_a_wire/view/resistance_in_a_wire_screen.dart",
+      "line": 28,
+      "module": "resistance-in-a-wire",
+      "string": "电阻率 · 长度 · 截面积 · R = ρL/A",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/resistance_in_a_wire/view/riaw_play_area.dart",
+      "line": 51,
+      "module": "resistance-in-a-wire",
+      "string": "riawControlPanel",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/radio_waves/config/radio_waves_scenario.dart",
+      "line": 50,
+      "module": "radio-waves",
+      "string": "message",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/radio_waves/screens/radio_waves_screen.dart",
+      "line": 350,
+      "module": "radio-waves",
+      "string": "静态场 vs 动态场",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/radio_waves/screens/radio_waves_screen.dart",
+      "line": 364,
+      "module": "radio-waves",
+      "string": "AM 与 FM 广播",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/screens/quantum_measurement_home.dart",
+      "line": 22,
+      "module": "quantum-measurement",
+      "string": "quantum-measurement",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/photons/components/average_polarization_panel.dart",
+      "line": 65,
+      "module": "quantum-measurement",
+      "string": "(N(",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/photons/components/average_polarization_panel.dart",
+      "line": 73,
+      "module": "quantum-measurement",
+      "string": ") − N(",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/photons/components/average_polarization_panel.dart",
+      "line": 81,
+      "module": "quantum-measurement",
+      "string": ")) / N(总数)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/photons/components/photon_result_display.dart",
+      "line": 65,
+      "module": "quantum-measurement",
+      "string": "P(",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/photons/components/photon_result_display.dart",
+      "line": 84,
+      "module": "quantum-measurement",
+      "string": "P(",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/coins/components/coin_bias_controls.dart",
+      "line": 293,
+      "module": "quantum-measurement",
+      "string": "up",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/quantum_measurement/coins/components/coin_result_display.dart",
+      "line": 74,
+      "module": "quantum-measurement",
+      "string": "P(",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/physics/quantum_wave_interference/view/common/qwi_wave_visualization_chrome.dart",
+      "line": 70,
+      "module": "quantum-wave-interference",
+      "string": "1 fs = 1 × 10⁻¹⁵ s",
+      "visible": false,
+      "a11y": false,
+      "classification": "FORMULA",
+      "status": "OK"
+    },
+    {
+      "file": "lib/physics/quantum_wave_interference/view/experiment/experiment_controls.dart",
+      "line": 72,
+      "module": "quantum-wave-interference",
+      "string": "Min",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/physics/quantum_wave_interference/view/experiment/experiment_controls.dart",
+      "line": 73,
+      "module": "quantum-wave-interference",
+      "string": "Max",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/ohms_law/view/ohms_law_play_area.dart",
+      "line": 53,
+      "module": "ohms-law",
+      "string": "ohmsLawControlPanel",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/ohms_law/view/ohms_law_play_area.dart",
+      "line": 54,
+      "module": "ohms-law",
+      "string": "ohmsLawUnits",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/ohms_law/view/controls/units_radio.dart",
+      "line": 28,
+      "module": "ohms-law",
+      "string": "ohmsLawUnits",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/molecule_shapes/screens/molecule_shapes_home.dart",
+      "line": 17,
+      "module": "molecule-shapes",
+      "string": "模型 · 真实分子 · VSEPR",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/magnetism/magnet_and_compass/mac_strings.dart",
+      "line": 8,
+      "module": "magnet-and-compass",
+      "string": "磁场 (B)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/john_travoltage/model/electron.dart",
+      "line": 10,
+      "module": "john-travoltage",
+      "string": "leg",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/john_travoltage/model/electron.dart",
+      "line": 11,
+      "module": "john-travoltage",
+      "string": "arm",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/john_travoltage/model/electron.dart",
+      "line": 12,
+      "module": "john-travoltage",
+      "string": "body",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gravity_force_lab/a11y/gfl_a11y_strings.dart",
+      "line": 57,
+      "module": "gravity-force-lab",
+      "string": "将尺子起点跳到 m1 球心 (J+C)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/gravity_force_lab/a11y/gfl_a11y_strings.dart",
+      "line": 58,
+      "module": "gravity-force-lab",
+      "string": "将尺子跳回并释放到初始位置 (J+H)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/friction/view/friction_play_area.dart",
+      "line": 53,
+      "module": "friction",
+      "string": "frictionPlayArea",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/fourier_making_waves/widgets/discrete_control_panel.dart",
+      "line": 193,
+      "module": "fourier-making-waves",
+      "string": "n (λₙ)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/fourier_making_waves/widgets/discrete_control_panel.dart",
+      "line": 208,
+      "module": "fourier-making-waves",
+      "string": "n (Tₙ)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/config/forces_scenario.dart",
+      "line": 36,
+      "module": "forces",
+      "string": "id",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/config/forces_scenario.dart",
+      "line": 36,
+      "module": "forces",
+      "string": "label",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/config/forces_scenario.dart",
+      "line": 62,
+      "module": "forces",
+      "string": "trigger",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/config/forces_scenario.dart",
+      "line": 62,
+      "module": "forces",
+      "string": "message",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/motion_screen.dart",
+      "line": 156,
+      "module": "forces",
+      "string": "施加力(N)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/motion_screen.dart",
+      "line": 157,
+      "module": "forces",
+      "string": "总质量(kg)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/motion_screen.dart",
+      "line": 158,
+      "module": "forces",
+      "string": "加速度(m/s²)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/motion_screen.dart",
+      "line": 159,
+      "module": "forces",
+      "string": "速度(m/s)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/motion_screen.dart",
+      "line": 525,
+      "module": "forces",
+      "string": "牛顿第二定律 F=ma",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/motion_screen.dart",
+      "line": 623,
+      "module": "forces",
+      "string": "时间 (s)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/netforce_screen.dart",
+      "line": 183,
+      "module": "forces",
+      "string": "左力(N)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/netforce_screen.dart",
+      "line": 184,
+      "module": "forces",
+      "string": "右力(N)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/forces/screens/netforce_screen.dart",
+      "line": 185,
+      "module": "forces",
+      "string": "合力(N)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/faradays_law/view/faradays_law_play_area.dart",
+      "line": 38,
+      "module": "faradays-law",
+      "string": "faradaysLawLayout",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/common/widgets/inquiry_models.dart",
+      "line": 137,
+      "module": "shared-chrome",
+      "string": "label",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/config/color_vision_scenario.dart",
+      "line": 59,
+      "module": "color-vision",
+      "string": "trigger",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/config/color_vision_scenario.dart",
+      "line": 59,
+      "module": "color-vision",
+      "string": "message",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/config/color_vision_scenario.dart",
+      "line": 112,
+      "module": "color-vision",
+      "string": "label",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/screens/rgb_bulbs_screen.dart",
+      "line": 900,
+      "module": "color-vision",
+      "string": "RGB 加色法原理",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/screens/rgb_bulbs_screen.dart",
+      "line": 908,
+      "module": "color-vision",
+      "string": "红光 (Red)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/screens/rgb_bulbs_screen.dart",
+      "line": 955,
+      "module": "color-vision",
+      "string": "加色法 vs 减色法 · 生活对照",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/screens/single_bulb_screen.dart",
+      "line": 393,
+      "module": "color-vision",
+      "string": "加色法 vs 减色法 · 生活对照",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/view/rgb_screen_view.dart",
+      "line": 202,
+      "module": "color-vision",
+      "string": "Red",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/color_vision/view/rgb_screen_view.dart",
+      "line": 222,
+      "module": "color-vision",
+      "string": "Blue",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/widgets/ball_values_panel.dart",
+      "line": 38,
+      "module": "collision-lab",
+      "string": "Ball",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/widgets/ball_values_panel.dart",
+      "line": 42,
+      "module": "collision-lab",
+      "string": "vx",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/widgets/ball_values_panel.dart",
+      "line": 43,
+      "module": "collision-lab",
+      "string": "vy",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/widgets/ball_values_panel.dart",
+      "line": 44,
+      "module": "collision-lab",
+      "string": "|v|",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/widgets/ball_values_panel.dart",
+      "line": 45,
+      "module": "collision-lab",
+      "string": "px",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/widgets/ball_values_panel.dart",
+      "line": 46,
+      "module": "collision-lab",
+      "string": "py",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/collision_lab/widgets/ball_values_panel.dart",
+      "line": 47,
+      "module": "collision-lab",
+      "string": "|p|",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/acid_base_solutions/abs_strings.dart",
+      "line": 14,
+      "module": "acid-base-solutions",
+      "string": "初始浓度 (mol/L)：",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/acid_base_solutions/abs_strings.dart",
+      "line": 15,
+      "module": "acid-base-solutions",
+      "string": "平衡浓度 (mol/L)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/acid_base_solutions/abs_strings.dart",
+      "line": 16,
+      "module": "acid-base-solutions",
+      "string": "水 (H₂O)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/acid_base_solutions/abs_strings.dart",
+      "line": 17,
+      "module": "acid-base-solutions",
+      "string": "强酸 (HA)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/acid_base_solutions/abs_strings.dart",
+      "line": 18,
+      "module": "acid-base-solutions",
+      "string": "弱酸 (HA)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/acid_base_solutions/abs_strings.dart",
+      "line": 19,
+      "module": "acid-base-solutions",
+      "string": "强碱 (MOH)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/acid_base_solutions/abs_strings.dart",
+      "line": 20,
+      "module": "acid-base-solutions",
+      "string": "弱碱 (B)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/ph_scale/phs_strings.dart",
+      "line": 5,
+      "module": "ph-scale",
+      "string": "pH 标度",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/ph_scale/model/ph_scale_constants.dart",
+      "line": 42,
+      "module": "ph-scale",
+      "string": "H₃O⁺",
+      "visible": false,
+      "a11y": false,
+      "classification": "FORMULA",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/ph_scale/model/ph_scale_constants.dart",
+      "line": 43,
+      "module": "ph-scale",
+      "string": "OH⁻",
+      "visible": false,
+      "a11y": false,
+      "classification": "FORMULA",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/ph_scale/model/ph_scale_constants.dart",
+      "line": 44,
+      "module": "ph-scale",
+      "string": "H₂O",
+      "visible": false,
+      "a11y": false,
+      "classification": "FORMULA",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/ph_scale/view/widgets/particle_counts_node.dart",
+      "line": 110,
+      "module": "ph-scale",
+      "string": "OH",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/molarity/config/molarity_scenario.dart",
+      "line": 159,
+      "module": "molarity",
+      "string": "message",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/isotopes_and_atomic_mass/widgets/mix_selection_controls.dart",
+      "line": 28,
+      "module": "isotopes-and-atomic-mass",
+      "string": "My Mix",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/build_a_nucleus/model/half_life_number_line.dart",
+      "line": 97,
+      "module": "build-a-nucleus",
+      "string": "seconds",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/build_a_nucleus/model/half_life_readout.dart",
+      "line": 27,
+      "module": "build-a-nucleus",
+      "string": "Half-life:",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/build_a_nucleus/model/half_life_readout.dart",
+      "line": 43,
+      "module": "build-a-nucleus",
+      "string": "x 10",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/chemistry/build_an_atom/widgets/mass_number_display.dart",
+      "line": 34,
+      "module": "build-an-atom",
+      "string": "scale",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/buoyancy/screens/buoyancy_home.dart",
+      "line": 12,
+      "module": "buoyancy",
+      "string": "buoyancy",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/buoyancy/applications/view/buoyancy_applications_screen.dart",
+      "line": 388,
+      "module": "buoyancy",
+      "string": "bottle",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/bending_light/components/scenery_controls.dart",
+      "line": 42,
+      "module": "bending-light",
+      "string": "increase",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/bending_light/components/scenery_controls.dart",
+      "line": 42,
+      "module": "bending-light",
+      "string": "decrease",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/bending_light/components/source_nodes.dart",
+      "line": 109,
+      "module": "bending-light",
+      "string": "checked",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/bending_light/components/source_nodes.dart",
+      "line": 109,
+      "module": "bending-light",
+      "string": "unchecked",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/keplers_laws/keplers_laws_strings.dart",
+      "line": 29,
+      "module": "keplers-laws",
+      "string": "面积 (AU²)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/keplers_laws/keplers_laws_strings.dart",
+      "line": 32,
+      "module": "keplers-laws",
+      "string": "速率 (km/s)",
+      "visible": false,
+      "a11y": false,
+      "classification": "UNIT",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/keplers_laws/keplers_laws_strings.dart",
+      "line": 37,
+      "module": "keplers-laws",
+      "string": "半长轴 (a)",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/keplers_laws/keplers_laws_strings.dart",
+      "line": 39,
+      "module": "keplers-laws",
+      "string": "AU",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/my_solar_system/my_solar_system_strings.dart",
+      "line": 28,
+      "module": "my-solar-system",
+      "string": "AU",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/my_solar_system/my_solar_system_strings.dart",
+      "line": 32,
+      "module": "my-solar-system",
+      "string": "Vx",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/my_solar_system/my_solar_system_strings.dart",
+      "line": 33,
+      "module": "my-solar-system",
+      "string": "Vy",
+      "visible": false,
+      "a11y": false,
+      "classification": "APPROVED_EXCEPTION",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/gravity_and_orbits/model/mode_config.dart",
+      "line": 128,
+      "module": "gravity-and-orbits",
+      "string": "Our Sun",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    },
+    {
+      "file": "lib/astronomy/gravity_and_orbits/model/mode_config.dart",
+      "line": 185,
+      "module": "gravity-and-orbits",
+      "string": "Our Sun",
+      "visible": false,
+      "a11y": false,
+      "classification": "SCIENTIFIC_SYMBOL",
+      "status": "OK"
+    }
+  ]
+}

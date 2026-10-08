@@ -24,6 +24,7 @@ import '../widgets/half_life_information_view.dart';
 import '../widgets/nucleon_arrow_column.dart';
 import '../widgets/nuclide_status.dart';
 import '../widgets/show_electron_cloud_checkbox.dart';
+import 'package:kratos/chemistry/build_a_nucleus/ban_strings.dart';
 
 class BuildANucleusScreen extends StatefulWidget {
   const BuildANucleusScreen({
@@ -320,7 +321,7 @@ class _BuildANucleusScreenState extends State<BuildANucleusScreen>
         const SizedBox(width: BanConstants.nucleonCreatorsHBoxSpacing),
         _CreatorNode(
           type: NucleonType.proton,
-          label: 'Protons',
+          label: BanStrings.proton,
           creatorKey: _creatorKeys[NucleonType.proton]!,
           onPointerDown: _onCreatorPointerDown,
           onPointerMove: _onSessionMove,
@@ -338,7 +339,7 @@ class _BuildANucleusScreenState extends State<BuildANucleusScreen>
         const SizedBox(width: BanConstants.nucleonCreatorsHBoxSpacing),
         _CreatorNode(
           type: NucleonType.neutron,
-          label: 'Neutrons',
+          label: BanStrings.neutron,
           creatorKey: _creatorKeys[NucleonType.neutron]!,
           onPointerDown: _onCreatorPointerDown,
           onPointerMove: _onSessionMove,

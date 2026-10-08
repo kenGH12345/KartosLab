@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../model/resistance_in_a_wire_model.dart';
 import '../../resistance_in_a_wire_view_constants.dart';
 import 'slider_unit.dart';
+import 'package:kratos/resistance_in_a_wire/riaw_strings.dart';
 
 /// PhET `ControlPanel` — resistance readout + ρ / L / A slider units.
 ///
@@ -28,7 +29,7 @@ class ResistanceInAWireControlPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatted = model.getFormattedResistanceValue();
     // Source pattern: "resistance = {value} ohms" (plural "ohms", not Ω).
-    final readout = 'resistance = $formatted ohms';
+    final readout = RiawStrings.resistanceReadout(formatted);
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -78,9 +79,9 @@ class ResistanceInAWireControlPanel extends StatelessWidget {
                 property: model.resistivityProperty,
                 range: model.resistivityProperty.range,
                 symbol: 'ρ',
-                name: 'resistivity',
+                name: RiawStrings.resistivity,
                 unit: 'Ωcm',
-                semanticLabel: 'rho, Resistivity',
+                semanticLabel: RiawStrings.semanticResistivity,
                 keyboardStep: 0.05,
                 shiftKeyboardStep: 0.01,
                 focusNode: resistivityFocusNode,
@@ -94,9 +95,9 @@ class ResistanceInAWireControlPanel extends StatelessWidget {
                 property: model.lengthProperty,
                 range: model.lengthProperty.range,
                 symbol: 'L',
-                name: 'length',
+                name: RiawStrings.length,
                 unit: 'cm',
-                semanticLabel: 'L, Length',
+                semanticLabel: RiawStrings.semanticLength,
                 keyboardStep: 1,
                 shiftKeyboardStep: 0.01,
                 focusNode: lengthFocusNode,
@@ -110,10 +111,10 @@ class ResistanceInAWireControlPanel extends StatelessWidget {
                 property: model.areaProperty,
                 range: model.areaProperty.range,
                 symbol: 'A',
-                name: 'area',
+                name: RiawStrings.area,
                 unit: 'cm²',
                 unitIsRichText: true,
-                semanticLabel: 'A, Area',
+                semanticLabel: RiawStrings.semanticArea,
                 keyboardStep: 1,
                 shiftKeyboardStep: 0.01,
                 focusNode: areaFocusNode,

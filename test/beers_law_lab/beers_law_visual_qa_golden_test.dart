@@ -15,6 +15,7 @@ import 'package:kratos/concentration/model/probe_region.dart';
 import 'package:kratos/concentration/model/solute_definitions.dart';
 import 'package:kratos/concentration/view/concentration_layout.dart';
 import 'package:kratos/concentration/view/concentration_screen.dart';
+import 'package:kratos/beers_law_lab/bll_strings.dart';
 
 /// Phase 4 — Raster screenshot golden matrix (1100×700, DPR 1).
 ///
@@ -577,7 +578,7 @@ void main() {
 
       await tester.tap(find.descendant(
         of: find.byType(TabBar),
-        matching: find.text('Concentration'),
+        matching: find.text(BllStrings.concentration),
       ));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 450));

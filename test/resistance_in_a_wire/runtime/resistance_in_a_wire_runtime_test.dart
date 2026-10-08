@@ -202,7 +202,7 @@ void main() {
           ResistanceInAWireModel.computeResistance(rho, l, a),
         );
         expect(
-          find.textContaining('resistance = ${model.getFormattedResistanceValue()}'),
+          find.textContaining('电阻 = ${model.getFormattedResistanceValue()}'),
           findsOneWidget,
         );
       }

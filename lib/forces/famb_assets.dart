@@ -33,6 +33,9 @@ class FambAssets {
 
   /// Puller PNG: color BLUE|RED|PURPLE|ORANGE, size '', '_lrg_', '_small_',
   /// pose 0=standing, 3=leaning (hands on knot).
+  ///
+  /// Orientation is baked into the asset: BLUE/PURPLE face right, RED/ORANGE
+  /// face left — so left/right teams meet face-to-face without Transform flip.
   static String puller({
     required String color,
     required String size, // '' medium, 'lrg', 'small'

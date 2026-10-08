@@ -22,17 +22,17 @@ class AbsViewsPanel extends StatelessWidget {
     final items = <({AbsViewMode mode, String label, Widget icon})>[
       (
         mode: AbsViewMode.particles,
-        label: 'Particles',
+        label: '粒子',
         icon: Image.asset(AbsAssets.magnifyingGlassIcon, width: 28, height: 22),
       ),
       (
         mode: AbsViewMode.graph,
-        label: 'Graph',
+        label: '图像',
         icon: const AbsGraphIcon(),
       ),
       (
         mode: AbsViewMode.hideViews,
-        label: 'Hide Views',
+        label: '隐藏视图',
         icon: const AbsBeakerIcon(),
       ),
     ];

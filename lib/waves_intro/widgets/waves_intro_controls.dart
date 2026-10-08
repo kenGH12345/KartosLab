@@ -4,6 +4,7 @@ import '../model/scene_kind.dart';
 import '../model/waves_intro_model.dart';
 import '../waves_intro_constants.dart';
 import 'waves_intro_toolbox.dart';
+import 'package:kratos/waves_intro/waves_intro_strings.dart';
 
 class _AudioMeterBar extends StatelessWidget {
   const _AudioMeterBar({required this.level});
@@ -14,7 +15,7 @@ class _AudioMeterBar extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Level', style: Theme.of(context).textTheme.labelSmall),
+        Text(WavesIntroStrings.level, style: Theme.of(context).textTheme.labelSmall),
         const SizedBox(height: 2),
         ClipRRect(
           borderRadius: BorderRadius.circular(3),
@@ -61,7 +62,7 @@ class WavesIntroControls extends StatelessWidget {
                   WavesIntroToolbox(model: model),
                   const SizedBox(height: 8),
                   Text(
-                    'Amplitude',
+                    WavesIntroStrings.amplitude,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   Slider(
@@ -88,11 +89,11 @@ class WavesIntroControls extends StatelessWidget {
                     segments: const [
                       ButtonSegment(
                         value: DisturbanceType.continuous,
-                        label: Text('Continuous'),
+                        label: Text(WavesIntroStrings.continuous),
                       ),
                       ButtonSegment(
                         value: DisturbanceType.pulse,
-                        label: Text('Pulse'),
+                        label: Text(WavesIntroStrings.pulse),
                       ),
                     ],
                     selected: {scene.disturbanceType},
@@ -148,23 +149,23 @@ class WavesIntroControls extends StatelessWidget {
                   CheckboxListTile(
                     dense: true,
                     contentPadding: EdgeInsets.zero,
-                    title: const Text('Graph'),
+                    title: Text(WavesIntroStrings.graph),
                     value: model.showGraph,
                     onChanged: (v) => model.setShowGraph(v ?? false),
                   ),
                   Text(
-                    'Viewpoint',
+                    WavesIntroStrings.viewpoint,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   SegmentedButton<Viewpoint>(
                     segments: const [
                       ButtonSegment(
                         value: Viewpoint.top,
-                        label: Text('Top'),
+                        label: Text(WavesIntroStrings.top),
                       ),
                       ButtonSegment(
                         value: Viewpoint.side,
-                        label: Text('Side'),
+                        label: Text(WavesIntroStrings.side),
                       ),
                     ],
                     selected: {model.viewpoint},
@@ -174,24 +175,24 @@ class WavesIntroControls extends StatelessWidget {
                     CheckboxListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Screen'),
+                      title: Text(WavesIntroStrings.screen),
                       value: model.showScreen,
                       onChanged: (v) => model.setShowScreen(v ?? false),
                     ),
                   if (config.kind == SceneKind.sound) ...[
                     Text(
-                      'Sound view',
+                      WavesIntroStrings.soundView,
                       style: Theme.of(context).textTheme.labelMedium,
                     ),
                     SegmentedButton<SoundViewType>(
                       segments: const [
                         ButtonSegment(
                           value: SoundViewType.waves,
-                          label: Text('Waves'),
+                          label: Text(WavesIntroStrings.waves),
                         ),
                         ButtonSegment(
                           value: SoundViewType.particles,
-                          label: Text('Particles'),
+                          label: Text(WavesIntroStrings.particles),
                         ),
                       ],
                       selected: {scene.soundViewType},
@@ -201,7 +202,7 @@ class WavesIntroControls extends StatelessWidget {
                     CheckboxListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Play Tone'),
+                      title: Text(WavesIntroStrings.playTone),
                       value: model.audioState.isTonePlaying,
                       onChanged: (v) => model.setTonePlaying(v ?? false),
                     ),
@@ -210,20 +211,20 @@ class WavesIntroControls extends StatelessWidget {
                     CheckboxListTile(
                       dense: true,
                       contentPadding: EdgeInsets.zero,
-                      title: const Text('Sound Effect'),
+                      title: Text(WavesIntroStrings.soundEffect),
                       value: model.audioState.soundEffectEnabled,
                       onChanged: (v) =>
                           model.setSoundEffectEnabled(v ?? false),
                     ),
                   const SizedBox(height: 4),
                   Text(
-                    'Audio',
+                    WavesIntroStrings.audio,
                     style: Theme.of(context).textTheme.labelMedium,
                   ),
                   Row(
                     children: [
                       IconButton(
-                        tooltip: model.audioState.muted ? 'Unmute' : 'Mute',
+                        tooltip: model.audioState.muted ? WavesIntroStrings.unmute : WavesIntroStrings.mute,
                         onPressed: () =>
                             model.setMute(!model.audioState.muted),
                         icon: Icon(
@@ -251,19 +252,19 @@ class WavesIntroControls extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        tooltip: model.isRunning ? 'Pause' : 'Play',
+                        tooltip: model.isRunning ? WavesIntroStrings.pause : WavesIntroStrings.play,
                         onPressed: model.togglePlayPause,
                         icon: Icon(
                           model.isRunning ? Icons.pause : Icons.play_arrow,
                         ),
                       ),
                       IconButton(
-                        tooltip: 'Step',
+                        tooltip: WavesIntroStrings.step,
                         onPressed: model.manualStep,
                         icon: const Icon(Icons.skip_next),
                       ),
                       IconButton(
-                        tooltip: 'Reset',
+                        tooltip: WavesIntroStrings.reset,
                         onPressed: model.reset,
                         icon: const Icon(Icons.refresh),
                       ),

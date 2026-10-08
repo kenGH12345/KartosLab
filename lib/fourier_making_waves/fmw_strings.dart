@@ -3,11 +3,11 @@ import 'model/equation_form.dart';
 import 'model/series_type.dart';
 import 'model/waveform_kind.dart';
 
-/// Chinese UI strings for Fourier: Making Waves.
+/// Chinese UI strings for Fourier: Making Waves (PHASE 5 title localized).
 class FmwStrings {
   FmwStrings._();
 
-  static const String title = 'Fourier: Making Waves';
+  static const String title = '傅里叶：合成波';
 
   static const String tabDiscrete = '离散';
   static const String tabWaveGame = '波形游戏';

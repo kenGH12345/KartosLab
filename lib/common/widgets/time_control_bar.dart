@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kratos/l10n/kartos_localization.dart';
 import '../simulation_clock.dart';
 
 /// 模拟时钟播放控制栏。
@@ -20,26 +21,27 @@ class TimeControlBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chrome = loc.shared;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         IconButton(
           icon: Icon(clock.isRunning ? Icons.pause : Icons.play_arrow, size: 22),
           onPressed: clock.toggle,
-          tooltip: clock.isRunning ? '暂停' : '播放',
+          tooltip: clock.isRunning ? chrome.pause : chrome.play,
           visualDensity: VisualDensity.compact,
         ),
         IconButton(
           icon: const Icon(Icons.skip_next, size: 20),
           onPressed: clock.isPaused ? clock.stepForward : null,
-          tooltip: '前进一帧',
+          tooltip: chrome.stepForward,
           visualDensity: VisualDensity.compact,
         ),
         if (showRestart)
           IconButton(
             icon: const Icon(Icons.restart_alt, size: 20),
             onPressed: clock.reset,
-            tooltip: '重置',
+            tooltip: chrome.reset,
             visualDensity: VisualDensity.compact,
           ),
         if (showTimeDisplay) ...[

@@ -12,6 +12,7 @@ import '../animation/bloch_animation_controller.dart';
 import '../composer/bloch_composer.dart';
 import '../model/bloch_sphere_model.dart';
 import 'bloch_scene.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class QuantumMeasurementBlochScreen extends StatefulWidget {
   const QuantumMeasurementBlochScreen({
@@ -102,7 +103,7 @@ class _QuantumMeasurementBlochScreenState
                             child: KratosResetAllButton(
                               onPressed: _reset,
                               radius: 20.5,
-                              tooltip: 'Reset All',
+                              tooltip: QmStrings.resetAll,
                             ),
                           ),
                         ],

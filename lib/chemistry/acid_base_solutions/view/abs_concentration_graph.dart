@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../abs_strings.dart';
 import '../model/abs_beaker.dart';
 import '../model/abs_colors.dart';
 import '../model/abs_math.dart';
@@ -77,7 +78,7 @@ class AbsConcentrationGraph extends StatelessWidget {
 
   static const double barWidth = AbsGraphLayout.barWidth;
   static const double barSpacing = AbsGraphLayout.barSpacing;
-  static const String yAxisTitle = 'Equilibrium Concentration (mol/L)';
+  static const String yAxisTitle = AbsStrings.equilibriumConcentration;
   static const double leftChrome = 70;
 
   @override

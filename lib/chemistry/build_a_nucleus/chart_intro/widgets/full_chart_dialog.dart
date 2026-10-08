@@ -58,7 +58,7 @@ class FullChartDialog extends StatelessWidget {
                       color: Colors.black,
                       size: BanConstants.closeIconSize,
                     ),
-                    tooltip: 'Close',
+                    tooltip: '关闭',
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],

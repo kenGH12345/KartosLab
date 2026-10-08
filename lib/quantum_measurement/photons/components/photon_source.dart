@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../model/photons_model.dart';
 import '../qm_photons_colors.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class PhotonSourceNode extends StatelessWidget {
   const PhotonSourceNode({
@@ -96,7 +97,7 @@ class PhotonSourceNode extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 5),
-        const Text('Photon Source', style: TextStyle(fontSize: 12)),
+        Text(QmStrings.photonSource, style: const TextStyle(fontSize: 12)),
       ],
     );
   }

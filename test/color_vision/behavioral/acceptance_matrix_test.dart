@@ -7,6 +7,7 @@ import 'package:kratos/color_vision/model/visible_color.dart';
 import 'package:kratos/color_vision/screens/color_vision_home.dart';
 import 'package:kratos/color_vision/view/rgb_screen_view.dart';
 import 'package:kratos/color_vision/view/single_bulb_screen_view.dart';
+import 'package:kratos/color_vision/color_vision_strings.dart';
 
 /// Behavioral acceptance matrix (Model locked — View interaction only).
 void main() {
@@ -218,11 +219,11 @@ void main() {
       await tester.pump();
       expect(find.byType(SingleBulbScreenView), findsOneWidget);
 
-      await tester.tap(find.text('RGB Bulbs'));
+      await tester.tap(find.text(ColorVisionStrings.rgbBulbs));
       await tester.pump();
       expect(find.byType(RgbScreenView), findsOneWidget);
 
-      await tester.tap(find.text('Single Bulb'));
+      await tester.tap(find.text(ColorVisionStrings.singleBulb));
       await tester.pump();
       expect(find.byType(SingleBulbScreenView), findsOneWidget);
     });

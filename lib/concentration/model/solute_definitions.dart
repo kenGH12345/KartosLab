@@ -8,7 +8,7 @@ import 'solvent.dart';
 abstract final class SoluteDefinitions {
   static final Solute drinkMix = Solute(
     id: 'drinkMix',
-    displayName: 'Drink mix',
+    displayName: '饮料粉',
     stockSolutionConcentration: 5.5,
     molarMass: 342.296, // sucrose
     colorScheme: SoluteColorScheme(
@@ -23,7 +23,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute cobaltIINitrate = Solute(
     id: 'cobaltIINitrate',
-    displayName: 'Cobalt(II) nitrate',
+    displayName: '硝酸钴(II)',
     formula: 'Co(NO<sub>3</sub>)<sub>2</sub>',
     stockSolutionConcentration: 5.0,
     molarMass: 182.942,
@@ -39,7 +39,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute cobaltChloride = Solute(
     id: 'cobaltChloride',
-    displayName: 'Cobalt(II) chloride',
+    displayName: '氯化钴(II)',
     formula: 'CoCl<sub>2</sub>',
     stockSolutionConcentration: 4.0,
     molarMass: 129.839,
@@ -55,7 +55,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute potassiumDichromate = Solute(
     id: 'potassiumDichromate',
-    displayName: 'Potassium dichromate',
+    displayName: '重铬酸钾',
     formula: 'K<sub>2</sub>Cr<sub>2</sub>O<sub>7</sub>',
     stockSolutionConcentration: 0.5,
     molarMass: 294.185,
@@ -71,7 +71,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute potassiumChromate = Solute(
     id: 'potassiumChromate',
-    displayName: 'Potassium chromate',
+    displayName: '铬酸钾',
     formula: 'K<sub>2</sub>CrO<sub>4</sub>',
     stockSolutionConcentration: 3.0,
     molarMass: 194.191,
@@ -87,7 +87,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute nickelIIChloride = Solute(
     id: 'nickelIIChloride',
-    displayName: 'Nickel(II) chloride',
+    displayName: '氯化镍(II)',
     formula: 'NiCl<sub>2</sub>',
     stockSolutionConcentration: 5.0,
     molarMass: 129.599,
@@ -103,7 +103,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute copperSulfate = Solute(
     id: 'copperSulfate',
-    displayName: 'Copper(II) sulfate',
+    displayName: '硫酸铜(II)',
     formula: 'CuSO<sub>4</sub>',
     stockSolutionConcentration: 1.0,
     molarMass: 159.609,
@@ -119,7 +119,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute potassiumPermanganate = Solute(
     id: 'potassiumPermanganate',
-    displayName: 'Potassium permanganate',
+    displayName: '高锰酸钾',
     formula: 'KMnO<sub>4</sub>',
     stockSolutionConcentration: 0.4,
     molarMass: 158.034,
@@ -136,7 +136,7 @@ abstract final class SoluteDefinitions {
 
   static final Solute sodiumChloride = Solute(
     id: 'sodiumChloride',
-    displayName: 'Sodium chloride',
+    displayName: '氯化钠',
     formula: 'NaCl',
     stockSolutionConcentration: 5.50,
     molarMass: 58.443,

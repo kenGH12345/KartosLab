@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kratos/l10n/kartos_localization.dart';
 
 /// 快照提供者回调：各 sim 提供当前「参数 + 读数」快照 Map。
 /// key 需与 [ExperimentLogger.columns] 的 key 匹配。
@@ -128,13 +129,13 @@ class _ExperimentLoggerState extends State<ExperimentLogger> {
                   IconButton(
                     visualDensity: VisualDensity.compact,
                     icon: const Icon(Icons.file_download_outlined, size: 16),
-                    tooltip: '导出',
+                    tooltip: loc.common.export,
                     onPressed: widget.onExport,
                   ),
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   icon: const Icon(Icons.delete_sweep_outlined, size: 16),
-                  tooltip: '清空全部',
+                  tooltip: loc.common.clearAll,
                   onPressed: _rows.isEmpty ? null : _clearAll,
                 ),
               ],
@@ -203,7 +204,7 @@ class _ExperimentLoggerState extends State<ExperimentLogger> {
                 IconButton(
                   visualDensity: VisualDensity.compact,
                   icon: const Icon(Icons.close, size: 12, color: Color(0xFF94A3B8)),
-                  tooltip: '删除该行',
+                  tooltip: loc.common.deleteRow,
                   onPressed: () => _removeAt(i),
                 ),
               ],

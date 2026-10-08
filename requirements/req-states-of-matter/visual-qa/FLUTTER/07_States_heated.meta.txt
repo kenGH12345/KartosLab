@@ -5,4 +5,4 @@ design: 834.0x504.0
 scene_scale: joist-fit (SomSceneShell)
 paused: true
 source: local-flutter-widget-test
-captured_at: 2026-09-28T01:29:04.190541
+captured_at: 2026-10-08T17:27:30.747025

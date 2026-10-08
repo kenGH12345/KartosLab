@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../gas_properties_colors.dart';
 import '../render/gas_render_state.dart';
+import 'package:kratos/gas_properties/gas_properties_strings.dart';
 
 /// Speed or KE histogram — 19 bins from EnergySamplingState.
 class HistogramPainter extends CustomPainter {
@@ -111,7 +112,7 @@ class AverageSpeedPanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Average Speed',
+            GasPropertiesStrings.averageSpeed,
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -120,14 +121,14 @@ class AverageSpeedPanel extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Text(
-            'Heavy: ${fmt(energy?.heavyAverageSpeed)}',
+            '${GasPropertiesStrings.heavy}: ${fmt(energy?.heavyAverageSpeed)}',
             style: const TextStyle(
               color: Color(GasPropertiesColors.heavyParticle),
               fontSize: 12,
             ),
           ),
           Text(
-            'Light: ${fmt(energy?.lightAverageSpeed)}',
+            '${GasPropertiesStrings.light}: ${fmt(energy?.lightAverageSpeed)}',
             style: const TextStyle(
               color: Color(GasPropertiesColors.lightParticle),
               fontSize: 12,

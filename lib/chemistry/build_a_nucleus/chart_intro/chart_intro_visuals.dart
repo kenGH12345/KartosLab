@@ -76,11 +76,11 @@ class ChartIntroVisuals {
   static const Color chartRadioBackground = Color(BanConstants.panelBackgroundValue);
 
   /// [已确认] `mostLikelyDecayType` / `stable` / `unknown` / `percentageInParenthesesPattern`
-  static const String mostLikelyDecayType = 'Most likely decay type';
-  static const String stableLabel = 'Stable';
-  static const String unknownLabel = 'Unknown';
-  static const String unknownPercentLiteral = 'unknown ';
-  static const String decayButtonLabel = 'Decay';
+  static const String mostLikelyDecayType = '最可能衰变类型';
+  static const String stableLabel = '稳定';
+  static const String unknownLabel = '未知';
+  static const String unknownPercentLiteral = '未知 ';
+  static const String decayButtonLabel = '衰变';
 
   /// DecaySymbolNode Z 色。[已确认] `PhetColorScheme.RED_COLORBLIND` rgb(255,85,0)
   static const Color decayEquationProtonNumber = Color(0xFFFF5500);
@@ -137,17 +137,17 @@ class ChartIntroVisuals {
   static const double nucleonNumberMinVerticalSpacing = 25;
 
   /// 手风琴标题。[已确认] `partialNuclideChart`
-  static const String partialNuclideChartTitle = 'Partial Nuclide Chart';
+  static const String partialNuclideChartTitle = '部分核素图';
 
   /// [已确认] `NuclearShellModelText`
-  static const String nuclearShellModelLabel = 'Nuclear Shell Model';
+  static const String nuclearShellModelLabel = '核壳层模型';
 
   /// [已确认] Nuclear Shell 高亮底 rgb(189,255,255)
   static const Color nuclearShellModelFill = Color(0xFFBDFFFF);
 
-  static const String energyAxisLabel = 'Energy';
+  static const String energyAxisLabel = '能量';
 
-  static const String magicNumbersLabel = 'Magic Numbers';
+  static const String magicNumbersLabel = '幻数';
 
   /// 图例标题。[已确认] `mostLikelyDecayType`
   static const String legendTitle = mostLikelyDecayType;
@@ -170,10 +170,10 @@ class ChartIntroVisuals {
   static const double fullChartDialogContentSpacing = 10;
 
   /// Full Chart 按钮 / Dialog。[已确认] `FullChartTextButton` + strings
-  static const String fullChartButtonLabel = 'Full Chart';
-  static const String fullChartDialogTitle = 'Full Nuclide Chart';
+  static const String fullChartButtonLabel = '完整图表';
+  static const String fullChartDialogTitle = '完整核素图';
   static const String fullChartInfoText =
-      'A full, interactive chart of the nuclides and their decays is available from Energy Education Project at University of Calgary, see https://energyeducation.ca/simulations/nuclear/nuclidechart.html.';
+      '完整、可交互的核素及衰变图表由卡尔加里大学 Energy Education Project 提供，见 https://energyeducation.ca/simulations/nuclear/nuclidechart.html。';
   static const String fullChartAsset = 'assets/images/full_nuclide_chart.png';
   static const String fullChartExternalUrl =
       'https://energyeducation.ca/simulations/nuclear/nuclidechart.html';
@@ -247,8 +247,8 @@ class ChartIntroVisuals {
   static const double focusedCellLabelFontSize = 6;
 
   /// [已确认] axis.protonNumber / axis.neutronNumber 英文字面
-  static const String protonAxisLabel = 'Proton Number';
-  static const String neutronAxisLabel = 'Neutron Number';
+  static const String protonAxisLabel = '质子数';
+  static const String neutronAxisLabel = '中子数';
 
   // —— Chart Intro 周期表（shred PeriodicTableCell / PeriodicTableNode）——
 

@@ -4,6 +4,7 @@ import '../model/more_tools_model.dart';
 import '../qa_launch.dart';
 import '../view/more_tools_play_area.dart';
 import 'bending_light_scene_shell.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 class MoreToolsScreen extends StatefulWidget {
   const MoreToolsScreen({super.key, this.embedded = false});
@@ -42,7 +43,7 @@ class _MoreToolsScreenState extends State<MoreToolsScreen> {
     );
     if (widget.embedded) return body;
     return Scaffold(
-      appBar: AppBar(title: const Text('Bending Light — More Tools')),
+      appBar: AppBar(title: const Text(BlStrings.titleMoreTools)),
       body: body,
     );
   }

@@ -8,6 +8,7 @@ import 'package:kratos/balancing_chemical_equations/views/balance_scales_node.da
 import 'package:kratos/balancing_chemical_equations/views/bar_charts_node.dart';
 import 'package:kratos/balancing_chemical_equations/views/particles_node.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+import 'package:kratos/balancing_chemical_equations/bce_strings.dart';
 
 void main() {
   group('EquationsModel defaults', () {
@@ -216,11 +217,11 @@ void main() {
       model.toggleReactants();
       await tester.pump();
       expect(model.reactantsExpanded, isFalse);
-      expect(find.text('Reactants'), findsOneWidget);
+      expect(find.text(BceStrings.reactants), findsOneWidget);
       model.toggleProducts();
       await tester.pump();
       expect(model.productsExpanded, isFalse);
-      expect(find.text('Products'), findsOneWidget);
+      expect(find.text(BceStrings.products), findsOneWidget);
     });
 
     testWidgets('Reset All from modified UI state', (tester) async {

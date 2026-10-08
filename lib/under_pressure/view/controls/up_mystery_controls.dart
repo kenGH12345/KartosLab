@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:kratos/under_pressure/controller/under_pressure_controller.dart';
 import 'package:kratos/under_pressure/transform/up_mvt.dart';
+import 'package:kratos/under_pressure/under_pressure_strings.dart';
 
 /// Source: `MysteryPoolView` choice panel + sun `ComboBox`.
 class UpMysteryControls extends StatelessWidget {
@@ -46,13 +47,13 @@ class UpMysteryControls extends StatelessWidget {
               children: [
                 _Radio(
                   selected: choice == 'fluidDensity',
-                  label: 'Mystery Fluid',
+                  label: UnderPressureStrings.mysteryFluid,
                   onTap: () => controller.setMysteryChoice('fluidDensity'),
                 ),
                 const SizedBox(height: 5),
                 _Radio(
                   selected: choice == 'gravity',
-                  label: 'Mystery Planet',
+                  label: UnderPressureStrings.mysteryPlanet,
                   onTap: () => controller.setMysteryChoice('gravity'),
                 ),
               ],
@@ -65,12 +66,12 @@ class UpMysteryControls extends StatelessWidget {
           child: choice == 'fluidDensity'
               ? _MysteryCombo(
                   value: mystery.customFluidDensityIndex,
-                  items: const ['Fluid A', 'Fluid B', 'Fluid C'],
+                  items: const [UnderPressureStrings.fluidA, UnderPressureStrings.fluidB, UnderPressureStrings.fluidC],
                   onChanged: controller.setMysteryFluidIndex,
                 )
               : _MysteryCombo(
                   value: mystery.customGravityIndex,
-                  items: const ['Planet A', 'Planet B', 'Planet C'],
+                  items: const [UnderPressureStrings.planetA, UnderPressureStrings.planetB, UnderPressureStrings.planetC],
                   onChanged: controller.setMysteryGravityIndex,
                 ),
         ),

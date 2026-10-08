@@ -4,6 +4,7 @@ import '../model/balloons_static_electricity_constants.dart';
 import '../model/balloons_static_electricity_model.dart';
 import 'base_view_layout.dart';
 import 'charge_painter.dart';
+import 'package:kratos/balloons_and_static_electricity/base_strings.dart';
 
 /// Wall image + charge canvas — PhET `WallNode`.
 class WallNode extends StatelessWidget {
@@ -34,7 +35,7 @@ class WallNode extends StatelessWidget {
           left: wall.x,
           top: 0,
           child: Semantics(
-            label: 'Wall',
+            label: BaseStrings.wall,
             child: IgnorePointer(
               child: Image.asset(
                 BaseAssets.wall,

@@ -17,6 +17,7 @@ import '../components/coin_result_display.dart';
 import '../components/coins_scene_primitives.dart';
 import '../components/multi_coin_display.dart';
 import '../model/coins_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class ClassicalCoinsScene extends StatefulWidget {
   const ClassicalCoinsScene({
@@ -75,7 +76,7 @@ class _ClassicalCoinsSceneState extends State<ClassicalCoinsScene> {
         scene.singleCoin.measurementState == ExperimentMeasurementState.revealed;
     final multiRevealed =
         scene.coinSet.measurementState == ExperimentMeasurementState.revealed;
-    final title = preparing ? 'Coin to Prepare' : 'Coin';
+    final title = preparing ? QmStrings.coinToPrepare : QmStrings.coin;
 
     // Prep column top — content-driven VBox like CoinExperimentPreparationArea.
     final prepTop = 8.0;
@@ -167,7 +168,7 @@ class _ClassicalCoinsSceneState extends State<ClassicalCoinsScene> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CoinsSectionTitle('Single Coin Measurements'),
+              CoinsSectionTitle(QmStrings.singleCoinMeasurements),
               const SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -225,7 +226,7 @@ class _ClassicalCoinsSceneState extends State<ClassicalCoinsScene> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CoinsSectionTitle('Multiple Coin Measurements'),
+              CoinsSectionTitle(QmStrings.multipleCoinMeasurements),
               const SizedBox(height: 8),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../composer/spin_composer.dart';
 import '../model/spin_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class SternGerlachApparatus extends StatelessWidget {
   const SternGerlachApparatus({
@@ -73,17 +74,17 @@ class SternGerlachApparatus extends StatelessWidget {
               runSpacing: 2,
               children: [
                 _BlockChip(
-                  label: 'None',
+                  label: QmStrings.none,
                   selected: blockingMode == BlockingMode.noBlocker,
                   onTap: () => onBlockingChanged!(BlockingMode.noBlocker),
                 ),
                 _BlockChip(
-                  label: 'Block ↑',
+                  label: QmStrings.blockUp,
                   selected: blockingMode == BlockingMode.blockUp,
                   onTap: () => onBlockingChanged!(BlockingMode.blockUp),
                 ),
                 _BlockChip(
-                  label: 'Block ↓',
+                  label: QmStrings.blockDown,
                   selected: blockingMode == BlockingMode.blockDown,
                   onTap: () => onBlockingChanged!(BlockingMode.blockDown),
                 ),

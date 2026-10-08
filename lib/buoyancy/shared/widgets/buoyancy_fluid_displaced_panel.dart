@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import '../../domain/material/buoyancy_gravity.dart';
 import '../../domain/material/buoyancy_material.dart';
 import '../../physics/constants.dart';
+import '../../buoyancy_strings.dart';
 import 'buoyancy_accordion_stub.dart';
 
 /// Source: `FluidDisplacedAccordionBox.ts` + scenery-phet `BeakerNode.ts`.
@@ -88,7 +89,7 @@ class _BuoyancyFluidDisplacedPanelState extends State<BuoyancyFluidDisplacedPane
     final totalH = beakerH + yR + scaleIconH - 8;
 
     return BuoyancyAccordionStub(
-      title: 'Fluid Displaced',
+      title: BuoyancyStrings.fluidDisplaced,
       expanded: widget.expanded,
       onToggle: widget.onToggle,
       child: SizedBox(

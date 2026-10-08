@@ -7,6 +7,7 @@ import 'package:kratos/wave_on_a_string/model/woas_time_speed.dart';
 import 'package:kratos/wave_on_a_string/view/woas_play_area.dart';
 import 'package:kratos/wave_on_a_string/view/woas_string_painter.dart';
 import 'package:kratos/wave_on_a_string/woas_constants.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 Widget _harness(WoasModel model) {
   return MaterialApp(
@@ -44,7 +45,7 @@ void main() {
   testWidgets('E2E-B Oscillate + amp/freq live update', (tester) async {
     final model = WoasModel();
     await tester.pumpWidget(_harness(model));
-    await tester.tap(find.text('Oscillate'));
+    await tester.tap(find.text(WoasStrings.oscillate));
     await tester.pump();
     for (var i = 0; i < 20; i++) {
       model.manualStep(frameDuration);
@@ -60,7 +61,7 @@ void main() {
   testWidgets('E2E-C Pulse trigger propagates', (tester) async {
     final model = WoasModel()..setDamping(0);
     await tester.pumpWidget(_harness(model));
-    await tester.tap(find.text('Pulse'));
+    await tester.tap(find.text(WoasStrings.pulse));
     await tester.pump();
     model.triggerPulse();
     for (var i = 0; i < 60; i++) {
@@ -77,13 +78,13 @@ void main() {
   testWidgets('E2E-D Fixed → Loose → No End', (tester) async {
     final model = WoasModel();
     await tester.pumpWidget(_harness(model));
-    await tester.tap(find.text('Loose End'));
+    await tester.tap(find.text(WoasStrings.looseEnd));
     await tester.pump();
     expect(model.stringEndType, WoasEndType.looseEnd);
-    await tester.tap(find.text('No End'));
+    await tester.tap(find.text(WoasStrings.noEnd));
     await tester.pump();
     expect(model.stringEndType, WoasEndType.noEnd);
-    await tester.tap(find.text('Fixed End'));
+    await tester.tap(find.text(WoasStrings.fixedEnd));
     await tester.pump();
     expect(model.stringEndType, WoasEndType.fixedEnd);
   });

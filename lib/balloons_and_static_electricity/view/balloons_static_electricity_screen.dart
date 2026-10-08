@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../model/balloons_static_electricity_model.dart';
 import 'base_view_layout.dart';
 import 'balloons_static_electricity_view.dart';
+import 'package:kratos/balloons_and_static_electricity/base_strings.dart';
 
 /// Single-screen Balloons and Static Electricity — PhET `BASEScreen`.
 ///
@@ -19,8 +20,8 @@ class BalloonsStaticElectricityScreen extends StatefulWidget {
   final bool autoStartClock;
   final bool enableAudio;
 
-  static const String title = 'Balloons and Static Electricity';
-  static const String subtitle = '摩擦起电 · 诱导电荷 · 静电吸引';
+  static const String title = BaseStrings.title;
+  static const String subtitle = BaseStrings.subtitle;
   static const Color accentColor = Color(0xFFF79722);
 
   /// Home card icon — peer Material style (JT / CAF); not a custom Home system.

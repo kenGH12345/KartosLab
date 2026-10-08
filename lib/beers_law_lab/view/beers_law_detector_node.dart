@@ -57,7 +57,7 @@ class _DetectorBody extends StatelessWidget {
       top: pos.dy,
       width: bodyW,
       child: Semantics(
-        label: 'Detector reading $_valueText',
+        label: '探测器读数 $_valueText',
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -202,7 +202,7 @@ class _DetectorProbeState extends State<_DetectorProbe> {
           return KeyEventResult.ignored;
         },
         child: Semantics(
-          label: 'Detector probe',
+          label: '探测器探针',
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onPanUpdate: (d) {

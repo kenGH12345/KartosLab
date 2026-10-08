@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/qm_visual.dart';
 import '../model/bloch_sphere_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 const _controlFont = TextStyle(fontSize: 14, color: Colors.black);
 
@@ -71,7 +72,7 @@ class MagneticFieldControl extends StatelessWidget {
           ),
         QmCheckbox(
           value: model.magneticFieldEnabled,
-          label: 'Magnetic Field',
+          label: QmStrings.magneticField,
           onChanged: (v) {
             model.setMagneticFieldEnabled(v);
             onChanged();

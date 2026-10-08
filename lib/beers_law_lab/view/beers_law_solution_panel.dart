@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../bll_strings.dart';
 import '../model/beers_law_model.dart';
 import '../model/beers_law_solution.dart';
 import '../model/concentration_transform.dart';
@@ -42,7 +43,7 @@ class BeersLawSolutionPanel extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Text('Solution:', style: TextStyle(fontSize: 18)),
+                Text('${BllStrings.solution}：', style: const TextStyle(fontSize: 18)),
                 const SizedBox(width: 8),
                 Expanded(
                   child: _SolutionSelector(model: model),
@@ -52,7 +53,7 @@ class BeersLawSolutionPanel extends StatelessWidget {
             const SizedBox(height: 15),
             Row(
               children: [
-                const Text('Concentration:', style: TextStyle(fontSize: 18)),
+                Text('${BllStrings.concentration}：', style: const TextStyle(fontSize: 18)),
                 const SizedBox(width: 8),
                 Container(
                   padding:

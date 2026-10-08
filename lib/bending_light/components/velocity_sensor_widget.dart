@@ -8,6 +8,7 @@ import 'velocity_arrow.dart';
 import '../phet_font.dart';
 import '../screens/stage_scale.dart';
 import 'toolbox_icons.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// `VelocitySensorNode`: triangle hot-spot, readout, blue arrow from model velocity.
 class VelocitySensorView extends StatelessWidget {
@@ -118,7 +119,7 @@ class _VelocityPainter extends CustomPainter {
     )..layout(maxWidth: 36);
     tp.paint(canvas, Offset(33 - tp.width / 2, -15));
     final title = TextPainter(
-      text: TextSpan(text: 'Speed', style: PhetFont.of(10, color: Colors.black)),
+      text: TextSpan(text: BlStrings.speed, style: PhetFont.of(10, color: Colors.black)),
       textDirection: TextDirection.ltr,
     )..layout();
     title.paint(canvas, Offset(33 - title.width / 2, 4));

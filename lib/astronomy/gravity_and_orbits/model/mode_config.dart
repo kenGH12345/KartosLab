@@ -136,7 +136,7 @@ ModeConfigResult _sunEarth(bool isModel) {
     y: 0,
     vx: 0,
     vy: GaoConstants.earthOrbitalSpeedAtPerihelion,
-    tickLabel: 'Earth',
+    tickLabel: '地球',
   );
   final bodies = [sun, planet];
   centerBodies(bodies);
@@ -193,7 +193,7 @@ ModeConfigResult _sunEarthMoon(bool isModel) {
     y: 0,
     vx: 0,
     vy: GaoConstants.earthOrbitalSpeedAtPerihelion,
-    tickLabel: 'Earth',
+    tickLabel: '地球',
     touchDilation: 2,
   );
 
@@ -212,7 +212,7 @@ ModeConfigResult _sunEarthMoon(bool isModel) {
     y: moonY,
     vx: moonVx,
     vy: GaoConstants.earthOrbitalSpeedAtPerihelion,
-    tickLabel: 'Our Moon',
+    tickLabel: '月球',
     massSettable: false,
     massReadoutBelow: false,
     pathLengthBuffer: isModel ? GaoConstants.earthPerihelion / 2 : 0,
@@ -262,7 +262,7 @@ ModeConfigResult _planetMoon(bool isModel) {
     y: 0,
     vx: planetVelocityX,
     vy: 0,
-    tickLabel: 'Earth',
+    tickLabel: '地球',
   );
   final moon = BodyConfiguration(
     type: GaoBodyType.moon,
@@ -272,7 +272,7 @@ ModeConfigResult _planetMoon(bool isModel) {
     y: GaoConstants.moonPerigee,
     vx: moonVelocityX,
     vy: 0,
-    tickLabel: 'Our Moon',
+    tickLabel: '月球',
     rotationPeriod: isModel ? 27.322 * GaoConstants.secondsPerDay : null,
   );
   final bodies = [planet, moon];
@@ -320,7 +320,7 @@ ModeConfigResult _earthSatellite(bool isModel) {
     y: 0,
     vx: 0,
     vy: 0,
-    tickLabel: 'Earth',
+    tickLabel: '地球',
     maxPathLength: 35879455,
     touchDilation: 0,
   );
@@ -332,7 +332,7 @@ ModeConfigResult _earthSatellite(bool isModel) {
     y: 0,
     vx: 0,
     vy: GaoConstants.spaceStationSpeed,
-    tickLabel: 'Space Station',
+    tickLabel: '空间站',
     rotationPeriod: GaoConstants.spaceStationOrbitalPeriod,
   );
   final bodies = [planet, satellite];

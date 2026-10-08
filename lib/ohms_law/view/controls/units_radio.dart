@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import '../../model/current_units.dart';
 import '../../model/ohms_law_model.dart';
 import '../../ohms_law_view_constants.dart';
+import 'package:kratos/ohms_law/ohms_law_strings.dart';
 
 /// PhET `UnitsRadioButtonContainer` — vertical aqua-style radios (1.5+).
 class UnitsRadioGroup extends StatefulWidget {
@@ -67,13 +68,13 @@ class _UnitsRadioGroupState extends State<UnitsRadioGroup> {
       onKeyEvent: _onKey,
       child: Semantics(
         container: true,
-        label: 'Current units',
+        label: OhmsLawStrings.currentUnits,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              'Units',
+              OhmsLawStrings.units,
               style: TextStyle(
                 fontFamily: OhmsLawViewConstants.uiFontFamily,
                 fontSize: 22,
@@ -86,7 +87,7 @@ class _UnitsRadioGroupState extends State<UnitsRadioGroup> {
             _AquaRadio(
               key: const Key('ohms_law_units_ma'),
               selected: model.currentUnits == CurrentUnit.milliamps,
-              label: 'Milliamps (mA)',
+              label: OhmsLawStrings.milliamps,
               onTap: () {
                 _focus.requestFocus();
                 model.currentUnits = CurrentUnit.milliamps;
@@ -96,7 +97,7 @@ class _UnitsRadioGroupState extends State<UnitsRadioGroup> {
             _AquaRadio(
               key: const Key('ohms_law_units_a'),
               selected: model.currentUnits == CurrentUnit.amps,
-              label: 'Amps (A)',
+              label: OhmsLawStrings.amps,
               onTap: () {
                 _focus.requestFocus();
                 model.currentUnits = CurrentUnit.amps;

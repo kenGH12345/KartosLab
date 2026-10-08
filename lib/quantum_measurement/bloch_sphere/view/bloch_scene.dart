@@ -10,6 +10,7 @@ import '../components/bloch_sphere_view.dart';
 import '../components/bloch_state_equation.dart';
 import '../components/measurement_controls.dart';
 import '../components/state_preset_controls.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class BlochScene extends StatelessWidget {
   const BlochScene({
@@ -120,7 +121,7 @@ class BlochScene extends StatelessWidget {
           top: geometry.measureSphereCenter.dy + sphereR + 12 + 160 + 12,
           child: QmCheckbox(
             value: model.magneticFieldEnabled,
-            label: 'Magnetic Field',
+            label: QmStrings.magneticField,
             onChanged: (v) {
               model.setMagneticFieldEnabled(v);
               onChanged();

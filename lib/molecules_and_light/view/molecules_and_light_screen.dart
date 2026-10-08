@@ -12,6 +12,7 @@ import '../molecules_and_light_constants.dart';
 import 'molecules_and_light_mvt.dart';
 import 'observation_window_painter.dart';
 import 'spectrum_diagram_painter.dart';
+import 'package:kratos/molecules_and_light/mal_strings.dart';
 
 /// Single Molecules and Light simulation screen (PhET `MicroScreenView`).
 ///
@@ -19,7 +20,7 @@ import 'spectrum_diagram_painter.dart';
 class MoleculesAndLightScreen extends StatefulWidget {
   const MoleculesAndLightScreen({super.key});
 
-  static const String title = 'Molecules and Light';
+  static const String title = MalStrings.title;
   static const String subtitle = '光子吸收 · 分子振动 · 光谱';
   static const Color accentColor = Color(0xFF4070CE);
 
@@ -255,7 +256,7 @@ class MoleculesAndLightScreenState extends State<MoleculesAndLightScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Light Sources', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('光源', style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 4),
           Wrap(
             spacing: 6,
@@ -268,7 +269,7 @@ class MoleculesAndLightScreenState extends State<MoleculesAndLightScreen>
             ],
           ),
           const SizedBox(height: 4),
-          const Text('Higher Energy →', style: TextStyle(fontSize: 11)),
+          const Text('更高能量 →', style: TextStyle(fontSize: 11)),
         ],
       ),
     );
@@ -443,7 +444,7 @@ class MoleculesAndLightScreenState extends State<MoleculesAndLightScreen>
                           key: const Key('spectrum-close'),
                           onPressed: () =>
                               setState(() => _spectrumOpen = false),
-                          child: const Text('Close'),
+                          child: const Text('关闭'),
                         ),
                       ),
                     ],

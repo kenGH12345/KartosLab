@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../gases_intro_constants.dart';
+import '../gases_intro_strings.dart';
 import '../model/ideal_gas_law_model.dart';
 import '../model/particle.dart';
 import '../painters/gauge_painter.dart';
@@ -331,7 +332,7 @@ class GasPropertiesOopsDialog extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: onDismiss,
-                      child: const Text('OK'),
+                      child: const Text(GasesIntroStrings.ok),
                     ),
                   ),
                 ],

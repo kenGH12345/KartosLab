@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../common/qm_visual.dart';
 import '../model/bloch_sphere_model.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 String _basisLetter(BlochStateDirection basis) {
   switch (basis) {
@@ -108,7 +109,7 @@ class BlochStateEquation extends StatelessWidget {
       children: [
         if (showTitle) ...[
           const Text(
-            'Spin State to Prepare',
+            QmStrings.spinStateToPrepare,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
@@ -180,7 +181,7 @@ class BlochMeasureEquationPanel extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Basis:', style: TextStyle(fontSize: 14)),
+              Text(QmStrings.basis, style: const TextStyle(fontSize: 14)),
               const SizedBox(width: 8),
               for (final (d, label) in _bases) ...[
                 QmAquaRadio(
@@ -230,7 +231,7 @@ class BlochSystemUnderTest extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            isSingle ? 'Atom' : 'Atoms',
+            isSingle ? QmStrings.atom : QmStrings.atoms,
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
           ),
           Expanded(

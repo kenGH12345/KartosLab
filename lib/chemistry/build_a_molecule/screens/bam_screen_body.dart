@@ -159,7 +159,7 @@ class _BamScreenBodyState extends State<BamScreenBody> {
                       child: KratosResetAllButton(
                         onPressed: widget.controller.reset,
                         radius: 20.5,
-                        tooltip: 'Reset All',
+                        tooltip: '全部重置',
                       ),
                     ),
                     if (showOverlay)
@@ -188,7 +188,7 @@ class _BamScreenBodyState extends State<BamScreenBody> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title ?? 'Build a Molecule'),
+        title: Text(widget.title ?? '搭建分子'),
         backgroundColor: BamConstants.playAreaBackgroundColor,
       ),
       body: body,

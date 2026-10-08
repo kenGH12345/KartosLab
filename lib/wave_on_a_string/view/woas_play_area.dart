@@ -12,6 +12,7 @@ import 'woas_layout.dart';
 import 'woas_overlays.dart';
 import 'woas_start_node.dart';
 import 'woas_string_painter.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 /// PhET `WOASScreenView` — play area + control chrome (Phase 3).
 ///
@@ -133,13 +134,14 @@ class WoasPlayAreaState extends State<WoasPlayArea>
                       top: 10,
                       child: WoasRadioPanel<WoasMode>(
                         key: const Key('wave_mode_panel'),
-                        semanticLabel: 'Wave Mode',
+                        semanticLabel: WoasStrings.waveMode,
                         values: const [
                           WoasMode.manual,
                           WoasMode.oscillate,
                           WoasMode.pulse,
                         ],
-                        labels: const ['Manual', 'Oscillate', 'Pulse'],
+                        labels: const [WoasStrings.manual, WoasStrings.oscillate, WoasStrings.pulse],
+                        keyIds: const ['Manual', 'Oscillate', 'Pulse'],
                         groupValue: model.waveMode,
                         onChanged: model.setWaveMode,
                       ),
@@ -149,17 +151,18 @@ class WoasPlayAreaState extends State<WoasPlayArea>
                       top: 10,
                       child: WoasRadioPanel<WoasEndType>(
                         key: const Key('end_type_panel'),
-                        semanticLabel: 'End Type',
+                        semanticLabel: WoasStrings.endType,
                         values: const [
                           WoasEndType.fixedEnd,
                           WoasEndType.looseEnd,
                           WoasEndType.noEnd,
                         ],
                         labels: const [
-                          'Fixed End',
-                          'Loose End',
-                          'No End',
+                          WoasStrings.fixedEnd,
+                          WoasStrings.looseEnd,
+                          WoasStrings.noEnd,
                         ],
+                        keyIds: const ['Fixed End', 'Loose End', 'No End'],
                         groupValue: model.stringEndType,
                         onChanged: model.setStringEndType,
                       ),

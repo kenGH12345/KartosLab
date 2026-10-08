@@ -6,6 +6,7 @@ import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
 
 import '../controller/mixtures_controller.dart';
 import '../iaam_constants.dart';
+import '../iaam_strings.dart';
 import '../model/mixtures_constants.dart';
 import '../transform/iaam_transform.dart';
 import '../widgets/expanded_periodic_table.dart';
@@ -132,7 +133,7 @@ class _MixIsotopesScreenState extends State<MixIsotopesScreen>
                             left: 0,
                             width: panelW,
                             child: MixAccordionShell(
-                              title: 'Percent Composition',
+                              title: '百分组成',
                               width: panelW,
                               expanded: _controller.compositionExpanded,
                               onToggle: () =>
@@ -152,7 +153,7 @@ class _MixIsotopesScreenState extends State<MixIsotopesScreen>
                             left: 0,
                             width: panelW,
                             child: MixAccordionShell(
-                              title: 'Average Atomic Mass',
+                              title: IaamStrings.averageAtomicMass,
                               width: panelW,
                               expanded: _controller.averageMassExpanded,
                               onToggle: () =>
@@ -229,7 +230,7 @@ class _MixIsotopesScreenState extends State<MixIsotopesScreen>
 
     if (widget.embedded) return body;
     return Scaffold(
-      appBar: AppBar(title: const Text('Mixtures')),
+      appBar: AppBar(title: const Text('混合物')),
       body: body,
     );
   }

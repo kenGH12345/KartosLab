@@ -4,6 +4,7 @@ import '../gases_intro_constants.dart';
 import '../model/hold_constant.dart';
 import '../model/ideal_gas_law_model.dart';
 import '../model/particle.dart';
+import 'package:kratos/gases_intro/gases_intro_strings.dart';
 
 /// Bicycle pump with Path proportions from scenery-phet [BicyclePumpNode].
 /// Shared by Gases Intro and Gas Properties.
@@ -433,7 +434,7 @@ class HeaterCoolerWidget extends StatelessWidget {
                           ignoring: !enabled,
                           child: Column(
                             children: [
-                              const Text('Heat', style: labelStyle),
+                              Text(GasesIntroStrings.heat, style: labelStyle),
                               Expanded(
                                 child: LayoutBuilder(
                                   builder: (context, c) {
@@ -482,7 +483,7 @@ class HeaterCoolerWidget extends StatelessWidget {
                                   },
                                 ),
                               ),
-                              const Text('Cool', style: labelStyle),
+                              Text(GasesIntroStrings.cool, style: labelStyle),
                             ],
                           ),
                         ),

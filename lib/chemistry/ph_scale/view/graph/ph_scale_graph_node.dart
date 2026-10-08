@@ -275,8 +275,8 @@ class _ScaleSwitch extends StatelessWidget {
     return SizedBox(
       width: 280,
       child: _AbSwitch(
-        leftLabel: 'Logarithmic',
-        rightLabel: 'Linear',
+        leftLabel: '对数',
+        rightLabel: '线性',
         leftSelected: state.scale == GraphScale.logarithmic,
         onLeft: () => state.scale = GraphScale.logarithmic,
         onRight: () => state.scale = GraphScale.linear,

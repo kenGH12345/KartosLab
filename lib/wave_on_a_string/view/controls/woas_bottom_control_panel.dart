@@ -4,6 +4,7 @@ import '../../model/woas_mode.dart';
 import '../../model/woas_model.dart';
 import '../../woas_constants.dart';
 import 'woas_number_control.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 /// PhET `BottomControlPanel` — mode-conditional NumberControls + tool checkboxes.
 class WoasBottomControlPanel extends StatelessWidget {
@@ -42,7 +43,8 @@ class WoasBottomControlPanel extends StatelessWidget {
   List<Widget> _modeControls(WoasMode mode) {
     final damping = WoasNumberControl(
       key: const Key('damping_control'),
-      title: 'Damping',
+      title: WoasStrings.damping,
+      keyPrefix: 'Damping',
       value: model.damping * 100,
       min: dampingMin * 100,
       max: dampingMax * 100,
@@ -53,7 +55,8 @@ class WoasBottomControlPanel extends StatelessWidget {
     );
     final tension = WoasNumberControl(
       key: const Key('tension_control'),
-      title: 'Tension',
+      title: WoasStrings.tension,
+      keyPrefix: 'Tension',
       value: model.tension * 100,
       min: tensionMin * 100,
       max: tensionMax * 100,
@@ -64,7 +67,8 @@ class WoasBottomControlPanel extends StatelessWidget {
     );
     final amplitude = WoasNumberControl(
       key: const Key('amplitude_control'),
-      title: 'Amplitude',
+      title: WoasStrings.amplitude,
+      keyPrefix: 'Amplitude',
       value: model.amplitudeCm,
       min: amplitudeMinCm,
       max: maxStartAmplitudeCm,
@@ -75,7 +79,8 @@ class WoasBottomControlPanel extends StatelessWidget {
     );
     final frequency = WoasNumberControl(
       key: const Key('frequency_control'),
-      title: 'Frequency',
+      title: WoasStrings.frequency,
+      keyPrefix: 'Frequency',
       value: model.frequencyHz,
       min: frequencyMinHz,
       max: frequencyMaxHz,
@@ -86,7 +91,8 @@ class WoasBottomControlPanel extends StatelessWidget {
     );
     final pulseWidth = WoasNumberControl(
       key: const Key('pulse_width_control'),
-      title: 'Pulse Width',
+      title: WoasStrings.pulseWidth,
+      keyPrefix: 'Pulse Width',
       value: model.pulseWidthS,
       min: pulseWidthMinS,
       max: pulseWidthMaxS,
@@ -134,19 +140,19 @@ class _CheckboxColumn extends StatelessWidget {
       children: [
         _CheckRow(
           key: const Key('rulers_checkbox'),
-          label: 'Rulers',
+          label: WoasStrings.rulers,
           value: model.rulersVisible,
           onChanged: model.setRulersVisible,
         ),
         _CheckRow(
           key: const Key('stopwatch_checkbox'),
-          label: 'Stopwatch',
+          label: WoasStrings.stopwatch,
           value: model.stopwatch.isVisible,
           onChanged: model.setStopwatchVisible,
         ),
         _CheckRow(
           key: const Key('reference_line_checkbox'),
-          label: 'Reference Line',
+          label: WoasStrings.referenceLine,
           value: model.referenceLineVisible,
           onChanged: model.setReferenceLineVisible,
         ),

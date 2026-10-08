@@ -3,4 +3,4 @@ viewport: 1024x768
 DPR: 1
 actions: initial
 source: local-flutter-widget-test
-captured_at: 2026-09-27T17:26:25.508551Z
+captured_at: 2026-10-08T09:24:41.429533Z

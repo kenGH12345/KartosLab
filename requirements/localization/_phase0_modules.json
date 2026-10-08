@@ -1,0 +1,682 @@
+[
+  {
+    "module": "astronomy/gravity_and_orbits",
+    "total": 35,
+    "english": 33,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 3
+  },
+  {
+    "module": "astronomy/keplers_laws",
+    "total": 59,
+    "english": 51,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 3,
+    "files": 4
+  },
+  {
+    "module": "astronomy/my_solar_system",
+    "total": 41,
+    "english": 36,
+    "chinese": 0,
+    "mixed": 1,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 4
+  },
+  {
+    "module": "balancing_act",
+    "total": 36,
+    "english": 33,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 3
+  },
+  {
+    "module": "balancing_chemical_equations",
+    "total": 24,
+    "english": 23,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "balloons_and_static_electricity",
+    "total": 13,
+    "english": 12,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 2,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "beers_law_lab",
+    "total": 22,
+    "english": 21,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 9
+  },
+  {
+    "module": "bending_light",
+    "total": 47,
+    "english": 46,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 7,
+    "scientific": 0,
+    "files": 15
+  },
+  {
+    "module": "blackbody_spectrum",
+    "total": 22,
+    "english": 16,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 3,
+    "files": 1
+  },
+  {
+    "module": "buoyancy",
+    "total": 37,
+    "english": 35,
+    "chinese": 2,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 14
+  },
+  {
+    "module": "capacitor_lab_basics",
+    "total": 19,
+    "english": 19,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 2,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "cck_ac_virtual_lab",
+    "total": 36,
+    "english": 34,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 4
+  },
+  {
+    "module": "charges_and_fields",
+    "total": 18,
+    "english": 12,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 3,
+    "files": 2
+  },
+  {
+    "module": "chemistry/acid_base_solutions",
+    "total": 13,
+    "english": 11,
+    "chinese": 1,
+    "mixed": 1,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 4
+  },
+  {
+    "module": "chemistry/build_a_molecule",
+    "total": 12,
+    "english": 5,
+    "chinese": 4,
+    "mixed": 3,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 6
+  },
+  {
+    "module": "chemistry/build_a_nucleus",
+    "total": 53,
+    "english": 35,
+    "chinese": 12,
+    "mixed": 1,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 15
+  },
+  {
+    "module": "chemistry/build_an_atom",
+    "total": 20,
+    "english": 14,
+    "chinese": 5,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 7
+  },
+  {
+    "module": "chemistry/isotopes_and_atomic_mass",
+    "total": 18,
+    "english": 17,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 7
+  },
+  {
+    "module": "chemistry/molarity",
+    "total": 30,
+    "english": 1,
+    "chinese": 25,
+    "mixed": 4,
+    "a11y": 2,
+    "scientific": 0,
+    "files": 10
+  },
+  {
+    "module": "chemistry/molecule_polarity",
+    "total": 34,
+    "english": 27,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 4
+  },
+  {
+    "module": "chemistry/ph_scale",
+    "total": 37,
+    "english": 24,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 11
+  },
+  {
+    "module": "chemistry/states_of_matter",
+    "total": 46,
+    "english": 42,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 3
+  },
+  {
+    "module": "circuit",
+    "total": 74,
+    "english": 0,
+    "chinese": 68,
+    "mixed": 6,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "collision_lab",
+    "total": 53,
+    "english": 46,
+    "chinese": 2,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 7
+  },
+  {
+    "module": "color_vision",
+    "total": 117,
+    "english": 10,
+    "chinese": 85,
+    "mixed": 20,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 11
+  },
+  {
+    "module": "common",
+    "total": 116,
+    "english": 4,
+    "chinese": 101,
+    "mixed": 11,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 24
+  },
+  {
+    "module": "concentration",
+    "total": 23,
+    "english": 19,
+    "chinese": 2,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "curve_fitting",
+    "total": 29,
+    "english": 18,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 2
+  },
+  {
+    "module": "density",
+    "total": 26,
+    "english": 24,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 2
+  },
+  {
+    "module": "diffusion",
+    "total": 11,
+    "english": 9,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "energy_forms_and_changes",
+    "total": 26,
+    "english": 24,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 3
+  },
+  {
+    "module": "energy_skate_park",
+    "total": 68,
+    "english": 9,
+    "chinese": 56,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 4
+  },
+  {
+    "module": "faradays_law",
+    "total": 9,
+    "english": 6,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 5
+  },
+  {
+    "module": "forces",
+    "total": 138,
+    "english": 15,
+    "chinese": 118,
+    "mixed": 2,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 9
+  },
+  {
+    "module": "fourier_making_waves",
+    "total": 68,
+    "english": 5,
+    "chinese": 59,
+    "mixed": 1,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 4
+  },
+  {
+    "module": "friction",
+    "total": 13,
+    "english": 10,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "gas_properties",
+    "total": 27,
+    "english": 27,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "gases_intro",
+    "total": 12,
+    "english": 12,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "gravity_force_lab",
+    "total": 56,
+    "english": 52,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 35,
+    "scientific": 1,
+    "files": 4
+  },
+  {
+    "module": "gravity_force_lab_basics",
+    "total": 11,
+    "english": 9,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 1
+  },
+  {
+    "module": "hookes_law",
+    "total": 26,
+    "english": 26,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 8
+  },
+  {
+    "module": "john_travoltage",
+    "total": 17,
+    "english": 14,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 3
+  },
+  {
+    "module": "magnetism/magnet_and_compass",
+    "total": 10,
+    "english": 6,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "main.dart",
+    "total": 1,
+    "english": 1,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 1
+  },
+  {
+    "module": "masses_and_springs_basics",
+    "total": 30,
+    "english": 30,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 8
+  },
+  {
+    "module": "membrane_transport",
+    "total": 17,
+    "english": 14,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "molecule_shapes",
+    "total": 1,
+    "english": 1,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 1
+  },
+  {
+    "module": "molecules_and_light",
+    "total": 8,
+    "english": 7,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "normal_modes",
+    "total": 18,
+    "english": 16,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "ohms_law",
+    "total": 13,
+    "english": 12,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 2,
+    "scientific": 0,
+    "files": 6
+  },
+  {
+    "module": "optics",
+    "total": 52,
+    "english": 0,
+    "chinese": 51,
+    "mixed": 1,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "pendulum_lab",
+    "total": 39,
+    "english": 36,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 3
+  },
+  {
+    "module": "physics/quantum_wave_interference",
+    "total": 67,
+    "english": 56,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 17
+  },
+  {
+    "module": "plinko_probability",
+    "total": 23,
+    "english": 16,
+    "chinese": 0,
+    "mixed": 1,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 4
+  },
+  {
+    "module": "projectile_motion",
+    "total": 47,
+    "english": 44,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "quantum_coin_toss",
+    "total": 38,
+    "english": 31,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "quantum_measurement",
+    "total": 64,
+    "english": 46,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 26
+  },
+  {
+    "module": "radio_waves",
+    "total": 29,
+    "english": 0,
+    "chinese": 25,
+    "mixed": 4,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 1
+  },
+  {
+    "module": "reactants_products_and_leftovers",
+    "total": 5,
+    "english": 5,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 3
+  },
+  {
+    "module": "resistance_in_a_wire",
+    "total": 13,
+    "english": 11,
+    "chinese": 2,
+    "mixed": 0,
+    "a11y": 3,
+    "scientific": 0,
+    "files": 6
+  },
+  {
+    "module": "rutherford_scattering",
+    "total": 26,
+    "english": 22,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 4
+  },
+  {
+    "module": "screens",
+    "total": 78,
+    "english": 10,
+    "chinese": 56,
+    "mixed": 12,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 2
+  },
+  {
+    "module": "sound",
+    "total": 41,
+    "english": 1,
+    "chinese": 40,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 3
+  },
+  {
+    "module": "under_pressure",
+    "total": 21,
+    "english": 16,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 2,
+    "files": 6
+  },
+  {
+    "module": "vector_addition",
+    "total": 33,
+    "english": 31,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 1,
+    "files": 5
+  },
+  {
+    "module": "wave_interference",
+    "total": 35,
+    "english": 0,
+    "chinese": 33,
+    "mixed": 2,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 1
+  },
+  {
+    "module": "wave_on_a_string",
+    "total": 17,
+    "english": 16,
+    "chinese": 1,
+    "mixed": 0,
+    "a11y": 2,
+    "scientific": 0,
+    "files": 5
+  },
+  {
+    "module": "waves_intro",
+    "total": 23,
+    "english": 23,
+    "chinese": 0,
+    "mixed": 0,
+    "a11y": 0,
+    "scientific": 0,
+    "files": 4
+  }
+]

@@ -9,6 +9,7 @@ import '../../domain/time_speed.dart';
 import '../common/qwi_number_control.dart';
 import '../common/qwi_particle_selector.dart';
 import 'experiment_controller.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Particle selector — PhET SceneRadioButtonGroup 2×2.
 class ExperimentParticleSelector extends StatelessWidget {
@@ -53,7 +54,7 @@ class ExperimentSourceControls extends StatelessWidget {
         else
           QwiNumberControl(
             sliderKey: const Key('qwi_speed_slider'),
-            title: 'Speed',
+            title: QwiStrings.speed,
             valueText: '${scene.particleSpeedMps.toStringAsExponential(2)} m/s',
             value: scene.particleSpeedMps.clamp(scene.defaults.speedMinMps, scene.defaults.speedMaxMps),
             min: scene.defaults.speedMinMps,
@@ -63,7 +64,7 @@ class ExperimentSourceControls extends StatelessWidget {
         const SizedBox(height: 4),
         QwiNumberControl(
           sliderKey: const Key('qwi_intensity_slider'),
-          title: 'Source Intensity',
+          title: QwiStrings.sourceIntensity,
           valueText: '',
           value: scene.sourceStrength,
           min: 0,
@@ -96,12 +97,12 @@ class ExperimentSlitControls extends StatelessWidget {
   final ExperimentController controller;
 
   static const _slitLabels = {
-    SlitConfiguration.bothOpen: 'Both Slits Open',
-    SlitConfiguration.leftCovered: 'Left Slit Covered',
-    SlitConfiguration.rightCovered: 'Right Slit Covered',
-    SlitConfiguration.leftDetector: 'Detector on Left Slit',
-    SlitConfiguration.rightDetector: 'Detector on Right Slit',
-    SlitConfiguration.bothDetectors: 'Detectors on Both Slits',
+    SlitConfiguration.bothOpen: QwiStrings.bothSlitsOpen,
+    SlitConfiguration.leftCovered: QwiStrings.leftSlitCovered,
+    SlitConfiguration.rightCovered: QwiStrings.rightSlitCovered,
+    SlitConfiguration.leftDetector: QwiStrings.detectorOnLeftSlit,
+    SlitConfiguration.rightDetector: QwiStrings.detectorOnRightSlit,
+    SlitConfiguration.bothDetectors: QwiStrings.detectorsOnBothSlits,
   };
 
   @override
@@ -118,7 +119,7 @@ class ExperimentSlitControls extends StatelessWidget {
       children: [
         QwiNumberControl(
           sliderKey: const Key('qwi_slit_separation_slider'),
-          title: 'Slit Separation',
+          title: QwiStrings.slitSeparation,
           valueText: '${sepUm.toStringAsFixed(0)} µm',
           value: scene.slitSeparationMm.clamp(scene.defaults.slitSeparationMinMm, scene.defaults.slitSeparationMaxMm),
           min: scene.defaults.slitSeparationMinMm,
@@ -131,7 +132,7 @@ class ExperimentSlitControls extends StatelessWidget {
         const SizedBox(height: 4),
         QwiNumberControl(
           sliderKey: const Key('qwi_screen_distance_slider'),
-          title: 'Barrier-Screen Distance',
+          title: QwiStrings.barrierScreenDistance,
           valueText: '${scene.screenDistanceM.toStringAsFixed(2)} m',
           value: scene.screenDistanceM,
           min: QwiConstants.experimentScreenDistanceMinM,
@@ -142,7 +143,7 @@ class ExperimentSlitControls extends StatelessWidget {
           onChanged: controller.setScreenDistanceM,
         ),
         const SizedBox(height: 4),
-        const Text('Configuration', style: TextStyle(fontFamily: 'Arial', fontSize: 11, fontWeight: FontWeight.w600)),
+        Text(QwiStrings.configuration, style: const TextStyle(fontFamily: 'Arial', fontSize: 11, fontWeight: FontWeight.w600)),
         const SizedBox(height: 2),
         Container(
           height: 28,
@@ -192,8 +193,8 @@ class ExperimentDetectorControls extends StatelessWidget {
           key: const Key('qwi_detection_mode'),
           value: scene.detectionMode,
           items: const {
-            DetectorMode.intensity: 'Intensity',
-            DetectorMode.hits: 'Hits',
+            DetectorMode.intensity: QwiStrings.intensity,
+            DetectorMode.hits: QwiStrings.hits,
           },
           onChanged: controller.setDetectionMode,
         ),
@@ -206,7 +207,7 @@ class ExperimentDetectorControls extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Text(
-                  'Screen Brightness',
+                  QwiStrings.screenBrightness,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(fontFamily: 'Arial', fontSize: 12, fontWeight: FontWeight.w600),
@@ -273,18 +274,18 @@ class ExperimentTimeControls extends StatelessWidget {
         TextButton(
           key: const Key('qwi_play_pause'),
           onPressed: () => controller.setPlaying(!clock.isPlaying),
-          child: Text(clock.isPlaying ? 'Pause' : 'Play', style: const TextStyle(fontSize: 11)),
+          child: Text(clock.isPlaying ? QwiStrings.pause : QwiStrings.play, style: const TextStyle(fontSize: 11)),
         ),
         _TinyChip(
           key: const Key('qwi_speed_normal'),
-          label: 'Normal',
+          label: QwiStrings.normal,
           selected: clock.speed == TimeSpeed.normal,
           onTap: () => controller.setTimeSpeed(TimeSpeed.normal),
         ),
         const SizedBox(width: 4),
         _TinyChip(
           key: const Key('qwi_speed_fast'),
-          label: 'Fast',
+          label: QwiStrings.fast,
           selected: clock.speed == TimeSpeed.fast,
           onTap: () => controller.setTimeSpeed(TimeSpeed.fast),
         ),

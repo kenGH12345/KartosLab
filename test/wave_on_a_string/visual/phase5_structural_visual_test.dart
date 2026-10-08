@@ -10,6 +10,7 @@ import 'package:kratos/wave_on_a_string/view/woas_play_area.dart';
 import 'package:kratos/wave_on_a_string/view/woas_start_node.dart';
 import 'package:kratos/wave_on_a_string/view/woas_string_painter.dart';
 import 'package:kratos/wave_on_a_string/woas_constants.dart';
+import 'package:kratos/wave_on_a_string/woas_strings.dart';
 
 Widget _harness(WoasModel model) {
   return MaterialApp(
@@ -53,8 +54,8 @@ void main() {
       expect(woasBeadDisplayYs(model).length, 61);
       expect(find.byType(WoasCenterLine), findsOneWidget);
       expect(model.referenceLineVisible, isFalse);
-      expect(find.text('Manual'), findsOneWidget);
-      expect(find.text('Fixed End'), findsOneWidget);
+      expect(find.text(WoasStrings.manual), findsOneWidget);
+      expect(find.text(WoasStrings.fixedEnd), findsOneWidget);
       expect(model.amplitudeCm, closeTo(0.75, 1e-12));
       expect(model.frequencyHz, closeTo(1.50, 1e-12));
       expect(model.damping, closeTo(0.2, 1e-12));
@@ -91,18 +92,18 @@ void main() {
     testWidgets('Conditional controls: Oscillate vs Pulse vs Manual', (tester) async {
       final model = WoasModel();
       await tester.pumpWidget(_harness(model));
-      expect(find.text('Amplitude'), findsNothing);
+      expect(find.text(WoasStrings.amplitude), findsNothing);
 
       model.setWaveMode(WoasMode.oscillate);
       await tester.pump();
-      expect(find.text('Amplitude'), findsOneWidget);
-      expect(find.text('Frequency'), findsOneWidget);
-      expect(find.text('Pulse Width'), findsNothing);
+      expect(find.text(WoasStrings.amplitude), findsOneWidget);
+      expect(find.text(WoasStrings.frequency), findsOneWidget);
+      expect(find.text(WoasStrings.pulseWidth), findsNothing);
 
       model.setWaveMode(WoasMode.pulse);
       await tester.pump();
-      expect(find.text('Pulse Width'), findsOneWidget);
-      expect(find.text('Frequency'), findsNothing);
+      expect(find.text(WoasStrings.pulseWidth), findsOneWidget);
+      expect(find.text(WoasStrings.frequency), findsNothing);
     });
 
     testWidgets('Reference Line ON independent of center dash', (tester) async {
@@ -133,9 +134,9 @@ void main() {
       await tester.pumpWidget(_harness(model));
       model.resetAll();
       await tester.pump();
-      expect(find.text('Manual'), findsOneWidget);
-      expect(find.text('Fixed End'), findsOneWidget);
-      expect(find.text('Amplitude'), findsNothing);
+      expect(find.text(WoasStrings.manual), findsOneWidget);
+      expect(find.text(WoasStrings.fixedEnd), findsOneWidget);
+      expect(find.text(WoasStrings.amplitude), findsNothing);
       expect(model.rulersVisible, isFalse);
     });
   });

@@ -5,6 +5,7 @@ import '../model/equation.dart';
 import '../model/equation_term.dart';
 import 'bce_molecule_node.dart';
 import 'horizontal_aligner.dart';
+import 'package:kratos/balancing_chemical_equations/bce_strings.dart';
 
 /// PhET `ParticlesNode` + `ParticlesAccordionBox` pair.
 class ParticlesNode extends StatelessWidget {
@@ -51,7 +52,7 @@ class ParticlesNode extends StatelessWidget {
                 left: aligner.reactantsBoxLeft,
                 top: 0,
                 child: _AccordionBox(
-                  title: 'Reactants',
+                  title: BceStrings.reactants,
                   width: boxSize.width,
                   height: boxSize.height,
                   expanded: reactantsExpanded,
@@ -78,7 +79,7 @@ class ParticlesNode extends StatelessWidget {
                 left: aligner.productsBoxLeft,
                 top: 0,
                 child: _AccordionBox(
-                  title: 'Products',
+                  title: BceStrings.products,
                   width: boxSize.width,
                   height: boxSize.height,
                   expanded: productsExpanded,

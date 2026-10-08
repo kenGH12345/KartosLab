@@ -7,6 +7,7 @@ import '../../render/experiment/graph_renderer.dart';
 import '../../render_data/experiment/fraunhofer_render_data.dart';
 import '../common/qwi_colors.dart';
 import 'experiment_controller.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// PhET `GraphAccordionBox`.
 ///
@@ -24,8 +25,8 @@ class ExperimentGraphAccordion extends StatelessWidget {
   Widget build(BuildContext context) {
     final expanded = controller.graphExpanded;
     final hits = controller.scene.detectionMode == DetectorMode.hits;
-    final title = hits ? 'Hits Graph' : 'Intensity Graph';
-    final yLabel = hits ? 'Count' : 'Intensity';
+    final title = hits ? QwiStrings.hitsGraph : QwiStrings.intensityGraph;
+    final yLabel = hits ? QwiStrings.count : QwiStrings.intensity;
     final zoom = controller.model.graphZoom;
     final detZoom = controller.model.detectorScreenScaleIndex;
 

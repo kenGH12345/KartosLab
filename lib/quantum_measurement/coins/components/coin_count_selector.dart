@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:kratos/quantum_coin_toss/common/quantum_measurement_colors.dart';
 
 import '../../coins/model/coin_set.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class CoinCountSelector extends StatelessWidget {
   const CoinCountSelector({
@@ -27,7 +28,7 @@ class CoinCountSelector extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         const Text(
-          'Identical Coins',
+          QmStrings.identicalCoins,
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 12),

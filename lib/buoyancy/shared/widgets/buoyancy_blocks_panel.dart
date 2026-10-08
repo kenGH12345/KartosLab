@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../buoyancy_strings.dart';
 import '../compare_block_set.dart';
 import '../../rendering/runtime/buoyancy_play_area.dart';
 
@@ -24,7 +25,7 @@ class BuoyancyBlocksPanel extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
-              'Blocks',
+              BuoyancyStrings.blocks,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
             ),
             const SizedBox(height: 4),
@@ -46,9 +47,12 @@ class BuoyancyBlocksPanel extends StatelessWidget {
                       Expanded(
                         child: Text(
                           switch (mode) {
-                            CompareBlockSet.sameMass => 'Same Mass',
-                            CompareBlockSet.sameVolume => 'Same Volume',
-                            CompareBlockSet.sameDensity => 'Same Density',
+                            CompareBlockSet.sameMass =>
+                              BuoyancyStrings.sameMass,
+                            CompareBlockSet.sameVolume =>
+                              BuoyancyStrings.sameVolume,
+                            CompareBlockSet.sameDensity =>
+                              BuoyancyStrings.sameDensity,
                           },
                           style: const TextStyle(fontSize: 13),
                           overflow: TextOverflow.ellipsis,

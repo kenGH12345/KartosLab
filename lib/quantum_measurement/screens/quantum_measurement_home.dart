@@ -13,14 +13,15 @@ import 'package:kratos/quantum_measurement/coins/view/coins_screen.dart';
 import 'package:kratos/quantum_measurement/photons/view/photons_screen.dart';
 import 'package:kratos/quantum_measurement/qm_assets.dart';
 import 'package:kratos/quantum_measurement/spin/view/spin_screen.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 /// Formal KartosLab Home entry for Simulation ID `quantum-measurement`.
 class QuantumMeasurementHome extends StatefulWidget {
   const QuantumMeasurementHome({super.key});
 
   static const String simulationId = 'quantum-measurement';
-  static const String title = 'Quantum Measurement';
-  static const String subtitle = 'Coins · Photons · Spin · Bloch';
+  static const String title = QmStrings.title;
+  static const String subtitle = QmStrings.subtitle;
   static const Color accentColor = Color(0xFF5B21B6);
   static const String homeIconAsset = QmAssets.spinScreenIcon;
 
@@ -79,7 +80,7 @@ class _QuantumMeasurementHomeState extends State<QuantumMeasurementHome> {
       onTabChanged: _onTabChanged,
       tabs: const [
         KratosTab(
-          label: 'Coins',
+          label: QmStrings.coins,
           icon: Icons.monetization_on_outlined,
           color: QuantumMeasurementHome.accentColor,
           child: QuantumMeasurementCoinsScreen(
@@ -87,7 +88,7 @@ class _QuantumMeasurementHomeState extends State<QuantumMeasurementHome> {
           ),
         ),
         KratosTab(
-          label: 'Photons',
+          label: QmStrings.photons,
           icon: Icons.light_mode_outlined,
           color: QuantumMeasurementHome.accentColor,
           child: QuantumMeasurementPhotonsScreen(
@@ -95,7 +96,7 @@ class _QuantumMeasurementHomeState extends State<QuantumMeasurementHome> {
           ),
         ),
         KratosTab(
-          label: 'Spin',
+          label: QmStrings.spin,
           icon: Icons.sync_alt_rounded,
           color: QuantumMeasurementHome.accentColor,
           child: QuantumMeasurementSpinScreen(
@@ -103,7 +104,7 @@ class _QuantumMeasurementHomeState extends State<QuantumMeasurementHome> {
           ),
         ),
         KratosTab(
-          label: 'Bloch Sphere',
+          label: QmStrings.blochSphere,
           icon: Icons.public_outlined,
           color: QuantumMeasurementHome.accentColor,
           child: QuantumMeasurementBlochScreen(

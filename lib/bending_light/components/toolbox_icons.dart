@@ -13,6 +13,7 @@ import 'intensity_meter_widget.dart';
 import 'prism_knob.dart';
 import 'probe_glyph.dart';
 import 'wave_view.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// Toolbox icon for `ProtractorNode` at scale 0.24.
 class ProtractorToolboxIcon extends StatelessWidget {
@@ -178,7 +179,7 @@ class _IntensityFacePainter extends CustomPainter {
       lightSourceBottom: true,
     );
     final title = TextPainter(
-      text: TextSpan(text: 'Intensity', style: PhetFont.of(24, color: Colors.white)),
+      text: TextSpan(text: BlStrings.intensity, style: PhetFont.of(24, color: Colors.white)),
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: size.width - 15);
     title.paint(canvas, Offset((size.width - title.width) / 2, inner.bottom - title.height - 3));
@@ -314,7 +315,7 @@ class _VelocityBodyPainter extends CustomPainter {
       lightSourceBottom: true,
     );
     final title = TextPainter(
-      text: TextSpan(text: 'Speed', style: PhetFont.of(10)),
+      text: TextSpan(text: BlStrings.speed, style: PhetFont.of(10)),
       textDirection: TextDirection.ltr,
     )..layout(maxWidth: 46);
     title.paint(canvas, Offset(33 - title.width / 2, 6));

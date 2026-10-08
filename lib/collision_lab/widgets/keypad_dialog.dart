@@ -101,11 +101,11 @@ class _KeypadDialogState extends State<KeypadDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: const Text('取消'),
         ),
         ElevatedButton(
           onPressed: _submit,
-          child: const Text('Enter'),
+          child: const Text('确定'),
         ),
       ],
     );

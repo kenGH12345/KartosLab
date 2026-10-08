@@ -4,6 +4,7 @@ import 'package:kratos/chemistry/isotopes_and_atomic_mass/controller/make_isotop
 import 'package:kratos/chemistry/isotopes_and_atomic_mass/screens/make_isotopes_screen.dart';
 import 'package:kratos/chemistry/isotopes_and_atomic_mass/widgets/expanded_periodic_table.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
+import 'package:kratos/chemistry/isotopes_and_atomic_mass/iaam_strings.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -95,7 +96,7 @@ void main() {
       );
       await tester.pump();
       expect(find.text('Mass Number'), findsOneWidget);
-      expect(find.text('Atomic Mass'), findsOneWidget);
+      expect(find.text(IaamStrings.atomicMass), findsOneWidget);
       expect(find.text('Symbol'), findsOneWidget);
       expect(find.text('Abundance in Nature'), findsOneWidget);
       expect(find.byType(KratosResetAllButton), findsOneWidget);

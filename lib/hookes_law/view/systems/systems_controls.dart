@@ -1,3 +1,4 @@
+import 'package:kratos/hookes_law/hookes_law_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../constants/hookes_law_constants.dart';
@@ -55,7 +56,7 @@ Widget systemsForceControl({
 }) {
   final range = equivalent.appliedForceRange;
   return IntroNumberControl(
-    title: 'Applied Force:',
+    title: '${HookesLawStrings.appliedForce}:',
     value: equivalent.appliedForce,
     min: range.min,
     max: range.max,

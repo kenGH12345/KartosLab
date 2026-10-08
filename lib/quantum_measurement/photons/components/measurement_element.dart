@@ -4,6 +4,7 @@ library;
 import 'package:flutter/material.dart';
 
 import '../qm_photons_colors.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class PolarizingBeamSplitterNode extends StatelessWidget {
   const PolarizingBeamSplitterNode({
@@ -49,7 +50,7 @@ class PolarizingBeamSplitterNode extends StatelessWidget {
             top: size.height + 4,
             width: size.width + 40,
             child: const Text(
-              'Polarizing\nBeam Splitter',
+              QmStrings.polarizingBeamSplitter,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 11),
             ),

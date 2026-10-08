@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../model/single_bulb_state.dart';
 import '../model/filter.dart';
 import '../solver/color_model.dart';
+import 'package:kratos/color_vision/color_vision_strings.dart';
 
 /// Paints the single-bulb filter simulation.
 ///
@@ -107,7 +108,7 @@ class SingleBulbPainter extends CustomPainter {
           (state.filter.customG * 255).round(),
           (state.filter.customB * 255).round(),
         );
-        filterLabel = 'Custom';
+        filterLabel = ColorVisionStrings.custom;
         break;
     }
 

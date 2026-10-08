@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../controller/masb_controller.dart';
 import '../masb_constants.dart';
 import '../model/masb_model.dart';
+import '../masb_strings.dart';
 
 /// Bounce right stack: Spring Constant + Gravity + LineOptions.
 class BounceRightPanel extends StatelessWidget {
@@ -53,7 +54,7 @@ class _GravityPanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text('Gravity',
+            Text(MasbStrings.gravity,
                 style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
             Text('${g.toStringAsFixed(1)} m/s²',
                 style: TextStyle(fontSize: 12, color: Colors.grey.shade800)),
@@ -61,11 +62,13 @@ class _GravityPanel extends StatelessWidget {
               isExpanded: true,
               value: model.body == MasbBody.custom ? MasbBody.custom : model.body,
               items: const [
-                DropdownMenuItem(value: MasbBody.earth, child: Text('Earth')),
-                DropdownMenuItem(value: MasbBody.moon, child: Text('Moon')),
-                DropdownMenuItem(value: MasbBody.jupiter, child: Text('Jupiter')),
-                DropdownMenuItem(value: MasbBody.planetX, child: Text('Planet X')),
-                DropdownMenuItem(value: MasbBody.custom, child: Text('Custom')),
+                DropdownMenuItem(value: MasbBody.earth, child: Text(MasbStrings.earth)),
+                DropdownMenuItem(value: MasbBody.moon, child: Text(MasbStrings.moon)),
+                DropdownMenuItem(value: MasbBody.jupiter, child: Text(MasbStrings.jupiter)),
+                DropdownMenuItem(
+                    value: MasbBody.planetX, child: Text(MasbStrings.planetX)),
+                DropdownMenuItem(
+                    value: MasbBody.custom, child: Text(MasbStrings.custom)),
               ],
               onChanged: (b) {
                 if (b != null) controller.setBody(b);
@@ -89,8 +92,8 @@ class _GravityPanel extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('None', style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
-                Text('Lots', style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
+                Text(MasbStrings.none, style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
+                Text(MasbStrings.lots, style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
               ],
             ),
           ],
@@ -115,7 +118,7 @@ class _LineOptionsPanel extends StatelessWidget {
           CheckboxListTile(
             dense: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            title: const Text('Unstretched Length', style: TextStyle(fontSize: 12)),
+            title: Text(MasbStrings.unstretchedLength, style: const TextStyle(fontSize: 12)),
             secondary: const _LineSwatch(Color(0xFF4142E8)),
             value: model.naturalLengthVisible,
             onChanged: (v) => controller.setNaturalLengthVisible(v ?? false),
@@ -124,7 +127,7 @@ class _LineOptionsPanel extends StatelessWidget {
           CheckboxListTile(
             dense: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            title: const Text('Resting Position', style: TextStyle(fontSize: 12)),
+            title: Text(MasbStrings.restingPosition, style: const TextStyle(fontSize: 12)),
             secondary: const _LineSwatch(Color(0xFF00B400)),
             value: model.equilibriumPositionVisible,
             onChanged: (v) =>
@@ -134,7 +137,7 @@ class _LineOptionsPanel extends StatelessWidget {
           CheckboxListTile(
             dense: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            title: const Text('Movable Line', style: TextStyle(fontSize: 12)),
+            title: Text(MasbStrings.movableLine, style: const TextStyle(fontSize: 12)),
             secondary: const _LineSwatch(Color(0xFFFF0000)),
             value: model.movableLineVisible,
             onChanged: (v) => controller.setMovableLineVisible(v ?? false),
@@ -207,7 +210,7 @@ class _VectorOptionsPanel extends StatelessWidget {
           CheckboxListTile(
             dense: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            title: const Text('Period Trace', style: TextStyle(fontSize: 12)),
+            title: Text(MasbStrings.periodTrace, style: const TextStyle(fontSize: 12)),
             value: model.spring.periodTraceVisible,
             onChanged: (v) => controller.setPeriodTraceVisible(v ?? false),
             controlAffinity: ListTileControlAffinity.leading,
@@ -215,7 +218,7 @@ class _VectorOptionsPanel extends StatelessWidget {
           CheckboxListTile(
             dense: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            title: const Text('Velocity', style: TextStyle(fontSize: 12)),
+            title: Text(MasbStrings.velocity, style: const TextStyle(fontSize: 12)),
             value: model.velocityVectorVisible,
             onChanged: (v) => controller.setVelocityVectorVisible(v ?? false),
             controlAffinity: ListTileControlAffinity.leading,
@@ -223,7 +226,7 @@ class _VectorOptionsPanel extends StatelessWidget {
           CheckboxListTile(
             dense: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-            title: const Text('Acceleration', style: TextStyle(fontSize: 12)),
+            title: Text(MasbStrings.acceleration, style: const TextStyle(fontSize: 12)),
             value: model.accelerationVectorVisible,
             onChanged: (v) =>
                 controller.setAccelerationVectorVisible(v ?? false),

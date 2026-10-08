@@ -2,4 +2,4 @@ state: 07_ThreeAtoms_initial
 viewport: 1280x800
 DPR: 1.0
 contentScale: 1.1636363636363636
-captured_at: 2026-10-05T21:00:32.013479
+captured_at: 2026-10-08T17:25:27.966376

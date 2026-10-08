@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../masb_strings.dart';
 
 import '../controller/masb_controller.dart';
 import '../masb_constants.dart';
@@ -25,7 +26,7 @@ class SpringConstantControl extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'Spring Constant',
+                  '劲度系数',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
@@ -60,9 +61,9 @@ class SpringConstantControl extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('Small',
+                    Text(MasbStrings.small,
                         style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
-                    Text('Large',
+                    Text(MasbStrings.large,
                         style: TextStyle(fontSize: 11, color: Colors.grey.shade700)),
                   ],
                 ),

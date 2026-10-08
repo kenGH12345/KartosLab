@@ -15,6 +15,7 @@ import '../components/spin_source.dart';
 import '../components/stern_gerlach_apparatus.dart';
 import '../model/spin_model.dart';
 import '../transform/spin_view_transform.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class SpinScene extends StatelessWidget {
   const SpinScene({
@@ -86,7 +87,7 @@ class SpinScene extends StatelessWidget {
           left: geometry.comboTopLeft.dx,
           top: geometry.comboTopLeft.dy + 44,
           child: const Text(
-            'Stern-Gerlach (SG) Measurements',
+            QmStrings.sternGerlachMeasurements,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ),

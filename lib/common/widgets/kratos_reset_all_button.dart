@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:kratos/l10n/kartos_localization.dart';
 
 /// scenery-phet `ResetAllButton` / `RoundPushButton.ThreeDAppearanceStrategy`.
 ///
@@ -17,6 +18,8 @@ class KratosResetAllButton extends StatefulWidget {
 
   final VoidCallback onPressed;
   final double radius;
+
+  /// Defaults to [loc.shared.resetAll] when null/empty.
   final String? tooltip;
 
   /// `PhetColorScheme.RESET_ALL_BUTTON_BASE_COLOR`
@@ -86,9 +89,14 @@ class _KratosResetAllButtonState extends State<KratosResetAllButton>
           ),
         ),
     );
-    final tip = widget.tooltip;
-    if (tip == null || tip.isEmpty) return button;
-    return Tooltip(message: tip, child: button);
+    final tip = (widget.tooltip == null || widget.tooltip!.isEmpty)
+        ? loc.shared.resetAll
+        : widget.tooltip!;
+    return Semantics(
+      button: true,
+      label: loc.shared.resetAllSemantics,
+      child: Tooltip(message: tip, child: button),
+    );
   }
 }
 

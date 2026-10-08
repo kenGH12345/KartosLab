@@ -21,6 +21,7 @@ import '../single_particles/single_particles_controls.dart';
 import '../single_particles/sp_emitter_view.dart';
 import 'qwi_layout_primitives.dart';
 import 'single_particles_layout_spec.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Places existing Single Particles components per [SingleParticlesLayoutSpec].
 ///
@@ -189,7 +190,7 @@ class SingleParticlesLayoutComposer extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
-                                'Wave Display',
+                                QwiStrings.waveDisplay,
                                 style: TextStyle(
                                   fontFamily: 'Arial',
                                   fontWeight: FontWeight.w600,
@@ -225,7 +226,7 @@ class SingleParticlesLayoutComposer extends StatelessWidget {
                                 children: [
                                   QwiPushButton(
                                     key: const Key('sp_take_snapshot'),
-                                    label: 'Snap',
+                                    label: QwiStrings.snap,
                                     enabled: !scene.snapshots.isFull,
                                     onPressed: scene.snapshots.isFull
                                         ? null
@@ -236,7 +237,7 @@ class SingleParticlesLayoutComposer extends StatelessWidget {
                                   const SizedBox(width: 6),
                                   QwiPushButton(
                                     key: const Key('sp_view_snapshots'),
-                                    label: 'View',
+                                    label: QwiStrings.view,
                                     enabled: scene.snapshots.length > 0,
                                     onPressed: scene.snapshots.length == 0
                                         ? null
@@ -369,11 +370,11 @@ class SingleParticlesLayoutComposer extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const Text('Snapshots', style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text(QwiStrings.snapshots, style: const TextStyle(fontWeight: FontWeight.bold)),
                               const Spacer(),
                               TextButton(
                                 onPressed: () => controller.setSnapshotPanelOpen(false),
-                                child: const Text('Close'),
+                                child: Text(QwiStrings.close),
                               ),
                             ],
                           ),
@@ -382,7 +383,7 @@ class SingleParticlesLayoutComposer extends StatelessWidget {
                               children: [
                                 for (var i = 0; i < scene.snapshots.length; i++)
                                   ListTile(
-                                    title: Text('Snapshot ${scene.snapshots.snapshots[i].snapshotNumber}'),
+                                    title: Text(QwiStrings.snapshotN(scene.snapshots.snapshots[i].snapshotNumber)),
                                     subtitle: Text(
                                       'hits=${scene.snapshots.snapshots[i].hits.length}',
                                       style: const TextStyle(fontSize: 11),

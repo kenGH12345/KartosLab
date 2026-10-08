@@ -14,7 +14,7 @@ class MoleculeShapesHome extends StatelessWidget {
   const MoleculeShapesHome({super.key});
 
   static const String title = MoleculeShapesStrings.title;
-  static const String subtitle = 'Model · Real Molecules · VSEPR';
+  static const String subtitle = '模型 · 真实分子 · VSEPR';
   static const Color accentColor = Color(0xFF9F66DA);
 
   @override

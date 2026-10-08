@@ -9,6 +9,7 @@ import 'package:kratos/common/widgets/kratos_tab_bar.dart';
 import 'package:kratos/concentration/audio/concentration_audio.dart';
 import 'package:kratos/concentration/view/concentration_screen.dart';
 import 'package:kratos/screens/home_screen.dart';
+import 'package:kratos/beers_law_lab/bll_strings.dart';
 
 /// Phase 5 — Home integration / product routing (H5-01..H5-12).
 void main() {
@@ -72,7 +73,7 @@ void main() {
   Future<void> switchToConcentration(WidgetTester tester) async {
     await tester.tap(find.descendant(
       of: find.byType(TabBar),
-      matching: find.text('Concentration'),
+      matching: find.text(BllStrings.concentration),
     ));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 450));

@@ -16,6 +16,7 @@ import '../../shared/widgets/buoyancy_forces_panel.dart';
 import '../../shared/widgets/buoyancy_pool_scale_height_control.dart';
 import '../../domain/material/buoyancy_material.dart';
 import '../composer/applications_composer.dart';
+import '../../buoyancy_strings.dart';
 
 /// Applications screen — layout from `BuoyancyApplicationsScreenView.ts`.
 class BuoyancyApplicationsScreen extends StatefulWidget {
@@ -126,7 +127,7 @@ class _BuoyancyApplicationsScreenState extends State<BuoyancyApplicationsScreen>
                     )
                   else
                     BuoyancyBlockControlPanel(
-                      tag: 'Brick',
+                      tag: BuoyancyStrings.brick,
                       tagColor: const Color(0xFFED3732),
                       mass: _model.block,
                       materials: _boatBlockMaterials,
@@ -139,7 +140,7 @@ class _BuoyancyApplicationsScreenState extends State<BuoyancyApplicationsScreen>
                     ),
                   const SizedBox(height: 5),
                   BuoyancyAccordionStub(
-                    title: 'Object Density',
+                    title: BuoyancyStrings.objectDensity,
                     expanded: _densityExpanded,
                     onToggle: () =>
                         setState(() => _densityExpanded = !_densityExpanded),
@@ -173,7 +174,7 @@ class _BuoyancyApplicationsScreenState extends State<BuoyancyApplicationsScreen>
                   ),
                   const SizedBox(height: 5),
                   BuoyancyAccordionStub(
-                    title: '% Submerged',
+                    title: BuoyancyStrings.percentSubmerged,
                     expanded: _submergedExpanded,
                     onToggle: () => setState(
                         () => _submergedExpanded = !_submergedExpanded),
@@ -384,10 +385,10 @@ class _BottlePanel extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Bottle',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+            Text(BuoyancyStrings.shapeKindLabel('bottle'),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
             const SizedBox(height: 4),
-            const Text('Material Inside', style: TextStyle(fontSize: 11)),
+            const Text('内部材料', style: TextStyle(fontSize: 11)),
             DropdownButton<BuoyancyMaterial>(
               isExpanded: true,
               isDense: true,
@@ -403,7 +404,7 @@ class _BottlePanel extends StatelessWidget {
                 if (v != null) onInterior(v);
               },
             ),
-            Text('Volume ${liters.toStringAsFixed(2)} L',
+            Text(BuoyancyStrings.volumeWithUnit(liters.toStringAsFixed(2)),
                 style: const TextStyle(fontSize: 11)),
             Slider(
               value: liters.toDouble(),

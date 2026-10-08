@@ -11,6 +11,7 @@ import 'package:kratos/quantum_measurement/quantum_measurement_module.dart';
 import 'package:kratos/quantum_measurement/screens/quantum_measurement_home.dart';
 import 'package:kratos/quantum_measurement/spin/view/spin_screen.dart';
 import 'package:kratos/screens/home_screen.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 void main() {
   setUp(() {
@@ -71,9 +72,9 @@ void main() {
       await tester.pumpWidget(const MaterialApp(home: HomeScreen()));
       await tester.pump();
 
-      expect(find.text('Quantum Measurement'), findsOneWidget);
-      await tester.ensureVisible(find.text('Quantum Measurement'));
-      await tester.tap(find.text('Quantum Measurement'));
+      expect(find.text(QmStrings.title), findsOneWidget);
+      await tester.ensureVisible(find.text(QmStrings.title));
+      await tester.tap(find.text(QmStrings.title));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
 
@@ -108,15 +109,15 @@ void main() {
         }
       }
 
-      await tester.tap(find.text('Photons'));
+      await tester.tap(find.text(QmStrings.photons));
       await frames(12);
       expect(find.byType(QuantumMeasurementPhotonsScreen), findsOneWidget);
 
-      await tester.tap(find.text('Spin'));
+      await tester.tap(find.text(QmStrings.spin));
       await frames(12);
       expect(find.byType(QuantumMeasurementSpinScreen), findsOneWidget);
 
-      await tester.tap(find.text('Bloch Sphere'));
+      await tester.tap(find.text(QmStrings.blochSphere));
       await frames(12);
       expect(find.byType(QuantumMeasurementBlochScreen), findsOneWidget);
     });

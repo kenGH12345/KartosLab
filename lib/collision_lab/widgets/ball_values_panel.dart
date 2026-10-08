@@ -116,7 +116,7 @@ class BallValuesPanel extends StatelessWidget {
     final ball = controller.model.ballSystem.balls[index];
     final v = await showKeypadDialog(
       context: context,
-      title: 'Ball ${ball.index} mass (kg)',
+      title: '${CollisionLabStrings.balls} ${ball.index} ${CollisionLabStrings.mass} (kg)',
       initial: ball.mass,
       min: CollisionLabConstants.massMin,
       max: CollisionLabConstants.massMax,
@@ -133,7 +133,7 @@ class BallValuesPanel extends StatelessWidget {
     final bounds = controller.model.playArea.bounds;
     final v = await showKeypadDialog(
       context: context,
-      title: 'Ball ${ball.index} ${axisX ? 'x' : 'y'} (m)',
+      title: '${CollisionLabStrings.balls} ${ball.index} ${axisX ? 'x' : 'y'} (m)',
       initial: axisX ? ball.position.x : ball.position.y,
       min: axisX ? bounds.minX : bounds.minY,
       max: axisX ? bounds.maxX : bounds.maxY,
@@ -153,7 +153,7 @@ class BallValuesPanel extends StatelessWidget {
     final ball = controller.model.ballSystem.balls[index];
     final v = await showKeypadDialog(
       context: context,
-      title: 'Ball ${ball.index} ${axisX ? 'vx' : 'vy'} (m/s)',
+      title: '${CollisionLabStrings.balls} ${ball.index} ${axisX ? 'vx' : 'vy'} (m/s)',
       initial: axisX ? ball.velocity.x : ball.velocity.y,
       min: CollisionLabConstants.velocityMin,
       max: CollisionLabConstants.velocityMax,

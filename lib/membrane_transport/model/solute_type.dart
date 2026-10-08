@@ -22,7 +22,7 @@ extension SoluteTypeLabel on SoluteType {
       case SoluteType.potassiumIon:
         return 'K⁺';
       case SoluteType.glucose:
-        return 'Glucose';
+        return '葡萄糖';
       case SoluteType.atp:
         return 'ATP';
       case SoluteType.adp:

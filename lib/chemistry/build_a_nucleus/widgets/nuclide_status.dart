@@ -14,6 +14,7 @@ import '../ban_constants.dart';
 import '../model/build_a_nucleus_state.dart';
 import '../model/half_life_number_line.dart';
 import '../model/half_life_readout.dart';
+import 'package:kratos/chemistry/build_a_nucleus/ban_strings.dart';
 
 /// 原版字符串填空。英文键来自 `build-a-nucleus-strings_en.json` [已确认]。
 class NuclideStatusText {
@@ -147,14 +148,14 @@ class NucleonCountReadout extends StatelessWidget {
               key: 'ban_proton_count',
               color: const Color(BanConstants.protonColorValue),
               // 生成器已用中文「质子」；面板与之一致。[推测：中文本地化仍待确认]
-              label: 'Protons',
+              label: BanStrings.proton,
               value: state.protonCount,
             ),
             const SizedBox(height: 4),
             _countRow(
               key: 'ban_neutron_count',
               color: const Color(BanConstants.neutronColorValue),
-              label: 'Neutrons',
+              label: BanStrings.neutron,
               value: state.neutronCount,
             ),
           ],
@@ -243,7 +244,7 @@ class NuclideSymbolReadout extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Symbol', style: TextStyle(fontSize: 11)),
+            const Text(BanStrings.symbol, style: TextStyle(fontSize: 11)),
             const SizedBox(height: 2),
             Container(
               key: const ValueKey('ban_symbol'),

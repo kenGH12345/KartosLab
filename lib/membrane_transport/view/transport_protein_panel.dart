@@ -5,6 +5,7 @@ import '../layout/membrane_transport_layout.dart';
 import '../membrane_transport_feature_set.dart';
 import '../model/membrane_transport_model.dart';
 import '../model/transport_protein_type.dart';
+import 'package:kratos/membrane_transport/membrane_transport_strings.dart';
 
 /// Right-side transport protein toolbox — PhET `TransportProteinPanel.ts`.
 class TransportProteinPanel extends StatelessWidget {
@@ -31,12 +32,12 @@ class TransportProteinPanel extends StatelessWidget {
         fs == MembraneTransportFeatureSet.playground) {
       sections.add(
         _ChannelSection(
-          title: 'Leakage Channels',
+          title: MembraneTransportStrings.leakageChannels,
           types: const [
             TransportProteinType.sodiumIonLeakageChannel,
             TransportProteinType.potassiumIonLeakageChannel,
           ],
-          labels: const ['Sodium Ion', 'Potassium Ion'],
+          labels: const [MembraneTransportStrings.sodiumIon, MembraneTransportStrings.potassiumIon],
           model: model,
           onDragStart: onDragStart,
         ),
@@ -44,12 +45,12 @@ class TransportProteinPanel extends StatelessWidget {
       sections.add(const Divider(height: 1, color: Colors.black));
       sections.add(
         _ChannelSection(
-          title: 'Voltage-Gated Channels',
+          title: MembraneTransportStrings.voltageGatedChannels,
           types: const [
             TransportProteinType.sodiumIonVoltageGatedChannel,
             TransportProteinType.potassiumIonVoltageGatedChannel,
           ],
-          labels: const ['Sodium Ion', 'Potassium Ion'],
+          labels: const [MembraneTransportStrings.sodiumIon, MembraneTransportStrings.potassiumIon],
           model: model,
           onDragStart: onDragStart,
           footer: _MembranePotentialControls(model: model),
@@ -58,12 +59,12 @@ class TransportProteinPanel extends StatelessWidget {
       sections.add(const Divider(height: 1, color: Colors.black));
       sections.add(
         _ChannelSection(
-          title: 'Ligand-Gated Channels',
+          title: MembraneTransportStrings.ligandGatedChannels,
           types: const [
             TransportProteinType.sodiumIonLigandGatedChannel,
             TransportProteinType.potassiumIonLigandGatedChannel,
           ],
-          labels: const ['Sodium Ion', 'Potassium Ion'],
+          labels: const [MembraneTransportStrings.sodiumIon, MembraneTransportStrings.potassiumIon],
           model: model,
           onDragStart: onDragStart,
           footer: _LigandToggle(model: model),
@@ -78,12 +79,12 @@ class TransportProteinPanel extends StatelessWidget {
       }
       sections.add(
         _ChannelSection(
-          title: 'Active Transporters',
+          title: MembraneTransportStrings.activeTransporters,
           types: const [
             TransportProteinType.sodiumPotassiumPump,
             TransportProteinType.sodiumGlucoseCotransporter,
           ],
-          labels: const ['Na⁺/K⁺ Pump', 'Na⁺/Glucose'],
+          labels: const [MembraneTransportStrings.naKPump, MembraneTransportStrings.naGlucose],
           model: model,
           onDragStart: onDragStart,
         ),
@@ -218,7 +219,7 @@ class _MembranePotentialControls extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text('Membrane Potential (mV)', style: TextStyle(fontSize: 11)),
+        const Text(MembraneTransportStrings.membranePotential, style: TextStyle(fontSize: 11)),
         const SizedBox(height: 4),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -254,7 +255,7 @@ class _MembranePotentialControls extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              const Text('Charges', style: TextStyle(fontSize: 11)),
+              const Text(MembraneTransportStrings.charges, style: TextStyle(fontSize: 11)),
             ],
           ),
         ),
@@ -338,7 +339,7 @@ class _LigandToggle extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Text(
-            added ? 'Remove Ligands' : 'Add Ligands',
+            added ? MembraneTransportStrings.removeLigands : MembraneTransportStrings.addLigands,
             textAlign: TextAlign.center,
             style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
           ),

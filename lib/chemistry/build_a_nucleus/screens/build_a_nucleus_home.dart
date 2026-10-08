@@ -34,8 +34,8 @@ class BuildANucleusHome extends StatelessWidget {
   /// [已确认] 现有 Decay AppBar「构建原子核 · 衰变」+ 原版 `screen.decay` = Decay
   static const String decayTabLabel = '衰变';
 
-  /// [已确认] 原版 `screen.chartIntro` = "Chart Intro"；工程无已审中文译名，不自造。
-  static const String chartIntroTabLabel = 'Chart Intro';
+  /// [已确认] 原版 `screen.chartIntro` = "Chart Intro" → 图表介绍
+  static const String chartIntroTabLabel = '图表介绍';
 
   /// Home 卡同色。[已确认] `home_screen.dart` 构建原子核卡片
   static const Color accentColor = Color(0xFFB45309);

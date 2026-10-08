@@ -17,6 +17,7 @@ import 'game_interactive_periodic_table.dart';
 import 'game_particle_counts_node.dart';
 import 'interactive_symbol_view.dart';
 import 'non_interactive_schematic.dart';
+import 'package:kratos/chemistry/build_an_atom/baa_strings.dart';
 
 /// PhET `ChallengeView` — presentation + answer input + action buttons.
 class GameChallengeView extends StatefulWidget {
@@ -446,21 +447,21 @@ class _GameChallengeViewState extends State<GameChallengeView> {
     Widget? btn;
     switch (state) {
       case GameState.presentingChallenge:
-        btn = _gameButton('Check', _canCheck ? _check : null);
+        btn = _gameButton(BaaStrings.check, _canCheck ? _check : null);
       case GameState.solvedCorrectly:
       case GameState.showingAnswer:
-        btn = _gameButton('Next', () {
+        btn = _gameButton(BaaStrings.next, () {
           if (game.gameState == GameState.solvedCorrectly ||
               game.gameState == GameState.showingAnswer) {
             game.next();
           }
         });
       case GameState.tryAgain:
-        btn = _gameButton('Try Again', () {
+        btn = _gameButton(BaaStrings.tryAgain, () {
           if (game.gameState == GameState.tryAgain) game.tryAgain();
         });
       case GameState.attemptsExhausted:
-        btn = _gameButton('Show Answer', () {
+        btn = _gameButton(BaaStrings.showAnswer, () {
           if (game.gameState == GameState.attemptsExhausted) {
             game.displayCorrectAnswer();
           }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:kratos/magnetism/magnet_and_compass/mac_strings.dart';
 import 'package:kratos/magnetism/magnet_and_compass/painters/bar_magnet_painter.dart';
 import 'package:kratos/magnetism/magnet_and_compass/screens/magnet_and_compass_screen.dart';
 import 'package:kratos/screens/home_screen.dart';
@@ -94,7 +95,7 @@ void main() {
     await pumpHome(tester);
     await openMagnet(tester);
 
-    await tester.tap(find.text('Flip Polarity'));
+    await tester.tap(find.text(MacStrings.flipPolarity));
     await tester.pump();
     expect(magnetPainter(tester).flipped, isTrue);
     expect(find.text('75%'), findsOneWidget);

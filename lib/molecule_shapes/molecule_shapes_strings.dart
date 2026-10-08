@@ -1,19 +1,20 @@
-/// English strings from `molecule-shapes-strings_en.json` (Model Screen subset).
+/// Molecule Shapes UI strings — Chinese defaults (PHASE 6).
 class MoleculeShapesStrings {
-  static const title = 'Molecule Shapes';
-  static const screenModel = 'Model';
-  static const screenRealMolecules = 'Real Molecules';
-  static const bonding = 'Bonding';
-  static const lonePair = 'Lone Pair';
-  static const options = 'Options';
-  static const geometryName = 'Name';
-  static const moleculeGeometry = 'Molecule Geometry';
-  static const electronGeometry = 'Electron Geometry';
-  static const showLonePairs = 'Show Lone Pairs';
-  static const showBondAngles = 'Show Bond Angles';
-  static const showOuterLonePairs = 'Show Outer Lone Pairs';
-  static const removeAll = 'Remove All';
-  static const molecule = 'Molecule';
-  static const realView = 'Real';
-  static const modelView = 'Model';
+  static const title = '分子形状';
+  static const screenModel = '模型';
+  static const screenRealMolecules = '真实分子';
+  static const bonding = '成键';
+  static const lonePair = '孤对电子';
+  static const options = '选项';
+  static const geometryName = '名称';
+  static const moleculeGeometry = '分子构型';
+  static const electronGeometry = '电子构型';
+  static const showLonePairs = '显示孤对电子';
+  static const showBondAngles = '显示键角';
+  static const showOuterLonePairs = '显示外层孤对电子';
+  static const removeAll = '全部移除';
+  static const molecule = '分子';
+  static const realView = '真实';
+  static const modelView = '模型';
+  static const resetAll = '全部重置';
 }

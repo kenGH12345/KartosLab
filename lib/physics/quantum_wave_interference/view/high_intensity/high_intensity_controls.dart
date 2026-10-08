@@ -9,6 +9,7 @@ import '../../domain/wave_display_mode.dart';
 import '../common/qwi_ab_switch.dart';
 import '../common/qwi_number_control.dart';
 import 'high_intensity_controller.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 class HiSourceControls extends StatelessWidget {
   const HiSourceControls({super.key, required this.controller});
@@ -32,7 +33,7 @@ class HiSourceControls extends StatelessWidget {
         else
           QwiNumberControl(
             sliderKey: const Key('hi_speed_slider'),
-            title: 'Speed',
+            title: QwiStrings.speed,
             valueText: scene.particleSpeedMps.toStringAsExponential(2),
             value: scene.particleSpeedMps.clamp(scene.speedMinMps, scene.speedMaxMps),
             min: scene.speedMinMps,
@@ -50,13 +51,13 @@ class HiSlitControls extends StatelessWidget {
   final HighIntensityController controller;
 
   static const _labels = {
-    SlitConfiguration.bothOpen: 'Both Slits Open',
-    SlitConfiguration.leftCovered: 'Top Covered',
-    SlitConfiguration.rightCovered: 'Bottom Covered',
-    SlitConfiguration.leftDetector: 'Detector on Top',
-    SlitConfiguration.rightDetector: 'Detector on Bottom',
-    SlitConfiguration.bothDetectors: 'Detectors Both',
-    SlitConfiguration.noBarrier: 'No Barrier',
+    SlitConfiguration.bothOpen: QwiStrings.bothSlitsOpen,
+    SlitConfiguration.leftCovered: QwiStrings.topCovered,
+    SlitConfiguration.rightCovered: QwiStrings.bottomCovered,
+    SlitConfiguration.leftDetector: QwiStrings.detectorOnTop,
+    SlitConfiguration.rightDetector: QwiStrings.detectorOnBottom,
+    SlitConfiguration.bothDetectors: QwiStrings.detectorsBoth,
+    SlitConfiguration.noBarrier: QwiStrings.noBarrier,
   };
 
   @override
@@ -72,7 +73,7 @@ class HiSlitControls extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('Configuration', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
+              Text(QwiStrings.configuration, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
               const SizedBox(height: 2),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -105,7 +106,7 @@ class HiSlitControls extends StatelessWidget {
           flex: 5,
           child: QwiNumberControl(
             sliderKey: const Key('hi_slit_separation_slider'),
-            title: 'Slit Separation',
+            title: QwiStrings.slitSeparation,
             valueText: '${(sep * 1000).toStringAsFixed(1)} µm',
             value: sep,
             min: scene.slitSeparationMinMm,
@@ -130,9 +131,9 @@ class HiWaveModeControls extends StatelessWidget {
         ? const [WaveDisplayMode.electricField, WaveDisplayMode.amplitude]
         : const [WaveDisplayMode.realPart, WaveDisplayMode.amplitude];
     final labels = {
-      WaveDisplayMode.electricField: 'Electric Field',
-      WaveDisplayMode.amplitude: 'Amplitude',
-      WaveDisplayMode.realPart: 'Real Part',
+      WaveDisplayMode.electricField: QwiStrings.electricField,
+      WaveDisplayMode.amplitude: QwiStrings.amplitude,
+      WaveDisplayMode.realPart: QwiStrings.realPart,
     };
     return Container(
       key: const Key('hi_wave_mode'),
@@ -184,16 +185,16 @@ class HiDetectorControls extends StatelessWidget {
             key: const Key('hi_screen_graph_switch'),
             value: !graph,
             onChanged: (screenSelected) => controller.setGraphVisible(!screenSelected),
-            leftLabel: 'Screen',
-            rightLabel: 'Graph',
+            leftLabel: QwiStrings.screen,
+            rightLabel: QwiStrings.graph,
           ),
         ),
         const SizedBox(height: 6),
         QwiAquaRadioGroup<DetectorMode>(
           value: scene.detectionMode,
           items: const {
-            DetectorMode.intensity: 'Intensity',
-            DetectorMode.hits: 'Hits',
+            DetectorMode.intensity: QwiStrings.intensity,
+            DetectorMode.hits: QwiStrings.hits,
           },
           onChanged: controller.setDetectionMode,
         ),
@@ -219,7 +220,7 @@ class HiDetectorControls extends StatelessWidget {
           ),
         ),
         if (!graph) ...[
-          const Text('Screen Brightness', style: TextStyle(fontFamily: 'Arial', fontSize: 11)),
+          Text(QwiStrings.screenBrightness, style: const TextStyle(fontFamily: 'Arial', fontSize: 11)),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               trackHeight: 3,
@@ -235,7 +236,7 @@ class HiDetectorControls extends StatelessWidget {
           ),
         ],
         if (graph) ...[
-          Text('Zoom ${controller.model.graphZoom.level}', style: const TextStyle(fontSize: 10)),
+          Text(QwiStrings.zoomLevel(controller.model.graphZoom.level), style: const TextStyle(fontSize: 10)),
           Slider(
             key: const Key('hi_zoom_slider'),
             value: controller.model.graphZoom.level.toDouble(),
@@ -286,9 +287,9 @@ class HiTimeControls extends StatelessWidget {
         QwiAquaRadioGroup<TimeSpeed>(
           value: clock.speed,
           items: const {
-            TimeSpeed.slow: 'Slow',
-            TimeSpeed.normal: 'Normal',
-            TimeSpeed.fast: 'Fast',
+            TimeSpeed.slow: QwiStrings.slow,
+            TimeSpeed.normal: QwiStrings.normal,
+            TimeSpeed.fast: QwiStrings.fast,
           },
           onChanged: controller.setTimeSpeed,
         ),

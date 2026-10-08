@@ -26,6 +26,7 @@ import 'package:kratos/quantum_measurement/spin/animation/spin_particle_simulati
 import 'package:kratos/quantum_measurement/spin/components/experiment_selector.dart';
 import 'package:kratos/quantum_measurement/spin/model/spin_model.dart';
 import 'package:kratos/quantum_measurement/spin/view/spin_screen.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 Future<void> _viewport(WidgetTester tester, [Size size = const Size(1024, 618)]) async {
   tester.view.physicalSize = size;
@@ -88,7 +89,7 @@ void main() {
       final model = CoinsModel(random: SeededQmRandom(1));
       await _pumpScreen(tester, QuantumMeasurementCoinsScreen(model: model));
       expect(model.classicalScene.preparingExperiment, isTrue);
-      expect(find.text('Flip'), findsNothing);
+      expect(find.text(QmStrings.flip), findsNothing);
       expect(find.byType(StartMeasurementButton), findsOneWidget);
     });
 
@@ -99,7 +100,7 @@ void main() {
       await tester.tap(find.byType(StartMeasurementButton));
       await tester.pump();
       expect(model.classicalScene.preparingExperiment, isFalse);
-      expect(find.text('Flip'), findsWidgets);
+      expect(find.text(QmStrings.flip), findsWidgets);
 
       await _tapText(tester, 'Flip');
       expect(
@@ -330,12 +331,12 @@ void main() {
       expect(model.sourceMode, SourceMode.continuous);
       await _pumpFrames(tester);
 
-      expect(find.text('Block ↓'), findsOneWidget);
-      await tester.tap(find.text('Block ↓'));
+      expect(find.text(QmStrings.blockDown), findsOneWidget);
+      await tester.tap(find.text(QmStrings.blockDown));
       await _pumpFrames(tester);
       expect(model.sternGerlachs[0].blockingMode, BlockingMode.blockDown);
 
-      await tester.tap(find.text('Block ↑'));
+      await tester.tap(find.text(QmStrings.blockUp));
       await _pumpFrames(tester);
       expect(model.sternGerlachs[0].blockingMode, BlockingMode.blockUp);
     });
@@ -570,9 +571,9 @@ void main() {
       final model = BlochSphereModel(random: SeededQmRandom(61));
       await _pumpScreen(tester, QuantumMeasurementBlochScreen(model: model));
       await _tapText(tester, 'Observe');
-      expect(find.text('Reprepare'), findsOneWidget);
+      expect(find.text(QmStrings.reprepare), findsOneWidget);
       await _tapText(tester, 'Reprepare');
-      expect(find.text('Observe'), findsOneWidget);
+      expect(find.text(QmStrings.observe), findsOneWidget);
     });
   });
 

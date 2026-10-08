@@ -6,6 +6,7 @@ import '../model/balloons_static_electricity_constants.dart';
 import '../model/balloons_static_electricity_model.dart';
 import '../model/base_vec2.dart';
 import 'charge_painter.dart';
+import 'package:kratos/balloons_and_static_electricity/base_strings.dart';
 
 /// Balloon image + charges + silhouette hit-test — PhET `BalloonNode`.
 class BalloonNode extends StatefulWidget {
@@ -74,7 +75,7 @@ class BalloonNodeState extends State<BalloonNode> {
       width: BaseConstants.balloonWidth,
       height: BaseConstants.balloonHeight,
       child: Semantics(
-        label: widget.semanticLabel ?? 'Balloon',
+        label: widget.semanticLabel ?? BaseStrings.balloon,
         button: true,
         child: _BalloonHitTarget(
           balloon: balloon,

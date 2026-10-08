@@ -99,14 +99,22 @@ void main() {
   testWidgets('A4 Lab gravity + drag + reset', (tester) async {
     await launch(tester);
     await goTab(tester, 'lab');
-    if (find.text('moon').evaluate().isNotEmpty) {
+    // ZH runtime: gravity labels are Chinese (BuoyancyStrings).
+    if (find.text('月球').evaluate().isNotEmpty) {
+      await tester.tap(find.text('月球'));
+      await pumpFrames(tester, 10);
+    } else if (find.text('moon').evaluate().isNotEmpty) {
       await tester.tap(find.text('moon'));
       await pumpFrames(tester, 10);
     }
     await dragOnPlayArea(tester);
     await tester.tap(find.byType(KratosResetAllButton));
     await pumpFrames(tester, 20);
-    expect(find.text('earth'), findsWidgets);
+    expect(
+      find.text('地球').evaluate().isNotEmpty ||
+          find.text('earth').evaluate().isNotEmpty,
+      isTrue,
+    );
     expect(tester.takeException(), isNull);
   });
 

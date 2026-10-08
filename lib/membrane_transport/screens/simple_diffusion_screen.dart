@@ -17,6 +17,7 @@ import '../view/particle_image_cache.dart';
 import '../view/protein_drag_session.dart';
 import '../view/protein_image_cache.dart';
 import '../view/transport_protein_panel.dart';
+import 'package:kratos/membrane_transport/membrane_transport_strings.dart';
 
 /// Shared screen body — featureSet gates proteins / voltage / ligands / ATP.
 class MembraneTransportScreenBody extends StatefulWidget {
@@ -404,7 +405,7 @@ class _SolutesPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Solutes',
+            MembraneTransportStrings.solutes,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
@@ -475,7 +476,7 @@ class _SideSoluteControl extends StatelessWidget {
     final fill = side == MembraneSide.outside
         ? MembraneTransportColors.observationOutside
         : MembraneTransportColors.observationInside;
-    final label = side == MembraneSide.outside ? 'Outside' : 'Inside';
+    final label = side == MembraneSide.outside ? MembraneTransportStrings.outside : MembraneTransportStrings.inside;
     final count = model.countSolutes(model.selectedSolute, side);
     final total =
         model.countSolutes(model.selectedSolute, MembraneSide.outside) +
@@ -735,12 +736,12 @@ class _TimeControls extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _SpeedRadio(
-              label: 'Normal',
+              label: MembraneTransportStrings.normal,
               selected: model.timeSpeed == MtTimeSpeed.normal,
               onTap: () => model.setTimeSpeed(MtTimeSpeed.normal),
             ),
             _SpeedRadio(
-              label: 'Slow',
+              label: MembraneTransportStrings.slow,
               selected: model.timeSpeed == MtTimeSpeed.slow,
               onTap: () => model.setTimeSpeed(MtTimeSpeed.slow),
             ),
@@ -790,12 +791,12 @@ class _CrossingOptions extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _Check(
-          label: 'Crossing Highlights',
+          label: MembraneTransportStrings.crossingHighlights,
           value: model.crossingHighlightsEnabled,
           onChanged: model.setCrossingHighlights,
         ),
         _Check(
-          label: 'Crossing Sounds',
+          label: MembraneTransportStrings.crossingSounds,
           value: model.crossingSoundsEnabled,
           onChanged: model.setCrossingSounds,
         ),
@@ -901,7 +902,7 @@ class _ConcentrationsPanelState extends State<_ConcentrationsPanel> {
                       ),
                       const SizedBox(width: 8),
                       const Text(
-                        'Solute Concentrations',
+                        MembraneTransportStrings.soluteConcentrations,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -972,7 +973,7 @@ class _SoluteConcentrationsContent extends StatelessWidget {
                 left: 4,
                 top: 22,
                 child: Text(
-                  'Outside',
+                  MembraneTransportStrings.outside,
                   style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
                 ),
               ),
@@ -980,7 +981,7 @@ class _SoluteConcentrationsContent extends StatelessWidget {
                 left: 4,
                 bottom: 22,
                 child: Text(
-                  'Inside',
+                  MembraneTransportStrings.inside,
                   style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
                 ),
               ),

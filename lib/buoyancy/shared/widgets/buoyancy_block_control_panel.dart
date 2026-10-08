@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../buoyancy_strings.dart';
 import '../../domain/mass/buoyancy_mass.dart';
 import '../../domain/material/buoyancy_material.dart';
 import '../../rendering/runtime/buoyancy_play_area.dart';
@@ -32,11 +33,34 @@ class BuoyancyBlockControlPanel extends StatelessWidget {
   static const double minVolumeL = 1;
 
   String _label(BuoyancyMaterial m) {
-    if (m.custom) return 'Custom';
+    if (m.custom) return BuoyancyStrings.custom;
     if (m.id.startsWith('material')) {
-      return 'Material ${m.id.substring(m.id.length - 1).toUpperCase()}';
+      return '${BuoyancyStrings.material} ${m.id.substring(m.id.length - 1).toUpperCase()}';
     }
-    return m.id[0].toUpperCase() + m.id.substring(1);
+    return BuoyancyStrings.fluidLabel(m.id) == m.id
+        ? _materialDisplay(m.id)
+        : BuoyancyStrings.fluidLabel(m.id);
+  }
+
+  String _materialDisplay(String id) {
+    const map = <String, String>{
+      'styrofoam': '泡沫塑料',
+      'wood': '木材',
+      'ice': '冰',
+      'pvc': 'PVC',
+      'brick': '砖',
+      'aluminum': '铝',
+      'steel': '钢',
+      'copper': '铜',
+      'lead': '铅',
+      'gold': '金',
+      'glass': '玻璃',
+      'diamond': '金刚石',
+      'titanium': '钛',
+      'apple': '苹果',
+      'human': '人体',
+    };
+    return map[id] ?? (id.isEmpty ? id : '${id[0].toUpperCase()}${id.substring(1)}');
   }
 
   @override
@@ -95,7 +119,8 @@ class BuoyancyBlockControlPanel extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Text('Mass ${massKg.toStringAsFixed(2)} kg',
+            Text(
+                BuoyancyStrings.massWithUnit(massKg.toStringAsFixed(2)),
                 style: const TextStyle(fontSize: 11)),
             Slider(
               value: massKg,
@@ -104,7 +129,8 @@ class BuoyancyBlockControlPanel extends StatelessWidget {
               activeColor: tagColor,
               onChanged: onMass,
             ),
-            Text('Volume ${volumeL.toStringAsFixed(2)} L',
+            Text(
+                BuoyancyStrings.volumeWithUnit(volumeL.toStringAsFixed(2)),
                 style: const TextStyle(fontSize: 11)),
             Slider(
               value: volumeL,

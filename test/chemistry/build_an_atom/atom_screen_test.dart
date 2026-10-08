@@ -6,6 +6,7 @@ import 'package:kratos/chemistry/build_an_atom/model/baa_particle.dart';
 import 'package:kratos/chemistry/build_an_atom/model/electron_model.dart';
 import 'package:kratos/chemistry/build_an_atom/model/number_atom.dart';
 import 'package:kratos/chemistry/build_an_atom/screens/atom_screen.dart';
+import 'package:kratos/chemistry/build_an_atom/baa_strings.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ void main() {
   group('Atom Screen', () {
     testWidgets('enters empty state', (tester) async {
       await pumpAtom(tester);
-      expect(find.text('Atom'), findsOneWidget);
+      expect(find.text(BaaStrings.atom), findsOneWidget);
       expect(find.text('Periodic Table'), findsOneWidget);
       expect(find.text('Protons:'), findsOneWidget);
       expect(find.text('Model:'), findsOneWidget);

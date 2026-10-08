@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kratos/common/simulation_clock.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
 import 'package:kratos/concentration/audio/concentration_audio.dart';
+import 'package:kratos/concentration/concentration_strings.dart';
 import 'package:kratos/concentration/model/concentration_model.dart';
 import 'package:kratos/concentration/model/concentration_constants.dart';
 import 'package:kratos/concentration/model/solute.dart';
@@ -139,7 +140,7 @@ class _ConcentrationScreenState extends State<ConcentrationScreen>
       appBar: AppBar(
         backgroundColor: const Color(0xFF0575B1),
         foregroundColor: Colors.white,
-        title: const Text('Concentration'),
+        title: const Text(ConcentrationStrings.title),
       ),
       body: body,
     );

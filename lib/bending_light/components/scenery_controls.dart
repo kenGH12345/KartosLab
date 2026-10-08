@@ -6,6 +6,7 @@ import '../model/substance.dart';
 import '../phet_font.dart';
 import '../screens/stage_scale.dart';
 import '../physics/visible_color.dart';
+import 'package:kratos/bending_light/bl_strings.dart';
 
 /// Round arrow button matching `MediumControlPanel` `ArrowButton` options.
 ///
@@ -548,8 +549,8 @@ class _DownTriangle extends CustomPainter {
 
 /// Index slider ticks at Air, Water, Glass, and 1.6 (`MediumControlPanel`).
 List<PhetSliderTick> indexOfRefractionTicks() => [
-      PhetSliderTick(Substance.air.indexForRed, 'Air'),
-      PhetSliderTick(Substance.water.indexForRed, 'Water'),
-      PhetSliderTick(Substance.glass.indexForRed, 'Glass'),
+      PhetSliderTick(Substance.air.indexForRed, BlStrings.air),
+      PhetSliderTick(Substance.water.indexForRed, BlStrings.water),
+      PhetSliderTick(Substance.glass.indexForRed, BlStrings.glass),
       const PhetSliderTick(1.6, '1.6'),
     ];

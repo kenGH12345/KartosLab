@@ -15,6 +15,7 @@ import '../composer/coins_composer.dart';
 import '../model/coins_model.dart';
 import 'classical_coins_scene.dart';
 import 'quantum_coins_scene.dart';
+import 'package:kratos/quantum_measurement/qm_strings.dart';
 
 class QuantumMeasurementCoinsScreen extends StatefulWidget {
   const QuantumMeasurementCoinsScreen({
@@ -123,8 +124,8 @@ class _DesignCanvas extends StatelessWidget {
             child: Center(
               child: SceneSelectorRadioButtonGroup<SystemType>(
                 items: const [
-                  (SystemType.classical, 'Classical Coin'),
-                  (SystemType.quantum, "Quantum 'Coin'"),
+                  (SystemType.classical, QmStrings.classicalCoin),
+                  (SystemType.quantum, QmStrings.quantumCoinQuoted),
                 ],
                 selectedValue: model.experimentMode,
                 onChanged: (mode) {
@@ -165,7 +166,7 @@ class _DesignCanvas extends StatelessWidget {
                 onChanged();
               },
               radius: 20.5,
-              tooltip: 'Reset All',
+              tooltip: QmStrings.resetAll,
             ),
           ),
         ],

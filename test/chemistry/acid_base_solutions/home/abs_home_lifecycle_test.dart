@@ -5,6 +5,7 @@ import 'package:kratos/chemistry/acid_base_solutions/view/intro_screen.dart';
 import 'package:kratos/chemistry/acid_base_solutions/view/my_solution_screen.dart';
 import 'package:kratos/common/widgets/kratos_reset_all_button.dart';
 import 'package:kratos/screens/home_screen.dart';
+import 'package:kratos/chemistry/acid_base_solutions/abs_strings.dart';
 
 /// Phase 6 — Home integration for Acid-Base Solutions.
 void main() {
@@ -76,9 +77,9 @@ void main() {
 
     expect(find.byType(AcidBaseSolutionsHome), findsOneWidget);
     expect(find.byType(AbsIntroScreen), findsOneWidget);
-    expect(find.text('Water (H₂O)'), findsOneWidget);
-    expect(find.text('Intro'), findsWidgets);
-    expect(find.text('My Solution'), findsWidgets);
+    expect(find.text(AbsStrings.waterH2O), findsOneWidget);
+    expect(find.text(AbsStrings.intro), findsWidgets);
+    expect(find.text(AbsStrings.mySolution), findsWidgets);
   });
 
   // H6 My Solution reachable via tab
@@ -88,16 +89,16 @@ void main() {
     await pumpHome(tester);
     await openAbs(tester);
 
-    await tester.tap(find.text('My Solution').last);
+    await tester.tap(find.text(AbsStrings.mySolution).last);
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 200));
     expect(find.byType(AbsMySolutionScreen), findsOneWidget);
-    expect(find.text('Acid'), findsOneWidget);
-    expect(find.text('Base'), findsOneWidget);
-    expect(find.text('weak'), findsOneWidget);
-    expect(find.text('strong'), findsOneWidget);
+    expect(find.text(AbsStrings.acid), findsOneWidget);
+    expect(find.text(AbsStrings.base), findsOneWidget);
+    expect(find.text(AbsStrings.weak), findsOneWidget);
+    expect(find.text(AbsStrings.strong), findsOneWidget);
     // Intro may remain KeepAlive-mounted (KratosTabSwitcher); assert My Solution chrome.
-    expect(find.text('Initial Concentration (mol/L):'), findsOneWidget);
+    expect(find.text(AbsStrings.initialConcentration), findsOneWidget);
   });
 
   // H7 Back to Home
@@ -119,14 +120,14 @@ void main() {
     for (var i = 0; i < 3; i++) {
       await openAbs(tester);
       expect(find.byType(AbsIntroScreen), findsOneWidget);
-      expect(find.text('Water (H₂O)'), findsOneWidget);
+      expect(find.text(AbsStrings.waterH2O), findsOneWidget);
 
-      await tester.tap(find.text('My Solution').last);
+      await tester.tap(find.text(AbsStrings.mySolution).last);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 150));
       expect(find.byType(AbsMySolutionScreen), findsOneWidget);
 
-      await tester.tap(find.text('Intro').last);
+      await tester.tap(find.text(AbsStrings.intro).last);
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 100));
 
@@ -136,7 +137,7 @@ void main() {
 
     await openAbs(tester);
     expect(find.byType(AbsIntroScreen), findsOneWidget);
-    expect(find.text('Water (H₂O)'), findsOneWidget);
+    expect(find.text(AbsStrings.waterH2O), findsOneWidget);
     await backToHome(tester);
   });
 
@@ -147,15 +148,15 @@ void main() {
     await pumpHome(tester);
     await openAbs(tester);
 
-    await tester.tap(find.text('Strong Acid (HA)'));
+    await tester.tap(find.text(AbsStrings.strongAcidHA));
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('Strong Acid (HA)'), findsOneWidget);
+    expect(find.text(AbsStrings.strongAcidHA), findsOneWidget);
 
     await backToHome(tester);
     await openAbs(tester);
     // Fresh instance defaults to Water
-    expect(find.text('Water (H₂O)'), findsOneWidget);
+    expect(find.text(AbsStrings.waterH2O), findsOneWidget);
     await backToHome(tester);
   });
 
@@ -166,7 +167,7 @@ void main() {
     await pumpHome(tester);
     for (var i = 0; i < 3; i++) {
       await openAbs(tester);
-      await tester.tap(find.text('My Solution').last);
+      await tester.tap(find.text(AbsStrings.mySolution).last);
       await tester.pump(const Duration(milliseconds: 100));
       await backToHome(tester);
     }
@@ -181,7 +182,7 @@ void main() {
     await pumpHome(tester);
     await openAbs(tester);
 
-    await tester.tap(find.text('Weak Base (B)'));
+    await tester.tap(find.text(AbsStrings.weakBaseB));
     await tester.pump(const Duration(milliseconds: 100));
     expect(find.byType(KratosResetAllButton), findsWidgets);
     final introReset = find.byType(KratosResetAllButton).first;
@@ -189,11 +190,11 @@ void main() {
     await tester.pump();
     await tester.tap(introReset, warnIfMissed: false);
     await tester.pump(const Duration(milliseconds: 100));
-    expect(find.text('Water (H₂O)'), findsOneWidget);
+    expect(find.text(AbsStrings.waterH2O), findsOneWidget);
 
     await backToHome(tester);
     await openAbs(tester);
-    await tester.tap(find.text('My Solution').last);
+    await tester.tap(find.text(AbsStrings.mySolution).last);
     await tester.pump(const Duration(milliseconds: 150));
     expect(find.byType(AbsMySolutionScreen), findsOneWidget);
     final myReset = find.descendant(
@@ -211,8 +212,8 @@ void main() {
 
   testWidgets('metadata constants match Home card', (tester) async {
     expect(AcidBaseSolutionsHome.title, '酸碱溶液');
-    expect(AcidBaseSolutionsHome.subtitle, contains('Intro'));
-    expect(AcidBaseSolutionsHome.subtitle, contains('My Solution'));
+    expect(AcidBaseSolutionsHome.subtitle, contains(AbsStrings.intro));
+    expect(AcidBaseSolutionsHome.subtitle, contains(AbsStrings.mySolution));
   });
 
   testWidgets('builder target is formal host not demo', (tester) async {

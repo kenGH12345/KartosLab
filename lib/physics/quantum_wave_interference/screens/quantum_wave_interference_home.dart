@@ -7,6 +7,7 @@ import '../assets/qwi_assets.dart';
 import '../view/experiment/experiment_screen.dart';
 import '../view/high_intensity/high_intensity_screen.dart';
 import '../view/single_particles/single_particles_screen.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 /// Formal KartosLab Home entry for Quantum Wave Interference.
 ///
@@ -20,15 +21,15 @@ class QuantumWaveInterferenceHome extends StatefulWidget {
 
   static const String title = '量子波干涉';
 
-  static const String subtitle = 'Experiment · High Intensity · Single Particles';
+  static const String subtitle = QwiStrings.subtitle;
 
   static const Color accentColor = Color(0xFF2563EB);
 
   static const String homeIconAsset = QwiAssets.experimentScreenIcon;
 
-  static const String experimentTabLabel = 'Experiment';
-  static const String highIntensityTabLabel = 'High Intensity';
-  static const String singleParticlesTabLabel = 'Single Particles';
+  static const String experimentTabLabel = QwiStrings.experiment;
+  static const String highIntensityTabLabel = QwiStrings.highIntensity;
+  static const String singleParticlesTabLabel = QwiStrings.singleParticles;
 
   @override
   State<QuantumWaveInterferenceHome> createState() => _QuantumWaveInterferenceHomeState();

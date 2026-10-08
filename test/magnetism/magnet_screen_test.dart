@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:kratos/common/widgets/nine_grid_layout.dart';
+import 'package:kratos/magnetism/magnet_and_compass/mac_strings.dart';
 import 'package:kratos/magnetism/magnet_and_compass/magnet_and_compass_constants.dart';
 import 'package:kratos/magnetism/magnet_and_compass/painters/bar_magnet_painter.dart';
 import 'package:kratos/magnetism/magnet_and_compass/painters/compass_painter.dart';
@@ -63,11 +64,11 @@ void main() {
       expect(find.byType(AppBar), findsOneWidget);
       expect(find.text('磁铁与罗盘'), findsOneWidget);
       expect(find.byType(NineGridLayout), findsOneWidget);
-      expect(find.text('Bar Magnet'), findsOneWidget);
+      expect(find.text(MacStrings.barMagnet), findsOneWidget);
       expect(find.text('75%'), findsOneWidget);
-      expect(find.text('Flip Polarity'), findsOneWidget);
-      expect(find.text('Compass'), findsOneWidget);
-      expect(find.text('Field Meter'), findsOneWidget);
+      expect(find.text(MacStrings.flipPolarity), findsOneWidget);
+      expect(find.text(MacStrings.compass), findsOneWidget);
+      expect(find.text(MacStrings.fieldMeter), findsOneWidget);
       expect(find.byType(Slider), findsOneWidget);
       expect(find.byIcon(Icons.refresh), findsOneWidget);
 
@@ -95,7 +96,7 @@ void main() {
     testWidgets('flip, see-inside, field meter, strength step', (tester) async {
       await _pumpScreen(tester);
 
-      await tester.tap(find.text('Flip Polarity'));
+      await tester.tap(find.text(MacStrings.flipPolarity));
       await tester.pump();
       _expectNoOverflow(tester);
       expect(_painter<BarMagnetPainter>(tester).flipped, isTrue);
@@ -135,7 +136,7 @@ void main() {
     testWidgets('reset restores B defaults after mutations', (tester) async {
       await _pumpScreen(tester);
 
-      await tester.tap(find.text('Flip Polarity'));
+      await tester.tap(find.text(MacStrings.flipPolarity));
       await tester.pump();
       await tester.tap(find.byType(Checkbox).at(1));
       await tester.pump();

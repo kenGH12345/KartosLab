@@ -6,4 +6,4 @@ mvt: scale=1.1926 origin=(29.4,0.0)
 DPR: 1
 actions: reset
 source: local-flutter-widget-test
-captured_at: 2026-09-27T17:28:23.147190Z
+captured_at: 2026-10-08T09:27:27.751569Z

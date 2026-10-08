@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'applications/model/buoyancy_applications_model.dart';
 import 'applications/view/buoyancy_applications_screen.dart';
+import 'buoyancy_strings.dart';
 import 'compare/model/buoyancy_compare_model.dart';
 import 'compare/view/buoyancy_compare_screen.dart';
 import 'explore/model/buoyancy_explore_model.dart';
@@ -12,6 +13,16 @@ import 'shapes/model/buoyancy_shapes_model.dart';
 import 'shapes/view/buoyancy_shapes_screen.dart';
 
 enum BuoyancySimScreen { compare, explore, lab, shapes, applications }
+
+extension BuoyancySimScreenLabel on BuoyancySimScreen {
+  String get label => switch (this) {
+        BuoyancySimScreen.compare => BuoyancyStrings.compare,
+        BuoyancySimScreen.explore => BuoyancyStrings.explore,
+        BuoyancySimScreen.lab => BuoyancyStrings.lab,
+        BuoyancySimScreen.shapes => BuoyancyStrings.shapes,
+        BuoyancySimScreen.applications => BuoyancyStrings.applications,
+      };
+}
 
 /// Five-screen host. Each screen owns a persistent Model (no cross-leak).
 /// Only the active screen mounts a PlayArea ticker — inactive models pause.
@@ -106,7 +117,7 @@ class _BuoyancySimHostState extends State<BuoyancySimHost> {
                                 : Colors.transparent,
                             child: Center(
                               child: Text(
-                                s.name,
+                                s.label,
                                 textAlign: TextAlign.center,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,

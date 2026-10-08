@@ -4,6 +4,7 @@ import '../model/scene_kind.dart';
 import '../model/waves_intro_model.dart';
 import '../view/waves_intro_shell.dart';
 import '../waves_intro_constants.dart';
+import 'package:kratos/waves_intro/waves_intro_strings.dart';
 
 /// One medium screen shell — delegates to screen-specific views inside [WavesIntroShell].
 class WavesIntroMediumScreen extends StatefulWidget {
@@ -66,11 +67,11 @@ class _WavesIntroMediumScreenState extends State<WavesIntroMediumScreen>
   static String _titleFor(SceneKind kind) {
     switch (kind) {
       case SceneKind.water:
-        return 'Water';
+        return WavesIntroStrings.water;
       case SceneKind.sound:
-        return 'Sound';
+        return WavesIntroStrings.sound;
       case SceneKind.light:
-        return 'Light';
+        return WavesIntroStrings.light;
     }
   }
 

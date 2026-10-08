@@ -27,10 +27,10 @@ class BuildAMoleculeHome extends StatelessWidget {
   final BamController? multipleController;
   final BamController? playgroundController;
 
-  static const String title = 'Build a Molecule';
-  static const String singleTabLabel = 'Single Molecule';
-  static const String multipleTabLabel = 'Multiple Molecules';
-  static const String playgroundTabLabel = 'Free Build';
+  static const String title = '搭建分子';
+  static const String singleTabLabel = '单个';
+  static const String multipleTabLabel = '多个';
+  static const String playgroundTabLabel = '练习场';
   static const Color accentColor = Color(0xFF0D9488);
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../concentration_assets.dart';
+import '../concentration_strings.dart';
 import '../model/concentration_model.dart';
 import '../model/solute.dart';
 import '../model/solute_form.dart';
@@ -198,7 +199,7 @@ class _SoluteFormRadios extends StatelessWidget {
         Expanded(
           child: _FormOption(
             selected: model.soluteForm == SoluteForm.solid,
-            label: 'Solid',
+            label: ConcentrationStrings.solid,
             iconAsset: ConcentrationAssets.shakerIcon,
             onTap: () => model.setSoluteForm(SoluteForm.solid),
           ),
@@ -207,7 +208,7 @@ class _SoluteFormRadios extends StatelessWidget {
         Expanded(
           child: _FormOption(
             selected: model.soluteForm == SoluteForm.solution,
-            label: 'Solution',
+            label: ConcentrationStrings.solution,
             iconAsset: ConcentrationAssets.dropperIcon,
             onTap: () => model.setSoluteForm(SoluteForm.solution),
           ),
@@ -299,7 +300,7 @@ class EvaporationPanel extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text('Evaporation:', style: TextStyle(fontSize: 22)),
+            const Text(ConcentrationStrings.evaporation, style: TextStyle(fontSize: 22)),
             const SizedBox(width: 10),
             SizedBox(
               // Source EvaporationSlider trackSize.width = 150 (+ thumb overhang)
@@ -423,7 +424,7 @@ class SaturatedIndicator extends StatelessWidget {
 
   final ConcentrationModel model;
 
-  static const String label = 'Saturated!';
+  static const String label = ConcentrationStrings.saturated;
   static const double fontSize = 20;
   static const EdgeInsets padding =
       EdgeInsets.symmetric(horizontal: 10, vertical: 5);
@@ -513,7 +514,7 @@ class RemoveSoluteButton extends StatelessWidget {
               ],
             ),
             child: const Text(
-              'Remove Solute',
+              ConcentrationStrings.removeSolute,
               style: TextStyle(fontSize: 22, color: Colors.black),
             ),
           ),

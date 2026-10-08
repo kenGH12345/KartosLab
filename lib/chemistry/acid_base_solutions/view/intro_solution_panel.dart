@@ -5,6 +5,7 @@ import '../model/intro_model.dart';
 import '../model/particle_key.dart';
 import '../model/solutions/aqueous_solution.dart';
 import 'abs_particle_painter.dart';
+import 'package:kratos/chemistry/acid_base_solutions/abs_strings.dart';
 
 /// Intro Solution panel — PhET `IntroSolutionPanel.ts` (AquaRadioButtonGroup).
 class IntroSolutionPanel extends StatelessWidget {
@@ -20,19 +21,19 @@ class IntroSolutionPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = <({AqueousSolution value, String label, ParticleKey icon})>[
-      (value: model.water, label: 'Water (H₂O)', icon: ParticleKey.h2o),
+      (value: model.water, label: AbsStrings.waterH2O, icon: ParticleKey.h2o),
       (
         value: model.strongAcid,
-        label: 'Strong Acid (HA)',
+        label: AbsStrings.strongAcidHA,
         icon: ParticleKey.ha
       ),
-      (value: model.weakAcid, label: 'Weak Acid (HA)', icon: ParticleKey.ha),
+      (value: model.weakAcid, label: AbsStrings.weakAcidHA, icon: ParticleKey.ha),
       (
         value: model.strongBase,
-        label: 'Strong Base (MOH)',
+        label: AbsStrings.strongBaseMOH,
         icon: ParticleKey.moh
       ),
-      (value: model.weakBase, label: 'Weak Base (B)', icon: ParticleKey.b),
+      (value: model.weakBase, label: AbsStrings.weakBaseB, icon: ParticleKey.b),
     ];
 
     return Container(
@@ -51,7 +52,7 @@ class IntroSolutionPanel extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Text(
-            'Solution',
+            AbsStrings.solution,
             style: TextStyle(
               fontFamily: 'Arial',
               fontSize: 14,

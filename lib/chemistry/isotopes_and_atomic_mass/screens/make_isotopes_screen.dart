@@ -225,7 +225,7 @@ class _MakeIsotopesScreenState extends State<MakeIsotopesScreen>
 
     if (widget.embedded) return body;
     return Scaffold(
-      appBar: AppBar(title: const Text('Isotopes')),
+      appBar: AppBar(title: const Text('同位素')),
       body: body,
     );
   }

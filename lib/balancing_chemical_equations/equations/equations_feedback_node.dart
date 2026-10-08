@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/equation.dart';
+import 'package:kratos/balancing_chemical_equations/bce_strings.dart';
 
 /// PhET `EquationsFeedbackNode` — face + Balanced / Simplified | Not simplified.
 class EquationsFeedbackNode extends StatelessWidget {
@@ -32,13 +33,13 @@ class EquationsFeedbackNode extends StatelessWidget {
               children: [
                 const _StatusRow(
                   ok: true,
-                  label: 'Balanced',
+                  label: BceStrings.balanced,
                 ),
                 const SizedBox(height: 8),
                 if (simplified)
-                  const _StatusRow(ok: true, label: 'Simplified')
+                  const _StatusRow(ok: true, label: BceStrings.simplified)
                 else
-                  const _StatusRow(ok: false, label: 'Not simplified'),
+                  const _StatusRow(ok: false, label: BceStrings.notSimplified),
               ],
             ),
           ],

@@ -1,20 +1,20 @@
-/// UI strings (English defaults matching PhET string keys).
+/// Plinko Probability UI strings — Chinese defaults (PHASE 7B remediation).
 class PlinkoStrings {
   PlinkoStrings._();
 
-  static const String title = 'Plinko Probability';
-  static const String subtitle = 'Galton · Bernoulli · 二项分布';
-  static const String intro = 'Intro';
-  static const String lab = 'Lab';
-  static const String rows = 'Rows';
-  static const String binaryProbability = 'Binary Probability';
-  static const String ideal = 'Ideal';
+  static const String title = '弹珠概率';
+  static const String subtitle = '高尔顿板 · 伯努利 · 二项分布';
+  static const String intro = '介绍';
+  static const String lab = '实验室';
+  static const String rows = '行数';
+  static const String binaryProbability = '二项概率';
+  static const String ideal = '理想';
   static const String nEquals = 'N =';
-  static const String outOfBalls = 'Out of Balls!';
-  static const String ball = 'Ball';
-  static const String path = 'Path';
-  static const String none = 'None';
-  static const String bin = 'Bin';
-  static const String count = 'Count';
-  static const String fraction = 'Fraction';
+  static const String outOfBalls = '球已用完！';
+  static const String ball = '球';
+  static const String path = '路径';
+  static const String none = '无';
+  static const String bin = '箱';
+  static const String count = '计数';
+  static const String fraction = '分数';
 }

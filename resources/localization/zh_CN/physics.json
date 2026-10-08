@@ -1,0 +1,38 @@
+{
+  "physics.gravity": {
+    "en": "Gravity",
+    "zh": "重力",
+    "domain": "physics",
+    "status": "approved"
+  },
+  "physics.mass": {
+    "en": "Mass",
+    "zh": "质量",
+    "domain": "physics",
+    "status": "approved"
+  },
+  "physics.weight": {
+    "en": "Weight",
+    "zh": "重量",
+    "domain": "physics",
+    "status": "approved"
+  },
+  "physics.density": {
+    "en": "Density",
+    "zh": "密度",
+    "domain": "physics",
+    "status": "approved"
+  },
+  "physics.pressure": {
+    "en": "Pressure",
+    "zh": "压强",
+    "domain": "physics",
+    "status": "approved"
+  },
+  "physics.volume": {
+    "en": "Volume",
+    "zh": "体积",
+    "domain": "physics",
+    "status": "approved"
+  }
+}

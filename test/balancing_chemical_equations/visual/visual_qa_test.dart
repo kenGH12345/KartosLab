@@ -18,6 +18,7 @@ import 'package:kratos/balancing_chemical_equations/views/bce_molecule_node.dart
 import 'package:kratos/balancing_chemical_equations/views/particles_node.dart';
 import 'package:kratos/balancing_chemical_equations/views/view_combo_box.dart';
 import 'package:kratos/balancing_chemical_equations/model/bce_molecule.dart';
+import 'package:kratos/balancing_chemical_equations/bce_strings.dart';
 
 Future<void> _pump768(WidgetTester tester, Widget child) async {
   await tester.binding.setSurfaceSize(const Size(900, 600));
@@ -85,7 +86,7 @@ void main() {
       await _pump768(tester, EquationsScreen(model: m));
       m.selectedEquation.balance();
       await tester.pump();
-      expect(find.text('Balanced'), findsOneWidget);
+      expect(find.text(BceStrings.balanced), findsOneWidget);
       expect(find.text('Simplified'), findsOneWidget);
     });
   });

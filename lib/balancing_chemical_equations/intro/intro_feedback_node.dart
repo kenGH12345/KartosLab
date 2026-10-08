@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/equation.dart';
+import 'package:kratos/balancing_chemical_equations/bce_strings.dart';
 
 /// PhET `IntroFeedbackNode` — visible only when [Equation.isBalanced].
 class IntroFeedbackNode extends StatelessWidget {
@@ -33,7 +34,7 @@ class IntroFeedbackNode extends StatelessWidget {
                 ),
                 const SizedBox(width: 5),
                 const Text(
-                  'Balanced',
+                  BceStrings.balanced,
                   style: TextStyle(
                     fontFamily: 'Arial',
                     fontSize: 18,

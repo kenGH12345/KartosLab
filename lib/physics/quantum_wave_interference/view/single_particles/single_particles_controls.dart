@@ -8,6 +8,7 @@ import '../../domain/wave_display_mode.dart';
 import '../common/qwi_ab_switch.dart';
 import '../common/qwi_number_control.dart';
 import 'single_particles_controller.dart';
+import 'package:kratos/physics/quantum_wave_interference/qwi_strings.dart';
 
 class SpSourceControls extends StatelessWidget {
   const SpSourceControls({super.key, required this.controller});
@@ -33,7 +34,7 @@ class SpSourceControls extends StatelessWidget {
                 onChanged: (v) => controller.setAutoRepeat(v ?? false),
               ),
             ),
-            const Flexible(child: Text('Auto-fire Mode', style: TextStyle(fontSize: 11))),
+            Flexible(child: Text(QwiStrings.autoFireMode, style: const TextStyle(fontSize: 11))),
           ],
         ),
         const SizedBox(height: 6),
@@ -48,7 +49,7 @@ class SpSourceControls extends StatelessWidget {
         else
           QwiNumberControl(
             sliderKey: const Key('sp_speed_slider'),
-            title: 'Speed',
+            title: QwiStrings.speed,
             valueText: scene.particleSpeedMps.toStringAsExponential(2),
             value: scene.particleSpeedMps.clamp(scene.speedMinMps, scene.speedMaxMps),
             min: scene.speedMinMps,
@@ -66,13 +67,13 @@ class SpSlitControls extends StatelessWidget {
   final SingleParticlesController controller;
 
   static const _labels = {
-    SlitConfiguration.bothOpen: 'Both Slits Open',
-    SlitConfiguration.leftCovered: 'Top Covered',
-    SlitConfiguration.rightCovered: 'Bottom Covered',
-    SlitConfiguration.leftDetector: 'Detector on Top',
-    SlitConfiguration.rightDetector: 'Detector on Bottom',
-    SlitConfiguration.bothDetectors: 'Detectors Both',
-    SlitConfiguration.noBarrier: 'No Barrier',
+    SlitConfiguration.bothOpen: QwiStrings.bothSlitsOpen,
+    SlitConfiguration.leftCovered: QwiStrings.topCovered,
+    SlitConfiguration.rightCovered: QwiStrings.bottomCovered,
+    SlitConfiguration.leftDetector: QwiStrings.detectorOnTop,
+    SlitConfiguration.rightDetector: QwiStrings.detectorOnBottom,
+    SlitConfiguration.bothDetectors: QwiStrings.detectorsBoth,
+    SlitConfiguration.noBarrier: QwiStrings.noBarrier,
   };
 
   @override
@@ -87,7 +88,7 @@ class SpSlitControls extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Text('Configuration', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
+              Text(QwiStrings.configuration, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 11)),
               const SizedBox(height: 2),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -120,7 +121,7 @@ class SpSlitControls extends StatelessWidget {
           flex: 5,
           child: QwiNumberControl(
             sliderKey: const Key('sp_slit_separation_slider'),
-            title: 'Slit Separation',
+            title: QwiStrings.slitSeparation,
             valueText: '${(sep * 1000).toStringAsFixed(1)} µm',
             value: sep,
             min: scene.slitSeparationMinMm,
@@ -145,9 +146,9 @@ class SpWaveModeControls extends StatelessWidget {
         ? const [WaveDisplayMode.electricField, WaveDisplayMode.amplitude]
         : const [WaveDisplayMode.realPart, WaveDisplayMode.amplitude];
     final labels = {
-      WaveDisplayMode.electricField: 'Electric Field',
-      WaveDisplayMode.amplitude: 'Amplitude',
-      WaveDisplayMode.realPart: 'Real Part',
+      WaveDisplayMode.electricField: QwiStrings.electricField,
+      WaveDisplayMode.amplitude: QwiStrings.amplitude,
+      WaveDisplayMode.realPart: QwiStrings.realPart,
     };
     return Container(
       key: const Key('sp_wave_mode'),
@@ -199,15 +200,15 @@ class SpDetectorControls extends StatelessWidget {
             key: const Key('sp_screen_graph_switch'),
             value: !graph,
             onChanged: (screenSelected) => controller.setGraphVisible(!screenSelected),
-            leftLabel: 'Screen',
-            rightLabel: 'Graph',
+            leftLabel: QwiStrings.screen,
+            rightLabel: QwiStrings.graph,
           ),
         ),
         const SizedBox(height: 6),
-        const Text('Detector: Hits', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
-        Text('Hits ${scene.hits.length}', style: const TextStyle(fontSize: 10)),
+        Text(QwiStrings.detectorHits, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+        Text(QwiStrings.hitsCount(scene.hits.length), style: const TextStyle(fontSize: 10)),
         if (!graph) ...[
-          const Text('Screen Brightness', style: TextStyle(fontFamily: 'Arial', fontSize: 11)),
+          Text(QwiStrings.screenBrightness, style: const TextStyle(fontFamily: 'Arial', fontSize: 11)),
           SliderTheme(
             data: SliderTheme.of(context).copyWith(
               trackHeight: 3,
@@ -223,7 +224,7 @@ class SpDetectorControls extends StatelessWidget {
           ),
         ],
         if (graph) ...[
-          Text('Zoom ${controller.model.graphZoom.level}', style: const TextStyle(fontSize: 10)),
+          Text(QwiStrings.zoomLevel(controller.model.graphZoom.level), style: const TextStyle(fontSize: 10)),
           Slider(
             key: const Key('sp_zoom_slider'),
             value: controller.model.graphZoom.level.toDouble(),
@@ -247,12 +248,12 @@ class SpDetectorControls extends StatelessWidget {
                   onChanged: (v) => controller.setProbeVisible(v ?? false),
                 ),
               ),
-              const Text('Probe', style: TextStyle(fontSize: 11)),
+              Text(QwiStrings.probe, style: const TextStyle(fontSize: 11)),
             ],
           ),
           if (scene.probeVisible)
             Text(
-              'Probe: ${scene.detectorProbe.state.name}',
+              QwiStrings.probeState(scene.detectorProbe.state.name),
               style: const TextStyle(fontFamily: 'Arial', fontSize: 10),
             ),
         ],
@@ -279,13 +280,13 @@ class SpTimeControls extends StatelessWidget {
               key: const Key('sp_play_pause'),
               style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 6), minimumSize: Size.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
               onPressed: () => controller.setPlaying(!clock.isPlaying),
-              child: Text(clock.isPlaying ? 'Pause' : 'Play', style: const TextStyle(fontSize: 11)),
+              child: Text(clock.isPlaying ? QwiStrings.pause : QwiStrings.play, style: const TextStyle(fontSize: 11)),
             ),
             TextButton(
               key: const Key('sp_step'),
               style: TextButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 6), minimumSize: Size.zero, tapTargetSize: MaterialTapTargetSize.shrinkWrap),
               onPressed: controller.stepOnce,
-              child: const Text('Step', style: TextStyle(fontSize: 11)),
+              child: Text(QwiStrings.step, style: const TextStyle(fontSize: 11)),
             ),
           ],
         ),
@@ -293,9 +294,9 @@ class SpTimeControls extends StatelessWidget {
         QwiAquaRadioGroup<TimeSpeed>(
           value: clock.speed,
           items: const {
-            TimeSpeed.slow: 'Slow',
-            TimeSpeed.normal: 'Normal',
-            TimeSpeed.fast: 'Fast',
+            TimeSpeed.slow: QwiStrings.slow,
+            TimeSpeed.normal: QwiStrings.normal,
+            TimeSpeed.fast: QwiStrings.fast,
           },
           onChanged: controller.setTimeSpeed,
         ),
